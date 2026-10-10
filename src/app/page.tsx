@@ -1,0 +1,225 @@
+import Link from 'next/link';
+import { listProducts, listCategories, getSettings } from '@/lib/db';
+import { TopBar, Header, Footer } from './SiteChrome';
+import { InquiryForm } from './InquiryForm';
+
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
+  const [products, cats, s] = await Promise.all([
+    listProducts({ status: 'published' }).catch(() => []),
+    listCategories().catch(() => []),
+    getSettings().catch(() => ({}))
+  ]);
+
+  const featured = products.filter((p) => p.featured).slice(0, 6);
+  const fallback = products.slice(0, 6);
+  const shown = featured.length ? featured : fallback;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: s.siteName || 'Badoudao',
+    url: s.siteUrl || '',
+    email: s.email,
+    telephone: s.phone,
+    address: { '@type': 'PostalAddress', addressLocality: s.address, addressCountry: 'CN' }
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <TopBar />
+      <Header />
+
+      <main id="main">
+        <section className="hero">
+          <div className="wrap">
+            <div>
+              <div className="eyebrow"><span style={{ width: 6, height: 6, borderRadius: 99, background: 'var(--brand)' }} />Quartz Clock Manufacturer · Small-Batch OEM</div>
+              <h1>Custom quartz clocks, built for <em>your brand</em></h1>
+              <p className="lede">Wall clocks, alarm clocks and table clocks in OEM and ODM form. MOQ from {s.moq || 500} pieces, custom dial artwork and packaging, and a quote back within {s.quoteHours || 12} hours.</p>
+              <div className="hero-btns">
+                <a href="#inquiry" className="btn btn-primary">Request a Quote</a>
+                <Link href="/products/" className="btn btn-ghost">View Products</Link>
+              </div>
+              <p className="hero-note">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f5c4a" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+                Movements are CE and RoHS compliant · Certification arranged on request
+              </p>
+            </div>
+            <div className="hero-img">
+              <img src="/hero-clocks.png" alt="Assorted quartz wall clocks manufactured by Badoudao" width={1536} height={1024} />
+            </div>
+          </div>
+        </section>
+
+        <div className="trust">
+          <div className="wrap trust-grid">
+            <div className="trust-item">
+              <div className="trust-num">
+                {String(s.capacityMin) === String(s.capacityMax)
+                  ? s.capacityMin
+                  : `${s.capacityMin}-${s.capacityMax}`}
+                <small>pcs</small>
+              </div>
+              <div className="trust-lab">Daily Capacity</div>
+            </div>
+            <div className="trust-item">
+              <div className="trust-num"><small>{s.quoteHours || 12}</small>h</div>
+              <div className="trust-lab">Quote Response</div>
+            </div>
+            <div className="trust-item">
+              <div className="trust-num">20<small>&ndash;45</small>d</div>
+              <div className="trust-lab">Lead Time</div>
+            </div>
+            <div className="trust-item">
+              <div className="trust-num">7<small>&ndash;10</small>d</div>
+              <div className="trust-lab">Sample Time</div>
+            </div>
+            <div className="trust-item">
+              <div className="trust-num">{s.moq || 500}<small>pcs</small></div>
+              <div className="trust-lab">Starting MOQ</div>
+            </div>
+          </div>
+        </div>
+
+        <section id="categories">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">Product Range</div>
+              <h2>Wall clocks, alarm clocks and movements — factory direct</h2>
+              <p className="sec-sub">All categories available with custom dials, logos, hands and packaging. Prices shown are <strong>Ex Works (factory) prices</strong> at MOQ {s.moq || 500} — freight and duties quoted separately.</p>
+            </div>
+            <div className="grid-3">
+              {cats.map((c) => (
+                <Link key={c.id} href={`/products/${c.id}/`} className="card">
+                  <div className="c-visual" style={{ background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }} />
+                  <div className="c-body">
+                    <h3>{c.name}</h3>
+                    <p>{c.description}</p>
+                    <div className="c-meta">
+                      <span><b>{c.designs}</b> designs</span>
+                      <span className="exw">EXW {c.price_range}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="alt" id="capability">
+          <div className="wrap split">
+            <div>
+              <div className="sec-tag">Manufacturing</div>
+              <h2>Everything happens under one roof</h2>
+              <p className="sec-sub">From moulding to finished box. Keeping the whole process in-house means faster sampling, tighter tolerances and no surprises between you and the factory.</p>
+              <div className="cap-list">
+                {[
+                  ['Tooling & in-house moulding', 'New tooling in 15–25 days, no subcontractor margin.'],
+                  ['Surface finishing', 'UV spray, electroplating, brushed and antique brass effects, hand-painting.'],
+                  ['Assembly & movement sourcing', 'Japan, Taiwan and China movements — you choose the accuracy-to-cost point.'],
+                  ['Four-stage QC', 'IQC, IPQC, FQC and OQC. Every carton checked before it leaves.'],
+                  ['Retail-ready packaging', 'Colour boxes, window boxes and gift sets designed to survive ocean freight.']
+                ].map(([h, p], i) => (
+                  <div className="cap" key={h}>
+                    <div className="cap-n">0{i + 1}</div>
+                    <div><h4>{h}</h4><p>{p}</p></div>
+                  </div>
+                ))}
+              </div>
+              <div className="certs">
+                <span className="cert">CE (movement)</span>
+                <span className="cert">RoHS (movement)</span>
+                <span className="cert">QC: IQC / IPQC / FQC / OQC</span>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.6 }}>
+                Quartz clocks themselves carry no mandatory certification requirement.{' '}
+                <Link href="/certification/" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
+              </p>
+            </div>
+            <div className="hero-img">
+              <img src="/hero-clocks.png" alt="Badoudao clock production" width={1536} height={1024} />
+            </div>
+          </div>
+        </section>
+
+        <section id="process">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">OEM / ODM Process</div>
+              <h2>From your idea to a shipped container</h2>
+            </div>
+            <div className="proc">
+              {[
+                ['Send your brief', 'A reference photo, a sample or a sketch is enough to start.'],
+                ['Quotation', `Within ${s.quoteHours || 12} hours with pricing broken down by tooling, unit, packaging and freight.`],
+                ['Sample', `${s.sampleDays || '7-10'} days. Sample cost is credited against your first bulk order.`],
+                ['Bulk production', '20–45 days depending on complexity, with photo and video updates.'],
+                ['Delivery', 'Ex Works by default. CIF or DDP available on request.']
+              ].map(([h, p], i) => (
+                <div className="proc-i" key={h}>
+                  <span className="proc-n">STEP 0{i + 1}</span>
+                  <h4>{h}</h4><p>{p}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {shown.length > 0 && (
+          <section className="alt" id="featured">
+            <div className="wrap">
+              <div className="sec-head">
+                <div className="sec-tag">Popular Models</div>
+                <h2>Where most enquiries start</h2>
+                <p className="sec-sub">No featured discounts — these are simply the models buyers ask about most.</p>
+              </div>
+              <div className="grid-3">
+                {shown.map((p) => (
+                  <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
+                    <div className="c-visual">
+                      {p.images.length
+                        ? <img src={p.images[0].url} alt={p.name} />
+                        : <span style={{ color: 'var(--ink3)', fontSize: 13 }}>No image</span>}
+                    </div>
+                    <div className="c-body">
+                      <h3 style={{ fontSize: 17 }}>{p.name}</h3>
+                      <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
+                      <div className="c-meta">
+                        <span>MOQ <b>{p.moq}</b></span>
+                        <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section id="inquiry">
+          <div className="wrap">
+            <div className="split" style={{ alignItems: 'start' }}>
+              <div>
+                <div className="sec-tag">Request a Quote</div>
+                <h2 style={{ fontSize: 32 }}>Tell us what you need built</h2>
+                <p className="sec-sub">Send a reference photo, a sample or just a rough idea. You will get a quotation within {s.quoteHours || 12} hours — no obligation.</p>
+                <div className="certs" style={{ marginTop: 32 }}>
+                  <span className="cert">MOQ from {s.moq || 500} pcs</span>
+                  <span className="cert">Samples in {s.sampleDays || '7-10'} days</span>
+                  <span className="cert">Ex Works pricing</span>
+                </div>
+              </div>
+              <InquiryForm products={products.slice(0, 9)} />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

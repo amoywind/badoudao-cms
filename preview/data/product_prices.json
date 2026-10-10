@@ -1,0 +1,67 @@
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "product_id": "BD-W-1201",
+        "min_qty": 500,
+        "max_qty": 2999,
+        "unit_price": 2.85
+      },
+      {
+        "id": 2,
+        "product_id": "BD-W-1201",
+        "min_qty": 3000,
+        "max_qty": 9999,
+        "unit_price": 2.4
+      },
+      {
+        "id": 3,
+        "product_id": "BD-W-1201",
+        "min_qty": 10000,
+        "max_qty": "null",
+        "unit_price": 2.15
+      },
+      {
+        "id": 4,
+        "product_id": "BD-W-1032",
+        "min_qty": 500,
+        "max_qty": 2999,
+        "unit_price": 7.4
+      },
+      {
+        "id": 5,
+        "product_id": "BD-W-1032",
+        "min_qty": 3000,
+        "max_qty": "null",
+        "unit_price": 6.2
+      },
+      {
+        "id": 6,
+        "product_id": "BD-A-2077",
+        "min_qty": 500,
+        "max_qty": 2999,
+        "unit_price": 2.3
+      },
+      {
+        "id": 7,
+        "product_id": "BD-A-2077",
+        "min_qty": 3000,
+        "max_qty": "null",
+        "unit_price": 1.85
+      },
+      {
+        "id": 8,
+        "product_id": "BD-M-0012",
+        "min_qty": 1000,
+        "max_qty": "null",
+        "unit_price": 0.38
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 1
+    }
+  }
+]

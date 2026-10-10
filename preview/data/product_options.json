@@ -1,0 +1,151 @@
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "product_id": "BD-W-1201",
+        "label": "Logo printing",
+        "price_delta": 0.08,
+        "sort_order": 1
+      },
+      {
+        "id": 2,
+        "product_id": "BD-W-1201",
+        "label": "Custom dial artwork",
+        "price_delta": 0.35,
+        "sort_order": 2
+      },
+      {
+        "id": 3,
+        "product_id": "BD-W-1201",
+        "label": "Colour box",
+        "price_delta": 0.55,
+        "sort_order": 3
+      },
+      {
+        "id": 4,
+        "product_id": "BD-W-1201",
+        "label": "Mixed models",
+        "price_delta": 0,
+        "sort_order": 4
+      },
+      {
+        "id": 5,
+        "product_id": "BD-W-1032",
+        "label": "Logo printing",
+        "price_delta": 0.15,
+        "sort_order": 1
+      },
+      {
+        "id": 6,
+        "product_id": "BD-W-1032",
+        "label": "Custom dial artwork",
+        "price_delta": 0.6,
+        "sort_order": 2
+      },
+      {
+        "id": 7,
+        "product_id": "BD-W-1032",
+        "label": "Gift box",
+        "price_delta": 0.9,
+        "sort_order": 3
+      },
+      {
+        "id": 8,
+        "product_id": "BD-A-2077",
+        "label": "Logo printing",
+        "price_delta": 0.06,
+        "sort_order": 1
+      },
+      {
+        "id": 9,
+        "product_id": "BD-A-2077",
+        "label": "Custom dial artwork",
+        "price_delta": 0.25,
+        "sort_order": 2
+      },
+      {
+        "id": 10,
+        "product_id": "BD-A-2077",
+        "label": "Gift box",
+        "price_delta": 0.7,
+        "sort_order": 3
+      },
+      {
+        "id": 11,
+        "product_id": "BD-A-2077",
+        "label": "Mixed colours",
+        "price_delta": 0,
+        "sort_order": 4
+      },
+      {
+        "id": 12,
+        "product_id": "BD-W-1288",
+        "label": "Logo printing",
+        "price_delta": 0.2,
+        "sort_order": 1
+      },
+      {
+        "id": 13,
+        "product_id": "BD-W-1288",
+        "label": "Custom dial artwork",
+        "price_delta": 0.75,
+        "sort_order": 2
+      },
+      {
+        "id": 14,
+        "product_id": "BD-W-1288",
+        "label": "Colour box",
+        "price_delta": 0.85,
+        "sort_order": 3
+      },
+      {
+        "id": 15,
+        "product_id": "BD-W-1440",
+        "label": "Logo printing",
+        "price_delta": 0.3,
+        "sort_order": 1
+      },
+      {
+        "id": 16,
+        "product_id": "BD-W-1440",
+        "label": "Custom dial artwork",
+        "price_delta": 1.2,
+        "sort_order": 2
+      },
+      {
+        "id": 17,
+        "product_id": "BD-W-1440",
+        "label": "Gift box",
+        "price_delta": 1.5,
+        "sort_order": 3
+      },
+      {
+        "id": 18,
+        "product_id": "BD-D-0840",
+        "label": "Logo printing",
+        "price_delta": 0.08,
+        "sort_order": 1
+      },
+      {
+        "id": 19,
+        "product_id": "BD-D-0840",
+        "label": "Custom dial artwork",
+        "price_delta": 0.3,
+        "sort_order": 2
+      },
+      {
+        "id": 20,
+        "product_id": "BD-D-0840",
+        "label": "Colour box",
+        "price_delta": 0.6,
+        "sort_order": 3
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 1
+    }
+  }
+]

@@ -1,0 +1,76 @@
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+[
+  {
+    "results": [
+      {
+        "id": "oem-odm",
+        "slug": "oem-odm",
+        "title": "OEM / ODM",
+        "heading": "OEM and ODM clock manufacturing",
+        "intro": "Two ways to work with us: OEM, where you supply artwork and we build to your specification; or ODM, where you start from an existing platform and modify it to your brand.",
+        "body": "",
+        "seo_title": "OEM & ODM Quartz Clock Manufacturing | Badoudao",
+        "seo_description": "OEM and ODM quartz clock manufacturing. Custom dial artwork, logo printing, retail packaging, MOQ from 500 pcs.",
+        "status": "published",
+        "sort_order": 1,
+        "updated_at": "2026-10-10 09:41:16"
+      },
+      {
+        "id": "small-batch",
+        "slug": "small-batch",
+        "title": "Small Batch",
+        "heading": "Small-batch clock manufacturing for growing brands",
+        "intro": "We run about 2,000 units a day. That means we are not chasing volume, and we are not going to pressure you into filling a container to hit a minimum.",
+        "body": "",
+        "seo_title": "Small Batch Quartz Clock Manufacturing | Badoudao",
+        "seo_description": "Why small-batch clock manufacturing suits growing brands. MOQ from 500 pcs, mixed models allowed, 12-hour quotes.",
+        "status": "published",
+        "sort_order": 2,
+        "updated_at": "2026-10-10 09:41:16"
+      },
+      {
+        "id": "factory",
+        "slug": "factory",
+        "title": "Factory",
+        "heading": "The factory",
+        "intro": "What we actually do, in what order, and with which equipment.",
+        "body": "",
+        "seo_title": "About the Factory | Badoudao Quartz Clock Manufacturer",
+        "seo_description": "Badoudao quartz clock factory. 2,000 units daily production, in-house moulding, finishing and assembly, four-stage QC.",
+        "status": "published",
+        "sort_order": 3,
+        "updated_at": "2026-10-10 09:41:16"
+      },
+      {
+        "id": "quality",
+        "slug": "quality",
+        "title": "Quality",
+        "heading": "Quality control",
+        "intro": "What gets checked, when, and what you receive as evidence.",
+        "body": "",
+        "seo_title": "Quality Control for Quartz Clocks | Badoudao",
+        "seo_description": "Four-stage QC for quartz clock manufacturing: IQC, IPQC, FQC and OQC. Movement accuracy testing and pre-shipment photo updates.",
+        "status": "published",
+        "sort_order": 4,
+        "updated_at": "2026-10-10 09:41:16"
+      },
+      {
+        "id": "certification",
+        "slug": "certification",
+        "title": "Certification",
+        "heading": "Certification and compliance",
+        "intro": "The plain version, because a compliance answer that hedges is worse than one that answers.",
+        "body": "",
+        "seo_title": "Certification & Compliance for Quartz Clocks | Badoudao",
+        "seo_description": "Honest explanation: finished quartz clocks carry no mandatory certification, movements are CE and RoHS compliant, specific reports arranged on request.",
+        "status": "published",
+        "sort_order": 5,
+        "updated_at": "2026-10-10 09:41:16"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 1
+    }
+  }
+]

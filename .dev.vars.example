@@ -1,0 +1,7 @@
+# Copy to .dev.vars for local development (never commit)
+ADMIN_EMAIL=admin@badoudao.com
+ADMIN_PASSWORD=change-this-password
+RESEND_API_KEY=re_xxxxxxxxxxxxx
+INBOX_EMAIL=you@yourdomain.com
+MAIL_FROM=Badoudao Website <website@yourdomain.com>
+SITE_URL=http://localhost:8788

@@ -1,0 +1,71 @@
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+[
+  {
+    "results": [
+      {
+        "id": "wall-clocks",
+        "name": "Quartz Wall Clocks",
+        "short": "Wall Clocks",
+        "description": "Round, square and vintage styles in plastic, metal and MDF. Custom dial artwork and branded bezels.",
+        "designs": "300+",
+        "price_range": "$1.60-9.80",
+        "sort_order": 1,
+        "status": "published"
+      },
+      {
+        "id": "alarm-clocks",
+        "name": "Quartz Alarm Clocks",
+        "short": "Alarm Clocks",
+        "description": "Backlight, twin-bell and digital alarm styles. Loudness tested for retail and hospitality use.",
+        "designs": "180+",
+        "price_range": "$1.20-6.50",
+        "sort_order": 2,
+        "status": "published"
+      },
+      {
+        "id": "table-desk-clocks",
+        "name": "Table & Desk Clocks",
+        "short": "Desk Clocks",
+        "description": "Bedside, office and mantel styles in wood, metal and resin, with retail-ready gift packaging.",
+        "designs": "150+",
+        "price_range": "$1.40-7.20",
+        "sort_order": 3,
+        "status": "published"
+      },
+      {
+        "id": "metal-clocks",
+        "name": "Metal & Luxury Clocks",
+        "short": "Metal Clocks",
+        "description": "Brushed brass, rose gold and stainless steel with luminous hands and silent sweep movements.",
+        "designs": "90+",
+        "price_range": "$6.50-14.00",
+        "sort_order": 4,
+        "status": "published"
+      },
+      {
+        "id": "wood-clocks",
+        "name": "Wood & MDF Clocks",
+        "short": "Wood Clocks",
+        "description": "Natural wood grain, MDF laser-cut and hand-painted styles. Strong fit for home decor retail.",
+        "designs": "120+",
+        "price_range": "$2.20-9.00",
+        "sort_order": 5,
+        "status": "published"
+      },
+      {
+        "id": "clock-movements",
+        "name": "Clock Movements & Parts",
+        "short": "Movements",
+        "description": "Silent sweep movements, hands, inserts and cases for buyers assembling their own ranges.",
+        "designs": "200+",
+        "price_range": "$0.25-2.40",
+        "sort_order": 6,
+        "status": "published"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 1
+    }
+  }
+]

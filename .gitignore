@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.vercel/
+out/
+.wrangler/
+.dev.vars
+.env
+.env.*
+*.log
+.DS_Store
+
+# local preview config
+wrangler.local.toml
+.wrangler/

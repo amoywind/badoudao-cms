@@ -1,0 +1,20 @@
+name = "badoudao"
+compatibility_date = "2026-10-10"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+migrations_dir = "src/migrations"
+
+# D1 database — create with:
+#   npx wrangler d1 create badoudao
+# then paste the database_id below
+[[d1_databases]]
+binding = "DB"
+database_name = "badoudao"
+database_id = "YOUR_DATABASE_ID"
+
+# R2 bucket for images — create with:
+#   npx wrangler r2 bucket create badoudao-media
+# then uncomment below
+# [[r2_buckets]]
+# binding = "MEDIA_BUCKET"
+# bucket_name = "badoudao-media"

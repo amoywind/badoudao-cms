@@ -1,0 +1,326 @@
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "product_id": "BD-W-1201",
+        "label": "Diameter",
+        "value": "12 inch / 30.5 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 2,
+        "product_id": "BD-W-1201",
+        "label": "Thickness",
+        "value": "4.2 cm",
+        "sort_order": 2
+      },
+      {
+        "id": 3,
+        "product_id": "BD-W-1201",
+        "label": "Weight",
+        "value": "0.58 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 4,
+        "product_id": "BD-W-1201",
+        "label": "Case material",
+        "value": "ABS plastic",
+        "sort_order": 4
+      },
+      {
+        "id": 5,
+        "product_id": "BD-W-1201",
+        "label": "Lens",
+        "value": "Glass",
+        "sort_order": 5
+      },
+      {
+        "id": 6,
+        "product_id": "BD-W-1201",
+        "label": "Movement",
+        "value": "Quartz, step second hand",
+        "sort_order": 6
+      },
+      {
+        "id": 7,
+        "product_id": "BD-W-1201",
+        "label": "Battery",
+        "value": "1 x AA (not included)",
+        "sort_order": 7
+      },
+      {
+        "id": 8,
+        "product_id": "BD-W-1201",
+        "label": "Packing",
+        "value": "10 pcs / carton",
+        "sort_order": 8
+      },
+      {
+        "id": 9,
+        "product_id": "BD-W-1032",
+        "label": "Diameter",
+        "value": "10 inch / 25.4 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 10,
+        "product_id": "BD-W-1032",
+        "label": "Depth",
+        "value": "3.8 cm",
+        "sort_order": 2
+      },
+      {
+        "id": 11,
+        "product_id": "BD-W-1032",
+        "label": "Weight",
+        "value": "0.72 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 12,
+        "product_id": "BD-W-1032",
+        "label": "Case material",
+        "value": "Brushed metal",
+        "sort_order": 4
+      },
+      {
+        "id": 13,
+        "product_id": "BD-W-1032",
+        "label": "Lens",
+        "value": "Mineral glass",
+        "sort_order": 5
+      },
+      {
+        "id": 14,
+        "product_id": "BD-W-1032",
+        "label": "Movement",
+        "value": "Quartz, silent sweep",
+        "sort_order": 6
+      },
+      {
+        "id": 15,
+        "product_id": "BD-W-1032",
+        "label": "Hands",
+        "value": "Luminous hour and minute",
+        "sort_order": 7
+      },
+      {
+        "id": 16,
+        "product_id": "BD-A-2077",
+        "label": "Diameter",
+        "value": "6 inch / 15.2 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 17,
+        "product_id": "BD-A-2077",
+        "label": "Height",
+        "value": "8.5 cm with bells",
+        "sort_order": 2
+      },
+      {
+        "id": 18,
+        "product_id": "BD-A-2077",
+        "label": "Weight",
+        "value": "0.32 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 19,
+        "product_id": "BD-A-2077",
+        "label": "Colours",
+        "value": "12 dial colour options",
+        "sort_order": 4
+      },
+      {
+        "id": 20,
+        "product_id": "BD-A-2077",
+        "label": "Movement",
+        "value": "Quartz, mechanical alarm",
+        "sort_order": 5
+      },
+      {
+        "id": 21,
+        "product_id": "BD-A-2077",
+        "label": "Packing",
+        "value": "24 pcs / carton",
+        "sort_order": 6
+      },
+      {
+        "id": 22,
+        "product_id": "BD-W-1288",
+        "label": "Diameter",
+        "value": "12 inch / 30.5 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 23,
+        "product_id": "BD-W-1288",
+        "label": "Depth",
+        "value": "4.5 cm",
+        "sort_order": 2
+      },
+      {
+        "id": 24,
+        "product_id": "BD-W-1288",
+        "label": "Weight",
+        "value": "0.95 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 25,
+        "product_id": "BD-W-1288",
+        "label": "Case material",
+        "value": "Solid oak",
+        "sort_order": 4
+      },
+      {
+        "id": 26,
+        "product_id": "BD-W-1288",
+        "label": "Finish",
+        "value": "Natural wax oil",
+        "sort_order": 5
+      },
+      {
+        "id": 27,
+        "product_id": "BD-W-1288",
+        "label": "Movement",
+        "value": "Quartz, silent sweep",
+        "sort_order": 6
+      },
+      {
+        "id": 28,
+        "product_id": "BD-W-1440",
+        "label": "Diameter",
+        "value": "14 inch / 35.5 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 29,
+        "product_id": "BD-W-1440",
+        "label": "Depth",
+        "value": "4.8 cm",
+        "sort_order": 2
+      },
+      {
+        "id": 30,
+        "product_id": "BD-W-1440",
+        "label": "Weight",
+        "value": "1.42 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 31,
+        "product_id": "BD-W-1440",
+        "label": "Case material",
+        "value": "Brushed brass-plated metal",
+        "sort_order": 4
+      },
+      {
+        "id": 32,
+        "product_id": "BD-W-1440",
+        "label": "Lens",
+        "value": "Mineral glass",
+        "sort_order": 5
+      },
+      {
+        "id": 33,
+        "product_id": "BD-W-1440",
+        "label": "Movement",
+        "value": "Quartz, silent sweep",
+        "sort_order": 6
+      },
+      {
+        "id": 34,
+        "product_id": "BD-W-1440",
+        "label": "Hands",
+        "value": "Luminous",
+        "sort_order": 7
+      },
+      {
+        "id": 35,
+        "product_id": "BD-M-0012",
+        "label": "Movement diameter",
+        "value": "12 mm shaft",
+        "sort_order": 1
+      },
+      {
+        "id": 36,
+        "product_id": "BD-M-0012",
+        "label": "Total depth",
+        "value": "15.5 mm",
+        "sort_order": 2
+      },
+      {
+        "id": 37,
+        "product_id": "BD-M-0012",
+        "label": "Movement type",
+        "value": "Quartz, silent sweep",
+        "sort_order": 3
+      },
+      {
+        "id": 38,
+        "product_id": "BD-M-0012",
+        "label": "Battery",
+        "value": "1 x AA",
+        "sort_order": 4
+      },
+      {
+        "id": 39,
+        "product_id": "BD-M-0012",
+        "label": "Accuracy",
+        "value": "Within 15 sec / month",
+        "sort_order": 5
+      },
+      {
+        "id": 40,
+        "product_id": "BD-M-0012",
+        "label": "Packing",
+        "value": "1,000 pcs / box",
+        "sort_order": 6
+      },
+      {
+        "id": 41,
+        "product_id": "BD-D-0840",
+        "label": "Size",
+        "value": "8 inch / 20.3 cm",
+        "sort_order": 1
+      },
+      {
+        "id": 42,
+        "product_id": "BD-D-0840",
+        "label": "Depth",
+        "value": "4.0 cm",
+        "sort_order": 2
+      },
+      {
+        "id": 43,
+        "product_id": "BD-D-0840",
+        "label": "Weight",
+        "value": "0.38 kg",
+        "sort_order": 3
+      },
+      {
+        "id": 44,
+        "product_id": "BD-D-0840",
+        "label": "Case material",
+        "value": "MDF",
+        "sort_order": 4
+      },
+      {
+        "id": 45,
+        "product_id": "BD-D-0840",
+        "label": "Movement",
+        "value": "Quartz, silent sweep",
+        "sort_order": 5
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]
