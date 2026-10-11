@@ -1,0 +1,14 @@
+-- Product images stored in D1 when R2 is not available.
+--
+-- R2 has to be switched on in the Cloudflare dashboard (the API refuses
+-- with error 10042), and until it is, the media library could not upload
+-- anything at all — the route returned 503. That is a worse outcome than
+-- storing images in the database, because a factory site with zero
+-- product photos does not get enquiries.
+--
+-- The trade-off is real and worth stating: D1 images are served through
+-- /api/media-file/[id] instead of Cloudflare's image CDN, and the D1 free
+-- tier holds 5 GB, which is around 3,500 images at 1 MB. That is far more
+-- than this catalogue needs. data stays NULL for anything held in R2, so
+-- enabling R2 later needs no data migration — the URL is decided per row.
+ALTER TABLE media ADD COLUMN data TEXT;

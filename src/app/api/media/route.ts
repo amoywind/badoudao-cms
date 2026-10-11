@@ -9,6 +9,25 @@ export const runtime = 'edge';
 const MAX_UPLOAD = 1024 * 1024;
 
 /**
+ * Bytes to base64 without blowing the argument limit.
+ *
+ * String.fromCharCode(...bytes) on a megabyte-scale array throws
+ * "Maximum call stack size exceeded", so the work is done in slices. Not
+ * elegant, but it is the difference between uploading working and not.
+ */
+function toBase64(bytes: Uint8Array): string {
+  let bin = '';
+  const CHUNK = 8192;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    bin += String.fromCharCode.apply(
+      null,
+      Array.from(bytes.subarray(i, i + CHUNK)) as unknown as number[]
+    );
+  }
+  return btoa(bin);
+}
+
+/**
  * Images live in Cloudflare R2, bound as MEDIA_BUCKET. Uploads go
  * straight to the bucket through this route so the admin session is the
  * only way in.
@@ -82,13 +101,8 @@ export async function POST(request) {
   const tag = String(form.get('tag') || '');
   const alt = String(form.get('alt') || '');
 
-  if (!env?.MEDIA_BUCKET) {
-    return NextResponse.json(
-      { error: 'R2 binding MEDIA_BUCKET is not configured. See README step 5.' },
-      { status: 503 }
-    );
-  }
-
+  /* R2 is optional. Without it images go to D1, which is slower to serve but
+   free at this site's scale and, more importantly, available at all. */
   const saved = [];
   const errors = [];
 
@@ -115,13 +129,27 @@ export async function POST(request) {
     const id = uid('img');
     const key = `${folder}/${id}.${ext}`;
 
-    try {
-      await env.MEDIA_BUCKET.put(key, buf, {
-        httpMetadata: { contentType: mime }
-      });
-    } catch (err) {
-      errors.push(`${file.name}: upload failed (${err.message})`);
-      continue;
+    /* R2 when it is bound, D1 when it is not.
+       R2 is the better home for anything served on a public page, so it is
+       preferred whenever available — but the account cannot switch R2 on
+       through the API (error 10042, dashboard only), and a factory site
+       with no product photos gets no enquiries. Falling back keeps the
+       library usable; the per-row `data` column means enabling R2 later
+       needs no migration, only a re-upload of what should move there. */
+    let url = `/api/media-file/${id}`;
+    let b64: string | null = null;
+
+    if (env?.MEDIA_BUCKET) {
+      try {
+        await env.MEDIA_BUCKET.put(key, buf, { httpMetadata: { contentType: mime } });
+        url = `/media/${key}`;
+      } catch (err) {
+        console.error('R2 put failed, storing in D1 instead:', err.message);
+      }
+    }
+
+    if (url.startsWith('/api/')) {
+      b64 = toBase64(new Uint8Array(buf));
     }
 
     const dims = await imageSize(buf).catch(() => ({ width: 0, height: 0 }));
@@ -133,23 +161,24 @@ export async function POST(request) {
     const isSquare = dims.width > 0 && dims.height > 0 && dims.width === dims.height;
 
     await run(
-      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag)
-       VALUES (?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag, data)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
       id,
       file.name.slice(0, 200),
-      `/media/${key}`,
+      url,
       mime,
       buf.byteLength,
       dims.width,
       dims.height,
       alt,
       folder,
-      tag
+      tag,
+      b64
     );
 
     saved.push({
       id,
-      url: `/media/${key}`,
+      url,
       filename: file.name,
       width: dims.width,
       height: dims.height,
@@ -215,11 +244,15 @@ export async function DELETE(request) {
 
   const row = await one('SELECT url FROM media WHERE id = ?', id);
   if (row) {
-    const { getRequestContext } = await import('@cloudflare/next-on-pages');
-    const { env } = getRequestContext();
-    try {
-      await env?.MEDIA_BUCKET?.delete(row.url.replace('/media/', ''));
-    } catch { /* record already gone */ }
+    /* Only files in R2 need a remote delete; D1 copies disappear with the
+       row. The url says which storage a given file used. */
+    if (row.url.startsWith('/media/')) {
+      const { getRequestContext } = await import('@cloudflare/next-on-pages');
+      const { env } = getRequestContext();
+      try {
+        await env?.MEDIA_BUCKET?.delete(row.url.replace('/media/', ''));
+      } catch { /* record already gone */ }
+    }
   }
 
   await run('DELETE FROM media WHERE id = ?', id);
