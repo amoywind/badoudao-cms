@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Toast, useToast } from '../_ui';
+import { Toast, useToast } from '../../_ui';
 
 export default function EditProductPage() {
   const { id } = useParams();

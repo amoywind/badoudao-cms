@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Toast, useToast } from '../_ui';
+import { Toast, useToast } from '../../_ui';
 
 const STATUS: Record<string, string> = {
   new: '新询盘', contacted: '已联系', quoted: '已报价',

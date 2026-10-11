@@ -13,10 +13,9 @@ export function useToast() {
 export function Toast({ toast }) {
   useEffect(() => {
     if (!toast) return;
-    const t = setTimeout(() => onDone(), 2600);
-    function onDone() {
+    const t = setTimeout(() => {
       document.querySelectorAll('.toast').forEach((el) => el.remove());
-    }
+    }, 2600);
     return () => clearTimeout(t);
   }, [toast]);
 

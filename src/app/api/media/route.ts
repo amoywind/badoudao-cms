@@ -55,7 +55,7 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const { getRequestContext } = require('@cloudflare/next-on-pages');
+  const { getRequestContext } = await import('@cloudflare/next-on-pages');
   const { env } = getRequestContext();
 
   const form = await request.formData().catch(() => null);
@@ -181,7 +181,7 @@ export async function DELETE(request) {
 
   const row = await one('SELECT url FROM media WHERE id = ?', id);
   if (row) {
-    const { getRequestContext } = require('@cloudflare/next-on-pages');
+    const { getRequestContext } = await import('@cloudflare/next-on-pages');
     const { env } = getRequestContext();
     try {
       await env?.MEDIA_BUCKET?.delete(row.url.replace('/media/', ''));
