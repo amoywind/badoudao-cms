@@ -8,7 +8,7 @@ migrations_dir = "src/migrations"
 [[d1_databases]]
 binding = "DB"
 database_name = "badoudao"
-database_id = "15eb0737-f5d2-4334-a16d-f92629e2d307"
+database_id = "aba203a7-d49a-4c93-b4f9-aa931aa219c7"
 
 # R2 bucket for images — create with:
 #   npx wrangler r2 bucket create badoudao-media
