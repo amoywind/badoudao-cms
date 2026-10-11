@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
+import { listProducts, listCategories, getSettings, buildMeta, SITE_URL } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
@@ -56,8 +56,23 @@ export default async function CategoryPage({ params }) {
     hasPart: products.map((p) => ({ '@type': 'Product', name: p.name, sku: p.id }))
   };
 
+  /* Emitted from the component, not only generateMetadata() — React hoists
+     these into <head>, and it removes the chance of a route shipping with
+     no title while the page itself renders fine. */
+  const label = cat.name || cat.short || category;
+  const metaTitle = cat?.seoTitle || `Wholesale ${label} — OEM Manufacturer | Badoudao`;
+  const metaDesc =
+    cat?.seoDescription ||
+    `${label} from Badoudao, China. ${cat?.designs || ''} designs, MOQ from 500 pcs, Ex Works factory pricing, custom dial artwork available.`
+      .replace(/\s+/g, ' ')
+      .trim();
+
   return (
     <>
+      <title>{metaTitle.slice(0, 62)}</title>
+      <meta name="description" content={metaDesc.slice(0, 158)} />
+      <link rel="canonical" href={`${SITE_URL}/products/${category}/`} />
+
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <TopBar />
       <Header />

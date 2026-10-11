@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
+import { getProduct, listProducts, getSettings, listProductVideos, buildMeta, SITE_URL } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
 
@@ -16,15 +16,11 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
 
-  /* DIAG */
-  console.log('[meta] generateMetadata called', category, slug);
-  if (typeof slug === 'undefined') {
-    return { title: 'DIAG-no-slug', description: 'params.slug undefined' };
-  }
-
-  /* A throw here produces no <title> at all, and the page still renders —
-     so a failure is invisible unless it is contained. Build a usable title
-     from whatever can be read, and never let this function fail. */
+  /* A throw here produces no <title> at all while the page still renders,
+     so the failure is invisible from the front end — the product routes
+     were serving no title at all. Contain it and fall back to something
+     built from the slug, which costs a description rather than the page's
+     identity in search results. */
   try {
     const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
 
@@ -109,8 +105,30 @@ export default async function ProductPage({ params }) {
 
   const mainImg = product.images[0];
 
+  /* Emit the tags from the component itself rather than relying on
+     generateMetadata(). This route was serving no <title> at all — the
+     page rendered, the H1 was right, and search engines saw a document
+     with no name. React hoists <title> and <meta> rendered anywhere in the
+     tree into <head>, so putting them here is both simple and guaranteed
+     to reach the output. generateMetadata() stays, because where it does
+     run it also feeds the sitemap and any server-side consumer. */
+  const metaTitle =
+    product.seoTitle || `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`;
+  const metaDesc =
+    product.seoDescription ||
+    `${product.name} — ${product.summary || ''} MOQ ${product.moq || 500} pcs.` +
+      (product.priceMin
+        ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
+        : '') +
+      ` ${product.leadTime || '20-30 days'} lead time, custom dial artwork available.`;
+
   return (
     <>
+      <title>{metaTitle.slice(0, 62)}</title>
+      <meta name="description" content={metaDesc.slice(0, 158)} />
+      {product.metaKeywords && <meta name="keywords" content={product.metaKeywords} />}
+      <link rel="canonical" href={`${SITE_URL}/products/${category}/${product.slug}/`} />
+
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }} />
