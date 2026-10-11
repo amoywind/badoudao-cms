@@ -26,7 +26,14 @@ export default function InquiriesPage() {
 
     const res = await fetch(`/api/inquiries?${p}`);
     if (res.status === 401) { window.location.href = '/login'; return; }
-    setData(await res.json());
+    const json = await res.json().catch(() => ({}));
+    /* Never let a partial payload through: the table below maps over these
+       arrays unguarded, and a missing one blanks the entire page. */
+    setData({
+      inquiries: [],
+      stats: { today: 0, week: 0, pending: 0, won: 0, stale: 0 },
+      ...json
+    });
   }
 
   useEffect(() => {
@@ -39,10 +46,12 @@ export default function InquiriesPage() {
   }, [search]);
 
   async function claim(inq) {
+    /* No hardcoded owner — leave the field blank and let the server attribute
+       it to the signed-in admin, otherwise every enquiry looks assigned. */
     await fetch('/api/inquiries', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: inq.id, owner: '张伟', status: inq.status === 'new' ? 'contacted' : inq.status })
+      body: JSON.stringify({ id: inq.id, owner: inq.owner || undefined, status: inq.status === 'new' ? 'contacted' : inq.status })
     });
     show('已认领');
     load();

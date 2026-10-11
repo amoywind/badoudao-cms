@@ -9,6 +9,35 @@ export const dynamic = 'force-dynamic';
 const STATUSES = ['new', 'contacted', 'quoted', 'negotiating', 'won', 'lost'];
 
 /* ------------------------------------------------------------------ */
+/* row → view model                                                    */
+/* ------------------------------------------------------------------ */
+
+/* `inquiries.products` is stored as a JSON-encoded string, but every screen
+   in the admin treats it as a real array (`i.products.length`,
+   `.map`, `.slice().join`). Handing the raw string through makes
+   `.join`/`.map` throw and the whole page blanks out, so it is decoded here
+   once at the edge instead of being patched in four components. */
+function parseProducts(raw) {
+  if (Array.isArray(raw)) return raw;
+  if (!raw) return [];
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? v.map((x) => String(x)).filter(Boolean) : [];
+  } catch {
+    /* pre-JSON rows, or a stray comma — show whatever text we have */
+    return String(raw)
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+}
+
+function mapInquiry(row) {
+  if (!row) return null;
+  return { ...row, products: parseProducts(row.products) };
+}
+
+/* ------------------------------------------------------------------ */
 /* GET — list enquiries, or one with its quotes                        */
 /* ------------------------------------------------------------------ */
 
@@ -29,17 +58,45 @@ export async function GET(request) {
 
     const quotes = await all('SELECT * FROM quotes WHERE inquiry_id = ? ORDER BY id DESC', id);
 
+    /* The detail screen links the enquiry to the product it came from so the
+       owner can quote straight from stock data. Optional — a general enquiry
+       has no product_id, hence the guard. */
+    let product = null;
+    if (inquiry.product_id) {
+      const p = await one(
+        'SELECT id, name, price_min, price_max, moq, lead_time FROM products WHERE id = ?',
+        inquiry.product_id
+      );
+      if (p) product = p;
+    }
+
     /* Group repeat enquiries from the same address so the owner sees history. */
-    const history = await all(
-      `SELECT id, created_at, status, quantity, message
+    const historyRows = await all(
+      `SELECT id, created_at, status, quantity, message, products
          FROM inquiries
         WHERE email = ? AND id != ?
         ORDER BY created_at DESC LIMIT 10`,
       inquiry.email,
       id
     );
+    const history = historyRows.map((h) => ({ ...h, products: parseProducts(h.products) }));
 
-    return NextResponse.json({ inquiry, quotes, history });
+    /* Activity trail for this enquiry. */
+    const logs = await all(
+      `SELECT id, user_id, action, entity, summary, created_at
+         FROM audit_log
+        WHERE entity = 'inquiries' AND entity_id = ?
+        ORDER BY id DESC LIMIT 30`,
+      id
+    );
+
+    return NextResponse.json({
+      inquiry: mapInquiry(inquiry),
+      quotes,
+      history,
+      product,
+      logs
+    });
   }
 
   /* Filters for the list view. Every branch is parameterised. */
@@ -67,7 +124,7 @@ export async function GET(request) {
      numbers always match what is listed below them. */
   const rows = await all(`SELECT status, created_at FROM inquiries ${clause}`, ...params);
 
-  const stats = { today: 0, week: 0, new: 0, open: 0, won: 0 };
+  const stats = { today: 0, week: 0, pending: 0, won: 0, stale: 0 };
   const now = Date.now();
   const dayMs = 86400000;
 
@@ -76,12 +133,14 @@ export async function GET(request) {
 
     if (age < dayMs) stats.today++;
     if (age < dayMs * 7) stats.week++;
-    if (r.status === 'new') stats.new++;
-    if (r.status !== 'lost' && r.status !== 'won') stats.open++;
+    /* "pending" is the follow-up queue: anything not yet closed out. */
+    if (r.status !== 'lost' && r.status !== 'won') stats.pending++;
     if (r.status === 'won') stats.won++;
+    /* promised reply window is 12h; flag anything untouched past 24h */
+    if (r.status === 'new' && age > dayMs) stats.stale++;
   }
 
-  return NextResponse.json({ inquiries, stats });
+  return NextResponse.json({ inquiries: inquiries.map(mapInquiry), stats });
 }
 
 /* ------------------------------------------------------------------ */
@@ -101,7 +160,16 @@ export async function PUT(request) {
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   const status = STATUSES.includes(body.status) ? body.status : existing.status;
-  const owner = body.owner !== undefined ? String(body.owner).slice(0, 80) : existing.owner;
+
+  /* Omitting `owner` claims the enquiry for whoever is signed in, instead of
+     silently keeping it unassigned. */
+  let owner = existing.owner;
+  if (body.owner !== undefined && body.owner !== null && String(body.owner).trim() !== '') {
+    owner = String(body.owner).slice(0, 80);
+  } else if (!existing.owner) {
+    const who = await one('SELECT name, email FROM users WHERE id = ?', user.id);
+    owner = (who?.name || who?.email || user.email || user.id || '').slice(0, 80);
+  }
   const ownerNote =
     body.ownerNote !== undefined ? String(body.ownerNote).slice(0, 2000) : existing.owner_note;
 

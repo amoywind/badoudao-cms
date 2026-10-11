@@ -10,6 +10,12 @@ const STATUS: Record<string, string> = {
   negotiating: '谈判中', won: '成交', lost: '流失'
 };
 
+/* D1 can hand numbers back as strings; Number() normalises before formatting. */
+function money(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? `$${n.toFixed(2)}` : '—';
+}
+
 export default function InquiryDetail() {
   const { id } = useParams();
   const router = useRouter();
@@ -23,8 +29,18 @@ export default function InquiryDetail() {
   async function load() {
     const res = await fetch(`/api/inquiries?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`);
     if (res.status === 401) { window.location.href = '/login'; return; }
-    const data = await res.json();
-    setD(data);
+    const data = await res.json().catch(() => ({}));
+    /* Default every collection the template below iterates over. Without this,
+       a partial payload (e.g. the 404 body) throws on `.length` and React
+       blanks the whole page instead of showing the "not found" state. */
+    setD({
+      inquiry: null,
+      quotes: [],
+      history: [],
+      logs: [],
+      product: null,
+      ...data
+    });
     if (data.inquiry) {
       setNote(data.inquiry.owner_note || '');
       setOwner(data.inquiry.owner || '');
@@ -43,12 +59,16 @@ export default function InquiryDetail() {
   if (!d.inquiry) return <div className="empty"><div className="t">询盘不存在</div></div>;
 
   const i = d.inquiry;
+  const prods = Array.isArray(i.products) ? i.products : [];
+  /* useParams() gives an array on a catch-all and a string here — always
+     normalise before it reaches the API, or the PUT silently writes nothing. */
+  const inqId = String(Array.isArray(id) ? id[0] : id ?? i.id);
 
   async function save(status) {
     await fetch('/api/inquiries', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status, owner, ownerNote: note })
+      body: JSON.stringify({ id: inqId, status, owner, ownerNote: note })
     });
     show('已保存');
     load();
@@ -59,7 +79,7 @@ export default function InquiryDetail() {
     await fetch('/api/inquiries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inquiryId: id, ...quote })
+      body: JSON.stringify({ inquiryId: inqId, ...quote })
     });
     setQuote({ qty: '', unitPrice: '', leadTime: '', note: '' });
     show('报价已记录');
@@ -123,11 +143,11 @@ export default function InquiryDetail() {
                 <div><div className="help">来源渠道</div><div style={{ fontSize: 12.5 }}>{i.utm_source || i.referrer || '直接访问'}</div></div>
               </div>
 
-              {i.products.length > 0 && (
+              {prods.length > 0 && (
                 <div className="fg">
                   <div className="help">关注产品</div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
-                    {i.products.map((p) => <span key={p} className="pl pl-bs">{p}</span>)}
+                    {prods.map((p) => <span key={p} className="pl pl-bs">{p}</span>)}
                   </div>
                 </div>
               )}
@@ -146,7 +166,7 @@ export default function InquiryDetail() {
               {d.product && (
                 <div className="note note-i">
                   关联产品 <strong>{d.product.name}</strong> ·
-                  出厂价 ${d.product.price_min?.toFixed(2)}–${d.product.price_max?.toFixed(2)} ·
+                  出厂价 {money(d.product.price_min)}–{money(d.product.price_max)} ·
                   MOQ {d.product.moq} · <Link href={`/admin/products/${d.product.id}`}>编辑产品</Link>
                 </div>
               )}
@@ -162,9 +182,9 @@ export default function InquiryDetail() {
                     {d.history.map((h) => (
                       <tr key={h.id}>
                         <td style={{ width: 120 }}>{h.created_at.slice(5, 16)}</td>
-                        <td>{h.products.join(', ') || h.message.slice(0, 40)}</td>
+                        <td>{h.products.join(', ') || String(h.message || '').slice(0, 40)}</td>
                         <td style={{ textAlign: 'right' }}>{h.quantity}</td>
-                        <td><span className="pl pl-n">{STATUS[h.status]}</span></td>
+                        <td><span className="pl pl-n">{STATUS[h.status] || h.status}</span></td>
                         <td><Link href={`/admin/inquiries/${h.id}`} className="btn btn-sm">打开</Link></td>
                       </tr>
                     ))}
@@ -207,8 +227,8 @@ export default function InquiryDetail() {
                       <tr key={q.id}>
                         <td style={{ fontSize: 11.5 }}>{q.created_at.slice(5, 16)}</td>
                         <td style={{ textAlign: 'right' }}>{q.qty}</td>
-                        <td style={{ textAlign: 'right' }}>${q.unit_price?.toFixed(2)}</td>
-                        <td style={{ textAlign: 'right', fontWeight: 600 }}>${q.total?.toFixed(2)}</td>
+                        <td style={{ textAlign: 'right' }}>{money(q.unit_price)}</td>
+                        <td style={{ textAlign: 'right', fontWeight: 600 }}>{money(q.total)}</td>
                       </tr>
                     ))}
                   </tbody>
