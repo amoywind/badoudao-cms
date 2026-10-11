@@ -6,6 +6,16 @@ import { LogoutButton } from './LogoutButton';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
+/**
+ * Nothing behind /admin should appear in a search result — the enquiry list
+ * holds customer names, emails and WhatsApp numbers. This is the belt to
+ * the robots.txt Disallow braces.
+ */
+export const metadata = {
+  title: '管理后台',
+  robots: { index: false, follow: false, nocache: true }
+};
+
 export default async function AdminLayout({ children }) {
   /* One-time admin creation lives in /login. That page sits outside this
      layout, and this layout redirects anonymous visitors before it could run. */
