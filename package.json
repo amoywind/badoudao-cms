@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
-    "preview": "node preview/render.js && node preview/serve.js",
-    "deploy": "npm run build && npx wrangler pages deploy .vercel/output/static",
+    "build": "next build",
+    "preview": "npm run pages:build && npx wrangler pages dev .vercel/output/static",
+    "deploy": "npm run pages:build && npx wrangler pages deploy .vercel/output/static",
     "db:migrate:local": "wrangler d1 migrations apply badoudao --local",
     "db:migrate:remote": "wrangler d1 migrations apply badoudao --remote",
     "db:seed:remote": "wrangler d1 execute badoudao --remote --file=./seed.sql",
@@ -15,7 +15,8 @@
     "preview:serve": "node preview/serve.js",
     "db:export:local": "wrangler d1 execute badoudao --local --config wrangler.local.toml --file=./seed.sql && wrangler d1 execute badoudao --local --config wrangler.local.toml --command \"SELECT * FROM categories\" --json > preview/data/categories.json",
     "db:push:setup": "node scripts/run-d1.js db-setup.sql",
-    "db:push:seed": "node scripts/run-d1.js db-seed.sql"
+    "db:push:seed": "node scripts/run-d1.js db-seed.sql",
+    "pages:build": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "next": "15.5.2",
@@ -30,6 +31,6 @@
     "@types/react-dom": "^18.3.1"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22"
   }
 }
