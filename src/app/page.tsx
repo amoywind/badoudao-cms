@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
-import { InquiryForm } from './InquiryForm';
+import { InquiryCTA } from './InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -213,8 +213,21 @@ export default async function HomePage() {
                   <span className="cert">Samples in {s.sampleDays || '7-10'} days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
+                {/* The homepage carries enough prompts already; a full form here
+                    competes with the product grid. Send visitors to the
+                    contact page instead. */}
+                <div style={{ marginTop: 32 }}>
+                  <a className="btn btn-primary" href="/contact/">Send an enquiry →</a>
+                </div>
               </div>
-              <InquiryForm products={products.slice(0, 9)} />
+              <div className="sec-tag" style={{ marginBottom: 12 }}>What we need from you</div>
+              <InquiryCTA label="Five fields is all it takes" />
+              <ul className="tick-list">
+                <li>Your name, business email and WhatsApp</li>
+                <li>Estimated quantity — a range is fine</li>
+                <li>A sentence on size, style and target price</li>
+                <li>Optional: a drawing, photo or PDF to reference</li>
+              </ul>
             </div>
           </div>
         </section>

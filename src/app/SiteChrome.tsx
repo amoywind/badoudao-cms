@@ -1,11 +1,24 @@
 import Link from 'next/link';
-import { getSettings, listCategories } from '@/lib/db';
-import type { Category, SiteSettings } from '@/lib/db';
+import { getSettings, listCategories, listNav } from '@/lib/db';
+import type { Category, NavItem, SiteSettings } from '@/lib/db';
 
 /* The DB read is wrapped in try/catch so a missing binding degrades to an
    empty page instead of a 500. The annotations keep the fallback variables
    typed — `let s = {}` would infer {} and every property access below it
    would fail type checking. */
+
+/* Used only if the navigation table is unavailable, so a database hiccup
+   leaves a working menu rather than a blank header. */
+const FALLBACK_TOP: NavItem[] = [
+  { id: 'products', label: 'Products', href: '/products/', placement: 'top_nav', navOrder: 1 },
+  { id: 'oem-odm', label: 'OEM / ODM', href: '/p/oem-odm/', placement: 'top_nav', navOrder: 2 },
+  { id: 'small-batch', label: 'Small Batch', href: '/p/small-batch/', placement: 'top_nav', navOrder: 3 },
+  { id: 'factory', label: 'Factory', href: '/p/factory/', placement: 'top_nav', navOrder: 4 },
+  { id: 'quality', label: 'Quality', href: '/p/quality/', placement: 'top_nav', navOrder: 5 },
+  { id: 'articles', label: 'Articles', href: '/articles/', placement: 'top_nav', navOrder: 6 },
+  { id: 'news', label: 'Company News', href: '/news/', placement: 'top_nav', navOrder: 7 },
+  { id: 'contact', label: 'Contact', href: '/contact/', placement: 'top_nav', navOrder: 8 }
+];
 
 export async function TopBar() {
   let s: SiteSettings = {};
@@ -22,19 +35,19 @@ export async function TopBar() {
 
 export async function Header() {
   let cats: Category[] = [];
+  let nav: NavItem[] = [];
   try { cats = await listCategories(); } catch {}
+  try { nav = await listNav('top_nav'); } catch {}
+  if (!nav.length) nav = FALLBACK_TOP;
+
   return (
     <header className="site-header">
       <div className="wrap nav">
         <Link className="logo" href="/">BADOU<span>DAO</span></Link>
         <nav className="menu">
-          <Link href="/products/">Products</Link>
-          <Link href="/p/oem-odm/">OEM / ODM</Link>
-          <Link href="/p/small-batch/">Small Batch</Link>
-          <Link href="/p/factory/">Factory</Link>
-          <Link href="/p/quality/">Quality</Link>
-          <Link href="/blog/">Guides</Link>
-          <Link href="/contact/">Contact</Link>
+          {nav.map((n) => (
+            <Link key={n.id} href={n.href}>{n.label}</Link>
+          ))}
         </nav>
         <div className="nav-cta">
           <Link href="/products/" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
@@ -45,12 +58,29 @@ export async function Header() {
   );
 }
 
+/* Footer column headings, paired with the placement that feeds each one. */
+const FOOTER_COLUMNS: { area: string; heading: string }[] = [
+  { area: 'footer_2', heading: 'Services' },
+  { area: 'footer_3', heading: 'Company' },
+  { area: 'footer_4', heading: 'Guides' }
+];
+
 export async function Footer() {
   let s: SiteSettings = {}, cats: Category[] = [];
+  let cols: NavItem[][] = [[], [], []];
   try {
     s = await getSettings();
     cats = await listCategories();
   } catch {}
+
+  /* Each footer column comes from the pages table. If one fails the column
+     renders empty rather than taking the whole footer down. */
+  cols = await Promise.all(
+    FOOTER_COLUMNS.map(async (c) => {
+      try { return await listNav(c.area); } catch { return []; }
+    })
+  );
+
   return (
     <footer className="site-footer">
       <div className="wrap">
@@ -71,33 +101,16 @@ export async function Footer() {
               ))}
             </div>
           </div>
-          <div>
-            <div className="f-h">Services</div>
-            <div className="f-list">
-              <Link href="/p/oem-odm/">OEM Manufacturing</Link>
-              <Link href="/p/small-batch/">Small Batch Runs</Link>
-              <Link href="/p/quality/">Quality Control</Link>
-              <Link href="/p/certification/">Certification</Link>
+          {FOOTER_COLUMNS.map((c, i) => (
+            <div key={c.area}>
+              <div className="f-h">{c.heading}</div>
+              <div className="f-list">
+                {cols[i].map((n) => (
+                  <Link key={n.id} href={n.href}>{n.label}</Link>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="f-h">Company</div>
-            <div className="f-list">
-              <Link href="/p/factory/">About the Factory</Link>
-              <Link href="/p/quality/">Quality Control</Link>
-              <Link href="/p/certification/">Certification</Link>
-              <Link href="/#inquiry">Contact</Link>
-            </div>
-          </div>
-          <div>
-            <div className="f-h">Guides</div>
-            <div className="f-list">
-              <Link href="/p/small-batch/">MOQ Explained</Link>
-              <Link href="/p/certification/">CE &amp; RoHS Guide</Link>
-              <Link href="/blog/">Buying Guides</Link>
-              <Link href="/contact/">Contact</Link>
-            </div>
-          </div>
+          ))}
         </div>
         <div className="f-bot">
           <span>© {new Date().getFullYear()} {s.siteName}. All rights reserved.</span>

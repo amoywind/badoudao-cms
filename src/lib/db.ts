@@ -52,6 +52,37 @@ export type Product = {
 
 export type SiteSettings = Record<string, string>;
 
+/* A product video is a YouTube id rather than a URL — the id survives a
+   change of player and keeps the column narrow. */
+export type ProductVideo = {
+  id: number;
+  productId: string;
+  youtubeId: string;
+  title: string;
+  sortOrder: number;
+};
+
+/**
+ * A navigation entry.
+ *
+ * Menus used to be hard-coded in SiteChrome.tsx, so reordering one item
+ * meant editing and redeploying. These rows live in the `pages` table and
+ * are read on every render, so the admin now owns both the header bar and
+ * the footer columns.
+ *
+ * `placement` is either a real area ('top_nav', 'footer_1' … 'footer_5')
+ * or 'content' for a standalone page that belongs to no menu. `href` is
+ * resolved from `external_key` for fixed routes that have no pages row,
+ * which keeps a single menu editable in one place.
+ */
+export type NavItem = {
+  id: string;
+  label: string;
+  href: string;
+  placement: string;
+  navOrder: number;
+};
+
 
 export function getDB() {
   const { env } = getRequestContext();
@@ -226,6 +257,84 @@ export async function listProducts(
 
 export async function listCategories(): Promise<Category[]> {
   return all('SELECT * FROM categories ORDER BY sort_order, name');
+}
+
+/**
+ * Extract an 11-character YouTube id from any of the URL shapes a user is
+ * likely to paste. Returns '' when the string is not recognisably YouTube,
+ * so a bad paste is caught before it reaches the page.
+ */
+export function youtubeId(input: string): string {
+  const s = String(input || '').trim();
+  if (/^[\w-]{11}$/.test(s)) return s;
+
+  const patterns = [
+    /youtube\.com\/watch\?(?:.*&)?v=([\w-]{11})/,
+    /youtu\.be\/([\w-]{11})/,
+    /youtube\.com\/embed\/([\w-]{11})/,
+    /youtube\.com\/shorts\/([\w-]{11})/,
+    /youtube\.com\/live\/([\w-]{11})/
+  ];
+  for (const p of patterns) {
+    const m = s.match(p);
+    if (m) return m[1];
+  }
+  return '';
+}
+
+export async function listProductVideos(productId: string): Promise<ProductVideo[]> {
+  const rows = await all(
+    'SELECT * FROM product_videos WHERE product_id = ? ORDER BY sort_order, id',
+    productId
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    productId: r.product_id,
+    youtubeId: r.youtube_id,
+    title: r.title || '',
+    sortOrder: r.sort_order ?? 0
+  }));
+}
+
+/**
+ * Menu entries for one area, ordered for display.
+ *
+ * Rows come from the `pages` table. `external_key` lets the menu point at a
+ * fixed route that has no page row of its own (/products/, /articles/ …),
+ * so a single call returns the whole menu. Anything flagged
+ * show_in_nav = 0 is skipped rather than deleted — that is how a campaign
+ * page is hidden without breaking a bookmarked link.
+ */
+export async function listNav(placement: string): Promise<NavItem[]> {
+  const rows = await all(
+    `SELECT id, title, nav_label, external_key, placement, nav_order, target
+       FROM pages
+      WHERE show_in_nav = 1 AND placement = ?
+      ORDER BY nav_order, id`,
+    placement
+  );
+
+  return rows
+    .map((r) => {
+      /* Three kinds of href, in priority order:
+           external_key — a fixed route (/products/, /articles/ …)
+           target       — another page's slug, used by menu-only rows that
+                         mirror a real content page (the footer's
+                         "Small Batch Runs" points at /p/small-batch/)
+           own id       — the row is itself the content page            */
+      const key = String(r.external_key || '').trim();
+      const target = String(r.target || '').trim();
+      return {
+        id: r.id,
+        label: String(r.nav_label || r.title || '').trim(),
+        href: key ? `/${key.replace(/^\/+|\/+$/g, '')}/`
+          : target ? `/p/${target}/`
+          : `/p/${r.id}/`,
+        placement: r.placement,
+        navOrder: r.nav_order ?? 0
+      };
+    })
+    .filter((n) => n.label);
 }
 
 /** key/value settings with defaults applied. */

@@ -149,8 +149,38 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .note-box p:last-child { margin-bottom: 0; }
 
 .pd { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: start; }
-.pd-gallery .main { aspect-ratio: 4/3; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); }
+/* Square main frame: product photography is shot 1:1, and a square crop
+   keeps the clock undistorted instead of stretching it to fill a 4:3 box.
+   object-fit:cover trims the edges rather than letterboxing a tall image. */
+.pd-gallery .main { aspect-ratio: 1/1; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); }
 .pd-gallery .main img { width: 100%; height: 100%; object-fit: cover; }
+.pd-noimg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 100%; color: var(--ink3); font-size: 14px; }
+.pd-noimg a { color: var(--brand); font-weight: 500; font-size: 13.5px; }
+
+/* YouTube: thumbnail that opens the player in a new tab, rather than an
+   embedded iframe. Keeps the page light and avoids a third-party script
+   loading before the buyer asks for it. */
+.pd-videos { display: grid; gap: 12px; margin-top: 14px; }
+.pd-video {
+  position: relative; display: block; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--bg2);
+  text-decoration: none;
+}
+.pd-video img { width: 100%; height: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform .25s; }
+.pd-video:hover img { transform: scale(1.03); }
+.pd-video-play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,.94); color: #0f5c4a;
+  display: grid; place-items: center; padding-left: 3px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.2);
+}
+.pd-video-t {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,.78));
+  color: #fff; font-size: 13px; font-weight: 500;
+  padding: 22px 12px 10px;
+}
 .pd-info h1 { font-size: 38px; margin-bottom: 14px; }
 .pd-price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 24px 0; padding: 20px; background: var(--bg2); border-radius: 6px; border: 1px solid var(--line); }
 .pd-price .amt { font-family: var(--serif); font-size: 34px; font-weight: 600; }
@@ -195,6 +225,94 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .req-note { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--ink2); margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line2); }
 .req-note svg { flex-shrink: 0; color: var(--brand); }
 .mono { font-family: ui-monospace, Menlo, monospace; }
+
+/* ---- article & news reading pages ---- */
+
+.art-meta { font-size: 13px; color: var(--ink3); margin: -8px 0 24px; }
+.art-cover { margin: 0 0 32px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.art-cover img { width: 100%; height: auto; display: block; }
+.art-lede { font-size: 18px; line-height: 1.7; color: var(--ink2); margin: 0 0 28px; padding-bottom: 24px; border-bottom: 1px solid var(--line2); }
+
+.empty-state { text-align: center; padding: 72px 24px; max-width: 520px; margin: 0 auto; }
+.empty-state h3 { font-size: 22px; margin: 0 0 12px; }
+.empty-state p { color: var(--ink2); font-size: 14.5px; line-height: 1.7; }
+
+/* News reads as a timeline — recency is the whole point, so a single
+   column keeps the order obvious where a grid would flatten it. */
+.news-list { display: grid; gap: 0; max-width: 760px; }
+.news-item {
+  display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: start;
+  padding: 28px 0; border-bottom: 1px solid var(--line2); text-decoration: none;
+}
+.news-item:first-child { padding-top: 0; }
+.news-item:hover h3 { color: var(--brand); }
+.news-thumb { border-radius: 5px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); }
+.news-thumb img { width: 100%; height: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+.news-date { font-size: 12px; color: var(--ink3); margin-bottom: 7px; font-variant-numeric: tabular-nums; }
+.news-text h3 { font-size: 18px; margin: 0 0 8px; transition: color .15s; }
+.news-text p { font-size: 14px; color: var(--ink2); line-height: 1.7; margin: 0; }
+
+@media (max-width: 640px) {
+  .news-item { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.tick-list { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 11px; }
+.tick-list li { position: relative; padding-left: 28px; font-size: 14px; line-height: 1.65; color: var(--ink2); }
+.tick-list li::before {
+  content: ''; position: absolute; left: 0; top: 4px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--brandSoft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f5c4a' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center / 10px no-repeat;
+}
+
+/* ---- enquiry form: whatsapp, drawing upload, optional divider ---- */
+
+.wa-row { display: grid; grid-template-columns: 128px 1fr; gap: 9px; }
+.wa-code { font-size: 14px; padding: 11px 9px; cursor: pointer; }
+.wa-num { min-width: 0; }
+
+.opt-div { position: relative; text-align: center; margin: 26px 0 20px; }
+.opt-div::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--line2); }
+.opt-div span { position: relative; background: #fff; padding: 0 13px; font-size: 11.5px; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+
+.drop {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  border: 1.5px dashed var(--line); border-radius: 5px;
+  padding: 18px; min-height: 62px; cursor: pointer;
+  background: #fcfdfd; transition: border-color .15s, background .15s;
+}
+.drop:hover { border-color: var(--brand); background: var(--brandSoft); }
+.drop:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.drop.has-file { border-style: solid; border-color: var(--brand); background: var(--brandSoft); cursor: default; justify-content: space-between; }
+.drop.has-error { border-color: #dc2626; background: #fef2f2; }
+.drop-txt { font-size: 13.5px; color: var(--ink3); }
+
+.file-chip { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-left: 4px; }
+.file-name { font-size: 13.5px; font-weight: 500; color: var(--brand); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { font-size: 11.5px; color: var(--ink3); }
+.file-x { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: #fff; color: var(--ink2); font-size: 17px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.file-x:hover { border-color: #dc2626; color: #dc2626; }
+.fg-err { font-size: 12.5px; color: #b91c1c; margin-top: 6px; }
+
+.form-compact { padding: 24px; }
+.form-compact textarea.inp { min-height: 84px; }
+.form-compact .fg { margin-bottom: 14px; }
+
+/* ---- enquiry CTA: replaces the full form where one would be intrusive ---- */
+
+.inq-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--brand);
+  border-radius: 6px; padding: 26px 30px; margin: 32px 0;
+}
+.inq-cta h3 { font-size: 19px; margin: 0; }
+.inq-cta-sub { font-size: 13.5px; color: var(--ink2); margin: 5px 0 0; }
+.inq-cta .btn { flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .wa-row { grid-template-columns: 104px 1fr; }
+  .inq-cta { padding: 20px; }
+  .inq-cta .btn { width: 100%; }
+}
 
 @media (max-width: 1024px) {
   h1 { font-size: 42px; } h2 { font-size: 32px; }

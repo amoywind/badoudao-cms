@@ -29,11 +29,20 @@ export async function generateMetadata() {
   };
 }
 
-export default async function ContactPage() {
+export default async function ContactPage({
+  searchParams
+}: {
+  searchParams: Promise<{ model?: string }>;
+}) {
   const [s, products] = await Promise.all([
     getSettings().catch(() => ({} as SiteSettings)),
     listProducts({ status: 'published' }).catch(() => [])
   ]);
+
+  /* The product page CTA links here with ?model=… so the buyer does not
+     retype the model they were just looking at. */
+  const params = await searchParams.catch(() => ({}) as { model?: string });
+  const preset = params.model ? String(params.model).slice(0, 160) : '';
 
   const phone = s.phone || '';
   const email = s.email || 'sales@badoudao.com';
@@ -104,7 +113,7 @@ export default async function ContactPage() {
               </div>
 
               <div id="inquiry">
-                <InquiryForm products={products.slice(0, 9)} />
+                <InquiryForm products={products.slice(0, 9)} preset={preset} />
               </div>
             </div>
           </div>

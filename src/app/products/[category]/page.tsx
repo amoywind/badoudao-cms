@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
-import { InquiryForm } from '../../InquiryForm';
+import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -95,8 +95,14 @@ export default async function CategoryPage({ params }) {
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 32 }}>Tell us what you need</h2>
                 <p className="sec-sub">Send a reference photo or a sample. Quotation within {s.quoteHours || 12} hours.</p>
+                {/* Each model page carries its own form, where a buyer has
+                    already picked a product — no need for a second one here. */}
+                <ul className="tick-list" style={{ marginTop: 22 }}>
+                  <li>Choose a model above to request its exact price and lead time</li>
+                  <li>Or send a reference and we will recommend the closest match</li>
+                </ul>
               </div>
-              <InquiryForm products={products.slice(0, 9)} />
+              <InquiryCTA label="Enquire about these clocks" />
             </div>
           </div>
         </section>

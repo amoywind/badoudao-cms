@@ -49,11 +49,16 @@ export async function POST(request) {
   if (taken) slug = `${slug}-${Math.random().toString(36).slice(2, 5)}`;
 
   const status = body.status === 'published' ? 'published' : 'draft';
+  /* Articles and company news share this table — see the `type` column in
+     migration 0002. Only the two known values are accepted so a typo in the
+     admin cannot create a third, unrouted kind of post. */
+  const type = body.type === 'news' ? 'news' : 'article';
 
   await run(
     `INSERT INTO posts
-      (id, slug, title, excerpt, keyword, body, author, status, published_at, seo_title, seo_description)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      (id, slug, title, excerpt, keyword, body, author, status, published_at,
+       seo_title, seo_description, type, cover)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     id,
     slug,
     String(body.title).slice(0, 200),
@@ -64,7 +69,9 @@ export async function POST(request) {
     status,
     status === 'published' ? new Date().toISOString() : null,
     String(body.seoTitle || '').slice(0, 200),
-    String(body.seoDescription || '').slice(0, 300)
+    String(body.seoDescription || '').slice(0, 300),
+    type,
+    String(body.cover || '').slice(0, 400)
   );
 
   await log(user.id, 'create', 'posts', id, body.title);

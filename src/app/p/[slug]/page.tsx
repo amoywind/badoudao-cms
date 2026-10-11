@@ -3,7 +3,7 @@ import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { one, getSettings, listCategories } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
-import { InquiryForm } from '../../InquiryForm';
+import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -66,7 +66,9 @@ export default async function StaticPage({ params }) {
                   ))}
                 </div>
               </div>
-              <InquiryForm />
+              {/* Readers arrived to read, not to enquire — a banner that
+                  links onward interrupts far less than a full form. */}
+              <InquiryCTA label="Ready to order?" />
             </div>
           </div>
         </section>

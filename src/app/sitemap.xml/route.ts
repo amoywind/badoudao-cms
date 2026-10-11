@@ -13,7 +13,7 @@ import { all, getSettings } from '@/lib/db';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-const SITE = process.env.SITE_URL || 'https://badoudao-site.pages.dev';
+const DEFAULT_SITE = 'https://badoudao-site.pages.dev';
 
 /* escape the five XML entities — a stray & in a product name would make the
    whole feed unparseable and Google would silently discard it. */
@@ -47,9 +47,10 @@ export async function GET() {
     all("SELECT slug, updated_at FROM pages WHERE status = 'published' ORDER BY sort_order").catch(
       () => []
     ),
-    all("SELECT slug, updated_at FROM posts WHERE status = 'published' ORDER BY created_at DESC").catch(
-      () => []
-    ),
+    all(
+      `SELECT slug, type, updated_at FROM posts WHERE status = 'published'
+        ORDER BY created_at DESC`
+    ).catch(() => []),
     all("SELECT slug, category, updated_at FROM products WHERE status = 'published'").catch(
       () => []
     ),
@@ -58,6 +59,10 @@ export async function GET() {
 
   const today = new Date().toISOString().slice(0, 10);
   const entries: string[] = [];
+
+  /* Prefer the custom domain once one is set in the admin, so the sitemap
+     stops advertising the pages.dev address after a domain is attached. */
+  const SITE = String(settings.siteUrl || '').trim().replace(/\/+$/, '') || DEFAULT_SITE;
 
   /* The homepage changes whenever anything is published, so it always claims
      today's date. */
@@ -92,14 +97,32 @@ export async function GET() {
     );
   });
 
-  entries.push(url(`${SITE}/blog/`, { priority: '0.6', changefreq: 'weekly' }));
+  /* Articles and company news are separate listings driven by posts.type, so
+     each gets its own index URL and its own detail URLs. */
+  const articles = posts.filter((p) => (p.type || 'article') === 'article');
+  const news = posts.filter((p) => p.type === 'news');
 
-  posts.forEach((b) => {
+  entries.push(url(`${SITE}/articles/`, { priority: '0.7', changefreq: 'weekly' }));
+  entries.push(url(`${SITE}/news/`, { priority: '0.5', changefreq: 'weekly' }));
+
+  articles.forEach((b) => {
     entries.push(
-      url(`${SITE}/blog/${b.slug}/`, {
+      url(`${SITE}/articles/${b.slug}/`, {
         priority: '0.6',
         changefreq: 'monthly',
         lastmod: stamp(b.updated_at)
+      })
+    );
+  });
+
+  /* News is trust content, not search content — indexed but kept below the
+     guides so it never competes with them for the same query. */
+  news.forEach((n) => {
+    entries.push(
+      url(`${SITE}/news/${n.slug}/`, {
+        priority: '0.4',
+        changefreq: 'monthly',
+        lastmod: stamp(n.updated_at)
       })
     );
   });

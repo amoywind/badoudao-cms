@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { InquiryForm } from '../InquiryForm';
+import { InquiryCTA } from '../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -81,7 +81,7 @@ export default async function ProductsIndex() {
                 <h2 style={{ fontSize: 30 }}>Tell us what you need</h2>
                 <p className="sec-sub">Quotation within {s.quoteHours || 12} hours.</p>
               </div>
-              <InquiryForm products={products.slice(0, 9)} />
+              <InquiryCTA label="Send us your requirements" />
             </div>
           </div>
         </section>

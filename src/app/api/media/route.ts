@@ -4,6 +4,10 @@ import { currentUser, can } from '@/lib/auth';
 
 export const runtime = 'edge';
 
+/* Per-file upload ceiling. Product photography is square and web-optimised,
+   so a 1 MB cap keeps pages fast without rejecting real shots. */
+const MAX_UPLOAD = 1024 * 1024;
+
 /**
  * Images live in Cloudflare R2, bound as MEDIA_BUCKET. Uploads go
  * straight to the bucket through this route so the admin session is the
@@ -84,9 +88,13 @@ export async function POST(request) {
   for (const file of files) {
     const buf = await file.arrayBuffer();
 
-    /* 8MB limit per file */
-    if (buf.byteLength > 8 * 1024 * 1024) {
-      errors.push(`${file.name}: over 8MB`);
+    /* Product photography is square and web-optimised. 1 MB is generous for
+       a 1200x1200 shot — anything larger is usually an uncompressed export,
+       and rejecting it here beats shipping a slow page. The admin sees the
+       exact size in the error so the fix is obvious. */
+    if (buf.byteLength > MAX_UPLOAD) {
+      const mb = (buf.byteLength / 1024 / 1024).toFixed(2);
+      errors.push(`${file.name}: ${mb} MB — the limit is 1 MB`);
       continue;
     }
 
@@ -111,6 +119,12 @@ export async function POST(request) {
 
     const dims = await imageSize(buf).catch(() => ({ width: 0, height: 0 }));
 
+    /* Warn rather than reject on aspect ratio: a non-square image still
+       displays correctly thanks to the square crop, and sometimes a wide
+       shot is genuinely the better reference. The main-image slot is what
+       really needs 1:1, and the admin UI flags it there. */
+    const isSquare = dims.width > 0 && dims.height > 0 && dims.width === dims.height;
+
     await run(
       `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag)
        VALUES (?,?,?,?,?,?,?,?,?,?)`,
@@ -126,7 +140,16 @@ export async function POST(request) {
       tag
     );
 
-    saved.push({ id, url: `/media/${key}`, filename: file.name });
+    saved.push({
+      id,
+      url: `/media/${key}`,
+      filename: file.name,
+      width: dims.width,
+      height: dims.height,
+      ...(isSquare ? {} : { notice: dims.width > 0
+        ? `${dims.width}x${dims.height} is not square — the main image slot prefers 1:1`
+        : 'Could not read the image dimensions' })
+    });
   }
 
   await log(user.id, 'upload', 'media', '', `${saved.length} file(s)`);
