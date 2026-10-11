@@ -4,4 +4,4 @@
 # a source-only fix lands (no package.json change), the cache key stays the same
 # and the rebuild can reuse stale output. Bumping this value on every push that
 # must invalidate the cache makes the change visible in the build log.
-BUILD_STAMP=2026-10-11-2
+BUILD_STAMP=2026-10-11-3
