@@ -38,8 +38,9 @@ UPDATE pages SET nav_label = 'Factory', nav_order = 3 WHERE id = 'nav-factory';
 UPDATE pages SET nav_label = 'Quality', nav_order = 4 WHERE id = 'nav-quality';
 
 -- Cases points at the articles system: customer stories and examples are
--- what a buyer scans here, not buying guides.
-UPDATE pages SET nav_label = 'Cases', nav_order = 5 WHERE id = 'nav-articles';
+-- what a buyer scans here, not buying guides. This row stays visible —
+-- only nav-news is hidden below.
+UPDATE pages SET nav_label = 'Cases', nav_order = 5, show_in_nav = 1 WHERE id = 'nav-articles';
 
 UPDATE pages SET nav_label = 'Contact', nav_order = 6 WHERE id = 'nav-contact';
 

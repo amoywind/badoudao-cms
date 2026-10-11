@@ -89,6 +89,11 @@ export async function POST(request) {
   const message = clean(body.message, 3000);
   const quantity = clean(body.quantity, 40);
 
+  /* The browser strips formatting before sending, but the API accepts
+     calls from anywhere — normalise here too so "+1 555-123-4567" and
+     "15551234567" are stored the same way and searchable together. */
+  const whatsapp = clean(body.whatsapp, 24).replace(/(?!^\+)\D+/g, '');
+
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'Please enter a valid business email' }, { status: 400 });
   }
@@ -153,7 +158,7 @@ export async function POST(request) {
     clean(body.name, 120),
     clean(body.company, 200),
     clean(body.country, 120),
-    clean(body.whatsapp, 24),
+    whatsapp,
     JSON.stringify(products),
     quantity,
     body.custom_logo === 'yes' ? 'yes' : 'no',
@@ -172,7 +177,7 @@ export async function POST(request) {
   notify({
     id, email, message, products, quantity,
     company: clean(body.company, 200),
-    whatsapp: clean(body.whatsapp, 24),
+    whatsapp,
     drawing: stored ? stored.filename : ''
   });
 
