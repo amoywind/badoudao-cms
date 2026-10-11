@@ -12,3 +12,8 @@ out/
 # local preview config
 wrangler.local.toml
 .wrangler/
+
+# curl test artefacts
+login.html
+admin-page.html
+site-home.html
