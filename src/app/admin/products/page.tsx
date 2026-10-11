@@ -17,7 +17,7 @@ export default function ProductsPage() {
 
     const res = await fetch(`/api/products?${params}`);
     if (res.status === 401) {
-      window.location.href = '/admin/login';
+      window.location.href = '/login';
       return;
     }
     const data = await res.json();

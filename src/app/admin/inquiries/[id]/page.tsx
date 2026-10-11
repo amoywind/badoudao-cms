@@ -22,7 +22,7 @@ export default function InquiryDetail() {
 
   async function load() {
     const res = await fetch(`/api/inquiries?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`);
-    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    if (res.status === 401) { window.location.href = '/login'; return; }
     const data = await res.json();
     setD(data);
     if (data.inquiry) {

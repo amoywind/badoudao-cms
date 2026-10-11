@@ -1,12 +1,21 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getSessionUser, SESSION_COOKIE } from '@/lib/auth';
+import { getDB } from '@/lib/db';
+import { getSessionUser, ensureAdminExists, SESSION_COOKIE } from '@/lib/auth';
 import { LoginForm } from './LoginForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default async function LoginPage() {
+  /* This page sits outside /admin so it does not inherit the admin layout's
+     auth check — otherwise the layout would redirect an anonymous visitor
+     straight back here and the page would never render.
+
+     That also means the one-time admin creation has to happen here, since the
+     admin layout redirects before it can run. */
+  await bootstrap();
+
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (token && (await getSessionUser(token))) {
     redirect('/admin');
@@ -32,4 +41,24 @@ export default async function LoginPage() {
       </div>
     </div>
   );
+}
+
+/** Create the first admin from env vars so a fresh install can be logged into. */
+async function bootstrap() {
+  try {
+    const db = getDB();
+    const existing = await db.prepare('SELECT id FROM users LIMIT 1').first();
+    if (existing) return;
+
+    const { getRequestContext } = await import('@cloudflare/next-on-pages');
+    const { env } = getRequestContext();
+
+    const email = env?.ADMIN_EMAIL || 'admin@badoudao.com';
+    const password = env?.ADMIN_PASSWORD || 'badoudao-change-me';
+
+    await ensureAdminExists(email, password);
+    console.log('Created initial admin:', email);
+  } catch (err) {
+    console.error('bootstrap failed:', err.message);
+  }
 }

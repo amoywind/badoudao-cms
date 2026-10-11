@@ -8,7 +8,7 @@ export function LogoutButton() {
     <button
       onClick={async () => {
         await fetch('/api/auth', { method: 'DELETE' });
-        router.push('/admin/login');
+        router.push('/login');
         router.refresh();
       }}
     >

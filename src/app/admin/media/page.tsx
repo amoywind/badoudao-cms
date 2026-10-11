@@ -14,7 +14,7 @@ export default function MediaPage() {
 
   async function load() {
     const res = await fetch(`/api/media${folder ? `?folder=${folder}` : ''}`);
-    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    if (res.status === 401) { window.location.href = '/login'; return; }
     const d = await res.json();
     setMedia(d.media);
     setFolders(d.folders);

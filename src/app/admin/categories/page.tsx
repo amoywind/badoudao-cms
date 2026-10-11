@@ -15,7 +15,7 @@ export default function CategoriesPage() {
 
   async function load() {
     const res = await fetch('/api/categories');
-    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    if (res.status === 401) { window.location.href = '/login'; return; }
     const d = await res.json();
     setCats(d.categories);
   }

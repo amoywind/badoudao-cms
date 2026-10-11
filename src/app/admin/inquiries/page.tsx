@@ -25,7 +25,7 @@ export default function InquiriesPage() {
     if (search) p.set('q', search);
 
     const res = await fetch(`/api/inquiries?${p}`);
-    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    if (res.status === 401) { window.location.href = '/login'; return; }
     setData(await res.json());
   }
 
