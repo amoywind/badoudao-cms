@@ -179,7 +179,12 @@ export async function POST(request) {
   return NextResponse.json({
     ok: true,
     id,
-    ...(stored ? {} : { warning: 'Enquiry saved, but the file could not be stored. Please email it to us.' })
+    /* Warn only when a file was actually sent and could not be kept — most
+       enquiries have no attachment, and a warning on every successful
+       submission trains the buyer to ignore it. */
+    ...(drawing && !stored
+      ? { warning: 'Enquiry saved, but the file could not be stored. Please email it to us.' }
+      : {})
   });
 }
 
