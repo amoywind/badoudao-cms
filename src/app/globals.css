@@ -297,6 +297,12 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .form-compact textarea.inp { min-height: 84px; }
 .form-compact .fg { margin-bottom: 14px; }
 
+/* Shown only when a send fails — gives the buyer a way forward instead of
+   a dead end, which matters when the failure is the network rather than
+   anything they did wrong. */
+.form-fallback { margin-top: 14px; padding: 12px 14px; background: #fff8f1; border: 1px solid #fed7aa; border-radius: 4px; font-size: 13.5px; color: #9a3412; line-height: 1.6; }
+.form-fallback a { color: #9a3412; font-weight: 500; }
+
 /* ---- enquiry CTA: replaces the full form where one would be intrusive ---- */
 
 .inq-cta {

@@ -10,14 +10,12 @@ import type { Category, NavItem, SiteSettings } from '@/lib/db';
 /* Used only if the navigation table is unavailable, so a database hiccup
    leaves a working menu rather than a blank header. */
 const FALLBACK_TOP: NavItem[] = [
-  { id: 'products', label: 'Products', href: '/products/', placement: 'top_nav', navOrder: 1 },
-  { id: 'oem-odm', label: 'OEM / ODM', href: '/p/oem-odm/', placement: 'top_nav', navOrder: 2 },
-  { id: 'small-batch', label: 'Small Batch', href: '/p/small-batch/', placement: 'top_nav', navOrder: 3 },
-  { id: 'factory', label: 'Factory', href: '/p/factory/', placement: 'top_nav', navOrder: 4 },
-  { id: 'quality', label: 'Quality', href: '/p/quality/', placement: 'top_nav', navOrder: 5 },
-  { id: 'articles', label: 'Articles', href: '/articles/', placement: 'top_nav', navOrder: 6 },
-  { id: 'news', label: 'Company News', href: '/news/', placement: 'top_nav', navOrder: 7 },
-  { id: 'contact', label: 'Contact', href: '/contact/', placement: 'top_nav', navOrder: 8 }
+  { id: 'nav-home', label: 'Home', href: '/', placement: 'top_nav', navOrder: 1 },
+  { id: 'nav-products', label: 'Products', href: '/products/', placement: 'top_nav', navOrder: 2 },
+  { id: 'nav-factory', label: 'Factory', href: '/p/factory/', placement: 'top_nav', navOrder: 3 },
+  { id: 'nav-quality', label: 'Quality', href: '/p/quality/', placement: 'top_nav', navOrder: 4 },
+  { id: 'nav-articles', label: 'Cases', href: '/articles/', placement: 'top_nav', navOrder: 5 },
+  { id: 'nav-contact', label: 'Contact', href: '/contact/', placement: 'top_nav', navOrder: 6 }
 ];
 
 export async function TopBar() {
@@ -62,7 +60,7 @@ export async function Header() {
 const FOOTER_COLUMNS: { area: string; heading: string }[] = [
   { area: 'footer_2', heading: 'Services' },
   { area: 'footer_3', heading: 'Company' },
-  { area: 'footer_4', heading: 'Guides' }
+  { area: 'footer_4', heading: 'Resources' }
 ];
 
 export async function Footer() {

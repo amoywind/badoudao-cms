@@ -221,8 +221,7 @@ export default async function ProductPage({ params }) {
               {/* The only other page that keeps a form: a buyer who opened
                   this specific model has already chosen, so asking here is
                   the least intrusive place to do it. */}
-              <InquiryForm products={others.length ? others : [product]}
-                preset={product.name} compact />
+              <InquiryForm preset={product.name} compact />
             </div>
           </div>
         </section>

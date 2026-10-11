@@ -316,18 +316,19 @@ export async function listNav(placement: string): Promise<NavItem[]> {
 
   return rows
     .map((r) => {
-      /* Three kinds of href, in priority order:
+      /* Four ways an entry can point somewhere, in priority order:
            external_key — a fixed route (/products/, /articles/ …)
-           target       — another page's slug, used by menu-only rows that
-                         mirror a real content page (the footer's
-                         "Small Batch Runs" points at /p/small-batch/)
+           id 'home'     — the site root, which no suffix can express
+           target       — a sibling row's id (a footer entry mirroring a
+                          content page, e.g. "Small Batch" → /p/small-batch/)
            own id       — the row is itself the content page            */
       const key = String(r.external_key || '').trim();
       const target = String(r.target || '').trim();
       return {
         id: r.id,
         label: String(r.nav_label || r.title || '').trim(),
-        href: key ? `/${key.replace(/^\/+|\/+$/g, '')}/`
+        href: r.id === 'nav-home' ? '/'
+          : key ? `/${key.replace(/^\/+|\/+$/g, '')}/`
           : target ? `/p/${target}/`
           : `/p/${r.id}/`,
         placement: r.placement,

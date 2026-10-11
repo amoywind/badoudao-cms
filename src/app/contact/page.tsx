@@ -34,13 +34,13 @@ export default async function ContactPage({
 }: {
   searchParams: Promise<{ model?: string }>;
 }) {
-  const [s, products] = await Promise.all([
-    getSettings().catch(() => ({} as SiteSettings)),
-    listProducts({ status: 'published' }).catch(() => [])
+  const [s] = await Promise.all([
+    getSettings().catch(() => ({} as SiteSettings))
   ]);
 
-  /* The product page CTA links here with ?model=… so the buyer does not
-     retype the model they were just looking at. */
+  /* The product page CTA links here with ?model=… so the enquiry is
+     attributed to the product the buyer was looking at, without a picker
+     they have to operate. */
   const params = await searchParams.catch(() => ({}) as { model?: string });
   const preset = params.model ? String(params.model).slice(0, 160) : '';
 
@@ -113,7 +113,7 @@ export default async function ContactPage({
               </div>
 
               <div id="inquiry">
-                <InquiryForm products={products.slice(0, 9)} preset={preset} />
+                <InquiryForm preset={preset} />
               </div>
             </div>
           </div>
