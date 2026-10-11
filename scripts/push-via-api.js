@@ -106,7 +106,15 @@ async function main() {
 
   console.log(`  待上传 ${files.length} 个文件:`);
 
-  /* 4. build a new tree from the base tree with those blobs replaced */
+  /* Files to delete on the remote. Set GH_DELETE="path/a,path/b".
+     Leaving an old route in place causes Next.js route conflicts — a
+     leftover app/admin/login/ alongside app/login/ builds twice. */
+  const deletes = (process.env.GH_DELETE || '')
+    .split(',')
+    .map((f) => f.trim())
+    .filter(Boolean);
+
+  /* 4. build a new tree from the base tree with blobs replaced / removed */
   const entries = [];
   for (const file of files) {
     const content = fs.readFileSync(path.join(ROOT, file));
@@ -116,6 +124,16 @@ async function main() {
     });
     console.log(`    blob ${blob.sha.slice(0, 7)}  ${file}`);
     entries.push({ path: file, mode: '100644', type: 'blob', sha: blob.sha });
+  }
+
+  for (const file of deletes) {
+    if (fs.existsSync(path.join(ROOT, file))) {
+      console.error(`  ✗ ${file} 在本地仍存在，先删除再推送`);
+      process.exit(1);
+    }
+    /* sha: null tells Git to remove the path from the tree */
+    entries.push({ path: file, mode: '100644', type: 'blob', sha: null });
+    console.log(`    删除  ${file}`);
   }
 
   const newTree = await gh('POST', `/repos/${REPO}/git/trees`, {

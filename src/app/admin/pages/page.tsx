@@ -1,0 +1,196 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Toast, useToast } from '../_ui';
+
+/* Mirrors the columns in the pages table. body is HTML so the front end can
+   render it with dangerouslySetInnerHTML. */
+const BLANK = {
+  id: '', slug: '', title: '', heading: '', intro: '',
+  body: '', seoTitle: '', seoDescription: '', status: 'published'
+};
+
+const STATUS = {
+  published: { label: '已发布', cls: 'pl-g' },
+  draft: { label: '草稿', cls: 'pl-n' }
+};
+
+export default function PagesAdmin() {
+  const [pages, setPages] = useState(null);
+  const [edit, setEdit] = useState(null);
+  const { toast, show } = useToast();
+
+  async function load() {
+    const res = await fetch('/api/pages');
+    if (res.status === 401) { window.location.href = '/login'; return; }
+    const d = await res.json();
+    setPages(d.pages);
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function save(status) {
+    const payload = { ...edit, status };
+    const res = await fetch('/api/pages', {
+      method: edit.id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await res.json();
+    if (!res.ok) { show(d.error || '保存失败', 'err'); return; }
+    show(status === 'published' ? '已发布' : '已保存草稿');
+    setEdit(null);
+    load();
+  }
+
+  async function remove(p) {
+    if (!confirm(`删除页面「${p.title}」？`)) return;
+    const res = await fetch(`/api/pages?id=${encodeURIComponent(p.id)}`, { method: 'DELETE' });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) { show(d.error || '删除失败', 'err'); return; }
+    show('已删除');
+    load();
+  }
+
+  if (!pages) return <div className="empty"><span className="spin" /></div>;
+
+  /* ---------- editor ---------- */
+  if (edit) {
+    return (
+      <div className="card">
+        <div className="card-h">
+          <h3>{edit.id ? `编辑 ${edit.id}` : '新建页面'}</h3>
+          <div className="r">
+            <button className="btn btn-sm" onClick={() => setEdit(null)}>取消</button>
+            <button className="btn btn-sm" onClick={() => save('draft')}>存草稿</button>
+            <button className="btn btn-p btn-sm" onClick={() => save('published')}>发布</button>
+          </div>
+        </div>
+
+        <div className="card-b">
+          {!edit.id && (
+            <div className="fg">
+              <label className="fl">页面 ID<span className="req">*</span></label>
+              <input
+                className="inp"
+                value={edit.id}
+                onChange={(e) => setEdit({ ...edit, id: e.target.value.replace(/[^a-z0-9-]/gi, '') })}
+                placeholder="certification"
+              />
+              <span className="hint">小写英文与连字符。发布后网址为 /p/你的ID/</span>
+            </div>
+          )}
+
+          <div className="fg2">
+            <div className="fg">
+              <label className="fl">栏目名<span className="req">*</span></label>
+              <input className="inp" value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} placeholder="Certification" />
+              <span className="hint">用于页脚和面包屑，例如「工厂」</span>
+            </div>
+            <div className="fg">
+              <label className="fl">URL 别名</label>
+              <input className="inp" value={edit.slug} onChange={(e) => setEdit({ ...edit, slug: e.target.value })} placeholder="留空则同 ID" />
+            </div>
+          </div>
+
+          <div className="fg">
+            <label className="fl">页面大标题</label>
+            <input className="inp" value={edit.heading} onChange={(e) => setEdit({ ...edit, heading: e.target.value })} placeholder="Certification and compliance" />
+          </div>
+
+          <div className="fg">
+            <label className="fl">简介<span className="hint">显示在标题下方，也用于 SEO 描述</span></label>
+            <textarea className="inp" rows={3} value={edit.intro} onChange={(e) => setEdit({ ...edit, intro: e.target.value })} />
+          </div>
+
+          <div className="fg">
+            <label className="fl">正文<span className="hint">支持 HTML</span></label>
+            <textarea
+              className="inp mono"
+              style={{ minHeight: 320, fontSize: 13 }}
+              value={edit.body}
+              onChange={(e) => setEdit({ ...edit, body: e.target.value })}
+            />
+          </div>
+
+          <div className="fg2">
+            <div className="fg">
+              <label className="fl">SEO 标题<span className="hint">60 字符内</span></label>
+              <input className="inp" value={edit.seoTitle} onChange={(e) => setEdit({ ...edit, seoTitle: e.target.value })} />
+            </div>
+            <div className="fg">
+              <label className="fl">SEO 描述<span className="hint">155 字符内</span></label>
+              <textarea className="inp" rows={2} value={edit.seoDescription} onChange={(e) => setEdit({ ...edit, seoDescription: e.target.value })} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ---------- list ---------- */
+  return (
+    <>
+      <div className="card">
+        <div className="card-h">
+          <h3>页面管理</h3>
+          <span className="sub">{pages.length} 个页面</span>
+          <div className="r">
+            <button className="btn btn-p btn-sm" onClick={() => setEdit({ ...BLANK })}>+ 新建页面</button>
+          </div>
+        </div>
+
+        <div className="card-b flush">
+          {pages.length === 0 ? (
+            <div className="empty"><div className="t">还没有页面</div></div>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>页面</th>
+                  <th>标题</th>
+                  <th>状态</th>
+                  <th style={{ width: 190 }}>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pages.map((p) => {
+                  const st = STATUS[p.status] || STATUS.draft;
+                  return (
+                    <tr key={p.id}>
+                      <td>
+                        <div className="pname">{p.heading || p.title}</div>
+                        <div className="psku">/p/{p.id}/</div>
+                      </td>
+                      <td style={{ fontSize: 13, color: 'var(--ink3)' }}>{p.title}</td>
+                      <td><span className={`pl ${st.cls}`}>{st.label}</span></td>
+                      <td>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <a className="btn btn-sm" href={`/p/${p.id}/`} target="_blank" rel="noreferrer">查看</a>
+                          <button className="btn btn-sm" onClick={() => setEdit({
+                            id: p.id, slug: p.slug, title: p.title, heading: p.heading || '',
+                            intro: p.intro || '', body: p.body || '',
+                            seoTitle: p.seo_title || '', seoDescription: p.seo_description || '',
+                            status: p.status
+                          })}>编辑</button>
+                          <button className="btn btn-d btn-sm" onClick={() => remove(p)}>删除</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
+      <div className="note note-g">
+        这些页面直接影响采购决策，正文写实比写好更重要。
+        种子数据已预置工厂介绍、小批量优势、认证说明等 5 个页面的标题与 SEO 信息，你只需填正文。
+      </div>
+
+      <Toast toast={toast} />
+    </>
+  );
+}
