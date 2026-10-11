@@ -13,7 +13,9 @@
     "db:studio": "wrangler d1 studio badoudao",
     "preview:build": "node preview/render.js",
     "preview:serve": "node preview/serve.js",
-    "db:export:local": "wrangler d1 execute badoudao --local --config wrangler.local.toml --file=./seed.sql && wrangler d1 execute badoudao --local --config wrangler.local.toml --command \"SELECT * FROM categories\" --json > preview/data/categories.json"
+    "db:export:local": "wrangler d1 execute badoudao --local --config wrangler.local.toml --file=./seed.sql && wrangler d1 execute badoudao --local --config wrangler.local.toml --command \"SELECT * FROM categories\" --json > preview/data/categories.json",
+    "db:push:setup": "node scripts/run-d1.js db-setup.sql",
+    "db:push:seed": "node scripts/run-d1.js db-seed.sql"
   },
   "dependencies": {
     "next": "15.5.2",
