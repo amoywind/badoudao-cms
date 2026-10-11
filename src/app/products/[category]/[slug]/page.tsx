@@ -15,25 +15,41 @@ export const dynamic = 'force-dynamic';
  */
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
-  const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
 
-  if (!product || product.category !== category) {
-    return { title: 'Product not found | Badoudao', robots: { index: false } };
+  /* A throw here produces no <title> at all, and the page still renders —
+     so a failure is invisible unless it is contained. Build a usable title
+     from whatever can be read, and never let this function fail. */
+  try {
+    const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
+
+    if (!product || product.category !== category) {
+      return { title: 'Product | Badoudao', robots: { index: false } };
+    }
+
+    const moq = product.moq || 500;
+    const price = product.priceMin
+      ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
+      : '';
+
+    return buildMeta({
+      title: `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`,
+      description:
+        `${product.name} — ${product.summary || ''} MOQ ${moq} pcs.${price}` +
+        ` Custom dial artwork and logo available. ${product.leadTime || '20-30 days'} lead time.`,
+      seoTitle: product.seoTitle,
+      seoDescription: product.seoDescription,
+      keywords: product.metaKeywords,
+      path: `/products/${category}/${product.slug}/`,
+      image: product.images[0]?.url,
+      type: 'product'
+    });
+  } catch (err) {
+    console.error('generateMetadata failed:', (err as Error)?.message);
+    return {
+      title: `${slug} | Badoudao Quartz Clocks`,
+      description: 'OEM and ODM quartz clocks from Badoudao. MOQ from 500 pieces, Ex Works pricing.'
+    };
   }
-
-  const moq = product.moq || 500;
-
-  return buildMeta({
-    title: `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`,
-    description:
-      `${product.name} — ${product.summary} MOQ ${moq} pcs, EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}. Custom dial artwork and logo available. ${product.leadTime || '20-30 days'} lead time.`,
-    seoTitle: product.seoTitle,
-    seoDescription: product.seoDescription,
-    keywords: product.metaKeywords,
-    path: `/products/${category}/${product.slug}/`,
-    image: product.images[0]?.url,
-    type: 'product'
-  });
 }
 
 export default async function ProductPage({ params }) {

@@ -9,24 +9,32 @@ export const dynamic = 'force-dynamic';
 
 /** One keyword per category page — the category name buyers actually type. */
 export async function generateMetadata({ params }) {
-  const cats = await listCategories().catch(() => []);
-  const cat = cats.find((c) => c.id === params.category);
-  if (!cat) return { title: 'Products | Badoudao', robots: { index: false } };
+  try {
+    const cats = await listCategories().catch(() => []);
+    const cat = cats.find((c) => c.id === params.category);
+    if (!cat) return { title: 'Products | Badoudao', robots: { index: false } };
 
-  const label = cat.name || cat.short || params.category;
+    const label = cat.name || cat.short || params.category;
 
-  return buildMeta({
-    title: `Wholesale ${label} — OEM Manufacturer | Badoudao`,
-    description:
-      `${cat.description || label} from Badoudao, China. ${cat.designs || ''} designs, MOQ from 500 pcs, Ex Works factory pricing, custom dial artwork available.`.replace(
-        /\s+/g,
-        ' '
-      ),
-    seoTitle: cat.seoTitle,
-    seoDescription: cat.seoDescription,
-    keywords: `${label.toLowerCase()} manufacturer, wholesale ${label.toLowerCase()}, OEM ${label.toLowerCase()}`,
-    path: `/products/${params.category}/`
-  });
+    return buildMeta({
+      title: `Wholesale ${label} — OEM Manufacturer | Badoudao`,
+      description:
+        `${cat.description || label} from Badoudao, China. ${cat.designs || ''} designs, MOQ from 500 pcs, Ex Works factory pricing, custom dial artwork available.`.replace(
+          /\s+/g,
+          ' '
+        ),
+      seoTitle: cat.seoTitle,
+      seoDescription: cat.seoDescription,
+      keywords: `${label.toLowerCase()} manufacturer, wholesale ${label.toLowerCase()}, OEM ${label.toLowerCase()}`,
+      path: `/products/${params.category}/`
+    });
+  } catch (err) {
+    console.error('generateMetadata failed:', (err as Error)?.message);
+    return {
+      title: `${params.category} | Badoudao Quartz Clocks`,
+      description: 'OEM and ODM quartz clocks from Badoudao, China. MOQ from 500 pieces, Ex Works pricing.'
+    };
+  }
 }
 
 export default async function CategoryPage({ params }) {
