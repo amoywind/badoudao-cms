@@ -1,7 +1,12 @@
 User-agent: *
 Allow: /
 
+# Admin, API and the login screen hold no indexable content.
 Disallow: /admin/
 Disallow: /api/
+Disallow: /login
 
-Sitemap: https://badoudao.pages.dev/sitemap.xml
+# Filtered listings (?q=, ?status=) duplicate the canonical pages.
+Disallow: /*?*
+
+Sitemap: https://badoudao-site.pages.dev/sitemap.xml

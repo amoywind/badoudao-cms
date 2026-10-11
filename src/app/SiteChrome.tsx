@@ -34,6 +34,7 @@ export async function Header() {
           <Link href="/p/factory/">Factory</Link>
           <Link href="/p/quality/">Quality</Link>
           <Link href="/blog/">Guides</Link>
+          <Link href="/contact/">Contact</Link>
         </nav>
         <div className="nav-cta">
           <Link href="/products/" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
@@ -73,27 +74,28 @@ export async function Footer() {
           <div>
             <div className="f-h">Services</div>
             <div className="f-list">
-              <Link href="/oem-odm/">OEM Manufacturing</Link>
-              <Link href="/small-batch/">Small Batch Runs</Link>
-              <Link href="/quality/">Quality Control</Link>
-              <Link href="/certification/">Certification</Link>
+              <Link href="/p/oem-odm/">OEM Manufacturing</Link>
+              <Link href="/p/small-batch/">Small Batch Runs</Link>
+              <Link href="/p/quality/">Quality Control</Link>
+              <Link href="/p/certification/">Certification</Link>
             </div>
           </div>
           <div>
             <div className="f-h">Company</div>
             <div className="f-list">
-              <Link href="/factory/">About the Factory</Link>
-              <Link href="/quality/">Quality Control</Link>
-              <Link href="/certification/">Certification</Link>
+              <Link href="/p/factory/">About the Factory</Link>
+              <Link href="/p/quality/">Quality Control</Link>
+              <Link href="/p/certification/">Certification</Link>
               <Link href="/#inquiry">Contact</Link>
             </div>
           </div>
           <div>
             <div className="f-h">Guides</div>
             <div className="f-list">
-              <Link href="/faq/">Buyer FAQ</Link>
-              <Link href="/small-batch/">MOQ Explained</Link>
-              <Link href="/certification/">CE &amp; RoHS Guide</Link>
+              <Link href="/p/small-batch/">MOQ Explained</Link>
+              <Link href="/p/certification/">CE &amp; RoHS Guide</Link>
+              <Link href="/blog/">Buying Guides</Link>
+              <Link href="/contact/">Contact</Link>
             </div>
           </div>
         </div>
