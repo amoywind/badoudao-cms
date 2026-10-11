@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
+import { SeoBox } from '../_seo';
+import { MarkdownEditor } from '../_md';
+import { htmlToMd } from '@/lib/markdown';
 
-/* Mirrors the columns in the pages table. body is HTML so the front end can
-   render it with dangerouslySetInnerHTML. */
+/* Mirrors the columns in the pages table. body is stored as HTML because
+   that is what the front end renders; the editor works in Markdown and the
+   API converts on save. */
 const BLANK = {
   id: '', slug: '', title: '', heading: '', intro: '',
   body: '', seoTitle: '', seoDescription: '', status: 'published'
@@ -14,6 +18,21 @@ const STATUS = {
   published: { label: '已发布', cls: 'pl-g' },
   draft: { label: '草稿', cls: 'pl-n' }
 };
+
+/* Open an existing page in the editor as Markdown rather than raw tags. */
+function toEdit(p) {
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    heading: p.heading || '',
+    intro: p.intro || '',
+    body: htmlToMd(p.body || ''),
+    seoTitle: p.seo_title || '',
+    seoDescription: p.seo_description || '',
+    status: p.status
+  };
+}
 
 export default function PagesAdmin() {
   const [pages, setPages] = useState(null);
@@ -105,24 +124,24 @@ export default function PagesAdmin() {
 
           <div className="fg">
             <label className="fl">正文<span className="hint">支持 HTML</span></label>
-            <textarea
-              className="inp mono"
-              style={{ minHeight: 320, fontSize: 13 }}
+            <MarkdownEditor
               value={edit.body}
-              onChange={(e) => setEdit({ ...edit, body: e.target.value })}
+              onChange={(v) => setEdit({ ...edit, body: v })}
+              minHeight={320}
+              placeholder={'## 标题\n\n正文段落。\n\n- 列表项\n\n| 项目 | 参数 |\n| --- | --- |\n| 尺寸 | 12 英寸 |'}
             />
+            <div className="help">
+              支持 Markdown。保存时会自动转成网页格式。
+            </div>
           </div>
 
-          <div className="fg2">
-            <div className="fg">
-              <label className="fl">SEO 标题<span className="hint">60 字符内</span></label>
-              <input className="inp" value={edit.seoTitle} onChange={(e) => setEdit({ ...edit, seoTitle: e.target.value })} />
-            </div>
-            <div className="fg">
-              <label className="fl">SEO 描述<span className="hint">155 字符内</span></label>
-              <textarea className="inp" rows={2} value={edit.seoDescription} onChange={(e) => setEdit({ ...edit, seoDescription: e.target.value })} />
-            </div>
-          </div>
+          <SeoBox
+            value={{ title: edit.seoTitle, description: edit.seoDescription }}
+            onChange={(v) => setEdit({ ...edit, seoTitle: v.title, seoDescription: v.description })}
+            fallbackTitle={`${edit.heading || edit.title || 'Page'} | Badoudao Quartz Clock Manufacturer`}
+            fallbackDescription={edit.intro}
+            path={`/p/${edit.slug || edit.id}/`}
+          />
         </div>
       </div>
     );
@@ -167,12 +186,7 @@ export default function PagesAdmin() {
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
                           <a className="btn btn-sm" href={`/p/${p.id}/`} target="_blank" rel="noreferrer">查看</a>
-                          <button className="btn btn-sm" onClick={() => setEdit({
-                            id: p.id, slug: p.slug, title: p.title, heading: p.heading || '',
-                            intro: p.intro || '', body: p.body || '',
-                            seoTitle: p.seo_title || '', seoDescription: p.seo_description || '',
-                            status: p.status
-                          })}>编辑</button>
+                          <button className="btn btn-sm" onClick={() => setEdit(toEdit(p))}>编辑</button>
                           <button className="btn btn-d btn-sm" onClick={() => remove(p)}>删除</button>
                         </div>
                       </td>

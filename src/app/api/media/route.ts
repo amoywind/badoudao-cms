@@ -45,7 +45,14 @@ export async function GET(request) {
     (usedBy[u.media_id] = usedBy[u.media_id] || []).push({ id: u.id, name: u.name });
   });
 
-  const folders = await all('SELECT folder, COUNT(*) AS n FROM media GROUP BY folder');
+  /* Real folder rows, so an empty folder can exist. The previous GROUP BY on
+   media.folder only surfaced folders that already had an image in them. */
+const folders = await all(
+  `SELECT f.id, f.name, f.parent, f.sort_order,
+          (SELECT COUNT(*) FROM media m WHERE m.folder = f.name) AS n
+     FROM media_folders f
+    ORDER BY f.parent, f.sort_order, f.name`
+);
 
   return NextResponse.json({
     media: media.map((m) => ({ ...m, usedBy: usedBy[m.id] || [] })),
@@ -177,6 +184,10 @@ export async function PUT(request) {
   await log(user.id, 'update', 'media', body.id, 'alt / folder / tag');
   return NextResponse.json({ ok: true });
 }
+
+/* ------------------------------------------------------------------ */
+/* files                                                                */
+/* ------------------------------------------------------------------ */
 
 export async function DELETE(request) {
   const user = await currentUser(request);

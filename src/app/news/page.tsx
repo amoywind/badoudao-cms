@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { all, getSettings } from '@/lib/db';
+import { all, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryCTA } from '../InquiryForm';
 
@@ -40,12 +40,12 @@ async function load(): Promise<{ items: News[]; s: SiteSettings }> {
 }
 
 export async function generateMetadata() {
-  return {
-    title: `Company News | Badoudao Quartz Clock Factory`,
+  return buildMeta({
+    title: 'Company News — Factory Updates from Badoudao Quartz Clocks',
     description:
-      'Production updates, exhibition appearances and shipment records from Badoudao, a quartz clock manufacturer in China.',
-    alternates: { canonical: '/news/' }
-  };
+      'Production runs, exhibition appearances and shipment records from Badoudao, a quartz clock manufacturer in China. Photographs taken on site.',
+    path: '/news/'
+  });
 }
 
 export default async function NewsPage() {

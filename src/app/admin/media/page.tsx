@@ -22,6 +22,31 @@ export default function MediaPage() {
 
   useEffect(() => { load(); }, [folder]);
 
+  /* Prompt rather than a modal: creating a folder is a two-second action
+     and a dialog box would be more friction than it saves. The parent
+     defaults to wherever the filter is already pointing, which is what you
+     almost always want. */
+  async function newFolder() {
+    const parent = folder.includes('/') ? folder.slice(0, folder.lastIndexOf('/')) : '';
+    const name = prompt(
+      parent ? `在 ${parent} 下新建文件夹，名称：` : '新建文件夹名称：',
+      ''
+    );
+    if (!name || !name.trim()) return;
+
+    const res = await fetch('/api/media/folders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'create', name: name.trim(), parent })
+    });
+    const d = await res.json();
+    if (!res.ok) { show(d.error || '创建失败', 'err'); return; }
+
+    show(`已创建 ${d.path}`);
+    setFolder(d.path);
+    load();
+  }
+
   async function upload(files) {
     if (!files || !files.length) return;
     setUploading(true);
@@ -71,8 +96,19 @@ export default function MediaPage() {
           <div className="r">
             <select className="inp fld" value={folder} onChange={(e) => setFolder(e.target.value)}>
               <option value="">全部目录</option>
-              {folders.map((f) => <option key={f.folder} value={f.folder}>{f.folder} ({f.n})</option>)}
+              {/* Two levels, flat: the admin wants to see "products" and
+                  "products / wall-clocks" as they are, not a nested tree
+                  they have to expand to discover. */}
+              {folders.map((f) => {
+                const path = f.parent ? `${f.parent}/${f.name}` : f.name;
+                return (
+                  <option key={f.id} value={path}>
+                    {f.parent ? `　└ ${f.name}` : f.name} ({f.n})
+                  </option>
+                );
+              })}
             </select>
+            <button className="btn btn-sm" onClick={newFolder}>新建文件夹</button>
             <button className="btn btn-p btn-sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
               {uploading ? '上传中…' : '选择文件'}
             </button>

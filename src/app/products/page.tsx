@@ -1,11 +1,28 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings } from '@/lib/db';
+import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryCTA } from '../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata() {
+  const [products, cats, s] = await Promise.all([
+    listProducts({ status: 'published' }).catch(() => []),
+    listCategories().catch(() => []),
+    getSettings().catch(() => ({} as SiteSettings))
+  ]);
+
+  return buildMeta({
+    title: 'Wholesale Quartz Clocks — OEM & ODM Catalogue | Badoudao',
+    description:
+      `Browse ${products.length} quartz clock models from Badoudao: wall, alarm, desk, wood and metal clocks plus clock movements. MOQ from ${s.moq || 500} pcs, Ex Works factory pricing, custom dial artwork and logo printing available.`,
+    keywords:
+      'wholesale quartz clocks, quartz clock catalogue, OEM clock models, clock movement supplier',
+    path: '/products/'
+  });
+}
 
 export default async function ProductsIndex() {
   const [products, cats, s] = await Promise.all([

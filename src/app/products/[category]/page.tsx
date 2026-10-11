@@ -1,11 +1,33 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings } from '@/lib/db';
+import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+/** One keyword per category page — the category name buyers actually type. */
+export async function generateMetadata({ params }) {
+  const cats = await listCategories().catch(() => []);
+  const cat = cats.find((c) => c.id === params.category);
+  if (!cat) return { title: 'Products | Badoudao', robots: { index: false } };
+
+  const label = cat.name || cat.short || params.category;
+
+  return buildMeta({
+    title: `Wholesale ${label} — OEM Manufacturer | Badoudao`,
+    description:
+      `${cat.description || label} from Badoudao, China. ${cat.designs || ''} designs, MOQ from 500 pcs, Ex Works factory pricing, custom dial artwork available.`.replace(
+        /\s+/g,
+        ' '
+      ),
+    seoTitle: cat.seoTitle,
+    seoDescription: cat.seoDescription,
+    keywords: `${label.toLowerCase()} manufacturer, wholesale ${label.toLowerCase()}, OEM ${label.toLowerCase()}`,
+    path: `/products/${params.category}/`
+  });
+}
 
 export default async function CategoryPage({ params }) {
   const { category } = params;

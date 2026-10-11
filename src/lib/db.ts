@@ -19,6 +19,8 @@ export type Category = {
   designs?: string;
   price_range?: string;
   status?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type ProductSpec = { label: string; value: string };
@@ -42,6 +44,11 @@ export type Product = {
   featured: boolean;
   status: string;
   sortOrder: number;
+  /* Added in migration 0002 so the admin can override how a product
+     appears in search results without touching code. */
+  seoTitle?: string;
+  seoDescription?: string;
+  metaKeywords?: string;
   createdAt?: string;
   updatedAt?: string;
   specs: ProductSpec[];
@@ -139,6 +146,9 @@ export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
     featured: row.featured === 1,
     status: row.status || 'published',
     sortOrder: row.sort_order ?? 0,
+    seoTitle: row.seo_title || '',
+    seoDescription: row.seo_description || '',
+    metaKeywords: row.meta_keywords || '',
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     specs: (extras.specs as ProductSpec[]) || [],
@@ -256,7 +266,18 @@ export async function listProducts(
 }
 
 export async function listCategories(): Promise<Category[]> {
-  return all('SELECT * FROM categories ORDER BY sort_order, name');
+  const rows = await all('SELECT * FROM categories ORDER BY sort_order, name');
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    short: r.short || '',
+    description: r.description,
+    designs: r.designs,
+    price_range: r.price_range,
+    status: r.status,
+    seoTitle: r.seo_title || '',
+    seoDescription: r.seo_description || ''
+  }));
 }
 
 /**
@@ -381,6 +402,66 @@ export async function log(userId, action, entity, entityId, summary) {
 /* ------------------------------------------------------------------ */
 /* helpers                                                             */
 /* ------------------------------------------------------------------ */
+
+/** Canonical host. Overridable so a custom domain needs no code change. */
+export const SITE_URL = 'https://badoudao-site.pages.dev';
+
+/**
+ * Build a Next.js metadata object for a public page.
+ *
+ * Every page used to inherit one shared title, which told Google that eight
+ * different URLs were the same page. Each route now supplies its own, with
+ * the admin's override winning when set — an editor should be able to fix
+ * a title without touching code.
+ *
+ * `trim` guards the two failure modes that waste a rewrite: a title over
+ * ~60 characters is cut off in results, and a description over ~160 is
+ * dropped entirely.
+ */
+export function buildMeta({
+  title,
+  description,
+  seoTitle,
+  seoDescription,
+  path = '',
+  image,
+  type = 'website',
+  keywords
+}: {
+  title: string;
+  description: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  path?: string;
+  image?: string;
+  type?: string;
+  keywords?: string;
+}) {
+  const t = String(seoTitle || title || '').trim().slice(0, 62);
+  const d = String(seoDescription || description || '').trim().slice(0, 158);
+  const site = SITE_URL.replace(/\/+$/, '');
+  const url = path ? `${site}${path.startsWith('/') ? path : `/${path}`}` : site;
+
+  return {
+    title: t,
+    description: d,
+    alternates: { canonical: path || '/' },
+    keywords: keywords || undefined,
+    openGraph: {
+      title: t,
+      description: d,
+      url,
+      type,
+      siteName: 'Badoudao',
+      images: image ? [{ url: image.startsWith('http') ? image : `${site}${image}` }] : undefined
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title: t,
+      description: d
+    }
+  };
+}
 
 export function slugify(text) {
   return String(text)

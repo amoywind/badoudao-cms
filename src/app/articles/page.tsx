@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { all, getSettings } from '@/lib/db';
+import { all, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryCTA } from '../InquiryForm';
 
@@ -41,12 +41,16 @@ async function load(): Promise<{ posts: Post[]; s: SiteSettings }> {
 }
 
 export async function generateMetadata() {
-  return {
-    title: `Quartz Clock Buying Guides | Badoudao`,
+  const { posts } = await load();
+
+  return buildMeta({
+    title: 'Quartz Clock Buying Guides — MOQ, Pricing, Certification | Badoudao',
     description:
-      'Practical guides for buyers of quartz clocks: MOQ explained, Ex Works pricing, certifications, lead times and how to choose a manufacturer.',
-    alternates: { canonical: '/articles/' }
-  };
+      'Practical guides for buyers of quartz clocks: how MOQ works, Ex Works vs FOB pricing, CE and RoHS requirements, lead times and how to vet a Chinese manufacturer.',
+    keywords:
+      'quartz clock buying guide, clock MOQ, ex works pricing, quartz clock certification',
+    path: '/articles/'
+  });
 }
 
 export default async function ArticlesPage() {

@@ -1,0 +1,11 @@
+-- Drawings are stored in D1 as base64 rather than R2.
+--
+-- R2 is not enabled on this account, and the upload path used to drop the
+-- file silently when MEDIA_BUCKET was missing — the buyer saw their
+-- enquiry saved while the drawing vanished. Attachments are capped at
+-- 2 MB and are only sent with an enquiry, so the volume is small and the
+-- database is a reasonable home until R2 is switched on.
+--
+-- data stays NULL for anything already held in R2: those rows keep being
+-- served from /media/… and this column is simply unused.
+ALTER TABLE attachments ADD COLUMN data TEXT;

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDB, one, all, run, uid, slugify, log } from '@/lib/db';
 import { currentUser, can } from '@/lib/auth';
+import { mdToHtml } from '@/lib/markdown';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -64,7 +65,7 @@ export async function POST(request) {
     String(body.title).slice(0, 200),
     String(body.excerpt || '').slice(0, 400),
     String(body.keyword || '').slice(0, 120),
-    String(body.body || ''),
+    mdToHtml(String(body.body || '')),
     user.name,
     status,
     status === 'published' ? new Date().toISOString() : null,
@@ -113,17 +114,22 @@ export async function PUT(request) {
     `UPDATE posts SET
        slug = ?, title = ?, excerpt = ?, keyword = ?, body = ?,
        status = ?, published_at = ?, seo_title = ?, seo_description = ?,
+       type = ?, cover = ?,
        updated_at = datetime('now')
      WHERE id = ?`,
     slug,
     String(body.title ?? existing.title).slice(0, 200),
     String(body.excerpt ?? existing.excerpt).slice(0, 400),
     String(body.keyword ?? existing.keyword).slice(0, 120),
-    String(body.body ?? existing.body),
+    mdToHtml(String(body.body ?? existing.body)),
     status,
     publishedAt,
     String(body.seoTitle ?? existing.seo_title).slice(0, 200),
     String(body.seoDescription ?? existing.seo_description).slice(0, 300),
+    /* Only the two known values, same as on create — a stray value would
+       put the post under a route that does not exist. */
+    body.type === 'news' ? 'news' : body.type === 'article' ? 'article' : (existing.type || 'article'),
+    String(body.cover ?? existing.cover ?? '').slice(0, 400),
     body.id
   );
 

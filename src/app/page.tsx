@@ -1,11 +1,32 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings } from '@/lib/db';
+import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
 import { InquiryCTA } from './InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+/**
+ * Home page metadata.
+ *
+ * Carries the numbers a buyer filters on — MOQ, capacity, response time,
+ * price basis — because those are the terms the query contains, and a
+ * description that restates them is what earns the click.
+ */
+export async function generateMetadata() {
+  const s = await getSettings().catch(() => ({} as SiteSettings));
+
+  return buildMeta({
+    title: 'Quartz Clock Manufacturer China — OEM & ODM Wholesale | Badoudao',
+    description:
+      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 500} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 12} hours.`,
+    keywords:
+      'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
+    path: '/',
+    image: '/hero-clocks.png'
+  });
+}
 
 export default async function HomePage() {
   const [products, cats, s] = await Promise.all([

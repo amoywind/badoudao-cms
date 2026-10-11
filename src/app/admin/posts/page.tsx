@@ -2,11 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
+import { SeoBox } from '../_seo';
+import { MarkdownEditor } from '../_md';
+import { htmlToMd } from '@/lib/markdown';
 
 const BLANK = {
   title: '', slug: '', excerpt: '', keyword: '', body: '',
-  seoTitle: '', seoDescription: '', status: 'draft'
+  seoTitle: '', seoDescription: '', status: 'draft',
+  /* article — buying guides written for search, shown under /articles/
+     news    — factory and company updates, shown under /news/           */
+  type: 'article',
+  cover: ''
 };
+
+/* Rows come back snake_case (seo_title) while the form works in camelCase
+   (seoTitle). Spreading the row straight into state left both SEO boxes
+   permanently empty and saved their own value into a field the API never
+   read — the settings looked editable and did nothing. */
+function fromRow(p) {
+  return {
+    ...BLANK,
+    ...p,
+    /* Stored as HTML, edited as Markdown — see htmlToMd in lib/markdown. */
+    body: htmlToMd(p.body || ''),
+    seoTitle: p.seo_title || '',
+    seoDescription: p.seo_description || '',
+    type: p.type === 'news' ? 'news' : 'article',
+    cover: p.cover || ''
+  };
+}
 
 export default function PostsPage() {
   const [posts, setPosts] = useState(null);
@@ -76,6 +100,27 @@ export default function PostsPage() {
             </div>
           </div>
           <div className="card-b">
+            <div className="fg">
+              <label className="fl">类型<span className="req">*</span></label>
+              <div className="type-row">
+                <label className={`type-opt ${edit.type !== 'news' ? 'on' : ''}`}>
+                  <input type="radio" name="ptype" checked={edit.type !== 'news'}
+                    onChange={() => setEdit({ ...edit, type: 'article' })} />
+                  <span className="type-name">文章</span>
+                  <span className="type-desc">买家指南与知识，写给搜索流量</span>
+                </label>
+                <label className={`type-opt ${edit.type === 'news' ? 'on' : ''}`}>
+                  <input type="radio" name="ptype" checked={edit.type === 'news'}
+                    onChange={() => setEdit({ ...edit, type: 'news' })} />
+                  <span className="type-name">公司动态</span>
+                  <span className="type-desc">工厂与展会实拍，建立信任</span>
+                </label>
+              </div>
+              <div className="help">
+                发布位置：{edit.type === 'news' ? '/news/' : '/articles/'}
+              </div>
+            </div>
+
             <div className="fg2">
               <div className="fg">
                 <label className="fl">标题<span className="req">*</span></label>
@@ -89,6 +134,18 @@ export default function PostsPage() {
                   placeholder="how-to-choose-clock-manufacturer" />
               </div>
             </div>
+
+            {edit.type === 'news' && (
+              <div className="fg">
+                <label className="fl">封面图<span className="hint">列表与分享卡片用</span></label>
+                <input className="inp" value={edit.cover}
+                  onChange={(e) => setEdit({ ...edit, cover: e.target.value })}
+                  placeholder="/media/news/exhibition.jpg" />
+                {edit.cover && (
+                  <img className="cover-prev" src={edit.cover} alt="" />
+                )}
+              </div>
+            )}
 
             <div className="fg">
               <label className="fl">目标关键词<span className="hint">这篇要抢的搜索词</span></label>
@@ -106,27 +163,28 @@ export default function PostsPage() {
             </div>
 
             <div className="fg">
-              <label className="fl">正文<span className="hint">支持 HTML</span></label>
-              <textarea className="inp" style={{ minHeight: 420, fontFamily: 'ui-monospace, monospace', fontSize: 13 }}
-                value={edit.body} onChange={(e) => setEdit({ ...edit, body: e.target.value })}
-                placeholder={'<p>第一段回答买家最关心的问题…</p>\n<h2>小标题</h2>\n<p>…</p>'} />
+              <label className="fl">正文<span className="hint">支持 Markdown</span></label>
+              <MarkdownEditor
+                value={edit.body}
+                onChange={(v) => setEdit({ ...edit, body: v })}
+                minHeight={420}
+                placeholder={'开头 100 字内直接回答标题的问题 —— AI 搜索摘的就是这段。\n\n## 小标题\n\n正文…'}
+              />
               <div className="help">
                 每篇文章要链到至少 2 个分类页和 1 个产品页，这样 Google 才知道该把流量分给谁
               </div>
             </div>
 
-            <div className="fg2">
-              <div className="fg">
-                <label className="fl">SEO 标题<span className="hint">60 字符内</span></label>
-                <input className="inp" value={edit.seoTitle}
-                  onChange={(e) => setEdit({ ...edit, seoTitle: e.target.value })} />
-              </div>
-              <div className="fg">
-                <label className="fl">SEO 描述<span className="hint">155 字符内</span></label>
-                <input className="inp" value={edit.seoDescription}
-                  onChange={(e) => setEdit({ ...edit, seoDescription: e.target.value })} />
-              </div>
-            </div>
+            <SeoBox
+              value={{ title: edit.seoTitle, description: edit.seoDescription }}
+              onChange={(v) => setEdit({ ...edit, seoTitle: v.title, seoDescription: v.description })}
+              fallbackTitle={`${edit.title} | Badoudao`}
+              fallbackDescription={edit.excerpt}
+              path={`/${edit.type === 'news' ? 'news' : 'articles'}/${edit.slug}/`}
+              previewImage={edit.cover || undefined}
+              keywords={edit.keyword}
+              onKeywordsChange={(v) => setEdit({ ...edit, keyword: v })}
+            />
           </div>
         </div>
         <Toast toast={toast} />
@@ -186,7 +244,7 @@ export default function PostsPage() {
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
                         <button className="btn btn-sm"
-                          onClick={() => { setEdit({ ...p }); setView('edit'); }}>编辑</button>
+                          onClick={() => { setEdit(fromRow(p)); setView('edit'); }}>编辑</button>
                         {p.status === 'draft' && (
                           <button className="btn btn-sm" onClick={() => publish(p)}>发布</button>
                         )}

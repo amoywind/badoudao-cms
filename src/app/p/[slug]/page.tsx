@@ -1,12 +1,42 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { one, getSettings, listCategories } from '@/lib/db';
+import { one, getSettings, listCategories, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+/**
+ * Per-page metadata.
+ *
+ * The pages table has carried seo_title and seo_description from the start,
+ * but nothing ever read them — the admin could fill them in and watch the
+ * page title stay unchanged. They are wired up here, with a generated
+ * fallback so a page with no override still gets its own title.
+ */
+export async function generateMetadata({ params }) {
+  const page = await one(
+    "SELECT * FROM pages WHERE id = ? AND status = 'published'",
+    params.slug
+  ).catch(() => null);
+
+  if (!page) return { title: 'Badoudao', robots: { index: false } };
+
+  const heading = page.heading || page.title;
+
+  return buildMeta({
+    title: `${heading} | Badoudao Quartz Clock Manufacturer`,
+    description:
+      page.seo_description ||
+      page.intro ||
+      `${heading} — from Badoudao, an OEM and ODM quartz clock manufacturer. MOQ from 500 pieces, Ex Works pricing.`,
+    seoTitle: page.seo_title,
+    seoDescription: page.seo_description,
+    path: `/p/${page.slug || params.slug}/`
+  });
+}
 
 export default async function StaticPage({ params }) {
   const page = await one(

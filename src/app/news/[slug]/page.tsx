@@ -1,11 +1,33 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { one, all, getSettings } from '@/lib/db';
+import { one, all, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }) {
+  const post = await one(
+    "SELECT * FROM posts WHERE slug = ? AND status = 'published' AND type = 'news'",
+    params.slug
+  ).catch(() => null);
+
+  if (!post) return { title: 'News not found | Badoudao', robots: { index: false } };
+
+  return buildMeta({
+    title: `${post.title} | Badoudao Factory News`,
+    description:
+      post.seo_description ||
+      post.excerpt ||
+      `${post.title} — an update from the Badoudao quartz clock factory in China.`,
+    seoTitle: post.seo_title,
+    seoDescription: post.seo_description,
+    path: `/news/${post.slug}/`,
+    image: post.cover,
+    type: 'article'
+  });
+}
 
 export default async function ArticlePage({ params }) {
   const { slug } = params;

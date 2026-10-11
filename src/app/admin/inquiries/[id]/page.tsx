@@ -38,6 +38,7 @@ export default function InquiryDetail() {
       quotes: [],
       history: [],
       logs: [],
+      attachments: [],
       product: null,
       ...data
     });
@@ -60,6 +61,7 @@ export default function InquiryDetail() {
 
   const i = d.inquiry;
   const prods = Array.isArray(i.products) ? i.products : [];
+  const atts = Array.isArray(d.attachments) ? d.attachments : [];
   /* useParams() gives an array on a catch-all and a string here — always
      normalise before it reaches the API, or the PUT silently writes nothing. */
   const inqId = String(Array.isArray(id) ? id[0] : id ?? i.id);
@@ -148,6 +150,30 @@ export default function InquiryDetail() {
                   <div className="help">关注产品</div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 5 }}>
                     {prods.map((p) => <span key={p} className="pl pl-bs">{p}</span>)}
+                  </div>
+                </div>
+              )}
+
+              {atts.length > 0 && (
+                <div className="fg">
+                  <div className="help">
+                    附件{d.i.has_attachment === 1 && atts.length === 0 ? '（记录显示有文件但未找到，可能上传时 R2 未启用）' : ''}
+                  </div>
+                  <div className="att-list">
+                    {atts.map((a) => {
+                      const isImg = String(a.mime || '').startsWith('image/');
+                      return (
+                        <a key={a.id} className="att-item" href={a.url} target="_blank" rel="noopener noreferrer">
+                          {isImg
+                            ? <img src={a.url} alt={a.filename} loading="lazy" />
+                            : <span className="att-ico" aria-hidden="true">PDF</span>}
+                          <span className="att-meta">
+                            <span className="att-name">{a.filename}</span>
+                            <span className="att-size">{(Number(a.size) / 1024).toFixed(0)} KB · 点击打开</span>
+                          </span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               )}

@@ -58,6 +58,14 @@ export async function GET(request) {
 
     const quotes = await all('SELECT * FROM quotes WHERE inquiry_id = ? ORDER BY id DESC', id);
 
+    /* Drawings the buyer uploaded. Kept as its own block so the owner sees
+       the file without opening anything — a reference drawing is often the
+       whole reason the buyer wrote. */
+    const attachments = await all(
+      'SELECT id, filename, url, mime, size FROM attachments WHERE inquiry_id = ? ORDER BY id',
+      id
+    );
+
     /* The detail screen links the enquiry to the product it came from so the
        owner can quote straight from stock data. Optional — a general enquiry
        has no product_id, hence the guard. */
@@ -95,7 +103,8 @@ export async function GET(request) {
       quotes,
       history,
       product,
-      logs
+      logs,
+      attachments
     });
   }
 

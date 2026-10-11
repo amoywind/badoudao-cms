@@ -200,46 +200,70 @@ export async function POST(request) {
 /**
  * Store the buyer's drawing and link it to the enquiry.
  *
- * Needs the R2 bucket. Without MEDIA_BUCKET the enquiry is still saved —
- * returning null is what tells the caller to skip has_attachment — so the
- * site keeps working before R2 is configured.
+ * Drawings are small (2 MB cap) and low-volume, so they are kept in D1 as
+ * base64 rather than depending on R2. That matters: R2 is not enabled on
+ * this account, and silently dropping a buyer's reference drawing is worse
+ * than storing it in the database. Product photography still uses R2 —
+ * it is served on every page and belongs in object storage.
+ *
+ * Returns null only when neither path worked.
  */
 async function storeDrawing(file, inquiryId) {
+  const filename = file.name.slice(0, 160) || 'drawing';
+  const mime = file.type || 'application/octet-stream';
+
+  /* Prefer R2 when it is bound — it is the better home for binary data. */
   try {
     const { getRequestContext } = await import('@cloudflare/next-on-pages');
     const { env } = getRequestContext();
-    if (!env?.MEDIA_BUCKET) return null;
 
-    /* Keep only the safe extension. The stored name never uses the
-       client's filename, which may contain path separators or unicode. */
-    const ext = (file.name.split('.').pop() || 'bin')
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '')
-      .slice(0, 5) || 'bin';
-    const key = `drawings/${inquiryId}-${Date.now()}.${ext}`;
+    if (env?.MEDIA_BUCKET) {
+      const ext = (file.name.split('.').pop() || 'bin')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '')
+        .slice(0, 5) || 'bin';
+      const key = `drawings/${inquiryId}-${Date.now()}.${ext}`;
+      const buf = await file.arrayBuffer();
 
+      await env.MEDIA_BUCKET.put(key, buf, {
+        httpMetadata: { contentType: mime }
+      });
+
+      const url = `/media/${key}`;
+      await run(
+        `INSERT INTO attachments (id, inquiry_id, filename, url, mime, size, data)
+         VALUES (?,?,?,?,?,?, NULL)`,
+        uid('att'), inquiryId, filename, url, mime, file.size
+      );
+      return { url, filename };
+    }
+  } catch (err) {
+    console.error('R2 drawing upload failed, falling back to D1:', err.message);
+  }
+
+  /* D1 fallback: 2 MB decoded is ~2.7 MB of text, well inside a row. */
+  try {
     const buf = await file.arrayBuffer();
-    await env.MEDIA_BUCKET.put(key, buf, {
-      httpMetadata: { contentType: file.type || 'application/octet-stream' }
-    });
+    const bytes = new Uint8Array(buf);
+    let bin = '';
+    /* Chunked to stay clear of the argument-count limit on large strings. */
+    const CHUNK = 8192;
+    for (let i = 0; i < bytes.length; i += CHUNK) {
+      bin += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + CHUNK)));
+    }
+    const b64 = btoa(bin);
 
-    const url = `/media/${key}`;
-    const filename = file.name.slice(0, 160) || 'drawing';
+    const ext = (filename.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5) || 'bin';
+    const url = `/api/drawing/${inquiryId}.${ext}`;
 
     await run(
-      `INSERT INTO attachments (id, inquiry_id, filename, url, mime, size)
-       VALUES (?,?,?,?,?,?)`,
-      uid('att'),
-      inquiryId,
-      filename,
-      url,
-      file.type || '',
-      file.size
+      `INSERT INTO attachments (id, inquiry_id, filename, url, mime, size, data)
+       VALUES (?,?,?,?,?,?,?)`,
+      uid('att'), inquiryId, filename, url, mime, file.size, b64
     );
-
     return { url, filename };
   } catch (err) {
-    console.error('storeDrawing:', err.message);
+    console.error('D1 drawing store failed:', err.message);
     return null;
   }
 }

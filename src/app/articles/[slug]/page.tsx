@@ -1,11 +1,42 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { one, all, getSettings } from '@/lib/db';
+import { one, all, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+/**
+ * The target keyword was chosen when the article was written and is stored
+ * in `posts.keyword`. Putting it in the title and description is the whole
+ * point of that column — an article written around one phrase ranks for
+ * that phrase.
+ */
+export async function generateMetadata({ params }) {
+  const post = await one(
+    "SELECT * FROM posts WHERE slug = ? AND status = 'published' AND type = 'article'",
+    params.slug
+  ).catch(() => null);
+
+  if (!post) return { title: 'Article not found | Badoudao', robots: { index: false } };
+
+  const kw = String(post.keyword || '').trim();
+
+  return buildMeta({
+    title: kw ? `${post.title} | ${kw} | Badoudao` : `${post.title} | Badoudao`,
+    description:
+      post.seo_description ||
+      post.excerpt ||
+      `${post.title} — a practical guide from Badoudao, an OEM and ODM quartz clock manufacturer.`,
+    seoTitle: post.seo_title,
+    seoDescription: post.seo_description,
+    keywords: kw,
+    path: `/articles/${post.slug}/`,
+    image: post.cover,
+    type: 'article'
+  });
+}
 
 export default async function ArticlePage({ params }) {
   const { slug } = params;

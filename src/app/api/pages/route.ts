@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { one, all, run, log } from '@/lib/db';
 import { currentUser, can } from '@/lib/auth';
+import { mdToHtml } from '@/lib/markdown';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -51,7 +52,7 @@ export async function POST(request) {
     String(body.title).slice(0, 200),
     String(body.heading || body.title).slice(0, 200),
     String(body.intro || '').slice(0, 600),
-    String(body.body || ''),
+    mdToHtml(String(body.body || '')),
     String(body.seoTitle || '').slice(0, 200),
     String(body.seoDescription || '').slice(0, 300),
     body.status || 'published',
@@ -83,7 +84,7 @@ export async function PUT(request) {
     String(body.title ?? existing.title).slice(0, 200),
     String(body.heading ?? existing.heading).slice(0, 200),
     String(body.intro ?? existing.intro).slice(0, 600),
-    String(body.body ?? existing.body),
+    mdToHtml(String(body.body ?? existing.body)),
     String(body.seoTitle ?? existing.seo_title).slice(0, 200),
     String(body.seoDescription ?? existing.seo_description).slice(0, 300),
     body.status ?? existing.status,

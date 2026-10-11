@@ -1,12 +1,40 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { getProduct, listProducts, getSettings, listProductVideos } from '@/lib/db';
+import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+/**
+ * Per-product metadata. The admin's seo_title / seo_description win when
+ * set; otherwise both are built from the price band and MOQ, which is what
+ * a buyer searches on and what earns the rich result.
+ */
+export async function generateMetadata({ params }) {
+  const { category, slug } = params;
+  const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
+
+  if (!product || product.category !== category) {
+    return { title: 'Product not found | Badoudao', robots: { index: false } };
+  }
+
+  const moq = product.moq || 500;
+
+  return buildMeta({
+    title: `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`,
+    description:
+      `${product.name} — ${product.summary} MOQ ${moq} pcs, EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}. Custom dial artwork and logo available. ${product.leadTime || '20-30 days'} lead time.`,
+    seoTitle: product.seoTitle,
+    seoDescription: product.seoDescription,
+    keywords: product.metaKeywords,
+    path: `/products/${category}/${product.slug}/`,
+    image: product.images[0]?.url,
+    type: 'product'
+  });
+}
 
 export default async function ProductPage({ params }) {
   const { category, slug } = params;
