@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
       `${post.title} — an update from the Badoudao quartz clock factory in China.`,
     seoTitle: post.seo_title,
     seoDescription: post.seo_description,
-    path: `/news/${post.slug}/`,
+    path: `/news/${post.slug}`,
     image: post.cover,
     type: 'article'
   });
@@ -56,7 +56,7 @@ export default async function ArticlePage({ params }) {
       <nav className="breadcrumb">
         <div className="wrap">
           <Link href="/">Home</Link><span>/</span>
-          <Link href="/news/">News</Link><span>/</span>
+          <Link href="/news">News</Link><span>/</span>
           <span>{post.title}</span>
         </div>
       </nav>

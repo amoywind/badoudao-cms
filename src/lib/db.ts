@@ -338,20 +338,24 @@ export async function listNav(placement: string): Promise<NavItem[]> {
   return rows
     .map((r) => {
       /* Four ways an entry can point somewhere, in priority order:
-           external_key — a fixed route (/products/, /articles/ …)
-           id 'home'     — the site root, which no suffix can express
+           external_key — a fixed route (/products, /articles …)
+           id 'nav-home' — the site root, which no suffix can express
            target       — a sibling row's id (a footer entry mirroring a
-                          content page, e.g. "Small Batch" → /p/small-batch/)
-           own id       — the row is itself the content page            */
+                          content page, e.g. "Small Batch" → /p/small-batch)
+           own id       — the row is itself the content page
+
+           No trailing slash anywhere: Cloudflare Pages strips it before the
+           request arrives, so a slashed link would be normalised into a
+           redirect on every click. See the note in next.config.mjs. */
       const key = String(r.external_key || '').trim();
       const target = String(r.target || '').trim();
       return {
         id: r.id,
         label: String(r.nav_label || r.title || '').trim(),
         href: r.id === 'nav-home' ? '/'
-          : key ? `/${key.replace(/^\/+|\/+$/g, '')}/`
-          : target ? `/p/${target}/`
-          : `/p/${r.id}/`,
+          : key ? `/${key.replace(/^\/+|\/+$/g, '')}`
+          : target ? `/p/${target}`
+          : `/p/${r.id}`,
         placement: r.placement,
         navOrder: r.nav_order ?? 0
       };

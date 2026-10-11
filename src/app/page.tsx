@@ -64,7 +64,7 @@ export default async function HomePage() {
               <p className="lede">Wall clocks, alarm clocks and table clocks in OEM and ODM form. MOQ from {s.moq || 500} pieces, custom dial artwork and packaging, and a quote back within {s.quoteHours || 12} hours.</p>
               <div className="hero-btns">
                 <a href="#inquiry" className="btn btn-primary">Request a Quote</a>
-                <Link href="/products/" className="btn btn-ghost">View Products</Link>
+                <Link href="/products" className="btn btn-ghost">View Products</Link>
               </div>
               <p className="hero-note">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f5c4a" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
@@ -116,7 +116,7 @@ export default async function HomePage() {
             </div>
             <div className="grid-3">
               {cats.map((c) => (
-                <Link key={c.id} href={`/products/${c.id}/`} className="card">
+                <Link key={c.id} href={`/products/${c.id}`} className="card">
                   <div className="c-visual" style={{ background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }} />
                   <div className="c-body">
                     <h3>{c.name}</h3>
@@ -159,7 +159,7 @@ export default async function HomePage() {
               </div>
               <p style={{ fontSize: 13, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.6 }}>
                 Quartz clocks themselves carry no mandatory certification requirement.{' '}
-                <Link href="/certification/" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
+                <Link href="/certification" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
               </p>
             </div>
             <div className="hero-img">
@@ -238,7 +238,7 @@ export default async function HomePage() {
                     competes with the product grid. Send visitors to the
                     contact page instead. */}
                 <div style={{ marginTop: 32 }}>
-                  <a className="btn btn-primary" href="/contact/">Send an enquiry →</a>
+                  <a className="btn btn-primary" href="/contact">Send an enquiry →</a>
                 </div>
               </div>
               <div className="sec-tag" style={{ marginBottom: 12 }}>What we need from you</div>

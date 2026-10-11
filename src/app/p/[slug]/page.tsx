@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
       `${heading} — from Badoudao, an OEM and ODM quartz clock manufacturer. MOQ from 500 pieces, Ex Works pricing.`,
     seoTitle: page.seo_title,
     seoDescription: page.seo_description,
-    path: `/p/${page.slug || params.slug}/`
+    path: `/p/${page.slug || params.slug}`
   });
 }
 

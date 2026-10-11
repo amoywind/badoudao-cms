@@ -11,11 +11,11 @@ import type { Category, NavItem, SiteSettings } from '@/lib/db';
    leaves a working menu rather than a blank header. */
 const FALLBACK_TOP: NavItem[] = [
   { id: 'nav-home', label: 'Home', href: '/', placement: 'top_nav', navOrder: 1 },
-  { id: 'nav-products', label: 'Products', href: '/products/', placement: 'top_nav', navOrder: 2 },
-  { id: 'nav-factory', label: 'Factory', href: '/p/factory/', placement: 'top_nav', navOrder: 3 },
-  { id: 'nav-quality', label: 'Quality', href: '/p/quality/', placement: 'top_nav', navOrder: 4 },
-  { id: 'nav-articles', label: 'Cases', href: '/articles/', placement: 'top_nav', navOrder: 5 },
-  { id: 'nav-contact', label: 'Contact', href: '/contact/', placement: 'top_nav', navOrder: 6 }
+  { id: 'nav-products', label: 'Products', href: '/products', placement: 'top_nav', navOrder: 2 },
+  { id: 'nav-factory', label: 'Factory', href: '/p/factory', placement: 'top_nav', navOrder: 3 },
+  { id: 'nav-quality', label: 'Quality', href: '/p/quality', placement: 'top_nav', navOrder: 4 },
+  { id: 'nav-articles', label: 'Cases', href: '/articles', placement: 'top_nav', navOrder: 5 },
+  { id: 'nav-contact', label: 'Contact', href: '/contact', placement: 'top_nav', navOrder: 6 }
 ];
 
 export async function TopBar() {
@@ -48,7 +48,7 @@ export async function Header() {
           ))}
         </nav>
         <div className="nav-cta">
-          <Link href="/products/" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
+          <Link href="/products" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
           <Link href="/#inquiry" className="btn btn-primary btn-sm">Get a Quote</Link>
         </div>
       </div>
@@ -95,7 +95,7 @@ export async function Footer() {
             <div className="f-h">Products</div>
             <div className="f-list">
               {cats.map((c) => (
-                <Link key={c.id} href={`/products/${c.id}/`}>{c.short || c.name}</Link>
+                <Link key={c.id} href={`/products/${c.id}`}>{c.short || c.name}</Link>
               ))}
             </div>
           </div>

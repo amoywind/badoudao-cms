@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
       seoTitle: product.seoTitle,
       seoDescription: product.seoDescription,
       keywords: product.metaKeywords,
-      path: `/products/${category}/${product.slug}/`,
+      path: `/products/${category}/${product.slug}`,
       image: product.images[0]?.url,
       type: 'product'
     });
@@ -127,7 +127,7 @@ export default async function ProductPage({ params }) {
       <title>{metaTitle.slice(0, 62)}</title>
       <meta name="description" content={metaDesc.slice(0, 158)} />
       {product.metaKeywords && <meta name="keywords" content={product.metaKeywords} />}
-      <link rel="canonical" href={`${SITE_URL}/products/${category}/${product.slug}/`} />
+      <link rel="canonical" href={`${SITE_URL}/products/${category}/${product.slug}`} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
@@ -139,8 +139,8 @@ export default async function ProductPage({ params }) {
       <nav className="breadcrumb">
         <div className="wrap">
           <Link href="/">Home</Link><span>/</span>
-          <Link href="/products/">Products</Link><span>/</span>
-          <Link href={`/products/${category}/`}>{category}</Link><span>/</span>
+          <Link href="/products">Products</Link><span>/</span>
+          <Link href={`/products/${category}`}>{category}</Link><span>/</span>
           <span>{product.name}</span>
         </div>
       </nav>

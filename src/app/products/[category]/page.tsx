@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
       seoTitle: cat.seoTitle,
       seoDescription: cat.seoDescription,
       keywords: `${label.toLowerCase()} manufacturer, wholesale ${label.toLowerCase()}, OEM ${label.toLowerCase()}`,
-      path: `/products/${params.category}/`
+      path: `/products/${params.category}`
     });
   } catch (err) {
     console.error('generateMetadata failed:', (err as Error)?.message);
@@ -71,7 +71,7 @@ export default async function CategoryPage({ params }) {
     <>
       <title>{metaTitle.slice(0, 62)}</title>
       <meta name="description" content={metaDesc.slice(0, 158)} />
-      <link rel="canonical" href={`${SITE_URL}/products/${category}/`} />
+      <link rel="canonical" href={`${SITE_URL}/products/${category}`} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <TopBar />
@@ -80,7 +80,7 @@ export default async function CategoryPage({ params }) {
       <nav className="breadcrumb">
         <div className="wrap">
           <Link href="/">Home</Link><span>/</span>
-          <Link href="/products/">Products</Link><span>/</span>
+          <Link href="/products">Products</Link><span>/</span>
           <span>{cat?.short || category}</span>
         </div>
       </nav>

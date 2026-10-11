@@ -67,10 +67,10 @@ export async function GET() {
   /* The homepage changes whenever anything is published, so it always claims
      today's date. */
   entries.push(url(`${SITE}/`, { priority: '1.0', changefreq: 'weekly', lastmod: today }));
-  entries.push(url(`${SITE}/products/`, { priority: '0.9', changefreq: 'weekly' }));
+  entries.push(url(`${SITE}/products`, { priority: '0.9', changefreq: 'weekly' }));
 
   cats.forEach((c) => {
-    entries.push(url(`${SITE}/products/${c.id}/`, { priority: '0.8', changefreq: 'weekly' }));
+    entries.push(url(`${SITE}/products/${c.id}`, { priority: '0.8', changefreq: 'weekly' }));
   });
 
   /* A product URL only works if its category landing page exists, so keep the
@@ -79,7 +79,7 @@ export async function GET() {
   products.forEach((p) => {
     if (!catIds.has(String(p.category))) return;
     entries.push(
-      url(`${SITE}/products/${p.category}/${p.slug}/`, {
+      url(`${SITE}/products/${p.category}/${p.slug}`, {
         priority: '0.7',
         changefreq: 'monthly',
         lastmod: stamp(p.updated_at)
@@ -89,7 +89,7 @@ export async function GET() {
 
   pages.forEach((p) => {
     entries.push(
-      url(`${SITE}/p/${p.slug}/`, {
+      url(`${SITE}/p/${p.slug}`, {
         priority: '0.6',
         changefreq: 'monthly',
         lastmod: stamp(p.updated_at)
@@ -102,12 +102,12 @@ export async function GET() {
   const articles = posts.filter((p) => (p.type || 'article') === 'article');
   const news = posts.filter((p) => p.type === 'news');
 
-  entries.push(url(`${SITE}/articles/`, { priority: '0.7', changefreq: 'weekly' }));
-  entries.push(url(`${SITE}/news/`, { priority: '0.5', changefreq: 'weekly' }));
+  entries.push(url(`${SITE}/articles`, { priority: '0.7', changefreq: 'weekly' }));
+  entries.push(url(`${SITE}/news`, { priority: '0.5', changefreq: 'weekly' }));
 
   articles.forEach((b) => {
     entries.push(
-      url(`${SITE}/articles/${b.slug}/`, {
+      url(`${SITE}/articles/${b.slug}`, {
         priority: '0.6',
         changefreq: 'monthly',
         lastmod: stamp(b.updated_at)
@@ -119,7 +119,7 @@ export async function GET() {
      guides so it never competes with them for the same query. */
   news.forEach((n) => {
     entries.push(
-      url(`${SITE}/news/${n.slug}/`, {
+      url(`${SITE}/news/${n.slug}`, {
         priority: '0.4',
         changefreq: 'monthly',
         lastmod: stamp(n.updated_at)
@@ -129,7 +129,7 @@ export async function GET() {
 
   /* The contact page is the main conversion URL — it carries the same
      enquiry form as the #inquiry anchor but has a keyword-matchable slug. */
-  entries.push(url(`${SITE}/contact/`, { priority: '0.9', changefreq: 'monthly' }));
+  entries.push(url(`${SITE}/contact`, { priority: '0.9', changefreq: 'monthly' }));
 
   /* Content lives under /admin and /api. They are already blocked in
      robots.txt; excluding them here keeps the feed honest as well. */

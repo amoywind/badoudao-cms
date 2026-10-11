@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
     seoTitle: post.seo_title,
     seoDescription: post.seo_description,
     keywords: kw,
-    path: `/articles/${post.slug}/`,
+    path: `/articles/${post.slug}`,
     image: post.cover,
     type: 'article'
   });
@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }) {
       <nav className="breadcrumb">
         <div className="wrap">
           <Link href="/">Home</Link><span>/</span>
-          <Link href="/articles/">Articles</Link><span>/</span>
+          <Link href="/articles">Articles</Link><span>/</span>
           <span>{post.title}</span>
         </div>
       </nav>
