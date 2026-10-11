@@ -16,6 +16,12 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
 
+  /* DIAG */
+  console.log('[meta] generateMetadata called', category, slug);
+  if (typeof slug === 'undefined') {
+    return { title: 'DIAG-no-slug', description: 'params.slug undefined' };
+  }
+
   /* A throw here produces no <title> at all, and the page still renders —
      so a failure is invisible unless it is contained. Build a usable title
      from whatever can be read, and never let this function fail. */
