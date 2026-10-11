@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { all, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 
@@ -9,7 +10,7 @@ export default async function BlogIndex() {
   const [posts, s] = await Promise.all([
     all("SELECT * FROM posts WHERE status = 'published' ORDER BY published_at DESC LIMIT 50")
       .catch(() => []),
-    getSettings().catch(() => ({}))
+    getSettings().catch(() => ({} as SiteSettings))
   ]);
 
   return (

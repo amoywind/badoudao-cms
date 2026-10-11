@@ -7,6 +7,52 @@
 
 import { getRequestContext } from '@cloudflare/next-on-pages';
 
+/* Rows come back from D1 as loosely typed objects. Naming the two shapes the
+   UI actually consumes lets `catch(() => [])` fallbacks infer correctly —
+   without this, an empty fallback narrows the type to never[] and every
+   property access below it fails the build. */
+export type Category = {
+  id: string;
+  name: string;
+  short: string;
+  description?: string;
+  designs?: string;
+  price_range?: string;
+  status?: string;
+};
+
+export type ProductSpec = { label: string; value: string };
+export type ProductOption = { label: string; priceDelta: number };
+export type ProductPrice = { minQty: number; maxQty: number | null; unitPrice: number };
+export type ProductImage = { url: string; alt?: string; isMain?: boolean };
+
+export type Product = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  summary: string;
+  priceMin: number;
+  priceMax: number;
+  moq: number;
+  leadTime: string;
+  moveLevel: string;
+  difficulty: string;
+  content: string;
+  featured: boolean;
+  status: string;
+  sortOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+  specs: ProductSpec[];
+  options: ProductOption[];
+  prices: ProductPrice[];
+  images: ProductImage[];
+};
+
+export type SiteSettings = Record<string, string>;
+
+
 export function getDB() {
   const { env } = getRequestContext();
   if (!env?.DB) {
@@ -44,7 +90,7 @@ export async function batch(statements) {
 /* row → object mappers                                                */
 /* ------------------------------------------------------------------ */
 
-export function mapProduct(row, extras = {}) {
+export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
   if (!row) return null;
   return {
     id: row.id,
@@ -64,10 +110,10 @@ export function mapProduct(row, extras = {}) {
     sortOrder: row.sort_order ?? 0,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-    specs: extras.specs || [],
-    options: extras.options || [],
-    prices: extras.prices || [],
-    images: extras.images || []
+    specs: (extras.specs as ProductSpec[]) || [],
+    options: (extras.options as ProductOption[]) || [],
+    prices: (extras.prices as ProductPrice[]) || [],
+    images: (extras.images as ProductImage[]) || []
   };
 }
 
@@ -128,7 +174,14 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
   });
 }
 
-export async function listProducts({ category, status, featured, limit = 200 } = {}) {
+export async function listProducts(
+  { category, status, featured, limit = 200 }: {
+    category?: string;
+    status?: string;
+    featured?: number;
+    limit?: number;
+  } = {}
+): Promise<Product[]> {
   const where = [];
   const params = [];
 
@@ -171,14 +224,14 @@ export async function listProducts({ category, status, featured, limit = 200 } =
   return withImages;
 }
 
-export async function listCategories() {
+export async function listCategories(): Promise<Category[]> {
   return all('SELECT * FROM categories ORDER BY sort_order, name');
 }
 
 /** key/value settings with defaults applied. */
-export async function getSettings() {
+export async function getSettings(): Promise<SiteSettings> {
   const rows = await all('SELECT key, value FROM settings');
-  const map = {};
+  const map: SiteSettings = {};
   rows.forEach((r) => {
     map[r.key] = r.value;
   });

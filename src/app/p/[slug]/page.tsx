@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { one, getSettings, listCategories } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
@@ -16,7 +17,7 @@ export default async function StaticPage({ params }) {
   if (!page) notFound();
 
   const [s, cats] = await Promise.all([
-    getSettings().catch(() => ({})),
+    getSettings().catch(() => ({} as SiteSettings)),
     listCategories().catch(() => [])
   ]);
 

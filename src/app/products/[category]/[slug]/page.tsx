@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
@@ -15,7 +16,7 @@ export default async function ProductPage({ params }) {
 
   const [related, s] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
-    getSettings().catch(() => ({}))
+    getSettings().catch(() => ({} as SiteSettings))
   ]);
   const others = related.filter((p) => p.id !== product.id).slice(0, 4);
 

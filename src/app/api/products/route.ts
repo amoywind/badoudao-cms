@@ -27,7 +27,7 @@ export async function GET(request) {
     category: searchParams.get('category') || undefined,
     status: searchParams.get('status') || undefined,
     featured: searchParams.has('featured')
-      ? searchParams.get('featured') === '1'
+      ? searchParams.get('featured') === '1' ? 1 : 0
       : undefined
   });
   const categories = await listCategories();

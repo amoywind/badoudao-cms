@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryForm } from '../../InquiryForm';
@@ -12,7 +13,7 @@ export default async function CategoryPage({ params }) {
   const cat = cats.find((c) => c.id === category);
   const [products, s] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
-    getSettings().catch(() => ({}))
+    getSettings().catch(() => ({} as SiteSettings))
   ]);
 
   const title = cat ? `${cat.name} — wholesale & OEM manufacturer` : 'Products';

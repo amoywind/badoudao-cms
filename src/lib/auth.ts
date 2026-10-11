@@ -125,7 +125,7 @@ export async function getSessionUser(token) {
 }
 
 export function sessionCookie(token, expires) {
-  const maxAge = Math.floor((new Date(expires) - Date.now()) / 1000);
+  const maxAge = Math.floor((new Date(expires).getTime() - Date.now()) / 1000);
   const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
   return `${COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`;
 }

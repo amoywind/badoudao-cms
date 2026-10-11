@@ -21,7 +21,7 @@ export default function InquiryDetail() {
   const [quote, setQuote] = useState({ qty: '', unitPrice: '', leadTime: '', note: '' });
 
   async function load() {
-    const res = await fetch(`/api/inquiries?id=${encodeURIComponent(id)}`);
+    const res = await fetch(`/api/inquiries?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`);
     if (res.status === 401) { window.location.href = '/admin/login'; return; }
     const data = await res.json();
     setD(data);
@@ -40,7 +40,7 @@ export default function InquiryDetail() {
   useEffect(() => { load(); }, [id]);
 
   if (!d) return <div className="empty"><span className="spin" /></div>;
-  if (!d.inquiry) return <div className="empty"><div class="t">询盘不存在</div></div>;
+  if (!d.inquiry) return <div className="empty"><div className="t">询盘不存在</div></div>;
 
   const i = d.inquiry;
 

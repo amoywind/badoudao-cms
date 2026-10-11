@@ -27,7 +27,7 @@ export default function EditProductPage() {
         specs: [], options: [], prices: [], images: []
       });
     }
-    fetch(`/api/products${isNew ? '' : `?id=${encodeURIComponent(id)}`}`)
+    fetch(`/api/products${isNew ? '' : `?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`}`)
       .then((r) => r.json())
       .then((d) => {
         if (!isNew && d.product) setProduct(d.product);

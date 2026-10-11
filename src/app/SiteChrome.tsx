@@ -1,14 +1,19 @@
 import Link from 'next/link';
 import { getSettings, listCategories } from '@/lib/db';
-import { getRequestContext } from '@cloudflare/next-on-pages';
+import type { Category, SiteSettings } from '@/lib/db';
+
+/* The DB read is wrapped in try/catch so a missing binding degrades to an
+   empty page instead of a 500. The annotations keep the fallback variables
+   typed — `let s = {}` would infer {} and every property access below it
+   would fail type checking. */
 
 export async function TopBar() {
-  let s = {};
+  let s: SiteSettings = {};
   try { s = await getSettings(); } catch {}
   return (
     <div className="topbar">
       <div className="wrap">
-        <span>{s.siteName} · Quartz clock manufacturer · OEM / ODM small-batch production</span>
+        <span>{s.siteName || 'Badoudao'} · Quartz clock manufacturer · OEM / ODM small-batch production</span>
         <span><b>Reply within {s.quoteHours || 12} hours</b> · <Link href="/#inquiry">Get a Quote</Link></span>
       </div>
     </div>
@@ -16,7 +21,7 @@ export async function TopBar() {
 }
 
 export async function Header() {
-  let cats = [];
+  let cats: Category[] = [];
   try { cats = await listCategories(); } catch {}
   return (
     <header className="site-header">
@@ -24,12 +29,11 @@ export async function Header() {
         <Link className="logo" href="/">BADOU<span>DAO</span></Link>
         <nav className="menu">
           <Link href="/products/">Products</Link>
-          <Link href="/oem-odm/">OEM / ODM</Link>
-          <Link href="/small-batch/">Small Batch</Link>
-          <Link href="/factory/">Factory</Link>
-          <Link href="/quality/">Quality</Link>
+          <Link href="/p/oem-odm/">OEM / ODM</Link>
+          <Link href="/p/small-batch/">Small Batch</Link>
+          <Link href="/p/factory/">Factory</Link>
+          <Link href="/p/quality/">Quality</Link>
           <Link href="/blog/">Guides</Link>
-          <Link href="/faq/">FAQ</Link>
         </nav>
         <div className="nav-cta">
           <Link href="/products/" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
@@ -41,7 +45,7 @@ export async function Header() {
 }
 
 export async function Footer() {
-  let s = {}, cats = [];
+  let s: SiteSettings = {}, cats: Category[] = [];
   try {
     s = await getSettings();
     cats = await listCategories();

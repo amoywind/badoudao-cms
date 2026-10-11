@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }) {
      immediately. Change the password in /admin/settings after logging in. */
   await bootstrap();
 
-  const token = cookies().get(SESSION_COOKIE)?.value;
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
   const user = token ? await getSessionUser(token) : null;
 
   if (!user) {

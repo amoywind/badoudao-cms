@@ -7,7 +7,7 @@ export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default async function LoginPage() {
-  const token = cookies().get(SESSION_COOKIE)?.value;
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (token && (await getSessionUser(token))) {
     redirect('/admin');
   }

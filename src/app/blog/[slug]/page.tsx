@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { one, all, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
@@ -16,7 +17,7 @@ export default async function PostPage({ params }) {
   if (!post) notFound();
 
   const [s, recent] = await Promise.all([
-    getSettings().catch(() => ({})),
+    getSettings().catch(() => ({} as SiteSettings)),
     all("SELECT slug, title FROM posts WHERE status = 'published' AND id != ? ORDER BY published_at DESC LIMIT 5", post.id)
       .catch(() => [])
   ]);

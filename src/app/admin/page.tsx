@@ -141,7 +141,7 @@ export default function DashboardPage() {
   );
 }
 
-function Todo({ n, tone, label, href }) {
+function Todo({ n, tone, label, href }: { n: number; tone: string; label: string; href?: string }) {
   const bg = { danger: '#fee2e2', warn: '#fef3c7', green: '#dcfce7', gray: '#f0f2f4' }[tone];
   const fg = { danger: '#b91c1c', warn: '#b45309', green: '#15803d', gray: '#767f8c' }[tone];
   return (

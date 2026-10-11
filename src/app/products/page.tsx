@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryForm } from '../InquiryForm';
@@ -10,7 +11,7 @@ export default async function ProductsIndex() {
   const [products, cats, s] = await Promise.all([
     listProducts({ status: 'published' }).catch(() => []),
     listCategories().catch(() => []),
-    getSettings().catch(() => ({}))
+    getSettings().catch(() => ({} as SiteSettings))
   ]);
 
   return (

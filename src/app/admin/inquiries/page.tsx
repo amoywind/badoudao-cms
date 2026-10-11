@@ -95,7 +95,7 @@ export default function InquiriesPage() {
         <div className="card-b flush">
           {data.inquiries.length === 0 ? (
             <div className="empty">
-              <div class="t">还没有询盘</div>
+              <div className="t">还没有询盘</div>
               <p style={{ fontSize: 13 }}>访客在前台提交表单后会出现在这里，同时发邮件到你邮箱</p>
             </div>
           ) : (

@@ -27,7 +27,7 @@ export default function MediaPage() {
     setUploading(true);
 
     const fd = new FormData();
-    Array.from(files).forEach((f) => fd.append('file', f));
+    Array.from(files as FileList).forEach((f) => fd.append('file', f as unknown as Blob));
     fd.append('folder', folder || 'uploads');
 
     try {
