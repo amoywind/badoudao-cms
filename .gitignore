@@ -17,3 +17,6 @@ wrangler.local.toml
 login.html
 admin-page.html
 site-home.html
+# build artefacts
+tsconfig.tsbuildinfo
+lg2.html
