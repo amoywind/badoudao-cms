@@ -74,7 +74,19 @@ for (const p of PAGES) {
        seo_title = ${q(p.seo_title)},
        seo_description = ${q(p.seo_description)},
        updated_at = datetime('now')
-     WHERE slug = ${q(p.slug)}`
+     WHERE id = ${q(p.slug)}`
+  );
+
+  /* The route reads a page by id, not by slug — /p/factory queries
+     `WHERE id = 'factory'`. The existing pages happen to have id = slug,
+     which is why nothing looked wrong until a row was inserted with only
+     a slug: the page rendered, returned 404, and the row was there the
+     whole time. So an UPDATE that matches nothing is an error here, not a
+     no-op. */
+  sql.push(
+    `INSERT OR IGNORE INTO pages (id, slug, title, heading, intro, seo_title, seo_description, body, status, updated_at)
+     VALUES (${q(p.slug)}, ${q(p.slug)}, ${q(p.title)}, ${q(p.heading)}, ${q(p.intro)},
+             ${q(p.seo_title)}, ${q(p.seo_description)}, ${q(body)}, 'published', datetime('now'))`
   );
 
   console.log(`  ${p.slug.padEnd(10)} ${String(body.length).padStart(5)} 字符  ${p.heading}`);

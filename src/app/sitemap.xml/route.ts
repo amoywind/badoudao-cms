@@ -44,7 +44,7 @@ function stamp(v) {
 export async function GET() {
   const [settings, pages, posts, products, cats] = await Promise.all([
     getSettings().catch(() => ({}) as Record<string, string>),
-    all("SELECT slug, updated_at FROM pages WHERE status = 'published' ORDER BY sort_order").catch(
+    all("SELECT id, updated_at FROM pages WHERE status = 'published' ORDER BY sort_order").catch(
       () => []
     ),
     all(
@@ -89,7 +89,7 @@ export async function GET() {
 
   pages.forEach((p) => {
     entries.push(
-      url(`${SITE}/p/${p.slug}`, {
+      url(`${SITE}/p/${p.id}`, {
         priority: '0.6',
         changefreq: 'monthly',
         lastmod: stamp(p.updated_at)

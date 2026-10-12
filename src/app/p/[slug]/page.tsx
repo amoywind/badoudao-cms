@@ -11,6 +11,13 @@ export const dynamic = 'force-dynamic';
 /**
  * Per-page metadata.
  *
+ * The route segment is called [slug] but the lookup is by id. Every page
+ * that existed before had id = slug, which hid the difference; a row
+ * inserted with only a slug renders a 404 while sitting in the table
+ * looking correct. Pages created through the admin follow the same rule, so
+ * this stays until the two are unified deliberately — changing one side
+ * alone breaks every existing URL.
+ *
  * The pages table has carried seo_title and seo_description from the start,
  * but nothing ever read them — the admin could fill them in and watch the
  * page title stay unchanged. They are wired up here, with a generated
