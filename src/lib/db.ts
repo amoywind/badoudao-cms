@@ -545,7 +545,11 @@ export async function buildMeta({
      a code edit and a redeploy. getSiteUrl() is itself memoised, so this
      costs nothing extra on a page that also renders the footer. */
   const site = await getSiteUrl();
-  const url = path ? `${site}${path.startsWith('/') ? path : `/${path}`}` : site;
+  /* Normalised to no trailing slash, matching every internal link: Cloudflare
+     strips the slash before the request arrives, so a canonical that kept it
+     would name a URL the site redirects rather than serves. */
+  const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`).replace(/\/+$/, '') : '';
+  const url = cleanPath ? `${site}${cleanPath}` : `${site}/`;
 
   /* og:type is a closed vocabulary — website, article, book, profile,
      video.movie and a handful more. Passing anything else (a product page
@@ -564,7 +568,11 @@ export async function buildMeta({
   return {
     title: t,
     description: d,
-    alternates: { canonical: path || '/' },
+    /* Absolute, not the path. Google resolves a relative canonical against
+       whatever host it happens to be crawling, which is how a domain change
+       ends up split across two identities. Passing the full URL makes the
+       host the same value the sitemap and og:url use. */
+    alternates: { canonical: url },
     keywords: keywords || undefined,
     openGraph: {
       title: t,
