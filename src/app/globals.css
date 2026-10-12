@@ -414,3 +414,26 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 }
 .drop-alt a { color: var(--brand); font-weight: 500; word-break: break-all; }
 .drop-alt a:hover { text-decoration: underline; }
+
+/* ---- error fallback ----
+   Shown instead of React's blank page. Centred rather than full-bleed:
+   on a product page the buyer has just scrolled past a spec table, and a
+   full-screen error reads like the site is down. */
+
+.eb {
+  min-height: 60vh; display: flex; align-items: center; justify-content: center;
+  padding: 48px 20px;
+}
+.eb-in { max-width: 460px; text-align: center; }
+.eb-ico {
+  width: 52px; height: 52px; margin: 0 auto 16px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: #fffbeb; border: 1px solid #fde68a;
+}
+.eb h2 { font-size: 19px; margin: 0 0 10px; color: var(--ink); }
+.eb-msg { font-size: 14px; line-height: 1.65; color: var(--ink2); margin: 0 0 20px; }
+.eb-act { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.eb-digest {
+  margin: 22px 0 0; font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px; color: #a8aeb8; word-break: break-word;
+}

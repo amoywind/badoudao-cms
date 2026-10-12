@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -270,7 +271,12 @@ export default async function ProductPage({ params }) {
               {/* The only other page that keeps a form: a buyer who opened
                   this specific model has already chosen, so asking here is
                   the least intrusive place to do it. */}
-              <InquiryForm preset={product.name} compact />
+              {/* A crash in the enquiry form must not cost the buyer the
+                  specifications they came for — it is the one interactive
+                  part of this page. */}
+              <ErrorBoundary label="product-enquiry" backHref="/contact">
+                <InquiryForm preset={product.name} compact />
+              </ErrorBoundary>
             </div>
           </div>
         </section>

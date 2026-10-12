@@ -41,7 +41,11 @@ const KNOWN_SAFE = [
   { match: /\{s\.stale > 0 &&/, why: 'explicit numeric comparison' },
   { match: /\{m\.usedBy\.length > 0 &&/, why: 'explicit numeric comparison' },
   { match: /\{p\.featured === 1 &&/, why: 'explicit numeric comparison' },
-  { match: /\{!product\.specs\.length &&/, why: 'boolean from !' }
+  { match: /\{!product\.specs\.length &&/, why: 'boolean from !' },
+  { match: /\{error\.digest &&/, why: 'string — Next supplies a digest or leaves it undefined' },
+  { match: /\{error\.message &&/, why: 'string — an Error always has one' },
+  { match: /\{i\.has_attachment === 1 &&/, why: 'boolean — from a numeric comparison' },
+  { match: /\{status &&/, why: 'string — a query string, empty at worst' }
 ];
 
 function isKnownSafe(line) {

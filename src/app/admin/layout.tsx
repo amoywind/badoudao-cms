@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getSessionUser, SESSION_COOKIE } from '@/lib/auth';
 import { LogoutButton } from './LogoutButton';
+import { AdminShell } from './_shell';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -28,9 +29,14 @@ export default async function AdminLayout({ children }) {
   }
 
   return (
+    /* The boundary wraps the content area rather than the whole shell, so a
+       crash in a page never costs the owner the sidebar and the way back to
+       the dashboard. */
     <div className="app">
       <Sidebar user={user} />
-      <div className="main">{children}</div>
+      <div className="main">
+        <AdminShell>{children}</AdminShell>
+      </div>
     </div>
   );
 }
