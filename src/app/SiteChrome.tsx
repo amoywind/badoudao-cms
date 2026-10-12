@@ -50,8 +50,8 @@ export async function Header() {
         <nav className="menu">
           {nav.map((n) =>
             n.id === 'nav-products' ? (
-              <div className="has-drop" key={n.id}>
-                <Link href={n.href} className="drop-trigger">
+              <div className="navdrop-wrap" key={n.id}>
+                <Link href={n.href} className="navdrop-trigger">
                   {n.label}
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="3" aria-hidden="true">
@@ -60,16 +60,16 @@ export async function Header() {
                 </Link>
 
                 {cats.length > 0 && (
-                  <div className="drop">
+                  <div className="navdrop">
                     <div className="drop-grid">
                       {cats.map((c) => (
-                        <Link key={c.id} href={`/products/${c.id}`} className="drop-item">
-                          <span className="drop-name">{c.name}</span>
-                          <span className="drop-desc">{c.short || c.description || ''}</span>
+                        <Link key={c.id} href={`/products/${c.id}`} className="navdrop-item">
+                          <span className="navdrop-name">{c.name}</span>
+                          <span className="navdrop-desc">{c.short || c.description || ''}</span>
                         </Link>
                       ))}
                     </div>
-                    <Link href="/products" className="drop-all">
+                    <Link href="/products" className="navdrop-all">
                       View all products →
                     </Link>
                   </div>

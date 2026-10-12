@@ -217,6 +217,12 @@ export function InquiryForm({
             <span className="hint">optional · max 2 MB</span>
           </label>
 
+          {/* Uploading is the primary route and the file lands in the admin
+              next to the enquiry. The email below is a genuine alternative
+              for the cases where it cannot work — a drawing too large to
+              compress, or someone on a phone who would rather not grant a
+              file picker. Both paths are offered because the ones that
+              never arrive are the quotes that needed the drawing. */}
           <div className={`drop${file ? ' has-file' : ''}${fileError ? ' has-error' : ''}`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={onDrop}
@@ -235,12 +241,26 @@ export function InquiryForm({
                   aria-label="Remove file">×</button>
               </>
             ) : (
-              <span className="drop-txt">Drop a file here or click to browse</span>
+              <>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="#0f5c4a" strokeWidth="1.8" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" strokeLinecap="round" />
+                  <path d="M7 9l5-5 5 5" strokeLinecap="round" />
+                  <path d="M12 4v12" strokeLinecap="round" />
+                </svg>
+                <span className="drop-txt">Drop your design here, or click to choose a file</span>
+              </>
             )}
           </div>
 
           <input ref={fileRef} type="file" hidden accept="image/*,application/pdf"
             onChange={(e) => chooseFile(e.target.files?.[0] || null)} />
+
+          <div className="drop-alt">
+            Or if it is easier — email your design to{' '}
+            <a href="mailto:amoywind@gmail.com">amoywind@gmail.com</a>
+            {' '}and we will match it to your enquiry.
+          </div>
 
           {fileError && <div className="fg-err">{fileError}</div>}
         </div>

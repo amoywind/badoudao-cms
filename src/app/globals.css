@@ -349,28 +349,28 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    <a>, otherwise the pointer crossing the gap between the link and the
    panel closes it. */
 
-.has-drop { position: relative; }
-.menu .drop-trigger { display: inline-flex; align-items: center; gap: 5px; }
-.menu .drop-trigger svg { transition: transform .2s; opacity: .55; }
-.has-drop:hover .drop-trigger svg,
-.has-drop:focus-within .drop-trigger svg { transform: rotate(180deg); }
-.has-drop:hover .drop-trigger,
-.has-drop:focus-within .drop-trigger { color: var(--ink); }
+.navdrop-wrap { position: relative; }
+.menu .navdrop-trigger { display: inline-flex; align-items: center; gap: 5px; }
+.menu .navdrop-trigger svg { transition: transform .2s; opacity: .55; }
+.navdrop-wrap:hover .navdrop-trigger svg,
+.navdrop-wrap:focus-within .navdrop-trigger svg { transform: rotate(180deg); }
+.navdrop-wrap:hover .navdrop-trigger,
+.navdrop-wrap:focus-within .navdrop-trigger { color: var(--ink); }
 
-.drop {
+.navdrop {
   position: absolute; top: 100%; left: -18px; z-index: 60;
   min-width: 560px; padding-top: 14px;
   opacity: 0; visibility: hidden; transform: translateY(-6px);
   transition: opacity .18s, transform .18s, visibility .18s;
 }
-.has-drop:hover .drop,
-.has-drop:focus-within .drop { opacity: 1; visibility: visible; transform: translateY(0); }
+.navdrop-wrap:hover .drop,
+.navdrop-wrap:focus-within .navdrop { opacity: 1; visibility: visible; transform: translateY(0); }
 
 /* the connector, so the pointer can cross into the panel without a gap */
-.drop::before {
+.navdrop::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px;
 }
-.drop {
+.navdrop {
   background: #fff; border: 1px solid var(--line); border-radius: 10px;
   box-shadow: 0 12px 34px rgba(15, 23, 42, .11);
   padding: 14px;
@@ -378,28 +378,39 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .drop-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
 }
-.drop-item {
+.navdrop-item {
   display: flex; flex-direction: column; gap: 2px;
   padding: 9px 11px; border-radius: 7px;
 }
-.drop-item::after { display: none; }          /* kill the menu underline */
-.drop-item:hover { background: #f4f7f6; }
-.drop-name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
-.drop-desc {
+.navdrop-item::after { display: none; }          /* kill the menu underline */
+.navdrop-item:hover { background: #f4f7f6; }
+.navdrop-name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.navdrop-desc {
   font-size: 11.5px; color: #8a919b; line-height: 1.4;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.drop-all {
+.navdrop-all {
   display: block; margin-top: 10px; padding: 9px 11px 2px;
   border-top: 1px solid var(--line);
   font-size: 12.5px; font-weight: 500; color: var(--brand);
 }
-.drop-all::after { display: none; }
-.drop-all:hover { background: #f4f7f6; border-radius: 0 0 7px 7px; }
+.navdrop-all::after { display: none; }
+.navdrop-all:hover { background: #f4f7f6; border-radius: 0 0 7px 7px; }
 
 @media (max-width: 1000px) {
   /* No hover on touch — the panel would be unreachable. The Products link
      itself still goes to /products, so nothing is lost. */
-  .drop { display: none; }
-  .menu .drop-trigger svg { display: none; }
+  .navdrop { display: none; }
+  .menu .navdrop-trigger svg { display: none; }
 }
+
+/* Email fallback under the upload area. Offered as a second route rather
+   than an error message: a drawing over the size limit, or a phone where
+   a file picker is one tap too many, should not stop the enquiry going out. */
+.drop-alt {
+  margin-top: 9px; padding: 9px 12px;
+  background: #f7f9f8; border-radius: 6px;
+  font-size: 12.5px; line-height: 1.55; color: #6b7280;
+}
+.drop-alt a { color: var(--brand); font-weight: 500; word-break: break-all; }
+.drop-alt a:hover { text-decoration: underline; }
