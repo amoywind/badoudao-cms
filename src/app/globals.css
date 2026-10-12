@@ -363,7 +363,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   opacity: 0; visibility: hidden; transform: translateY(-6px);
   transition: opacity .18s, transform .18s, visibility .18s;
 }
-.navdrop-wrap:hover .drop,
+.navdrop-wrap:hover .navdrop,
 .navdrop-wrap:focus-within .navdrop { opacity: 1; visibility: visible; transform: translateY(0); }
 
 /* the connector, so the pointer can cross into the panel without a gap */
