@@ -77,6 +77,34 @@ function walk(dir) {
 
     lines.forEach((line, i) => {
       const no = i + 1;
+
+      /* A member access that mixes a state object with a local const from
+         the same render — `d.i.has_attachment`, where the state is `d` and
+         `i` is `const i = d.inquiry`. That is `undefined.has_attachment`,
+         which throws during render and lands on "Application error: a
+         client-side exception has occurred". The response is a well-formed
+         page and the type checker is silent, because `d` really is an
+         object with no `i` on it — TypeScript's index signature allows it. */
+      const stateNames = [...src.matchAll(/const\s+\[(\w+),\s*set(\w+)\]\s*=\s*useState/g)]
+        .map((m) => m[1]);
+      const localNames = [...src.matchAll(/^\s*const\s+(\w+)\s*=\s*\w+\./gm)].map((m) => m[1]);
+
+      for (const st of stateNames) {
+        for (const loc of localNames) {
+          const bad = new RegExp(`\\b${st}\\.${loc}\\b`);
+          const hit = bad.exec(src);
+          if (!hit) continue;
+          /* Reported once per pair — the pattern appears many times in a
+             file and 300 identical lines hide the one that matters. */
+          FINDINGS.push({
+            rel,
+            no: (src.slice(0, hit.index).match(/\n/g) || []).length + 1,
+            kind: 'state-local-mixup',
+            line: `reads ${st}.${loc} — ${loc} is a local const, not a property of ${st}`
+          });
+        }
+      }
+
       if (renderLines.has(line)) return;
 
       /* onClick / onChange / onSubmit and friends are handlers, not render. */
@@ -122,13 +150,17 @@ function walk(dir) {
 
 walk(SRC);
 
-if (!FINDINGS.length) {
+/* Same file, same line, same kind means the same mistake found several
+     ways — report it once, or the signal is lost in the noise. */
+const UNIQUE = [...new Map(FINDINGS.map((f) => [`${f.rel}:${f.no}:${f.kind}`, f])).values()];
+
+if (!UNIQUE.length) {
   console.log('No hydration hazards found.');
   process.exit(0);
 }
 
-console.log(`${FINDINGS.length} finding(s):\n`);
-for (const f of FINDINGS) {
+console.log(`${UNIQUE.length} finding(s):\n`);
+for (const f of UNIQUE) {
   console.log(`  ${f.rel}:${f.no}  [${f.kind}]`);
   console.log(`    ${f.line.slice(0, 100)}`);
 }

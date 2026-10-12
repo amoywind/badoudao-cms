@@ -154,11 +154,23 @@ export default function InquiryDetail() {
                 </div>
               )}
 
+              {/* The flag is set when the drawing is stored, so a row marked
+                  has_attachment with nothing in the attachments table means
+                  the write failed — worth saying plainly rather than
+                  showing an enquiry that looks like it came with no file.
+                  This branch also covers the earlier uploads lost to the
+                  foreign key, which are unrecoverable. */}
+              {i.has_attachment === 1 && atts.length === 0 && (
+                <div className="note note-w">
+                  这条询盘标记为带附件，但没有找到文件。
+                  早期版本的存储顺序有误，那批上传未能保存——
+                  如仍需要，请让买家重新发送。
+                </div>
+              )}
+
               {atts.length > 0 && (
                 <div className="fg">
-                  <div className="help">
-                    附件{d.i.has_attachment === 1 && atts.length === 0 ? '（记录显示有文件但未找到，可能上传时 R2 未启用）' : ''}
-                  </div>
+                  <div className="help">附件</div>
                   <div className="att-list">
                     {atts.map((a) => {
                       const isImg = String(a.mime || '').startsWith('image/');
