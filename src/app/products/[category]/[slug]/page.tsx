@@ -105,30 +105,8 @@ export default async function ProductPage({ params }) {
 
   const mainImg = product.images[0];
 
-  /* Emit the tags from the component itself rather than relying on
-     generateMetadata(). This route was serving no <title> at all — the
-     page rendered, the H1 was right, and search engines saw a document
-     with no name. React hoists <title> and <meta> rendered anywhere in the
-     tree into <head>, so putting them here is both simple and guaranteed
-     to reach the output. generateMetadata() stays, because where it does
-     run it also feeds the sitemap and any server-side consumer. */
-  const metaTitle =
-    product.seoTitle || `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`;
-  const metaDesc =
-    product.seoDescription ||
-    `${product.name} — ${product.summary || ''} MOQ ${product.moq || 500} pcs.` +
-      (product.priceMin
-        ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
-        : '') +
-      ` ${product.leadTime || '20-30 days'} lead time, custom dial artwork available.`;
-
   return (
     <>
-      <title>{metaTitle.slice(0, 62)}</title>
-      <meta name="description" content={metaDesc.slice(0, 158)} />
-      {product.metaKeywords && <meta name="keywords" content={product.metaKeywords} />}
-      <link rel="canonical" href={`${SITE_URL}/products/${category}/${product.slug}`} />
-
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }} />
