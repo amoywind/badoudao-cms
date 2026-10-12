@@ -112,10 +112,70 @@ export async function all(sql, ...params) {
   return results || [];
 }
 
+/**
+ * Memoise a read for the length of one request.
+ *
+ * Every public page loads the same handful of rows: the categories for the
+ * header and the footer, the site settings for the top bar and the contact
+ * details, the navigation. Measured on the product page, that was five
+ * identical reads per view — and each one is a network round trip to D1,
+ * which is where the ~1.3s was going.
+ *
+ * Held on globalThis rather than a module variable so the cache lives for
+ * the isolate, and the key includes the arguments: two products are two
+ * different queries and must not collide.
+ *
+ * Writes call invalidateCache() so the next request sees the change. The
+ * window is a single request either way, so there is nothing stale to
+ * serve.
+ */
+const CACHE = '__badoudao_read_cache__';
+
+type CacheBucket = Map<string, Promise<unknown>>;
+
+function cache(): CacheBucket {
+  const g = globalThis as unknown as Record<string, CacheBucket | undefined>;
+  if (!g[CACHE]) g[CACHE] = new Map();
+  return g[CACHE] as CacheBucket;
+}
+
+function readKey(sql: string, params: unknown[]) {
+  return `${sql}|${JSON.stringify(params)}`;
+}
+
+/** Run a query once per request and reuse the result after that. */
+export async function cached<T = Record<string, unknown>[]>(
+  sql: string,
+  ...params: unknown[]
+): Promise<T> {
+  const key = readKey(sql, params);
+  const bucket = cache();
+
+  const hit = bucket.get(key);
+  if (hit) return hit as T;
+
+  /* Promise, not value: two callers awaiting the same miss must not both
+     reach the database. */
+  const p = (async () => {
+    const rows = await all(sql, ...params);
+    return rows as T;
+  })();
+
+  bucket.set(key, p);
+  return p;
+}
+
+/** Drop memoised reads — call after anything that writes. */
+export function invalidateCache() {
+  cache().clear();
+}
+
 /** Run a write. */
 export async function run(sql, ...params) {
   const db = getDB();
-  return db.prepare(sql).bind(...params).run();
+  const r = await db.prepare(sql).bind(...params).run();
+  invalidateCache();
+  return r;
 }
 
 /** Run several writes in one transaction. */
@@ -245,28 +305,45 @@ export async function listProducts(
     LIMIT ?`;
   params.push(limit);
 
-  const rows = await all(sql, ...params);
+  const rows = await cached<any[]>(sql, ...params);
 
-  /* attach main image without N+1 queries */
-  const withImages = await Promise.all(
-    rows.map(async (row) => {
-      const img = await one(
-        `SELECT m.id, m.url, m.alt FROM product_images pi
+  /* Main image per product, in one query.
+
+     This was a query per row inside a Promise.all — technically concurrent,
+     so the wall-clock looked acceptable while still costing one D1 round
+     trip each. On a category page with 40 products that is 41 queries for
+     data that has one obvious join. The window function picks the same row
+     per product (is_main first, then sort order) in a single pass. */
+  const mainByProduct: Record<string, { id: string; url: string; alt: string }> = {};
+
+  if (rows.length) {
+    const imgs = await cached<any[]>(
+      `SELECT pi.product_id, m.id, m.url, m.alt,
+              ROW_NUMBER() OVER (
+                PARTITION BY pi.product_id
+                ORDER BY pi.is_main DESC, pi.sort_order, pi.id
+              ) AS rn
+         FROM product_images pi
          JOIN media m ON m.id = pi.media_id
-         WHERE pi.product_id = ? ORDER BY pi.is_main DESC, pi.sort_order LIMIT 1`,
-        row.id
-      );
-      return mapProduct(row, {
-        images: img ? [{ id: img.id, url: img.url, alt: img.alt || '', isMain: true }] : []
-      });
-    })
-  );
+        WHERE pi.product_id IN (${rows.map(() => '?').join(',')})`,
+      ...rows.map((r) => r.id)
+    );
 
-  return withImages;
+    imgs.forEach((i) => {
+      if (i.rn === 1) mainByProduct[i.product_id] = { id: i.id, url: i.url, alt: i.alt || '' };
+    });
+  }
+
+  return rows.map((row) => {
+    const img = mainByProduct[row.id];
+    return mapProduct(row, {
+      images: img ? [{ id: img.id, url: img.url, alt: img.alt, isMain: true }] : []
+    });
+  });
 }
 
 export async function listCategories(): Promise<Category[]> {
-  const rows = await all('SELECT * FROM categories ORDER BY sort_order, name');
+  const rows = await cached<any[]>('SELECT * FROM categories ORDER BY sort_order, name');
   return rows.map((r) => ({
     id: r.id,
     name: r.name,
@@ -327,7 +404,7 @@ export async function listProductVideos(productId: string): Promise<ProductVideo
  * page is hidden without breaking a bookmarked link.
  */
 export async function listNav(placement: string): Promise<NavItem[]> {
-  const rows = await all(
+  const rows = await cached<any[]>(
     `SELECT id, title, nav_label, external_key, placement, nav_order, target
        FROM pages
       WHERE show_in_nav = 1 AND placement = ?
@@ -365,7 +442,7 @@ export async function listNav(placement: string): Promise<NavItem[]> {
 
 /** key/value settings with defaults applied. */
 export async function getSettings(): Promise<SiteSettings> {
-  const rows = await all('SELECT key, value FROM settings');
+  const rows = await cached<any[]>('SELECT key, value FROM settings');
   const map: SiteSettings = {};
   rows.forEach((r) => {
     map[r.key] = r.value;

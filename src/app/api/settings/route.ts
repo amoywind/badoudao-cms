@@ -20,7 +20,13 @@ const DEFAULTS = {
   logoLight: '/logo-light.svg',
   logoDark: '/logo-dark.svg',
   brandColor: '#0f5c4a',
-  accentColor: '#b8874a'
+  accentColor: '#b8874a',
+  /* Verification tokens and analytics. A token is pasted once and must
+     reach <head> without a redeploy, so it is stored rather than compiled
+     in; the admin SEO screen writes to these keys. */
+  search_console_token: '',
+  bing_verification: '',
+  plausible_domain: ''
 };
 
 export async function GET(request) {

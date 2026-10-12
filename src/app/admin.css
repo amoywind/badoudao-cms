@@ -406,3 +406,16 @@ select.inp { cursor: pointer; }
   padding: 7px 14px; border-top: 1px solid var(--line); background: #fafbfc;
   font-size: 11.5px; color: #8a919b; flex-wrap: wrap;
 }
+
+/* ---- SEO centre ---- */
+
+.sg-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 15px; background: #f7f9f8; border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.sg-link code { font-size: 13px; color: var(--ink); word-break: break-all; }
+
+.sg-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+.sg-grid a { font-size: 13.5px; color: var(--brand); font-weight: 500; }
+.sg-grid a:hover { text-decoration: underline; }
