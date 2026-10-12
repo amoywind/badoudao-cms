@@ -446,6 +446,20 @@ export function buildMeta({
   const site = SITE_URL.replace(/\/+$/, '');
   const url = path ? `${site}${path.startsWith('/') ? path : `/${path}`}` : site;
 
+  /* og:type is a closed vocabulary — website, article, book, profile,
+     video.movie and a handful more. Passing anything else (a product page
+     wanting "product", for instance) makes Next reject the whole metadata
+     object: the page still renders, but with no <title> and no description
+     at all, which is invisible from the front end. Anything unrecognised
+     falls back to website; the Product JSON-LD below it is what actually
+     marks the page as a product. */
+  const OG_TYPES = new Set([
+    'website', 'article', 'book', 'profile', 'music.song', 'music.album',
+    'music.playlist', 'video.movie', 'video.episode', 'video.tv_show',
+    'video.other', 'website'
+  ]);
+  const ogType = OG_TYPES.has(type) ? type : 'website';
+
   return {
     title: t,
     description: d,
@@ -455,7 +469,7 @@ export function buildMeta({
       title: t,
       description: d,
       url,
-      type,
+      type: ogType,
       siteName: 'Badoudao',
       images: image ? [{ url: image.startsWith('http') ? image : `${site}${image}` }] : undefined
     },

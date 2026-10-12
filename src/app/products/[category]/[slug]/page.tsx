@@ -9,35 +9,51 @@ export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 /**
- * Per-product metadata. The admin's seo_title / seo_description win when
- * set; otherwise both are built from the price band and MOQ, which is what
- * a buyer searches on and what earns the rich result.
+ * Per-product metadata.
+ *
+ * The admin's seo_title / seo_description win when set; otherwise both are
+ * built from the price band and MOQ, which is what a buyer searches on.
+ *
+ * No `type` is passed: og:type has no "product" member, and supplying one
+ * made Next discard this whole object — the page rendered with no <title>
+ * and no description at all. The Product JSON-LD further down is what marks
+ * this as a product to a search engine.
  */
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
-  const log: string[] = [];
+
   try {
-    log.push("start");
-    const product: any = await getProduct(slug, { includeDrafts: false }).catch((e) => ({ err: e.message }));
-    log.push(`product=${!!product}`);
-    const moq = product?.moq || 500;
-    log.push(`moq=${moq} pmin=${typeof product?.priceMin} pmax=${typeof product?.priceMax}`);
-    const desc = `${product?.name} — ${product?.summary || ""} MOQ ${moq} pcs.`;
-    log.push("desc-ok");
-    const m: any = buildMeta({
-      title: `${product?.name} | Test`,
-      description: desc,
-      seoTitle: product?.seoTitle,
-      seoDescription: product?.seoDescription,
-      keywords: product?.metaKeywords,
-      path: `/products/${category}/${product?.slug}`,
-      image: product?.images?.[0]?.url,
-      type: 'product'
+    const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
+
+    if (!product || product.category !== category) {
+      return { title: 'Product | Badoudao', robots: { index: false } };
+    }
+
+    const moq = product.moq || 500;
+    const price = product.priceMin
+      ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
+      : '';
+
+    return buildMeta({
+      title: `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`,
+      description:
+        `${product.name} — ${product.summary || ''} MOQ ${moq} pcs.${price}` +
+        ` ${product.leadTime || '20-30 days'} lead time, custom dial artwork available.`,
+      seoTitle: product.seoTitle,
+      seoDescription: product.seoDescription,
+      keywords: product.metaKeywords,
+      path: `/products/${category}/${product.slug}`,
+      image: product.images[0]?.url
     });
-    log.push(`buildMeta-ok title=${m?.title ? "yes" : "EMPTY"}`);
-    return { title: `OK [${log.join(" | ")}]`, description: "d" };
-  } catch (err: any) {
-    return { title: `ERR [${log.join(" | ")}] >> ${err?.message}`, description: "d" };
+  } catch (err) {
+    /* Contained on purpose: a throw here leaves the page rendering with no
+       title at all, and nothing in the front end reveals it. */
+    console.error('generateMetadata failed:', (err as Error)?.message);
+    return {
+      title: `${slug} | Badoudao Quartz Clocks`,
+      description:
+        'OEM and ODM quartz clocks from Badoudao. MOQ from 500 pieces, Ex Works pricing.'
+    };
   }
 }
 
