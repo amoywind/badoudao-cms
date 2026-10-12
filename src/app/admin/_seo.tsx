@@ -26,6 +26,9 @@ export type SeoProps = {
   previewImage?: string;
   keywords?: string;
   onKeywordsChange?: (v: string) => void;
+  /* The host shown in the preview. Passed in rather than hard-coded, so
+     the mock result matches whatever domain the site is actually on. */
+  siteHost?: string;
 };
 
 const TITLE_MAX = 60;
@@ -44,7 +47,8 @@ export function SeoBox({
   path = '',
   previewImage,
   keywords,
-  onKeywordsChange
+  onKeywordsChange,
+  siteHost = 'oemwallclocks.com'
 }: SeoProps) {
   const t = text(value.title);
   const d = text(value.description);
@@ -115,7 +119,7 @@ export function SeoBox({
       <div className="seo-side">
         <div className="help">搜索结果预览</div>
         <div className="serp">
-          <div className="serp-url">badoudao-site.pages.dev{path}</div>
+          <div className="serp-url">{siteHost}{path}</div>
           <div className="serp-title">{shownTitle || '（未设置标题）'}</div>
           <div className="serp-desc">
             {shownDesc || '（未设置描述）'}

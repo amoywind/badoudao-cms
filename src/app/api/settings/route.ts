@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 const DEFAULTS = {
   siteName: 'Badoudao',
-  siteUrl: 'https://badoudao.pages.dev',
+  siteUrl: 'https://oemwallclocks.com',
   email: 'sales@badoudao.com',
   whatsapp: '+8613800000000',
   phone: '+86 138 0000 0000',

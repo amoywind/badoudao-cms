@@ -485,7 +485,27 @@ export async function log(userId, action, entity, entityId, summary) {
 /* ------------------------------------------------------------------ */
 
 /** Canonical host. Overridable so a custom domain needs no code change. */
-export const SITE_URL = 'https://badoudao-site.pages.dev';
+/**
+ * Fallback canonical host, used only when settings has no siteUrl.
+ *
+ * The custom domain oemwallclocks.com is the real one and lives in the
+ * settings table; this is what renders before anyone has saved it. Having
+ * it wrong for a moment is better than a build failing, but the settings
+ * value is what every caller should actually use — see getSiteUrl().
+ */
+export const SITE_URL = 'https://oemwallclocks.com';
+
+/** The site's canonical host, from settings, falling back to SITE_URL. */
+export async function getSiteUrl(): Promise<string> {
+  try {
+    const s = await getSettings();
+    const v = String(s.siteUrl || '').trim().replace(/\/+$/, '');
+    /* Guard against a half-finished setting: an empty or non-http value
+       would produce canonical tags pointing nowhere. */
+    if (v.startsWith('http')) return v;
+  } catch {}
+  return SITE_URL;
+}
 
 /**
  * Build a Next.js metadata object for a public page.
@@ -499,7 +519,7 @@ export const SITE_URL = 'https://badoudao-site.pages.dev';
  * ~60 characters is cut off in results, and a description over ~160 is
  * dropped entirely.
  */
-export function buildMeta({
+export async function buildMeta({
   title,
   description,
   seoTitle,
@@ -520,7 +540,11 @@ export function buildMeta({
 }) {
   const t = String(seoTitle || title || '').trim().slice(0, 62);
   const d = String(seoDescription || description || '').trim().slice(0, 158);
-  const site = SITE_URL.replace(/\/+$/, '');
+  /* Read from settings rather than the constant: the canonical host is the
+     one the owner chose, and a build-time constant means changing domain is
+     a code edit and a redeploy. getSiteUrl() is itself memoised, so this
+     costs nothing extra on a page that also renders the footer. */
+  const site = await getSiteUrl();
   const url = path ? `${site}${path.startsWith('/') ? path : `/${path}`}` : site;
 
   /* og:type is a closed vocabulary — website, article, book, profile,

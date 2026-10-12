@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
 
-const SITE = 'https://badoudao-site.pages.dev';
-
 /**
  * Search Console, analytics and the sitemap in one place.
  *
@@ -48,6 +46,10 @@ export default function SeoCenter() {
   }
 
   if (!s) return <div className="empty"><span className="spin" /></div>;
+
+  /* Read from the saved settings, so this screen shows the host the site
+     actually serves and not a constant that drifts when the domain changes. */
+  const SITE = String(s.siteUrl || 'https://oemwallclocks.com').replace(/\/+$/, '');
 
   const hasSc = !!String(s.search_console_token || '').trim();
   const hasPlausible = !!String(s.plausible_domain || '').trim();

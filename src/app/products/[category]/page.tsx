@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings, buildMeta, SITE_URL } from '@/lib/db';
+import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 

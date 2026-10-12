@@ -13,7 +13,7 @@ import { all, getSettings } from '@/lib/db';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_SITE = 'https://badoudao-site.pages.dev';
+const DEFAULT_SITE = 'https://oemwallclocks.com';
 
 /* escape the five XML entities — a stray & in a product name would make the
    whole feed unparseable and Google would silently discard it. */

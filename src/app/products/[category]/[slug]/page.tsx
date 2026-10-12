@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { getProduct, listProducts, getSettings, listProductVideos, buildMeta, SITE_URL } from '@/lib/db';
+import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
 

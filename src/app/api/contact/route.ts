@@ -331,7 +331,7 @@ async function notify(d) {
     <p style="margin:0 0 18px;color:#6b7280;font-size:13px">${esc(d.id)} · ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC</p>
     <table style="width:100%;border:1px solid #e5e7eb;border-radius:6px;font-size:14px;overflow:hidden">${rows}</table>
     <div style="margin-top:18px;background:#fafbfc;border-left:3px solid #0f5c4a;padding:14px;font-size:14px;line-height:1.7;color:#3d4450;white-space:pre-wrap">${esc(d.message)}</div>
-    <a href="${(env.SITE_URL || 'https://badoudao.pages.dev').replace(/\/$/, '')}/admin/inquiries/${esc(d.id)}"
+    <a href="${(env.SITE_URL || 'https://oemwallclocks.com').replace(/\/$/, '')}/admin/inquiries/${esc(d.id)}"
        style="display:inline-block;margin-top:20px;background:#0f5c4a;color:#fff;padding:11px 22px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px">Open in dashboard</a>
     <p style="margin:18px 0 0;font-size:12px;color:#9aa1ac">Reply within 12 hours to keep the enquiry.</p>
   </div>
