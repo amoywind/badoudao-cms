@@ -15,14 +15,29 @@ export const dynamic = 'force-dynamic';
  */
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
+  const log: string[] = [];
   try {
-    const product = await getProduct(slug, { includeDrafts: false }).catch((e) => ({ err: e.message }));
-    return {
-      title: `DIAG cat=${typeof category}/${category} slug=${typeof slug}/${slug} cat_field=${(product as any)?.category ?? "NULL"}`,
-      description: 'diag'
-    };
-  } catch (err) {
-    return { title: `DIAG-THROW ${err?.message}`, description: "diag" };
+    log.push("start");
+    const product: any = await getProduct(slug, { includeDrafts: false }).catch((e) => ({ err: e.message }));
+    log.push(`product=${!!product}`);
+    const moq = product?.moq || 500;
+    log.push(`moq=${moq} pmin=${typeof product?.priceMin} pmax=${typeof product?.priceMax}`);
+    const desc = `${product?.name} — ${product?.summary || ""} MOQ ${moq} pcs.`;
+    log.push("desc-ok");
+    const m: any = buildMeta({
+      title: `${product?.name} | Test`,
+      description: desc,
+      seoTitle: product?.seoTitle,
+      seoDescription: product?.seoDescription,
+      keywords: product?.metaKeywords,
+      path: `/products/${category}/${product?.slug}`,
+      image: product?.images?.[0]?.url,
+      type: 'product'
+    });
+    log.push(`buildMeta-ok title=${m?.title ? "yes" : "EMPTY"}`);
+    return { title: `OK [${log.join(" | ")}]`, description: "d" };
+  } catch (err: any) {
+    return { title: `ERR [${log.join(" | ")}] >> ${err?.message}`, description: "d" };
   }
 }
 
