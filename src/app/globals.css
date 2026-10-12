@@ -446,10 +446,11 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   font-size: 11px; color: #a8aeb8; word-break: break-word;
 }
 
-/* ---- factory gallery ----
-   Kept out of the markdown body: these are the only images that need
-   layout rather than stacking, and layout in a content field is something
-   the admin editor can break. */
+/* ---- showroom panorama ----
+   One wide strip rather than a grid: the photos were the same room from
+   six angles, so a strip reads as a room and a grid reads as six separate
+   listings. Kept out of the markdown body because it needs to be
+   full-bleed, which is layout a content field cannot express. */
 
 .showroom-strip { margin: 26px 0 0; }
 .showroom-strip img {
@@ -457,26 +458,16 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   border-radius: 10px; border: 1px solid var(--line);
 }
 
-.showroom-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; margin-top: 12px;
-}
-.showroom-grid figure { margin: 0; }
-.showroom-grid img {
-  display: block; width: 100%; height: auto;
-  aspect-ratio: 4 / 3; object-fit: cover;
-  border-radius: 8px; border: 1px solid var(--line);
-  transition: transform .25s;
-}
-.showroom-grid figure:hover img { transform: translateY(-2px); }
+/* ---- quality page: text beside the licence ----
+   The licence sits alongside the inspection content rather than below it.
+   A buyer reading this page is checking whether the factory is real, so
+   the evidence should be in view, not a scroll away. */
 
-.shop-grid { display: grid; gap: 12px; }
-.shop-grid figure { margin: 0; }
-.shop-grid img {
-  display: block; width: 100%; height: auto;
-  aspect-ratio: 4 / 3; object-fit: cover;
-  border-radius: 8px; border: 1px solid var(--line);
+.quality-layout {
+  display: grid; grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 48px; align-items: start;
 }
+.quality-layout .licence { position: sticky; top: 90px; }
 
 .licence {
   background: #fafbfc; border: 1px solid var(--line);
@@ -497,9 +488,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .licence a:hover img { transform: scale(1.012); }
 .licence p { margin: 9px 0 0; font-size: 11.5px; color: var(--ink3); line-height: 1.55; }
 
-@media (max-width: 900px) {
-  .showroom-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; }
-}
-@media (max-width: 560px) {
-  .showroom-grid { grid-template-columns: 1fr; }
+@media (max-width: 980px) {
+  .quality-layout { grid-template-columns: 1fr; gap: 30px; }
+  .quality-layout .licence { position: static; max-width: 420px; }
 }

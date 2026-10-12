@@ -1,10 +1,15 @@
 /**
- * Load the page content files into the pages table.
+ * Render the page content files to HTML and store the result.
  *
- * The content lives in scripts/content/*.md rather than in the database as
- * the source of truth, because markdown files can be reviewed in a diff.
- * This pushes them up. Re-running it is safe: the migration runner skips
- * statements it has already applied, so it will not duplicate a page.
+ * The pages API runs mdToHtml() before saving. Writing markdown straight
+ * into the database with SQL skips that, and the page then renders every
+ * heading marker, bold marker and bullet as literal text, which is what
+ * happened the first time this ran.
+ *
+ * So the conversion happens here, through the project's own renderer, and
+ * the database receives HTML like it always did. It is worth converting
+ * locally rather than posting to the API because a converter that silently
+ * returns its input should fail loudly, and that is easier to detect here.
  *
  * Usage: node scripts/push-content.js
  */
@@ -14,45 +19,62 @@ const { execFileSync } = require('child_process');
 
 const DIR = path.join(__dirname, 'content');
 
-/* slug -> { file, title, heading, intro, seo_title, seo_description } */
+/* id -> { file, title, heading, intro, seo_title, seo_description }
+   The route reads a page by id, not by slug, so these match the URL. */
 const PAGES = [
   {
-    slug: 'factory',
+    id: 'factory',
     file: 'factory.md',
     title: 'Factory',
     heading: 'The factory behind your order',
     intro:
-      'Badoudao is the export arm of Xiamen Orange Cat Creative Home Co., Ltd. — 2,000 clocks a day, made in our own building in Xiamen, China.',
+      'Badoudao is the export arm of Xiamen Orange Cat Creative Home Co., Ltd. Manufacturing decorative wall clocks on our own floor in Xiamen, China.',
     seo_title: 'Quartz Clock Factory in Xiamen | OEM & ODM Manufacturer | Badoudao',
     seo_description:
       'In-house production of decorative quartz wall clocks in Xiamen: 2,000 units per day, 8 product series, custom structure, movement and packaging. MOQ from 500 pcs, Ex Works.'
   },
   {
-    slug: 'quality',
+    id: 'quality',
     file: 'quality.md',
     title: 'Quality',
     heading: 'Four stages, every unit',
     intro:
-      'Incoming inspection, in-process patrol, 100% powered testing of every finished clock, and batch reliability sampling. Sealed samples kept per batch.',
+      'Incoming inspection, in-process patrol, 100% powered testing of every finished clock, and batch reliability sampling. A sealed sample is kept per batch.',
     seo_title: 'Quality Control for OEM Quartz Clocks | GB/T 6046 | Badoudao',
     seo_description:
       'How our quartz wall clocks are inspected: 4-stage QC to GB/T 6046, 100% powered testing of every unit, sealed samples per batch, full traceability and after-sales handling.'
-  },
-  {
-    slug: 'faq',
-    file: 'faq.md',
-    title: 'FAQ',
-    heading: 'Frequently asked questions',
-    intro:
-      'MOQ, lead times, samples, customisation, payment terms and shipping — answered with our actual numbers rather than "contact us for details".',
-    seo_title: 'Quartz Clock Supplier FAQ — MOQ, Lead Time & Samples | Badoudao',
-    seo_description:
-      'Answers for buyers of wholesale quartz clocks: MOQ from 500 pcs, lead times by quantity, sample cost, what can be customised, payment terms and shipping terms from our Xiamen factory.'
   }
 ];
 
-/** Escape a string for a single-quoted SQL literal. */
 const q = (s) => "'" + String(s).replace(/'/g, "''") + "'";
+
+/**
+ * Convert one markdown file with the project's own renderer, so this
+ * cannot drift from the one the admin editor uses.
+ */
+function render(file) {
+  /* file:// prefix is required: a bare absolute path like "D:/..." is
+     parsed as a URL scheme, not a path, and the import fails. */
+  const importer =
+    'file:///' + path.join(__dirname, '..', 'src', 'lib', 'markdown.ts').replace(/\\/g, '/');
+
+  const script = `
+    const { mdToHtml } = await import('${importer}');
+    const fs = await import('node:fs');
+    const out = mdToHtml(fs.readFileSync(${JSON.stringify(file)}, 'utf8'));
+    process.stdout.write('<<<HTML>>>' + out);
+  `;
+
+  const out = execFileSync(
+    process.execPath,
+    ['--experimental-strip-types', '--input-type=module', '-e', script],
+    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
+  );
+
+  const marker = out.indexOf('<<<HTML>>>');
+  if (marker < 0) throw new Error(`渲染失败: ${file}`);
+  return out.slice(marker + '<<<HTML>>>'.length);
+}
 
 const sql = [];
 
@@ -63,33 +85,35 @@ for (const p of PAGES) {
     process.exit(1);
   }
 
-  const body = fs.readFileSync(file, 'utf8');
+  const html = render(file);
 
-  sql.push(
-    `UPDATE pages SET
-       body = ${q(body)},
+  /* A converter that returns its input unchanged is exactly the failure
+     that produced the broken pages, so refuse rather than store it. */
+  if (/^#{1,3}\s/m.test(html) || /\*\*[^*]+\*\*/.test(html)) {
+    console.error(`${p.file} 渲染后仍是 markdown，拒绝写入`);
+    process.exit(1);
+  }
+
+  const insert = `INSERT OR IGNORE INTO pages (id, slug, title, heading, intro, seo_title, seo_description, body, status, updated_at)
+     VALUES (${q(p.id)}, ${q(p.id)}, ${q(p.title)}, ${q(p.heading)}, ${q(p.intro)},
+             ${q(p.seo_title)}, ${q(p.seo_description)}, ${q(html)}, 'published', datetime('now'))`;
+
+  const update = `UPDATE pages SET
+       body = ${q(html)},
        title = ${q(p.title)},
        heading = ${q(p.heading)},
        intro = ${q(p.intro)},
        seo_title = ${q(p.seo_title)},
        seo_description = ${q(p.seo_description)},
        updated_at = datetime('now')
-     WHERE id = ${q(p.slug)}`
-  );
+     WHERE id = ${q(p.id)}`;
 
-  /* The route reads a page by id, not by slug — /p/factory queries
-     `WHERE id = 'factory'`. The existing pages happen to have id = slug,
-     which is why nothing looked wrong until a row was inserted with only
-     a slug: the page rendered, returned 404, and the row was there the
-     whole time. So an UPDATE that matches nothing is an error here, not a
-     no-op. */
-  sql.push(
-    `INSERT OR IGNORE INTO pages (id, slug, title, heading, intro, seo_title, seo_description, body, status, updated_at)
-     VALUES (${q(p.slug)}, ${q(p.slug)}, ${q(p.title)}, ${q(p.heading)}, ${q(p.intro)},
-             ${q(p.seo_title)}, ${q(p.seo_description)}, ${q(body)}, 'published', datetime('now'))`
-  );
+  sql.push(insert, update);
 
-  console.log(`  ${p.slug.padEnd(10)} ${String(body.length).padStart(5)} 字符  ${p.heading}`);
+  const tags = (html.match(/<(h2|h3|ul|ol|li|p|strong)[ >]/g) || []).length;
+  console.log(
+    `  ${p.id.padEnd(9)} ${String(html.length).padStart(5)} 字符  ${String(tags).padStart(3)} 个标签  ${p.heading}`
+  );
 }
 
 const sqlFile = path.join(__dirname, '.push-content.sql');
@@ -100,4 +124,4 @@ execFileSync(process.execPath, [path.join(__dirname, 'migrate.cjs'), sqlFile], {
 });
 
 fs.unlinkSync(sqlFile);
-console.log('\n已写入数据库。');
+console.log('\n已写入数据库（HTML）。');
