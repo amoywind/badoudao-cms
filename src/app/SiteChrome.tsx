@@ -42,11 +42,45 @@ export async function Header() {
     <header className="site-header">
       <div className="wrap nav">
         <Link className="logo" href="/">BADOU<span>DAO</span></Link>
+
+        {/* Products opens a dropdown of the categories.
+            CSS-only, using :hover and :focus-within: no JavaScript means no
+            layout shift on load and it still works with the header already
+            rendered on the server. */}
         <nav className="menu">
-          {nav.map((n) => (
-            <Link key={n.id} href={n.href}>{n.label}</Link>
-          ))}
+          {nav.map((n) =>
+            n.id === 'nav-products' ? (
+              <div className="has-drop" key={n.id}>
+                <Link href={n.href} className="drop-trigger">
+                  {n.label}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="3" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </Link>
+
+                {cats.length > 0 && (
+                  <div className="drop">
+                    <div className="drop-grid">
+                      {cats.map((c) => (
+                        <Link key={c.id} href={`/products/${c.id}`} className="drop-item">
+                          <span className="drop-name">{c.name}</span>
+                          <span className="drop-desc">{c.short || c.description || ''}</span>
+                        </Link>
+                      ))}
+                    </div>
+                    <Link href="/products" className="drop-all">
+                      View all products →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link key={n.id} href={n.href}>{n.label}</Link>
+            )
+          )}
         </nav>
+
         <div className="nav-cta">
           <Link href="/products" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
           <Link href="/#inquiry" className="btn btn-primary btn-sm">Get a Quote</Link>

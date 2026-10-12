@@ -343,3 +343,63 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   .fg2 { grid-template-columns: 1fr; }
   .cta .wrap { flex-direction: column; align-items: flex-start; }
 }
+/* ---- products dropdown ----
+   CSS-only (:hover / :focus-within) so it works with no JavaScript and
+   nothing shifts on load. The wrapper is the hover target, not the
+   <a>, otherwise the pointer crossing the gap between the link and the
+   panel closes it. */
+
+.has-drop { position: relative; }
+.menu .drop-trigger { display: inline-flex; align-items: center; gap: 5px; }
+.menu .drop-trigger svg { transition: transform .2s; opacity: .55; }
+.has-drop:hover .drop-trigger svg,
+.has-drop:focus-within .drop-trigger svg { transform: rotate(180deg); }
+.has-drop:hover .drop-trigger,
+.has-drop:focus-within .drop-trigger { color: var(--ink); }
+
+.drop {
+  position: absolute; top: 100%; left: -18px; z-index: 60;
+  min-width: 560px; padding-top: 14px;
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity .18s, transform .18s, visibility .18s;
+}
+.has-drop:hover .drop,
+.has-drop:focus-within .drop { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* the connector, so the pointer can cross into the panel without a gap */
+.drop::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px;
+}
+.drop {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, .11);
+  padding: 14px;
+}
+.drop-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+}
+.drop-item {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 9px 11px; border-radius: 7px;
+}
+.drop-item::after { display: none; }          /* kill the menu underline */
+.drop-item:hover { background: #f4f7f6; }
+.drop-name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.drop-desc {
+  font-size: 11.5px; color: #8a919b; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.drop-all {
+  display: block; margin-top: 10px; padding: 9px 11px 2px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px; font-weight: 500; color: var(--brand);
+}
+.drop-all::after { display: none; }
+.drop-all:hover { background: #f4f7f6; border-radius: 0 0 7px 7px; }
+
+@media (max-width: 1000px) {
+  /* No hover on touch — the panel would be unreachable. The Products link
+     itself still goes to /products, so nothing is lost. */
+  .drop { display: none; }
+  .menu .drop-trigger svg { display: none; }
+}

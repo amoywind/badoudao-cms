@@ -122,9 +122,8 @@ export async function POST(request) {
 
   const id = uid('inq');
 
-  /* Validate the drawing before the inquiry row exists, so a rejected file
-     never leaves an empty enquiry behind. */
-  let stored = null;
+  /* Validate the drawing before anything is written, so a rejected file
+     never leaves a half-finished enquiry behind. */
   if (drawing) {
     if (drawing.size > MAX_DRAWING) {
       return NextResponse.json(
@@ -139,13 +138,14 @@ export async function POST(request) {
         { status: 415 }
       );
     }
-    stored = await storeDrawing(drawing, id);
-    /* A storage failure must not cost us the enquiry — record the row with
-       has_attachment = 0 and tell the buyer to email the file separately. */
-    if (!stored) {
-      console.error('drawing upload failed for', id);
-    }
   }
+
+  /* The enquiry row has to exist before the drawing can be attached:
+     attachments.inquiry_id carries a foreign key to inquiries, and storing
+     the file first fails with SQLITE_CONSTRAINT_FOREIGNKEY — which is how
+     every uploaded drawing was being silently dropped while the buyer was
+     told their enquiry had been saved. The order is validate → insert
+     enquiry → store file. */
 
   await run(
     `INSERT INTO inquiries
@@ -165,7 +165,10 @@ export async function POST(request) {
     message,
     productId,
     clean(body.sourcePage, 300),
-    stored ? 1 : 0,
+    /* The row is inserted before the file is stored, because
+       attachments.inquiry_id is a foreign key to this table. The flag is
+       corrected immediately below rather than guessed at this point. */
+    0,
     clean(body.utmSource, 100),
     clean(body.utmMedium, 100),
     clean(body.utmCampaign, 100),
@@ -173,6 +176,22 @@ export async function POST(request) {
     ip,
     request.headers.get('CF-IPCountry') || ''
   );
+
+  /* Now that the enquiry exists, the drawing can be attached. Storing it
+     first failed with SQLITE_CONSTRAINT_FOREIGNKEY, which is why every
+     uploaded drawing was dropped while the buyer was told their enquiry
+     had been saved. */
+  let stored = null;
+  if (drawing) {
+    stored = await storeDrawing(drawing, id);
+    /* A storage failure must not cost us the enquiry — record it as sent
+       without a file and tell the buyer to email it separately. */
+    if (stored) {
+      await run('UPDATE inquiries SET has_attachment = 1 WHERE id = ?', id);
+    } else {
+      console.error('drawing upload failed for', id);
+    }
+  }
 
   notify({
     id, email, message, products, quantity,
