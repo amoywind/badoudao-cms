@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Toast, useToast } from '../_ui';
+import { Toast, useToast, useMounted } from '../_ui';
 
 const STATUS: Record<string, { label: string; cls: string }> = {
   new: { label: '新询盘', cls: 'pl-b' },
@@ -18,6 +18,10 @@ export default function InquiriesPage() {
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const { toast, show } = useToast();
+  /* "How long has this been sitting" depends on the clock, so it is only
+     rendered in the browser. The server cannot know it, and guessing would
+     hand React two different trees to reconcile. */
+  const mounted = useMounted();
 
   async function load() {
     const p = new URLSearchParams();
@@ -125,7 +129,12 @@ export default function InquiriesPage() {
               <tbody>
                 {data.inquiries.map((i) => {
                   const st = STATUS[i.status] || STATUS.new;
-                  const hours = (Date.now() - new Date(i.created_at.replace(' ', 'T') + 'Z').getTime()) / 3600000;
+                  /* SQLite writes "YYYY-MM-DD HH:MM:SS" in UTC with no zone
+                     marker; the Z is what makes the subtraction below
+                     correct rather than off by the server's offset. */
+                  const hours = mounted
+                    ? (Date.now() - new Date(i.created_at.replace(' ', 'T') + 'Z').getTime()) / 3600000
+                    : 0;
                   const late = i.status === 'new' && hours > 24;
                   return (
                     <tr key={i.id} style={late ? { background: '#fffbeb' } : undefined}>
