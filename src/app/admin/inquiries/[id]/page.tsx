@@ -156,15 +156,13 @@ export default function InquiryDetail() {
 
               {/* The flag is set when the drawing is stored, so a row marked
                   has_attachment with nothing in the attachments table means
-                  the write failed — worth saying plainly rather than
-                  showing an enquiry that looks like it came with no file.
-                  This branch also covers the earlier uploads lost to the
-                  foreign key, which are unrecoverable. */}
+                  the write failed. Worth saying plainly: the enquiry looks
+                  complete but the drawing is not recoverable. The uploads
+                  before the storage order was fixed are in this state. */}
               {i.has_attachment === 1 && atts.length === 0 && (
                 <div className="note note-w">
-                  这条询盘标记为带附件，但没有找到文件。
-                  早期版本的存储顺序有误，那批上传未能保存——
-                  如仍需要，请让买家重新发送。
+                  这条询盘标记为带附件，但文件没有保存下来。
+                  如果还需要这份设计图，请让买家重新发送。
                 </div>
               )}
 
