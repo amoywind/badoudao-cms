@@ -152,15 +152,25 @@ export default function SeoCenter() {
           <div className="fg" style={{ marginTop: 14 }}>
             <label className="fl">
               Plausible 域名
-              <span className="hint">在 Plausible 注册后你会拿到一个域名</span>
+              <span className="hint">只填域名，不要粘代码</span>
             </label>
             <input
               className="inp mono"
               value={s.plausible_domain || ''}
               onChange={(e) => setS({ ...s, plausible_domain: e.target.value })}
-              placeholder="badoudao.com"
+              placeholder="oemwallclocks.com"
             />
-            <div className="cnt">{hasPlausible ? '✓ 统计已开启' : '未开启（留空则不加载任何脚本）'}</div>
+            <div className="cnt">
+              {hasPlausible ? '✓ 统计已开启' : '未开启（留空则不加载任何脚本）'}
+            </div>
+            <div className="help" style={{ marginTop: 4 }}>
+              填上面这个域名就行 ——{' '}
+              <code>{SITE.replace(/^https?:\/\//, '')}</code>。
+              <br />
+              Plausible 后台给的是一段 <code>&lt;script&gt;</code> 代码，
+              <strong>不要整段粘进来</strong>，那会让统计重复计算。
+              本站会自动加载那个脚本，这里只负责告诉它「记哪个域名」。
+            </div>
           </div>
 
           {!hasPlausible && (

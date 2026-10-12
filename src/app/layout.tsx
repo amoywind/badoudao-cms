@@ -3,6 +3,38 @@ import './admin.css';
 import { getSettings } from '@/lib/db';
 
 /**
+ * Normalise whatever was pasted into the Plausible field down to a domain.
+ *
+ * Plausible shows a snippet like `<script async src=".../pa-XXXX.js">` with
+ * the site id inside the filename, and it is easy to paste the whole thing
+ * into a field asking for a domain. Left as-is it becomes a data-domain
+ * containing HTML, which loads Plausible's own script a second time and
+ * double-counts every visit — a silent failure, since the dashboard simply
+ * looks empty.
+ *
+ * So: pull the site id out of a pasted snippet, and accept a bare hostname
+ * with or without a scheme or a path.
+ */
+function plausibleDomain(input: unknown, siteHost: string): string {
+  const raw = String(input || '').trim();
+  if (!raw) return '';
+
+  /* A pasted snippet: it carries no hostname, only a site id, so the site's
+     own domain is the answer. Anything containing a < or a script tag is
+     treated as one rather than trusted as a hostname. */
+  if (/<|script|\.js/i.test(raw)) return siteHost;
+
+  /* Otherwise treat it as a hostname and strip anything that is not one. */
+  const host = raw
+    .replace(/^[a-z]+:\/\//i, '')
+    .split(/[/?#]/)[0]
+    .trim()
+    .toLowerCase();
+
+  return /^[a-z0-9.-]+\.[a-z]{2,}$/.test(host) ? host : siteHost;
+}
+
+/**
  * Root layout metadata — defaults only.
  *
  * Every public route supplies its own title and description through
@@ -40,7 +72,14 @@ export default async function RootLayout({ children }) {
 
   const sc = String(s.search_console_token || '').trim();
   const bing = String(s.bing_verification || '').trim();
-  const plausible = String(s.plausible_domain || '').trim();
+
+  /* The site's own host is the fallback when the field holds a pasted
+     snippet, which carries a site id rather than a domain. */
+  const siteHost = String(s.siteUrl || '').trim()
+    .replace(/^[a-z]+:\/\//i, '')
+    .split(/[/?#]/)[0]
+    .toLowerCase();
+  const plausible = plausibleDomain(s.plausible_domain, siteHost);
 
   return (
     <html lang="en">
