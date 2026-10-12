@@ -7,7 +7,7 @@
  * quote", "factory enquiry") instead of burying it below the fold on home.
  */
 import type { SiteSettings } from '@/lib/db';
-import { getSettings, listProducts } from '@/lib/db';
+import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryForm } from '../InquiryForm';
 
@@ -21,12 +21,15 @@ export async function generateMetadata() {
   const title = `Contact Badoudao | Get a Quotation for Wholesale Clocks`;
   const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 500} pieces, Ex Works pricing, reply within ${s.quoteHours || 12} hours.`;
 
-  return {
+  /* buildMeta() rather than a hand-rolled object, so this route gets the
+     absolute canonical and the siteUrl from settings like every other one.
+     A relative canonical names no host at all, which is how a site ends up
+     indexed twice under two domains. */
+  return buildMeta({
     title,
     description,
-    alternates: { canonical: '/contact/' },
-    openGraph: { title, description, type: 'website' }
-  };
+    path: '/contact'
+  });
 }
 
 export default async function ContactPage({
