@@ -15,42 +15,14 @@ export const dynamic = 'force-dynamic';
  */
 export async function generateMetadata({ params }) {
   const { category, slug } = params;
-
-  /* A throw here produces no <title> at all while the page still renders,
-     so the failure is invisible from the front end — the product routes
-     were serving no title at all. Contain it and fall back to something
-     built from the slug, which costs a description rather than the page's
-     identity in search results. */
   try {
-    const product = await getProduct(slug, { includeDrafts: false }).catch(() => null);
-
-    if (!product || product.category !== category) {
-      return { title: 'Product | Badoudao', robots: { index: false } };
-    }
-
-    const moq = product.moq || 500;
-    const price = product.priceMin
-      ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
-      : '';
-
-    return buildMeta({
-      title: `${product.name} | OEM Quartz Clock Manufacturer | Badoudao`,
-      description:
-        `${product.name} — ${product.summary || ''} MOQ ${moq} pcs.${price}` +
-        ` Custom dial artwork and logo available. ${product.leadTime || '20-30 days'} lead time.`,
-      seoTitle: product.seoTitle,
-      seoDescription: product.seoDescription,
-      keywords: product.metaKeywords,
-      path: `/products/${category}/${product.slug}`,
-      image: product.images[0]?.url,
-      type: 'product'
-    });
-  } catch (err) {
-    console.error('generateMetadata failed:', (err as Error)?.message);
+    const product = await getProduct(slug, { includeDrafts: false }).catch((e) => ({ err: e.message }));
     return {
-      title: `${slug} | Badoudao Quartz Clocks`,
-      description: 'OEM and ODM quartz clocks from Badoudao. MOQ from 500 pieces, Ex Works pricing.'
+      title: `DIAG cat=${typeof category}/${category} slug=${typeof slug}/${slug} cat_field=${(product as any)?.category ?? "NULL"}`,
+      description: 'diag'
     };
+  } catch (err) {
+    return { title: `DIAG-THROW ${err?.message}`, description: "diag" };
   }
 }
 
