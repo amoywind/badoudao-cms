@@ -24,7 +24,7 @@ export async function generateMetadata() {
     keywords:
       'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
     path: '/',
-    image: '/hero-clocks.png'
+    image: '/hero-clocks.jpg'
   });
 }
 
@@ -72,7 +72,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="hero-img">
-              <img src="/hero-clocks.png" alt="Assorted quartz wall clocks manufactured by Badoudao" width={1536} height={1024} />
+              <img src="/hero-clocks.jpg" alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs" width={1400} height={788} />
             </div>
           </div>
         </section>
@@ -163,7 +163,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="hero-img">
-              <img src="/hero-clocks.png" alt="Badoudao clock production" width={1536} height={1024} />
+              <img src="/workshop-floor.jpg" alt="Our assembly floor: staff fitting dials and movements before packing" width={1400} height={933} />
             </div>
           </div>
         </section>
