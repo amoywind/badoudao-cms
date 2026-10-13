@@ -159,7 +159,7 @@ export default async function HomePage() {
               </div>
               <p style={{ fontSize: 13, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.6 }}>
                 Quartz clocks themselves carry no mandatory certification requirement.{' '}
-                <Link href="/certification" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
+                <Link href="/p/certification" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
               </p>
             </div>
             <div className="hero-img">
