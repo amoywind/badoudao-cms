@@ -39,64 +39,50 @@ export default async function ProductsIndex() {
       <Header />
 
       <main>
-        <div className="page-head">
-          <div className="wrap">
-            <div className="sec-tag">Product Catalogue</div>
-            <h1>Quartz clocks, wholesale</h1>
-            <p className="sec-sub">
-              Every category is available in OEM and ODM form with custom dials, logos and retail packaging.
-              All prices are Ex Works (factory) — freight and duties quoted separately.
-            </p>
-          </div>
-        </div>
+        {/* The page header and the eight category cards that used to sit
+            here are gone.
 
+            The header repeated what the nav and the sidebar already say,
+            with a slogan in place of information: "Product Catalogue" over
+            "Quartz clocks, wholesale" over a paragraph about Ex Works that
+            appears on every model card below.
+
+            The cards were the real problem. Eight of them, each a large
+            gradient panel with no photograph — because no category has a
+            category image yet. So the first screen was eight identical
+            grey rectangles. A buyer cannot judge a category from its
+            description and a number, and the sidebar below does the same
+            job in a form that fits in one column and works on a phone.
+
+            What remains is the grid, with the category rail beside it. */}
         <section>
           <div className="wrap">
-            <div className="grid-3" style={{ marginBottom: 56 }}>
-              {cats.map((c) => (
-                <Link key={c.id} href={`/products/${c.id}/`} className="card">
-                  <div className="c-visual" style={{ background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }} />
-                  <div className="c-body">
-                    <h3>{c.name}</h3>
-                    <p>{c.description}</p>
-                    <div className="c-meta">
-                      <span><b>{c.designs}</b> designs</span>
-                      <span className="exw">EXW {c.price_range}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            {/* The category cards above already cover browsing from zero.
-                This grid is the flat "show me everything" case, and the
-                sidebar is there so a buyer who has decided on a material
-                can still narrow without scrolling back up. */}
             <div className="shop-layout">
               <CategoryNav cats={cats} counts={counts} heading="Browse by Category" />
 
               <div>
-            <div className="sec-head">
-              <div className="sec-tag">All Models</div>
-              <h2 style={{ fontSize: 30 }}>{products.length} models in production</h2>
-            </div>
-            <div className="grid-3">
-              {products.map((p) => (
-                <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
-                  <div className="c-visual">
-                    {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
-                  </div>
-                  <div className="c-body">
-                    <h3 style={{ fontSize: 17 }}>{p.name}</h3>
-                    <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
-                    <div className="c-meta">
-                      <span>MOQ <b>{p.moq}</b></span>
-                      <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                <div className="sec-head">
+                  <div className="sec-tag">All Models</div>
+                  <h1 style={{ fontSize: 30 }}>{products.length} models in production</h1>
+                </div>
+
+                <div className="grid-3">
+                  {products.map((p) => (
+                    <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
+                      <div className="c-visual">
+                        {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
+                      </div>
+                      <div className="c-body">
+                        <h3 style={{ fontSize: 17 }}>{p.name}</h3>
+                        <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
+                        <div className="c-meta">
+                          <span>MOQ <b>{p.moq}</b></span>
+                          <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

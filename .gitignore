@@ -21,3 +21,7 @@ site-home.html
 tsconfig.tsbuildinfo
 lg2.html
 m2.js
+
+# temp files from inline verification
+scripts/.*.tmp
+scripts/.*.ts
