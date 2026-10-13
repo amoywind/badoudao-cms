@@ -351,7 +351,15 @@ select.inp { cursor: pointer; }
   padding: 8px 10px; background: #fafbfc; border-bottom: 1px solid var(--line);
   flex-wrap: wrap;
 }
-.md-tools { display: flex; gap: 4px; flex-wrap: wrap; }
+.md-tools { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+
+/* A hairline between groups. Sixteen buttons in one run are unreadable:
+   a writer looking for "make this a heading" has to read past lists, links
+   and tables first, and mis-clicking one of them edits the text. */
+.md-sep {
+  width: 1px; height: 18px; background: var(--line);
+  margin: 0 5px; flex-shrink: 0;
+}
 .md-btn {
   min-width: 30px; height: 28px; padding: 0 8px;
   border: 1px solid var(--line); border-radius: 5px; background: #fff;

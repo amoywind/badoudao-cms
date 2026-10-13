@@ -283,14 +283,30 @@ export function htmlToMd(html: string): string {
      `tr` and `li` are deliberately absent: their rows are collected by the
      table and list passes below, and breaking the lines here would split
      a table into loose cells before it could be read as a table. */
-  s = s.replace(/<\/(p|div|h[1-6]|blockquote|pre)>/gi, '\n\n');
   s = s.replace(/<br\s*\/?>/gi, '\n');
   s = s.replace(/<(hr)\s*\/?>/gi, '\n\n---\n\n');
 
+  /* Headings are converted BEFORE the closing-tag pass below.
+
+     That pass turns </h2> into a blank line, which separates the opening
+     tag from its text — so a <h2…>…</h2> pattern no longer exists when the
+     heading rule runs after it, and every heading came out as bare prose.
+     The editor then re-read that prose as Markdown: "1. Incoming Material
+     Inspection" is an ordered list, so a heading saved once came back as
+     a list and stayed that way.
+
+     Converting first, and excluding h1–h6 from the closing-tag pass, keeps
+     the pairs intact for as long as they are needed. */
   s = s.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n# $1\n\n');
   s = s.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n\n');
   s = s.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n\n');
   s = s.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '\n#### $1\n\n');
+  s = s.replace(/<h5[^>]*>([\s\S]*?)<\/h5>/gi, '\n##### $1\n\n');
+  s = s.replace(/<h6[^>]*>([\s\S]*?)<\/h6>/gi, '\n###### $1\n\n');
+
+  /* p and div only. blockquote and pre are converted further down and
+     must keep their closing tag until then — see the note there. */
+  s = s.replace(/<\/(p|div)>/gi, '\n\n');
 
   /* Replace each <table> wholesale. Doing it in one pass keeps the rows
      together, which a row-level regex cannot: the pipe separators and the
@@ -322,12 +338,11 @@ export function htmlToMd(html: string): string {
   /* Any table markup outside a matched <table>…</table> pair. */
   s = s.replace(/<\/?(thead|tbody|table)[^>]*>/gi, '');
 
-  s = s.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_m, inner: string) => {
-    const t = String(inner).replace(/<[^>]*>/g, '').trim();
-    return `\n- ${t}`;
-  });
-  s = s.replace(/<\/?(ul|ol)[^>]*>/gi, '\n\n');
-
+  /* Blockquote and pre are converted before the closing-tag pass, for the
+     same reason as the headings: </blockquote> turned into a blank line
+     earlier means the <blockquote…>…</blockquote> pair no longer exists
+     by the time the rule below runs, and the quote comes back as a plain
+     paragraph — losing the > that keeps it a quote when the writer saves. */
   s = s.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (_m, inner: string) =>
     `\n> ${String(inner).replace(/<[^>]*>/g, '').trim()}\n`
   );
@@ -336,8 +351,27 @@ export function htmlToMd(html: string): string {
     `\n\`\`\`\n${String(inner).replace(/<[^>]*>/g, '')}\n\`\`\`\n`
   );
 
-  /* Inline formatting, longest markers first so ** is not eaten by *. */
-  s = s.replace(/<(strong|b)[^>]*>([\s\S]*?)<\/\1>/gi, '**$2**');
+  /* Ordered lists are numbered here rather than by the <li> pass, which
+     cannot tell <ol> from <ul> because by the time it runs the wrapper is
+     a blank line. Every <li> in an <ol> becoming "- " would quietly turn
+     a numbered procedure back into bullets on the first save. */
+  s = s.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_m, inner: string) => {
+    let n = 0;
+    const items = [...String(inner).matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)].map(
+      (li) => `${++n}. ${String(li[1]).replace(/<[^>]*>/g, '').trim()}`
+    );
+    return items.length ? `\n${items.join('\n')}\n` : '';
+  });
+  s = s.replace(/<\/?ol[^>]*>/gi, '');
+
+  s = s.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_m, inner: string) => {
+    const t = String(inner).replace(/<[^>]*>/g, '').trim();
+    return `\n- ${t}`;
+  });
+  s = s.replace(/<\/?ul[^>]*>/gi, '\n\n');
+
+
+  /* Inline formatting, longest markers first so ** is not eaten by *. */  s = s.replace(/<(strong|b)[^>]*>([\s\S]*?)<\/\1>/gi, '**$2**');
   s = s.replace(/<(em|i)[^>]*>([\s\S]*?)<\/\1>/gi, '*$2*');
   s = s.replace(/<(s|del|strike)[^>]*>([\s\S]*?)<\/\1>/gi, '~~$2~~');
   s = s.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`');

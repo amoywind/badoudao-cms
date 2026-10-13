@@ -45,6 +45,17 @@ const PAGES = [
       'How our quartz wall clocks are inspected: 4-stage QC to GB/T 6046, 100% powered testing of every unit, sealed samples per batch, full traceability and after-sales handling.'
   },
   {
+    id: 'certification',
+    file: 'certification.md',
+    title: 'Certification',
+    heading: 'Quality control, stage by stage',
+    intro:
+      'Incoming, in-process, final and outgoing inspection, plus the certification paperwork each market needs.',
+    seo_title: 'Quartz Clock Certification & Quality Reports | Badoudao',
+    seo_description:
+      'Quality control for OEM quartz clocks to GB/T 6046: IQC, IPQC, FQC and OQC with batch records kept. Movements carry CE and RoHS; market-specific certificates arranged on request.'
+  },
+  {
     id: 'oem-odm',
     file: 'oem-odm.md',
     title: 'OEM / ODM',

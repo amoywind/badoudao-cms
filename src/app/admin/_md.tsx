@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { mdToHtml, countWords } from '@/lib/markdown';
 
 /**
@@ -41,9 +41,83 @@ function wrap(text: string, from: number, to: number, before: string, after = be
   };
 }
 
+/* Replace the block prefix on every line of the selection: the toolbar
+   button for a heading has to win over whatever heading is already there,
+   or pressing H2 on an H3 does nothing visible. */
+function setLinePrefix(text: string, from: number, to: number, prefix: string, strip = /^(#{1,6}\s+|>\s+|[-*+]\s+|\d+\.\s+)/): Selection {
+  const start = text.lastIndexOf('\n', from - 1) + 1;
+  const endIdx = text.indexOf('\n', to);
+  const end = endIdx === -1 ? text.length : endIdx;
+
+  const block = text.slice(start, end);
+  const next = block
+    .split('\n')
+    .map((l) => prefix + l.replace(strip, ''))
+    .join('\n');
+
+  return {
+    text: text.slice(0, start) + next + text.slice(end),
+    from: start,
+    to: start + next.length
+  };
+}
+
+/* Move whole lines up or down, which is the operation a writer reaches for
+   when a paragraph is in the wrong place and retyping it is worse. */
+function moveLines(text: string, from: number, to: number, dir: -1 | 1): Selection {
+  const lines = text.split('\n');
+
+  /* Line index of the caret's start and the end of the selection. */
+  let first = 0, acc = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (acc + lines[i].length + 1 > from) { first = i; break; }
+    acc += lines[i].length + 1;
+  }
+  let last = first, acc2 = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (acc2 + lines[i].length + 1 > to) { last = i; break; }
+    acc2 += lines[i].length + 1;
+  }
+
+  const target = dir === -1 ? first - 1 : last + 1;
+  if (target < 0 || target >= lines.length) {
+    /* At the edge: return the selection unchanged rather than silently
+       doing nothing, so the caret does not jump. */
+    return { text, from, to };
+  }
+
+  const block = lines.splice(first, last - first + 1);
+  lines.splice(target, 0, ...block);
+
+  const next = lines.join('\n');
+  /* Keep the caret on the same words it was on. */
+  const offset = (next.slice(0, target).match(/\n/g) || []).length;
+  const shift = dir === -1 ? -1 : block.length;
+
+  return { text: next, from: from + shift, to: to + shift + offset * 0 };
+}
+
+/* Insert a hard line break inside the current paragraph.
+   Two trailing spaces followed by a newline is what Markdown reads as a
+   break; a bare newline is just a space, which is why the writer needs a
+   button for this at all rather than pressing Return. */
+function insertBreak(text: string, at: number): Selection {
+  const before = text.slice(0, at);
+  /* Already at the start of a line: there is nothing to break away from. */
+  const atLineStart = at === 0 || text[at - 1] === '\n';
+  if (atLineStart) return { text, from: at, to: at };
+
+  const t = '  \n';
+  return {
+    text: before + t + text.slice(at),
+    from: at + t.length,
+    to: at + t.length
+  };
+}
+
 const TOOLS: Tool[] = [
-  { key: 'h2', label: 'H2', title: '小标题', run: (s) => wrap(s.text, s.from, s.to, '## ', '') },
-  { key: 'h3', label: 'H3', title: '次级标题', run: (s) => wrap(s.text, s.from, s.to, '### ', '') },
+  { key: 'h2', label: 'H2', title: '小标题', run: (s) => setLinePrefix(s.text, s.from, s.to, '## ') },
+  { key: 'h3', label: 'H3', title: '次级标题', run: (s) => setLinePrefix(s.text, s.from, s.to, '### ') },
   {
     key: 'bold', label: 'B', title: '加粗',
     run: (s) => wrap(s.text, s.from, s.to, '**'),
@@ -57,11 +131,17 @@ const TOOLS: Tool[] = [
       return out;
     }
   },
+  { key: 'strike', label: 'S̶', title: '删除线', run: (s) => wrap(s.text, s.from, s.to, '~~') },
+  {
+    key: 'code', label: '</>', title: '行内代码',
+    run: (s) => wrap(s.text, s.from, s.to, '`')
+  },
   {
     key: 'link', label: '🔗', title: '插入链接',
     run: (s) => {
       const sel = s.text.slice(s.from, s.to) || 'link text';
       const t = `[${sel}](https://)`;
+      /* Select the label, not the URL: that is what has to be typed. */
       return { text: s.text.slice(0, s.from) + t + s.text.slice(s.to), from: s.from + 1, to: s.from + 1 + sel.length };
     }
   },
@@ -72,10 +152,14 @@ const TOOLS: Tool[] = [
       return { text: s.text.slice(0, s.from) + t + s.text.slice(s.to), from: s.from, to: s.from + t.length };
     }
   },
-  { key: 'ul', label: '• 列表', title: '无序列表', run: (s) => ({ text: prefixLines(s.text, s.from, s.to, '- '), from: s.from, to: s.to }), block: true },
-  { key: 'ol', label: '1. 列表', title: '有序列表', run: (s) => ({ text: prefixLines(s.text, s.from, s.to, '1. '), from: s.from, to: s.to }), block: true },
-  { key: 'quote', label: '❝', title: '引用', run: (s) => ({ text: prefixLines(s.text, s.from, s.to, '> '), from: s.from, to: s.to }), block: true },
-  { key: 'table', label: '表格', title: '插入表格', run: (s) => ({ text: insertTable(s.text, s.from), from: s.from, to: s.to }), block: true }
+  { key: 'br', label: '↵', title: '段内换行', run: (s) => insertBreak(s.text, s.to), block: true },
+  { key: 'ul', label: '• 列表', title: '无序列表', run: (s) => setLinePrefix(s.text, s.from, s.to, '- ') },
+  { key: 'ol', label: '1. 列表', title: '有序列表', run: (s) => setLinePrefix(s.text, s.from, s.to, '1. ') },
+  { key: 'quote', label: '❝', title: '引用', run: (s) => setLinePrefix(s.text, s.from, s.to, '> ') },
+  { key: 'hr', label: '—', title: '分隔线', run: (s) => ({ text: prefixLines(s.text, s.from, s.to, '---\n'), from: s.from, to: s.to }), block: true },
+  { key: 'table', label: '表格', title: '插入表格', run: (s) => ({ text: insertTable(s.text, s.from), from: s.from, to: s.to }), block: true },
+  { key: 'up', label: '↑', title: '上移一行', run: (s) => moveLines(s.text, s.from, s.to, -1), block: true },
+  { key: 'down', label: '↓', title: '下移一行', run: (s) => moveLines(s.text, s.from, s.to, 1), block: true }
 ];
 
 function prefixLines(text: string, from: number, to: number, prefix: string) {
@@ -101,6 +185,10 @@ function insertTable(text: string, at: number) {
     '\n| Specification | Value |\n| --- | --- |\n| Size | 12 inch |\n| Movement | Quartz |\n| MOQ | 500 pcs |\n';
   return text.slice(0, at) + t + text.slice(at);
 }
+
+/* Where a group begins, by index into TOOLS. Kept next to the list so
+   adding a tool does not silently land it in the wrong group. */
+const GROUP_STARTS = new Set([2, 5, 10, 12, 14]);
 
 export function MarkdownEditor({
   value,
@@ -138,17 +226,21 @@ export function MarkdownEditor({
     <div className="md">
       <div className="md-bar">
         <div className="md-tools">
-          {TOOLS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              className="md-btn"
-              title={t.title}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => apply(t)}
-            >
-              {t.label}
-            </button>
+          {TOOLS.map((t, i) => (
+            <Fragment key={t.key}>
+              {/* A hairline at each group boundary: headings, inline
+                  formatting, insert, block, move. */}
+              {GROUP_STARTS.has(i) && i !== 0 && <span className="md-sep" aria-hidden="true" />}
+              <button
+                type="button"
+                className="md-btn"
+                title={t.title}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => apply(t)}
+              >
+                {t.label}
+              </button>
+            </Fragment>
           ))}
         </div>
 
@@ -180,7 +272,7 @@ export function MarkdownEditor({
 
       <div className="md-foot">
         <span>{words} 词</span>
-        <span className="md-hint">支持 Markdown：## 标题、**粗体**、- 列表、[链接](url)、表格</span>
+        <span className="md-hint">支持 Markdown：## 标题、**粗体**、- 列表、[链接](url)、表格、段内换行用 ↵</span>
       </div>
     </div>
   );
