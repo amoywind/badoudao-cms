@@ -67,12 +67,19 @@
      count column has nowhere to sit and the names wrap mid-word. */
   .shop-layout { grid-template-columns: 200px minmax(0, 1fr); gap: 26px; }
 
-  /* The rail drops under the body. A 300px column beside a 700px one is
+  /* The rail drops under the body. A 380px column beside a 700px one is
      not readable on a tablet, and stacking costs nothing because the text
-     comes first either way. The body keeps its measure; only the rail
-     moves. */
+     comes first either way.
+
+     Not sticky once stacked: a sticky element below the text it belongs to
+     pins to the viewport while the reader is still in the middle of the
+     body, which is worse than no stickiness at all. The internal
+     max-height is released too, since the panel is no longer pinned and
+     the viewport limit would clip it for no reason. */
   .site .page-layout { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .site .page-rail { position: static; max-width: 560px; }
+  .site .page-rail {
+    position: static; max-width: 560px; max-height: none; overflow: visible;
+  }
 
   /* Two columns is the most a tablet portrait can carry. Below this it
      becomes one, but at 860 the cards are still ~380px wide, which is

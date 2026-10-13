@@ -109,7 +109,7 @@ export default async function StaticPage({ params }) {
               {page.slug === 'quality' ? (
                 <LicencePanel />
               ) : (
-                <PageRail slug={page.slug} categories={cats} counts={counts} moq={s.moq} quoteHours={s.quoteHours} />
+                <PageRail slug={page.slug} counts={counts} moq={s.moq} quoteHours={s.quoteHours} />
               )}
             </div>
           </div>
@@ -201,90 +201,139 @@ function ShowroomStrip() {
  */
 function PageRail({
   slug,
-  categories,
   counts,
   moq,
   quoteHours
 }: {
   slug: string;
-  categories: { id: string; name: string; designs?: string }[];
   counts?: Record<string, number>;
   moq?: string | number;
   quoteHours?: string | number;
 }) {
-  /* The numbers that matter differ by page: a buyer reading about small
-     batches is deciding on quantity, one reading the factory is deciding
-     on whether to trust us, one reading OEM/ODM is deciding on scope. */
-  const FACTS: Record<string, { label: string; value: string }[]> = {
+  /* Three blocks, in the order a buyer needs them.
+
+     What each page leads with differs because the reader's question
+     differs: someone on the small-batch page is deciding on quantity,
+     someone on the factory page is deciding whether to trust us. The
+     compliance block is the same everywhere because the answer is the
+     same everywhere. */
+
+  const CAPACITY: Record<string, { label: string; value: string }[]> = {
     'oem-odm': [
       { label: 'MOQ from', value: `${moq || 500} pcs` },
       { label: 'Sample lead time', value: '1 day' },
-      { label: 'Production', value: '7–20 days' },
-      { label: 'NDA', value: 'Available' }
+      { label: 'Bulk production', value: '7–20 days' },
+      { label: 'Movement options', value: '6 types' },
+      { label: 'Materials', value: '8 series' }
     ],
     'small-batch': [
       { label: 'MOQ from', value: `${moq || 500} pcs` },
-      { label: 'Samples', value: '1–2 pcs' },
+      { label: 'Sample order', value: '1–2 pcs' },
       { label: 'Sample fee', value: 'Refunded on bulk' },
-      { label: 'Pricing', value: 'Ex Works' }
+      { label: 'Custom dial artwork', value: 'No new tooling' }
     ],
     factory: [
       { label: 'Daily capacity', value: '2,000 pcs' },
       { label: 'Established', value: 'Dec 2023' },
       { label: 'Product series', value: '8' },
-      { label: 'Movements', value: 'CE / RoHS' }
+      { label: 'In-house tooling', value: 'Yes' },
+      { label: 'Custom structure', value: 'Available' }
     ]
   };
 
-  const facts = FACTS[slug];
-  const list = (categories || []).filter((c) => counts?.[c.id]);
+  const figures = CAPACITY[slug];
+
+  /* The product range lives under the first block rather than as its own:
+     it is a navigation aid, not a fact about the factory, and the ask was
+     for three blocks. */
+  const list = Object.entries(counts || {})
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1]);
+
+  const CATEGORY_NAMES: Record<string, string> = {
+    'wall-clocks': 'Quartz Wall Clocks',
+    'alarm-clocks': 'Quartz Alarm Clocks',
+    'table-desk-clocks': 'Table & Desk Clocks',
+    'metal-clocks': 'Metal & Luxury Clocks',
+    'wood-clocks': 'Wood & MDF Clocks',
+    'clock-movements': 'Clock Movements & Parts'
+  };
 
   return (
     <aside className="page-rail">
-      {facts && (
-        <div className="rail-block">
-          <h2>Key figures</h2>
+      {figures && (
+        <section className="rail-card">
+          <h2>
+            <RailIcon d="M3 17l6-6 4 4 8-8M21 7v6h-6" />
+            Capacity &amp; Customisation
+          </h2>
           <dl>
-            {facts.map((f) => (
+            {figures.map((f) => (
               <div key={f.label}>
                 <dt>{f.label}</dt>
                 <dd>{f.value}</dd>
               </div>
             ))}
           </dl>
-        </div>
+
+          {list.length > 0 && (
+            <div className="rail-range">
+              <h3>Product range</h3>
+              <ul>
+                {list.slice(0, 6).map(([id, n]) => (
+                  <li key={id}>
+                    <Link href={`/products/${id}`}>
+                      <span>{CATEGORY_NAMES[id] || id}</span>
+                      <b>{n}</b>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
       )}
 
-      {list.length > 0 && (
-        <div className="rail-block">
-          <h2>Product range</h2>
-          <ul>
-            {list.map((c) => (
-              <li key={c.id}>
-                <Link href={`/products/${c.id}`}>
-                  <span>{c.name}</span>
-                  <b>{counts![c.id]}</b>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link href="/products" className="rail-all">
-            All products →
-          </Link>
-        </div>
-      )}
-
-      <div className="rail-block">
-        <h2>Next step</h2>
-        <p>
-          Send a reference, a sample or a sketch. A quotation comes back
-          within {quoteHours || 12} hours with no obligation.
-        </p>
-        <Link href="/#inquiry" className="btn btn-primary btn-sm rail-cta">
-          Request a Quote
+      <section className="rail-card">
+        <h2>
+          <RailIcon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          Quality &amp; Compliance
+        </h2>
+        <ul className="rail-ticks">
+          <li><b>100%</b> powered testing of every finished clock</li>
+          <li><b>7–10 days</b> for a custom sample</li>
+          <li><b>CE &amp; RoHS</b> on all movements</li>
+          <li><b>GB/T 6046</b> manufacturing standard</li>
+          <li>Sealed sample retained per batch</li>
+        </ul>
+        <Link href="/p/quality" className="rail-more">
+          How we inspect →
         </Link>
-      </div>
+      </section>
+
+      <section className="rail-card rail-ask">
+        <h2>Ready to start?</h2>
+        <p>
+          Send a reference, a sample or a sketch. You get a quotation within{' '}
+          {quoteHours || 12} hours, Ex Works, with no obligation.
+        </p>
+        <Link href="/#inquiry" className="rail-quote">
+          Get Instant Factory Quote
+        </Link>
+      </section>
     </aside>
+  );
+}
+
+/** A small stroked glyph. Inline rather than a sprite so the rail needs no
+    extra request and stays visible if the icon font fails. */
+function RailIcon({ d }: { d: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="1.9"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={d} />
+    </svg>
   );
 }
 
