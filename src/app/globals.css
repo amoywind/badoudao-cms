@@ -40,12 +40,26 @@ img { display: block; max-width: 100%; height: auto; }
 .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .nav { display: flex; align-items: center; gap: 28px; min-height: 72px; }
 
-/* The mobile menu toggle exists only in the DOM; hidden until the phone
-   breakpoint, where responsive.css turns it on. Kept here rather than in
-   responsive.css so the default state is visible where it is declared. */
+/* The mobile menu toggle lives in the markup at every width because the
+   checkbox it drives has to be a sibling of the header content for the
+   peer selector to reach it, and the markup cannot change per width.
+   Only the label is hidden here; the checkbox is off-screen and
+   untabbable, which is why the label wraps real text rather than being
+   the control itself. */
 .nav-toggle { display: none; }
-.nav-shell > summary { list-style: none; }
-.nav-shell > summary::-webkit-details-marker { display: none; }
+.nav-checkbox {
+  position: absolute; opacity: 0; pointer-events: none;
+  width: 1px; height: 1px; overflow: hidden;
+}
+.nav-toggle-bars { display: inline-flex; flex-direction: column; gap: 3.5px; }
+.nav-toggle-bars span {
+  display: block; width: 17px; height: 1.8px;
+  background: currentColor; border-radius: 2px;
+  transition: transform .2s, opacity .2s;
+}
+.nav-checkbox:checked + .nav-toggle .nav-toggle-bars span:nth-child(1) { transform: translateY(5.3px) rotate(45deg); }
+.nav-checkbox:checked + .nav-toggle .nav-toggle-bars span:nth-child(2) { opacity: 0; }
+.nav-checkbox:checked + .nav-toggle .nav-toggle-bars span:nth-child(3) { transform: translateY(-5.3px) rotate(-45deg); }
 .logo { font-family: var(--serif); font-size: 23px; font-weight: 600; letter-spacing: -.02em; }
 .logo span { color: var(--brand); }
 .menu { display: flex; gap: 26px; font-size: 14.5px; font-weight: 500; }

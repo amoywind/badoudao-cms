@@ -40,27 +40,34 @@ export async function Header() {
 
   return (
     <header className="site-header">
-      {/* A <details> rather than a button and a state hook.
+      {/* The mobile menu is a checkbox and a label, not a <details>.
 
-          Six links plus two buttons cannot fit a 390px screen at a
-          readable size, so below 600px the menu collapses. Using
-          <details> means it opens without JavaScript, which matters
-          twice over: the header is server-rendered and the site has no
-          bundle for it, and the links stay in the document so a crawler
-          and a screen reader see the same page a desktop visitor does.
+          <details> was the first attempt and it does not work here: a
+          closed details hides its children from rendering outright, so a
+          server-rendered header with no open attribute shows no
+          navigation at all on desktop — which is what happened. Setting
+          `open` fixes desktop and then the phone cannot close it, because
+          removing the attribute from CSS is not possible and
+          content-visibility only hides the content, not the open/closed
+          behaviour the summary toggles.
 
-          The desktop layout is untouched: responsive.css hides the
-          summary above 600px and only then changes how the menu flows. */}
-      <details className="nav-shell">
-        <summary className="nav-toggle">
-          Menu
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
-            <path d="M6 9l6 6 6-6" strokeLinecap="round" />
-          </svg>
-        </summary>
+          A checkbox is the version that behaves the same on both: the
+          markup is identical at every width, the peer selector
+          (#nav-toggle:checked ~ .nav) does the rest in CSS, and the
+          labels stay in the document for crawlers and screen readers. The
+          label wraps a real <button> so it is reachable by keyboard and
+          announced as a button, with the checkbox itself hidden from
+          assistive tech to avoid announcing it twice. */}
+      <input type="checkbox" id="nav-toggle" className="nav-checkbox"
+        aria-hidden="true" tabIndex={-1} />
+      <label className="nav-toggle" htmlFor="nav-toggle">
+        <span className="nav-toggle-bars" aria-hidden="true">
+          <span /><span /><span />
+        </span>
+        <span className="nav-toggle-text">Menu</span>
+      </label>
 
-        <div className="wrap nav">
+      <div className="wrap nav">
           <Link className="logo" href="/">BADOU<span>DAO</span></Link>
 
           {/* Products opens a dropdown of the categories.
@@ -106,7 +113,6 @@ export async function Header() {
           <Link href="/#inquiry" className="btn btn-primary btn-sm">Get a Quote</Link>
         </div>
         </div>
-      </details>
     </header>
   );
 }

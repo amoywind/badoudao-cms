@@ -173,29 +173,31 @@
 
   /* ---- Header becomes a panel ----
      Six links plus two buttons cannot fit 390px at any font size that
-     stays readable. They become a block behind a <details> toggle, so it
-     opens without JavaScript. */
+     stays readable. They collapse behind a toggle.
+
+     The checkbox and its label are siblings of the header content, so
+     :checked ~ .nav reaches the menu without JavaScript and without the
+     markup differing between widths. Nothing here depends on an
+     attribute that CSS cannot set — which is what made the previous
+     <details> attempt render an empty desktop header. */
   .site-header { position: relative; }
-  .nav-shell > summary { display: flex; }
-  .nav-shell[open] > .nav { border-top: 1px solid var(--line2); }
+
+  .nav-toggle {
+    display: flex; align-items: center; gap: 8px;
+    position: absolute; right: 16px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    padding: 9px 14px; border: 1px solid var(--line);
+    border-radius: 6px; background: #fff;
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    cursor: pointer; user-select: none;
+  }
 
   .nav {
     flex-wrap: wrap; min-height: 58px; row-gap: 0;
     padding-top: 0; padding-bottom: 0;
   }
-  .nav .logo { order: 1; }
-
-  .nav-toggle {
-    display: flex; align-items: center; gap: 7px;
-    margin-left: auto;
-    padding: 9px 14px; border: 1px solid var(--line);
-    border-radius: 6px; background: #fff;
-    font-size: 14px; font-weight: 500; color: var(--ink);
-    cursor: pointer; list-style: none;
-  }
-  .nav-toggle::-webkit-details-marker { display: none; }
-  .nav-toggle svg { transition: transform .2s; }
-  .nav-toggle[open] svg { transform: rotate(180deg); }
+  .nav .logo { order: 1; padding-right: 96px; }
 
   /* The menu and the buttons go full width below the logo row, so
      opening the panel does not push the page down past the fold. */
@@ -204,11 +206,13 @@
     flex-basis: 100%;
     flex-direction: column; align-items: stretch;
   }
+  /* Collapsed by default on a phone; the checkbox opens it. */
   .nav > .menu { display: none; gap: 0; padding: 4px 0 0; }
   .nav > .nav-cta { display: none; padding: 10px 0 14px; }
 
-  .nav-shell[open] > .nav > .menu,
-  .nav-shell[open] > .nav > .nav-cta { display: flex; }
+  .nav-checkbox:checked ~ .nav > .menu,
+  .nav-checkbox:checked ~ .nav > .nav-cta { display: flex; }
+  .nav-checkbox:checked ~ .nav { border-top: 1px solid var(--line2); }
 
   .menu a {
     padding: 13px 0; font-size: 15.5px;
