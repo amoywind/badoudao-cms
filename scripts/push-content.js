@@ -43,6 +43,28 @@ const PAGES = [
     seo_title: 'Quality Control for OEM Quartz Clocks | GB/T 6046 | Badoudao',
     seo_description:
       'How our quartz wall clocks are inspected: 4-stage QC to GB/T 6046, 100% powered testing of every unit, sealed samples per batch, full traceability and after-sales handling.'
+  },
+  {
+    id: 'oem-odm',
+    file: 'oem-odm.md',
+    title: 'OEM / ODM',
+    heading: 'Your brand, our factory',
+    intro:
+      'OEM private labelling on moulds already proven in mass production, or ODM development from your own design. NDA available before you share anything.',
+    seo_title: 'OEM & ODM Quartz Clock Manufacturer | Private Label | Badoudao',
+    seo_description:
+      'OEM private label quartz clocks on proven moulds, custom dial artwork, hands, case colour and packaging. ODM original development with ID design, tooling, movement matching and NDA. Xiamen factory, Ex Works.'
+  },
+  {
+    id: 'small-batch',
+    file: 'small-batch.md',
+    title: 'Small Batch',
+    heading: 'Test it before you commit',
+    intro:
+      'Small batch trial orders on existing moulds, with sample fees refunded on bulk orders. Low MOQ reduces the risk of testing a product nobody buys.',
+    seo_title: 'Small Batch Quartz Clock Orders | Low MOQ OEM | Badoudao',
+    seo_description:
+      'Small batch quartz clock production for market testing: samples from 1-2 pieces, OEM on existing moulds at small quantities, tiered pricing, tooling fees refundable on bulk orders. MOQ from 500.'
   }
 ];
 

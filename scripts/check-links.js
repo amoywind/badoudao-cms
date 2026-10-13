@@ -33,8 +33,8 @@ const PAGES = [
   '/contact',
   '/articles',
   '/news',
-  '/oem-odm',
-  '/small-batch',
+  '/p/oem-odm',
+  '/p/small-batch',
   '/sitemap.xml'
 ];
 
@@ -68,8 +68,41 @@ function internal(url, base) {
 }
 
 (async () => {
+  /* ---- 1. Navigation integrity ------------------------------------------
+     Two entries sharing a nav_order means one of them is dropped from the
+     rendered nav, silently: the query orders by a column that is no longer
+     unique and neither row is wrong on its own. It happened here when
+     oem-odm was given order 2 and nav-products already had it, and the only
+     symptom was a missing link nobody could explain.
+
+     Checked against the live nav so it catches what is actually rendered,
+     not what the database intends. */
+  const navCheck = await fetch(BASE + '/').then((r) => r.text()).catch(() => '');
+  const navItems = navCheck
+    ? [...navCheck.matchAll(/<nav class="menu">([\s\S]*?)<\/nav>/g)]
+        .flatMap((m) => [...m[1].matchAll(/>([^<>]{2,22})<\/a>/g)].map((x) => x[1].trim()))
+        .filter((t) => !/View all/i.test(t))
+    : [];
+
+  console.log('导航项:', navItems.join(' | ') || '(未取到)');
+
+  const EXPECTED = ['Home', 'Products', 'OEM / ODM', 'Small Batch',
+                    'Factory', 'Quality', 'Cases', 'Contact'];
+  const missing = EXPECTED.filter((e) => !navItems.some((n) => n === e));
+  const dupes = navItems.filter((n, i) => navItems.indexOf(n) !== i);
+  const extra = navItems.filter((n) => !EXPECTED.includes(n));
+
+  if (missing.length) {
+    console.log(`\n导航缺失: ${missing.join(', ')}`);
+    console.log('  通常是 nav_order 撞号，排序时某一项被挤掉。');
+  }
+  if (dupes.length) console.log(`\n导航重复: ${dupes.join(', ')}`);
+  if (extra.length) console.log(`\n导航多出: ${extra.join(', ')}`);
+
+  const navFailed = missing.length > 0 || dupes.length > 0;
+
+  /* ---- 2. Link reachability -------------------------------------------- */
   const seen = new Map();          // url -> pages that link to it
-  const sources = [];
 
   for (const p of PAGES) {
     let html;
@@ -132,15 +165,18 @@ function internal(url, base) {
   }
   await Promise.all(Array.from({ length: CONC }, worker));
 
-  if (!broken.length) {
-    console.log('全部链接正常。');
+  if (!broken.length && !navFailed) {
+    console.log('全部链接正常，导航完整。');
     process.exit(0);
   }
 
-  console.log(`\n${broken.length} 个链接无效:\n`);
-  for (const b of broken) {
-    console.log(`  ${String(b.status).padEnd(5)} ${b.url}`);
-    console.log(`        引用自: ${b.from.slice(0, 3).join(', ')}${b.from.length > 3 ? ' …' : ''}`);
+  if (broken.length) {
+    console.log(`\n${broken.length} 个链接无效:\n`);
+    for (const b of broken) {
+      console.log(`  ${String(b.status).padEnd(5)} ${b.url}`);
+      console.log(`        引用自: ${b.from.slice(0, 3).join(', ')}${b.from.length > 3 ? ' …' : ''}`);
+    }
   }
+
   process.exit(1);
 })();
