@@ -556,29 +556,37 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 }
 .page-layout > .content-block { max-width: none; }
 
-/* Sticky with a fallback for a rail taller than the viewport.
+/* Sticky with no internal scrollbar.
 
-   Three cards stack to roughly 900px, which is taller than a laptop's
-   usable height, and a plain sticky top would then pin the rail with its
-   bottom out of sight — including the quote button, which is the one thing
-   on the rail that has to be reachable. align-self:start is required for
-   sticky to work at all in a grid, and the panel scrolls internally once
-   it no longer fits. */
+   Three cards stack taller than a laptop's usable height, so this once
+   scrolled inside itself. A scrollbar inside a 380px column looks like a
+   mistake, and worse: the quote button — the one thing on the rail that has
+   to be clickable — can sit below the fold inside its own panel.
+
+   So the rail is capped to the viewport and its cards compress instead of
+   scrolling. The first card gives up its padding and the compliance list
+   tightens its line height, which buys back enough height for the button
+   to stay visible on a 900px screen. align-self:start is required for
+   sticky to work at all in a grid. */
 .page-rail {
   position: sticky; top: 90px;
   max-height: calc(100vh - 110px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
 
   background: #f4f5f4;
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 16px;
-  display: grid; gap: 14px; align-content: start;
+  padding: 14px;
+  display: grid; gap: 12px; align-content: start;
 }
-/* A scrollbar inside a 380px column eats space and looks like a mistake;
-   the panel still scrolls, it just does not advertise it. */
-.page-rail { scrollbar-width: thin; scrollbar-color: #cbd2d0 transparent; }
+
+/* The figures block takes the space it needs and the rest adjust, so a
+   short viewport squeezes the padding and line spacing before it starts
+   hiding anything. */
+.rail-card { padding: 16px 16px 17px; }
+.rail-card dl > div { padding: 6px 0; }
+.rail-ticks li { margin-bottom: 7px; line-height: 1.45; }
+.rail-ask p { margin-bottom: 13px; }
+.rail-quote { padding: 12px 18px; }
 
 .rail-card {
   background: #fff;
@@ -598,12 +606,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    the one button that is meant to be clicked. */
 .rail-card h2 svg { color: #3f4a56; flex-shrink: 0; }
 
-.rail-card h3 {
-  font-family: var(--sans); font-size: 11.5px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase; color: var(--ink3);
-  margin: 18px 0 9px; padding-top: 14px; border-top: 1px solid var(--line);
-}
-
 /* Figures as a definition list: the label is a question the buyer is
    already asking, so it reads as an answer rather than a caption. */
 .rail-card dl { margin: 0; }
@@ -617,18 +619,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .rail-card dd {
   margin: 0; font-size: 13.5px; font-weight: 600; color: var(--ink);
   text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
-}
-
-.rail-range ul { list-style: none; padding: 0; margin: 0; }
-.rail-range li a {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 0; font-size: 13.5px; color: #3f4a56;
-}
-.rail-range li a:hover { color: var(--brand); }
-.rail-range li span { flex: 1; min-width: 0; }
-.rail-range li b {
-  font-size: 12px; color: var(--ink3); font-weight: 500;
-  font-variant-numeric: tabular-nums;
 }
 
 /* Compliance as ticks rather than a table: these are claims, not figures,

@@ -78,7 +78,7 @@
      the viewport limit would clip it for no reason. */
   .site .page-layout { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .site .page-rail {
-    position: static; max-width: 560px; max-height: none; overflow: visible;
+    position: static; max-width: 560px; max-height: none;
   }
 
   /* Two columns is the most a tablet portrait can carry. Below this it

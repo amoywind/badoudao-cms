@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { one, getSettings, listCategories, countProductsByCategory, buildMeta } from '@/lib/db';
+import { one, getSettings, listCategories, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
@@ -53,10 +53,13 @@ export default async function StaticPage({ params }) {
 
   if (!page) notFound();
 
-  const [s, cats, counts] = await Promise.all([
+  /* No product counts here: the rail used to list the categories with their
+     counts, which made this page a second navigation and pushed the figures
+     the reader came for below the fold. One grouped query per page render
+     for a list nobody asked for. */
+  const [s, cats] = await Promise.all([
     getSettings().catch(() => ({} as SiteSettings)),
-    listCategories().catch(() => []),
-    countProductsByCategory().catch(() => ({} as Record<string, number>))
+    listCategories().catch(() => [])
   ]);
 
   return (
@@ -109,7 +112,7 @@ export default async function StaticPage({ params }) {
               {page.slug === 'quality' ? (
                 <LicencePanel />
               ) : (
-                <PageRail slug={page.slug} counts={counts} moq={s.moq} quoteHours={s.quoteHours} />
+                <PageRail slug={page.slug} moq={s.moq} quoteHours={s.quoteHours} />
               )}
             </div>
           </div>
@@ -201,12 +204,10 @@ function ShowroomStrip() {
  */
 function PageRail({
   slug,
-  counts,
   moq,
   quoteHours
 }: {
   slug: string;
-  counts?: Record<string, number>;
   moq?: string | number;
   quoteHours?: string | number;
 }) {
@@ -230,6 +231,7 @@ function PageRail({
       { label: 'MOQ from', value: `${moq || 500} pcs` },
       { label: 'Sample order', value: '1–2 pcs' },
       { label: 'Sample fee', value: 'Refunded on bulk' },
+      { label: 'Sample lead time', value: '1 day' },
       { label: 'Custom dial artwork', value: 'No new tooling' }
     ],
     factory: [
@@ -242,22 +244,6 @@ function PageRail({
   };
 
   const figures = CAPACITY[slug];
-
-  /* The product range lives under the first block rather than as its own:
-     it is a navigation aid, not a fact about the factory, and the ask was
-     for three blocks. */
-  const list = Object.entries(counts || {})
-    .filter(([, n]) => n > 0)
-    .sort((a, b) => b[1] - a[1]);
-
-  const CATEGORY_NAMES: Record<string, string> = {
-    'wall-clocks': 'Quartz Wall Clocks',
-    'alarm-clocks': 'Quartz Alarm Clocks',
-    'table-desk-clocks': 'Table & Desk Clocks',
-    'metal-clocks': 'Metal & Luxury Clocks',
-    'wood-clocks': 'Wood & MDF Clocks',
-    'clock-movements': 'Clock Movements & Parts'
-  };
 
   return (
     <aside className="page-rail">
@@ -275,22 +261,6 @@ function PageRail({
               </div>
             ))}
           </dl>
-
-          {list.length > 0 && (
-            <div className="rail-range">
-              <h3>Product range</h3>
-              <ul>
-                {list.slice(0, 6).map(([id, n]) => (
-                  <li key={id}>
-                    <Link href={`/products/${id}`}>
-                      <span>{CATEGORY_NAMES[id] || id}</span>
-                      <b>{n}</b>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </section>
       )}
 
