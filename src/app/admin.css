@@ -117,6 +117,26 @@ img { display: block; max-width: 100%; }
 
 /* ---------- table ---------- */
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+/* Opt in per table, not globally.
+
+   A table without table-layout:fixed gives every column as much width as
+   its widest cell wants, so one long product name pushes the status and
+   completeness columns off to the right edge and the header row reads as a
+   scatter of labels. Fixed layout makes the first column absorb the slack
+   and keeps the rest aligned.
+
+   Applied through [data-fixed] rather than to every table because most
+   admin tables have not declared column widths — 29 of 43 th elements
+   across the eight list pages. Setting it globally would make all of them
+   equal-width, which is a different distortion rather than a fix. Each
+   page opts in once its columns have widths. */
+table[data-fixed] { table-layout: fixed; }
+
+/* A cell that runs out of room wraps rather than widening its column or
+   being cut. overflow-wrap matters here because product names are often
+   unbroken ASCII strings with no spaces to break at. */
+th, td { overflow-wrap: break-word; }
 th {
   text-align: left; padding: 10px 13px; font-size: 11px; font-weight: 600;
   color: var(--ink3); letter-spacing: .04em; text-transform: uppercase;
@@ -183,7 +203,29 @@ select.inp { cursor: pointer; }
 .hint { font-weight: 400; color: var(--ink3); font-size: 11.5px; margin-left: 5px; }
 .fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .fg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+/* Equal columns, the default. */
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* The dashboard's two columns are not the same width.
+
+   Equal columns looked fine until the left one held a table of eight
+   enquiries and the right one held five short todo lines: the right card
+   was half empty while the table beside it was squeezed. The left column
+   gets the slack because it is the one with content of unpredictable
+   length, and the right one keeps a fixed width because its contents are
+   fixed — a count and a label.
+
+   A separate class rather than a change to .grid2: the enquiry detail,
+   product editor and settings pages use the same grid for pairs of forms,
+   where equal columns are correct. */
+.grid2-wide { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; }
+
+/* Below 1100px the fixed column is not worth its own space: 340px plus
+   whatever is left would squeeze the table into an unreadable sliver. One
+   column, and the todo card lands under the list it is about. */
+@media (max-width: 1100px) {
+  .grid2-wide { grid-template-columns: minmax(0, 1fr); }
+}
 .help { font-size: 11.5px; color: var(--ink3); margin-top: 4px; line-height: 1.5; }
 .help.warn { color: var(--warn); }
 

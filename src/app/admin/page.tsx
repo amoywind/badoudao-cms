@@ -51,7 +51,10 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="grid2" style={{ alignItems: 'start' }}>
+      {/* grid2-wide, not grid2: the left card holds a table whose row count
+          varies, the right one a fixed list of five. Equal columns left the
+          right card half empty and squeezed the table beside it. */}
+      <div className="grid2-wide" style={{ alignItems: 'start' }}>
         <div className="card">
           <div className="card-h">
             <h3>最新询盘</h3>
@@ -103,12 +106,23 @@ export default function DashboardPage() {
           <div className="r"><Link href="/admin/products" className="btn btn-sm">管理产品</Link></div>
         </div>
         <div className="card-b flush">
-          <table>
+          {/* data-fixed: every column below declares a width, so fixed layout
+              can hold them steady however long a product name is. Without it
+              one long name pushes status and completeness off to the right
+              and the header reads as a scatter of labels. */}
+          <table data-fixed>
             <thead>
               <tr>
-                <th style={{ width: 44 }}></th><th>产品</th><th>分类</th>
-                <th style={{ textAlign: 'right' }}>出厂价</th><th>状态</th><th style={{ width: 80 }}>完整度</th>
-              </tr>
+                  {/* Widths declared so table-layout:fixed has something to
+                      work from: the product name takes the slack, and every
+                      other column stays put however long the name is. */}
+                  <th style={{ width: 44 }}></th>
+                  <th>产品</th>
+                  <th style={{ width: 140 }}>分类</th>
+                  <th style={{ width: 110, textAlign: 'right' }}>出厂价</th>
+                  <th style={{ width: 76 }}>状态</th>
+                  <th style={{ width: 80 }}>完整度</th>
+                </tr>
             </thead>
             <tbody>
               {products.slice(0, 10).map((p) => {
