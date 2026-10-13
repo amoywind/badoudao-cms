@@ -95,7 +95,16 @@ export default async function RootLayout({ children }) {
           />
         )}
       </head>
-      <body>{children}</body>
+      {/* "site" scopes the front end. The admin shares this layout and
+          therefore this stylesheet, and the responsive layer targets bare
+          element names — h1, section, table — to keep the public pages
+          readable without wrapping every one of them in a class. Left
+          unscoped those reach the admin too: table { display: block } is
+          enough to dismantle every data list back there.
+
+          The admin marks itself with .admin-root instead, so it can opt out
+          by not carrying .site. */}
+      <body className="site">{children}</body>
     </html>
   );
 }

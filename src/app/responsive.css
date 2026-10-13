@@ -20,6 +20,14 @@
 
    Written after the layout rules so it wins on equal specificity, and
    all of it in one file section so the next change has one place to go.
+
+   SCOPE. Every selector here must start with .site, because the admin
+   shares the root layout and therefore this stylesheet. The bare element
+   names below — h1, section, table — are the ones that caused it: table
+   { display: block } alone dismantles every data list in the admin. Scoped
+   by hand on purpose rather than by script: a script that rewrites CSS
+   will eventually rewrite the words inside a comment too, and a selector
+   with a sentence spliced into it is worse than a missed one.
    =================================================================== */
 
 /* ---- 1024px: tablet landscape and small laptops ---- */
@@ -28,8 +36,8 @@
 
   .wrap { padding-left: var(--pad); padding-right: var(--pad); }
 
-  h1 { font-size: 40px; }
-  h2 { font-size: 29px; }
+  .site h1 { font-size: 40px; }
+  .site h2 { font-size: 29px; }
 
   /* The header is the first thing to break: logo, six nav links and two
      buttons cannot share 1024px once the nav has gaps. Below here the
@@ -52,8 +60,8 @@
 
 /* ---- 860px: tablet portrait ---- */
 @media (max-width: 860px) {
-  h1 { font-size: 35px; }
-  h2 { font-size: 26px; }
+  .site h1 { font-size: 35px; }
+  .site h2 { font-size: 26px; }
 
   /* The sidebar has to fold before the grid narrows: below 232px the
      count column has nowhere to sit and the names wrap mid-word. */
@@ -130,8 +138,8 @@
 @media (max-width: 600px) {
   :root { --pad: 16px; }
 
-  h1 { font-size: 30px; line-height: 1.2; }
-  h2 { font-size: 23px; }
+  .site h1 { font-size: 30px; line-height: 1.2; }
+  .site h2 { font-size: 23px; }
   .page-head h1 { font-size: 27px; }
 
   /* Grid and flex children default to min-width:auto, which means they
@@ -162,7 +170,7 @@
     hyphens: auto;
   }
 
-  section, .section { padding: 48px 0; }
+  .site section, .site .section { padding: 48px 0; }
   .hero .wrap { padding: 38px var(--pad) 40px; }
 
   /* The 1024px range sets the hero back to two columns, which is right
@@ -295,8 +303,8 @@
    One column already; this is only about the type scale and padding,
    where a 30px h1 on a 320px screen leaves about four words a line. */
 @media (max-width: 380px) {
-  h1 { font-size: 26px; }
-  h2 { font-size: 21px; }
+  .site h1 { font-size: 26px; }
+  .site h2 { font-size: 21px; }
   .page-head h1 { font-size: 24px; }
   .wrap { padding-left: 13px; padding-right: 13px; }
   .btn { padding: 12px 16px; font-size: 14px; }
@@ -312,17 +320,17 @@
    overflow-x: clip rather than hidden, because hidden turns the
    element into a scroll container, which breaks position:sticky
    descendants — the quality page's licence panel. */
-:where(p, h1, h2, h3, h4, li, td, th, span, a, div) {
+.site :where(p, h1, h2, h3, h4, li, td, th, span, a, div) {
   overflow-wrap: break-word;
 }
-:where(.wrap, section, .card, .c-body, .pd, .split, .grid-3, .grid-2,
+.site :where(.wrap, section, .card, .c-body, .pd, .split, .grid-3, .grid-2,
        .related-grid, .f-grid, .fg2, .cap-list, .proc, .trust-grid) {
   max-width: 100%;
 }
-:where(img, svg, video, iframe, table) {
+.site :where(img, svg, video, iframe, table) {
   max-width: 100%;
 }
-table { display: block; overflow-x: auto; }
+.site table { display: block; overflow-x: auto; }
 
 /* ---- Landscape phone ----
    A phone turned sideways is 844px wide and 390px tall. The 860px rules
@@ -331,7 +339,7 @@ table { display: block; overflow-x: auto; }
 @media (max-height: 500px) and (orientation: landscape) {
   .hero .wrap { padding: 32px var(--pad); }
   .site-header .wrap { min-height: 52px; }
-  section, .section { padding: 36px 0; }
+  .site section, .site .section { padding: 36px 0; }
 }
 
 /* ---- Print and motion preferences ----
