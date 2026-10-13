@@ -32,7 +32,18 @@ export default async function AdminLayout({ children }) {
     /* The boundary wraps the content area rather than the whole shell, so a
        crash in a page never costs the owner the sidebar and the way back to
        the dashboard. */
-    <div className="app">
+    /* admin-root marks the admin as not-the-public-site.
+
+       The responsive layer needs bare element names — h1, section, table —
+       so the public pages stay readable without wrapping every element in a
+       class, and those selectors are scoped to .site. <body> cannot carry
+       that class: it is shared, so marking it marked this tree too and the
+       admin inherited the public rules while admin.css lost the
+       specificity fight.
+
+       This is the outermost element of the admin, which is where the two
+       trees diverge, so it is where the scope has to be set. */
+    <div className="app admin-root">
       <Sidebar user={user} />
       <div className="main">
         <AdminShell>{children}</AdminShell>

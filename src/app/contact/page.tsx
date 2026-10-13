@@ -51,7 +51,8 @@ export default async function ContactPage({
   const email = s.email || 'sales@badoudao.com';
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -124,6 +125,7 @@ export default async function ContactPage({
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

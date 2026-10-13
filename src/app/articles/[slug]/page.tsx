@@ -58,7 +58,8 @@ export default async function ArticlePage({ params }) {
   ]);
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -117,6 +118,7 @@ export default async function ArticlePage({ params }) {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

@@ -52,7 +52,8 @@ export default async function NewsPage() {
   const { items, s } = await load();
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -126,6 +127,7 @@ export default async function NewsPage() {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

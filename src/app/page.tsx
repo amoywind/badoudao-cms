@@ -55,7 +55,8 @@ export default async function HomePage() {
   };
 
   return (
-    <>
+    <div className="site">
+
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <TopBar />
       <Header />
@@ -234,6 +235,7 @@ export default async function HomePage() {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

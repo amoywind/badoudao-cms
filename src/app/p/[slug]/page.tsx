@@ -63,7 +63,8 @@ export default async function StaticPage({ params }) {
   ]);
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -145,7 +146,8 @@ export default async function StaticPage({ params }) {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }
 

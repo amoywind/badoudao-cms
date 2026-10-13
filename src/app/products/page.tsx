@@ -34,7 +34,8 @@ export default async function ProductsIndex() {
   ]);
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -103,6 +104,7 @@ export default async function ProductsIndex() {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

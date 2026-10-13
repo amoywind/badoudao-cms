@@ -95,16 +95,31 @@ export default async function RootLayout({ children }) {
           />
         )}
       </head>
-      {/* "site" scopes the front end. The admin shares this layout and
-          therefore this stylesheet, and the responsive layer targets bare
-          element names — h1, section, table — to keep the public pages
-          readable without wrapping every one of them in a class. Left
-          unscoped those reach the admin too: table { display: block } is
-          enough to dismantle every data list back there.
+      {/* No class on <body>.
 
-          The admin marks itself with .admin-root instead, so it can opt out
-          by not carrying .site. */}
-      <body className="site">{children}</body>
+          An earlier attempt put .site here to scope the responsive layer,
+          which needs bare element names — h1, section, table — so the
+          public pages stay readable without wrapping every element in a
+          class. Unscoped, `table { display: block }` reached the admin and
+          dismantled every data table in it.
+
+          The fix was wrong in a way that only showed up in the rendered
+          admin: <body> is shared. Both the public pages and /admin render
+          inside this one element, so .site marked the admin too, and the
+          admin inherited the public responsive rules while admin.css lost
+          the specificity fight. The dashboard came back with its table
+          columns scattered and its two columns equal-width — the same
+          symptoms as before, one layer down.
+
+          Scoping has to happen where the two trees diverge, which is the
+          admin's own shell: AdminShell carries .admin-root, and the
+          responsive layer's .site selectors then match nothing in it.
+          Front-end pages get .site on their own wrapper instead.
+
+          check-css-scope.js only checks that the selectors are written
+          correctly; it cannot see that the scope is attached to the wrong
+          element. That took a screenshot of the admin to find. */}
+      <body>{children}</body>
     </html>
   );
 }

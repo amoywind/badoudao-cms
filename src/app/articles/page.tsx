@@ -57,7 +57,8 @@ export default async function ArticlesPage() {
   const { posts, s } = await load();
 
   return (
-    <>
+    <div className="site">
+
       <TopBar />
       <Header />
 
@@ -111,6 +112,7 @@ export default async function ArticlesPage() {
       </main>
 
       <Footer />
-    </>
+        </div>
+
   );
 }

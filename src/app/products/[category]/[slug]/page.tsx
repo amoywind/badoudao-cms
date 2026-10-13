@@ -109,7 +109,12 @@ export default async function ProductPage({ params }) {
 
   const mainImg = product.images[0];
 
+  /* Wrapped in .site so the responsive layer's bare-element selectors —
+     h1, section, table — apply here and not in the admin, which shares the
+     root layout and therefore this stylesheet. The admin's own layout
+     carries .admin-root instead; see app/layout.tsx. */
   return (
+    <div className="site">
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
@@ -284,5 +289,6 @@ export default async function ProductPage({ params }) {
 
       <Footer />
     </>
+    </div>
   );
 }
