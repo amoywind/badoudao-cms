@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
+import { listProducts, listCategories, getSettings, countProductsByCategory, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
+import { CategoryNav } from '../../CategoryNav';
 import { InquiryCTA } from '../../InquiryForm';
 
 export const runtime = 'edge';
@@ -41,9 +42,10 @@ export default async function CategoryPage({ params }) {
   const { category } = params;
   const cats = await listCategories().catch(() => []);
   const cat = cats.find((c) => c.id === category);
-  const [products, s] = await Promise.all([
+  const [products, s, counts] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
-    getSettings().catch(() => ({} as SiteSettings))
+    getSettings().catch(() => ({} as SiteSettings)),
+    countProductsByCategory().catch(() => ({} as Record<string, number>))
   ]);
 
   const title = cat ? `${cat.name} — wholesale & OEM manufacturer` : 'Products';
@@ -85,36 +87,45 @@ export default async function CategoryPage({ params }) {
 
         <section>
           <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">Available Models</div>
-              <h2 style={{ fontSize: 30 }}>{products.length} {products.length === 1 ? 'model' : 'models'} in production</h2>
-              <p className="sec-sub">Prices are per piece Ex Works. Larger orders step down.</p>
-            </div>
+            {/* Sidebar beside the grid, not above it: a buyer who came
+                here for one category still needs the other seven one click
+                away, and the counts tell them which are worth opening. */}
+            <div className="shop-layout">
+              <CategoryNav cats={cats} current={category} counts={counts} />
 
-            {products.length === 0 ? (
-              <p style={{ color: 'var(--ink3)' }}>
-                Models in this category are being added.{' '}
-                <a href="#inquiry" style={{ color: 'var(--brand)' }}>Send us your requirement</a> and we will quote.
-              </p>
-            ) : (
-              <div className="grid-3">
-                {products.map((p) => (
-                  <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
-                    <div className="c-visual">
-                      {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
-                    </div>
-                    <div className="c-body">
-                      <h3 style={{ fontSize: 18 }}>{p.name}</h3>
-                      <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 130)}…</p>
-                      <div className="c-meta">
-                        <span>MOQ <b>{p.moq}</b> · {p.leadTime}</span>
-                        <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+              <div>
+                <div className="sec-head">
+                  <div className="sec-tag">Available Models</div>
+                  <h2 style={{ fontSize: 30 }}>{products.length} {products.length === 1 ? 'model' : 'models'} in production</h2>
+                  <p className="sec-sub">Prices are per piece Ex Works. Larger orders step down.</p>
+                </div>
+
+                {products.length === 0 ? (
+                  <p style={{ color: 'var(--ink3)' }}>
+                    Models in this category are being added.{' '}
+                    <a href="#inquiry" style={{ color: 'var(--brand)' }}>Send us your requirement</a> and we will quote.
+                  </p>
+                ) : (
+                  <div className="grid-3">
+                    {products.map((p) => (
+                      <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
+                        <div className="c-visual">
+                          {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
+                        </div>
+                        <div className="c-body">
+                          <h3 style={{ fontSize: 18 }}>{p.name}</h3>
+                          <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 130)}…</p>
+                          <div className="c-meta">
+                            <span>MOQ <b>{p.moq}</b> · {p.leadTime}</span>
+                            <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </section>
 

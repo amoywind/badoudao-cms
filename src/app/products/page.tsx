@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
+import { listProducts, listCategories, getSettings, countProductsByCategory, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
+import { CategoryNav } from '../CategoryNav';
 import { InquiryCTA } from '../InquiryForm';
 
 export const runtime = 'edge';
@@ -25,10 +26,11 @@ export async function generateMetadata() {
 }
 
 export default async function ProductsIndex() {
-  const [products, cats, s] = await Promise.all([
+  const [products, cats, s, counts] = await Promise.all([
     listProducts({ status: 'published' }).catch(() => []),
     listCategories().catch(() => []),
-    getSettings().catch(() => ({} as SiteSettings))
+    getSettings().catch(() => ({} as SiteSettings)),
+    countProductsByCategory().catch(() => ({} as Record<string, number>))
   ]);
 
   return (
@@ -66,6 +68,14 @@ export default async function ProductsIndex() {
               ))}
             </div>
 
+            {/* The category cards above already cover browsing from zero.
+                This grid is the flat "show me everything" case, and the
+                sidebar is there so a buyer who has decided on a material
+                can still narrow without scrolling back up. */}
+            <div className="shop-layout">
+              <CategoryNav cats={cats} counts={counts} heading="Browse by Category" />
+
+              <div>
             <div className="sec-head">
               <div className="sec-tag">All Models</div>
               <h2 style={{ fontSize: 30 }}>{products.length} models in production</h2>
@@ -86,6 +96,8 @@ export default async function ProductsIndex() {
                   </div>
                 </Link>
               ))}
+            </div>
+              </div>
             </div>
           </div>
         </section>

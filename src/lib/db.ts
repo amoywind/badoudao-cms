@@ -358,6 +358,29 @@ export async function listCategories(): Promise<Category[]> {
 }
 
 /**
+ * Published product count per category, keyed by category id.
+ *
+ * For the category sidebar: "Metal Clocks (14)" tells a buyer whether a
+ * branch is worth opening, and a category showing 0 says so instead of
+ * inviting a click that leads to an empty grid.
+ *
+ * One grouped query rather than a COUNT per category — eight round trips
+ * on every product page render is not worth a number that could be a
+ * single row.
+ */
+export async function countProductsByCategory(): Promise<Record<string, number>> {
+  const rows = await cached<any[]>(
+    `SELECT category, COUNT(*) AS n
+       FROM products
+      WHERE status = 'published' AND category IS NOT NULL AND category <> ''
+      GROUP BY category`
+  );
+  const out: Record<string, number> = {};
+  for (const r of rows) out[r.category] = Number(r.n) || 0;
+  return out;
+}
+
+/**
  * Extract an 11-character YouTube id from any of the URL shapes a user is
  * likely to paste. Returns '' when the string is not recognisably YouTube,
  * so a bad paste is caught before it reaches the page.

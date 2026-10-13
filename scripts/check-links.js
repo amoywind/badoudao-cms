@@ -77,12 +77,23 @@ function internal(url, base) {
 
      Checked against the live nav so it catches what is actually rendered,
      not what the database intends. */
+  /* The nav is read as the text of every link and dropdown trigger inside
+     it, not as `>text</a>`: the Products entry renders as a link wrapped
+     in a div so it can carry a dropdown panel, which a naive anchor regex
+     reports as missing. Reading the nav's own text instead of parsing the
+     markup around each item means the check cannot be fooled by how an
+     entry happens to be built. */
   const navCheck = await fetch(BASE + '/').then((r) => r.text()).catch(() => '');
-  const navItems = navCheck
-    ? [...navCheck.matchAll(/<nav class="menu">([\s\S]*?)<\/nav>/g)]
-        .flatMap((m) => [...m[1].matchAll(/>([^<>]{2,22})<\/a>/g)].map((x) => x[1].trim()))
-        .filter((t) => !/View all/i.test(t))
-    : [];
+  let navItems = [];
+  if (navCheck) {
+    const navBlock = (navCheck.match(/<nav class="menu">([\s\S]*?)<\/nav>/) || [])[1] || '';
+    /* Drop the dropdown panel's own links before reading labels: they
+       belong to the Products menu, not to the top level. */
+    const topOnly = navBlock.replace(/<div class="navdrop">[\s\S]*?<\/div>\s*<\/div>/g, '');
+    navItems = [...topOnly.matchAll(/>([^<>]{2,24})</g)]
+      .map((m) => m[1].trim())
+      .filter((t) => t && !/View all/i.test(t));
+  }
 
   console.log('导航项:', navItems.join(' | ') || '(未取到)');
 

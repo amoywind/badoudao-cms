@@ -55,6 +55,10 @@
   h1 { font-size: 35px; }
   h2 { font-size: 26px; }
 
+  /* The sidebar has to fold before the grid narrows: below 232px the
+     count column has nowhere to sit and the names wrap mid-word. */
+  .shop-layout { grid-template-columns: 200px minmax(0, 1fr); gap: 26px; }
+
   /* Two columns is the most a tablet portrait can carry. Below this it
      becomes one, but at 860 the cards are still ~380px wide, which is
      what makes them readable and tappable. */
@@ -89,6 +93,37 @@
   .quality-layout { grid-template-columns: 1fr; gap: 28px; }
   .quality-layout .licence { position: static; max-width: 400px; }
   .showroom-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- 680px: category sidebar becomes a horizontal scroller ----
+   Stacked above the grid it would be eight links before any product
+   appeared, which on a phone is most of the first screen. Sideways it is
+   one swipe and it scrolls out of the way. Placed outside the 600px
+   bucket so it applies to the 600–860 range too, where the sidebar is
+   already too narrow to read comfortably. */
+@media (max-width: 680px) {
+  .shop-layout { grid-template-columns: 1fr; gap: 22px; }
+  .cat-nav { position: static; }
+
+  .cat-nav-h { margin-bottom: 9px; }
+
+  .cat-nav ul {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 6px; margin: 0 -16px; padding-left: 16px; padding-right: 16px;
+    scrollbar-width: none;
+  }
+  .cat-nav ul::-webkit-scrollbar { display: none; }
+
+  .cat-nav li { border-bottom: 0; flex-shrink: 0; }
+  .cat-nav a {
+    padding: 8px 14px; font-size: 13.5px; white-space: nowrap;
+    border: 1px solid var(--line); border-radius: 999px; background: #fff;
+  }
+  .cat-nav a.on {
+    border-color: var(--brand); background: var(--brandSoft);
+  }
+
+  .cat-nav-note { display: none; }
 }
 
 /* ---- 600px: phones ---- */

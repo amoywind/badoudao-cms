@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listProducts, listCategories, getSettings, buildMeta } from '@/lib/db';
+import { listCategories, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
 import { InquiryCTA } from './InquiryForm';
 
@@ -29,15 +29,20 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [products, cats, s] = await Promise.all([
-    listProducts({ status: 'published' }).catch(() => []),
+  const [cats, s] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings))
   ]);
 
-  const featured = products.filter((p) => p.featured).slice(0, 6);
-  const fallback = products.slice(0, 6);
-  const shown = featured.length ? featured : fallback;
+  /* No product grid on the home page.
+
+     It was there, and it was wrong for this buyer. A wall of six clocks
+     with EXW prices tells a wholesale buyer who already knows what they
+     want to see, and tells everyone else nothing they can act on: they
+     cannot tell a 40-piece aluminium movement from a 60-piece brass one
+     from a photograph, and picking a product is a conversation, not a
+     click. The categories below carry the same information in a form a
+     buyer can use to navigate, and the enquiry form is one scroll away. */
 
   const schema = {
     '@context': 'https://schema.org',
@@ -191,36 +196,10 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {shown.length > 0 && (
-          <section className="alt" id="featured">
-            <div className="wrap">
-              <div className="sec-head">
-                <div className="sec-tag">Popular Models</div>
-                <h2>Where most enquiries start</h2>
-                <p className="sec-sub">No featured discounts — these are simply the models buyers ask about most.</p>
-              </div>
-              <div className="grid-3">
-                {shown.map((p) => (
-                  <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
-                    <div className="c-visual">
-                      {p.images.length
-                        ? <img src={p.images[0].url} alt={p.name} />
-                        : <span style={{ color: 'var(--ink3)', fontSize: 13 }}>No image</span>}
-                    </div>
-                    <div className="c-body">
-                      <h3 style={{ fontSize: 17 }}>{p.name}</h3>
-                      <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
-                      <div className="c-meta">
-                        <span>MOQ <b>{p.moq}</b></span>
-                        <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        {/* The Popular Models grid that used to sit here is gone. See the note
+            on HomePage: a six-card product wall on the home page gives a
+            wholesale buyer nothing they can act on and pushes the enquiry
+            form a full screen further down. */}
 
         <section id="inquiry">
           <div className="wrap">
