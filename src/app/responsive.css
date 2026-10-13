@@ -1,0 +1,252 @@
+/* ===================================================================
+   Responsive layer
+   -------------------------------------------------------------------
+   Three breakpoints, applied mobile-last. The site had eight different
+   values scattered across six media queries — 640, 700, 760, 900, 980,
+   1000, 1024, 1100 — with nothing between phone and desktop and no
+   tablet range of its own. A tablet in portrait fell into the phone
+   rules (single column, 34px headings) while a small laptop in landscape
+   got the full desktop layout, so neither was designed for.
+
+   The three widths below are chosen from the devices this audience
+   actually arrives on:
+
+     1024px  iPad landscape and small laptops. Two columns still read
+             comfortably, so this is about tightening rather than
+             stacking.
+     860px   iPad portrait. A single column of product cards becomes
+             unusably wide cards, so this is where grids go to two.
+     600px   phones. One column, larger type, everything full width.
+
+   Written after the layout rules so it wins on equal specificity, and
+   all of it in one file section so the next change has one place to go.
+   =================================================================== */
+
+/* ---- 1024px: tablet landscape and small laptops ---- */
+@media (max-width: 1024px) {
+  :root { --pad: 20px; }
+
+  .wrap { padding-left: var(--pad); padding-right: var(--pad); }
+
+  h1 { font-size: 40px; }
+  h2 { font-size: 29px; }
+
+  /* The header is the first thing to break: logo, six nav links and two
+     buttons cannot share 1024px once the nav has gaps. Below here the
+     menu becomes a panel, so this range only has to survive to 860px. */
+  .nav { gap: 18px; min-height: 64px; }
+  .menu { gap: 17px; font-size: 13.5px; }
+  .nav-cta .btn-ghost { display: none; }
+
+  /* The product dropdown is 560px wide and anchored to a link near the
+     left edge; at this width it runs off the right. Anchoring it to the
+     right edge of the viewport keeps it on screen without a scroller. */
+  .navdrop { left: auto; right: -120px; min-width: 480px; }
+
+  .hero .wrap { grid-template-columns: 1fr 1fr; gap: 36px; padding: 54px var(--pad) 48px; }
+  .pd { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .split { gap: 36px; }
+  .cap-list { grid-template-columns: 1fr 1fr; }
+  .section, section { padding: 60px 0; }
+}
+
+/* ---- 860px: tablet portrait ---- */
+@media (max-width: 860px) {
+  h1 { font-size: 35px; }
+  h2 { font-size: 26px; }
+
+  /* Two columns is the most a tablet portrait can carry. Below this it
+     becomes one, but at 860 the cards are still ~380px wide, which is
+     what makes them readable and tappable. */
+  .grid-3, .related-grid, .faq-grid, .f-grid, .fg2 { grid-template-columns: 1fr 1fr; }
+  .trust-grid { grid-template-columns: repeat(3, 1fr); }
+  .trust-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 16px; }
+  .proc { grid-template-columns: 1fr 1fr; }
+
+  /* The hero puts the image under the text. It stays side by side at 860
+     because a tablet in portrait has the height for it; the image is what
+     makes the first screen worth stopping on. */
+  .hero .wrap { grid-template-columns: 1fr; gap: 32px; padding: 46px var(--pad) 44px; }
+  .hero-img { max-width: 520px; }
+
+  /* Product detail: the gallery above the buy box. The gallery can be
+     narrower than half and still be large enough to judge a clock. */
+  .pd { grid-template-columns: 1fr; gap: 32px; }
+  .split { grid-template-columns: 1fr; gap: 32px; }
+
+  /* The product dropdown is 560px wide and anchored near the left of the
+     nav. Below this the nav is a vertical panel, so it has to become part
+     of that flow — a hover panel with no hover is unreachable, which is
+     why the old rule hid it and left the Products link going to
+     /products. Showing the categories is better than hiding them. */
+  .navdrop-wrap { width: 100%; }
+  .navdrop {
+    position: static; opacity: 1; visibility: visible; transform: none;
+    box-shadow: none; border: 0;
+    border-left: 2px solid var(--brandSoft);
+    border-radius: 0; padding: 0 0 0 12px; margin: 4px 0 8px;
+    min-width: 0; background: #fafbfc;
+  }
+  .navdrop::before { display: none; }
+  .navdrop-all { padding: 10px 0; }
+  .menu .navdrop-trigger svg { display: none; }
+
+  .showroom-strip img { min-height: 0; }
+  .quality-layout { grid-template-columns: 1fr; gap: 28px; }
+  .quality-layout .licence { position: static; max-width: 400px; }
+  .showroom-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- 600px: phones ---- */
+@media (max-width: 600px) {
+  :root { --pad: 16px; }
+
+  h1 { font-size: 30px; line-height: 1.2; }
+  h2 { font-size: 23px; }
+  .page-head h1 { font-size: 27px; }
+
+  section, .section { padding: 48px 0; }
+  .hero .wrap { padding: 38px var(--pad) 40px; }
+
+  /* Everything single column. A two-column product grid at 390px gives
+     170px cards, which is too narrow to judge a clock from. */
+  .grid-3, .grid-2, .related-grid, .faq-grid, .f-grid, .fg2,
+  .trust-grid, .proc, .cap-list, .drop-grid, .wa-row {
+    grid-template-columns: 1fr;
+  }
+  .news-item { grid-template-columns: 1fr; gap: 16px; }
+  .trust-item { border-bottom: 1px solid rgba(255,255,255,.1); }
+  .showroom-grid { grid-template-columns: 1fr; }
+
+  .wa-row { grid-template-columns: 1fr; }
+
+  /* Buttons full width: a 44px-tall target is the minimum, and a
+     half-width button next to its neighbour is smaller than that. */
+  .cta .wrap { flex-direction: column; align-items: stretch; gap: 28px; }
+  .btn { width: 100%; justify-content: center; }
+  .nav-cta .btn { width: 100%; }
+  .inq-cta { padding: 20px; }
+  .inq-cta .btn { width: 100%; }
+  .btn-sm { padding: 10px 16px; }
+
+  /* ---- Header becomes a panel ----
+     Six links plus two buttons cannot fit 390px at any font size that
+     stays readable. They become a block behind a <details> toggle, so it
+     opens without JavaScript. */
+  .site-header { position: relative; }
+  .nav-shell > summary { display: flex; }
+  .nav-shell[open] > .nav { border-top: 1px solid var(--line2); }
+
+  .nav {
+    flex-wrap: wrap; min-height: 58px; row-gap: 0;
+    padding-top: 0; padding-bottom: 0;
+  }
+  .nav .logo { order: 1; }
+
+  .nav-toggle {
+    display: flex; align-items: center; gap: 7px;
+    margin-left: auto;
+    padding: 9px 14px; border: 1px solid var(--line);
+    border-radius: 6px; background: #fff;
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    cursor: pointer; list-style: none;
+  }
+  .nav-toggle::-webkit-details-marker { display: none; }
+  .nav-toggle svg { transition: transform .2s; }
+  .nav-toggle[open] svg { transform: rotate(180deg); }
+
+  /* The menu and the buttons go full width below the logo row, so
+     opening the panel does not push the page down past the fold. */
+  .nav > .menu,
+  .nav > .nav-cta {
+    flex-basis: 100%;
+    flex-direction: column; align-items: stretch;
+  }
+  .nav > .menu { display: none; gap: 0; padding: 4px 0 0; }
+  .nav > .nav-cta { display: none; padding: 10px 0 14px; }
+
+  .nav-shell[open] > .nav > .menu,
+  .nav-shell[open] > .nav > .nav-cta { display: flex; }
+
+  .menu a {
+    padding: 13px 0; font-size: 15.5px;
+    border-bottom: 1px solid var(--line2);
+  }
+  .menu a::after { display: none; }
+  .menu a:last-child { border-bottom: 0; }
+
+  /* The dropdown panel is a hover construct: there is no hover on a
+     phone, so it has to become part of the flow. */
+  .navdrop-wrap { width: 100%; }
+  .navdrop {
+    position: static; opacity: 1; visibility: visible; transform: none;
+    box-shadow: none; border: 0; border-left: 2px solid var(--brandSoft);
+    border-radius: 0; padding: 0 0 0 12px; margin: 4px 0 8px;
+    min-width: 0; background: #fafbfc;
+  }
+  .navdrop::before { display: none; }
+  .navdrop-all { padding: 10px 0; }
+
+  .topbar { font-size: 12px; }
+  .topbar .wrap { flex-direction: column; gap: 2px; text-align: center; padding: 8px var(--pad); }
+  .topbar .hide-sm { display: none; }
+
+  .breadcrumb { font-size: 12.5px; }
+  .sec-sub { font-size: 14px; }
+  .card .c-body { padding: 18px; }
+  .c-body h3 { font-size: 17px; }
+  .eb-in { max-width: 100%; }
+}
+
+/* ---- 380px: the narrowest phone worth supporting ----
+   One column already; this is only about the type scale and padding,
+   where a 30px h1 on a 320px screen leaves about four words a line. */
+@media (max-width: 380px) {
+  h1 { font-size: 26px; }
+  h2 { font-size: 21px; }
+  .page-head h1 { font-size: 24px; }
+  .wrap { padding-left: 13px; padding-right: 13px; }
+  .btn { padding: 12px 16px; font-size: 14px; }
+}
+
+/* ---- Landscape phone ----
+   A phone turned sideways is 844px wide and 390px tall. The 860px rules
+   apply, so the layout is the tablet one, but the viewport height means
+   the vertical padding has to come down or the fold is all padding. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero .wrap { padding: 32px var(--pad); }
+  .site-header .wrap { min-height: 52px; }
+  section, .section { padding: 36px 0; }
+}
+
+/* ---- Print and motion preferences ----
+   Honour the OS setting rather than animating regardless: this is a
+   B2B site and a buyer who has turned motion off at the system level
+   has usually turned it off because it makes them ill. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card:hover { transform: none; }
+  .card:hover .c-visual img { transform: none; }
+}
+
+/* ---- Touch targets ----
+   44px is the smallest reliably tappable size. Applied only where
+   hover did the work before, so it does not change the desktop layout. */
+@media (hover: none) {
+  .menu a { padding-top: 14px; padding-bottom: 14px; }
+  .footer a { display: inline-block; padding: 5px 0; }
+  .pager a, .pg a { min-height: 40px; display: inline-flex; align-items: center; }
+}
+
+/* ---- Wide desktop ----
+   Above 1600px the 1200px container leaves the page floating in the
+   middle of a very wide screen. Capping the growth keeps line lengths
+   readable rather than stretching the layout. */
+@media (min-width: 1600px) {
+  .wrap { max-width: 1400px; }
+}

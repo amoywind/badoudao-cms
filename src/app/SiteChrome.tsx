@@ -40,14 +40,34 @@ export async function Header() {
 
   return (
     <header className="site-header">
-      <div className="wrap nav">
-        <Link className="logo" href="/">BADOU<span>DAO</span></Link>
+      {/* A <details> rather than a button and a state hook.
 
-        {/* Products opens a dropdown of the categories.
-            CSS-only, using :hover and :focus-within: no JavaScript means no
-            layout shift on load and it still works with the header already
-            rendered on the server. */}
-        <nav className="menu">
+          Six links plus two buttons cannot fit a 390px screen at a
+          readable size, so below 600px the menu collapses. Using
+          <details> means it opens without JavaScript, which matters
+          twice over: the header is server-rendered and the site has no
+          bundle for it, and the links stay in the document so a crawler
+          and a screen reader see the same page a desktop visitor does.
+
+          The desktop layout is untouched: responsive.css hides the
+          summary above 600px and only then changes how the menu flows. */}
+      <details className="nav-shell">
+        <summary className="nav-toggle">
+          Menu
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" strokeLinecap="round" />
+          </svg>
+        </summary>
+
+        <div className="wrap nav">
+          <Link className="logo" href="/">BADOU<span>DAO</span></Link>
+
+          {/* Products opens a dropdown of the categories.
+              CSS-only, using :hover and :focus-within: no JavaScript means no
+              layout shift on load and it still works with the header already
+              rendered on the server. */}
+          <nav className="menu">
           {nav.map((n) =>
             n.id === 'nav-products' ? (
               <div className="navdrop-wrap" key={n.id}>
@@ -85,7 +105,8 @@ export async function Header() {
           <Link href="/products" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
           <Link href="/#inquiry" className="btn btn-primary btn-sm">Get a Quote</Link>
         </div>
-      </div>
+        </div>
+      </details>
     </header>
   );
 }

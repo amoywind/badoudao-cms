@@ -1,4 +1,5 @@
 import './globals.css';
+import './responsive.css';
 import './admin.css';
 import { getSettings } from '@/lib/db';
 
