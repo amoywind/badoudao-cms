@@ -10,7 +10,16 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { font-family: var(--sans); color: var(--ink); background: var(--bg); line-height: 1.6; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; height: auto; }
-.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+/* width:100% is load-bearing, not decoration.
+
+   .wrap is the grid container for the hero and every section, and a grid
+   container sizes itself to its content. With only max-width, the
+   1400px hero image widened the track past the viewport, so on a 390px
+   phone the column never became 390px — it stayed as wide as its widest
+   child and every line of text ran off the right edge. max-width caps the
+   top end; width sets the bottom end, and the bottom end is what a phone
+   needs. */
+.wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: 4px; font-size: 14.5px; font-weight: 600; border: 1.5px solid transparent; cursor: pointer; transition: .2s; white-space: nowrap; }
 .btn-primary { background: var(--brand); color: #fff; }
