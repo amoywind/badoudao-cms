@@ -67,6 +67,13 @@
      count column has nowhere to sit and the names wrap mid-word. */
   .shop-layout { grid-template-columns: 200px minmax(0, 1fr); gap: 26px; }
 
+  /* The rail drops under the body. A 300px column beside a 700px one is
+     not readable on a tablet, and stacking costs nothing because the text
+     comes first either way. The body keeps its measure; only the rail
+     moves. */
+  .site .page-layout { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .site .page-rail { position: static; max-width: 560px; }
+
   /* Two columns is the most a tablet portrait can carry. Below this it
      becomes one, but at 860 the cards are still ~380px wide, which is
      what makes them readable and tappable. */

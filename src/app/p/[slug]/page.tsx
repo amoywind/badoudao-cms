@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { one, getSettings, listCategories, buildMeta } from '@/lib/db';
+import { one, getSettings, listCategories, countProductsByCategory, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
 
@@ -53,9 +53,10 @@ export default async function StaticPage({ params }) {
 
   if (!page) notFound();
 
-  const [s, cats] = await Promise.all([
+  const [s, cats, counts] = await Promise.all([
     getSettings().catch(() => ({} as SiteSettings)),
-    listCategories().catch(() => [])
+    listCategories().catch(() => []),
+    countProductsByCategory().catch(() => ({} as Record<string, number>))
   ]);
 
   return (
@@ -86,12 +87,30 @@ export default async function StaticPage({ params }) {
 
         <section>
           <div className="wrap">
-            {/* Quality puts the licence beside its text rather than below:
-                a buyer checking whether a factory is real is reading this
-                page for exactly that, so the evidence belongs at hand. */}
-            <div className={page.slug === 'quality' ? 'quality-layout' : undefined}>
+            {/* Body and rail side by side.
+
+                The body keeps its 760px measure — a 1400px line of text is
+                unreadable, and that limit is the point. The problem was
+                what sat beside it: nothing, so half the screen was empty on
+                a page whose whole job is to be read.
+
+                Quality already had a rail, for the licence. Every other
+                page gets the same slot with what a buyer is actually
+                looking for alongside the prose: the product range to go
+                to next, and the numbers that decide whether to enquire.
+
+                Below 1024px the rail drops below the text — a 300px column
+                beside a 700px one is not readable on a tablet, and
+                stacking costs nothing since the text comes first either
+                way. */}
+            <div className="page-layout">
               <div className="content-block" dangerouslySetInnerHTML={{ __html: page.body }} />
-              {page.slug === 'quality' && <LicencePanel />}
+
+              {page.slug === 'quality' ? (
+                <LicencePanel />
+              ) : (
+                <PageRail slug={page.slug} categories={cats} counts={counts} moq={s.moq} quoteHours={s.quoteHours} />
+              )}
             </div>
           </div>
         </section>
@@ -164,6 +183,108 @@ function ShowroomStrip() {
         </figure>
       </div>
     </section>
+  );
+}
+
+/**
+ * The column beside a content page.
+ *
+ * The body is capped at 760px because a 1400px line is unreadable, and
+ * that cap left half the screen empty. Filling it with a second copy of
+ * the page's own text would be worse, so the rail carries what a buyer
+ * reaches for while reading: the range to go to next, and the two or three
+ * numbers that decide whether to enquire.
+ *
+ * What it shows depends on the page. Quality gets the licence instead —
+ * evidence that the factory is real belongs beside the inspection
+ * description rather than under a list of product categories.
+ */
+function PageRail({
+  slug,
+  categories,
+  counts,
+  moq,
+  quoteHours
+}: {
+  slug: string;
+  categories: { id: string; name: string; designs?: string }[];
+  counts?: Record<string, number>;
+  moq?: string | number;
+  quoteHours?: string | number;
+}) {
+  /* The numbers that matter differ by page: a buyer reading about small
+     batches is deciding on quantity, one reading the factory is deciding
+     on whether to trust us, one reading OEM/ODM is deciding on scope. */
+  const FACTS: Record<string, { label: string; value: string }[]> = {
+    'oem-odm': [
+      { label: 'MOQ from', value: `${moq || 500} pcs` },
+      { label: 'Sample lead time', value: '1 day' },
+      { label: 'Production', value: '7–20 days' },
+      { label: 'NDA', value: 'Available' }
+    ],
+    'small-batch': [
+      { label: 'MOQ from', value: `${moq || 500} pcs` },
+      { label: 'Samples', value: '1–2 pcs' },
+      { label: 'Sample fee', value: 'Refunded on bulk' },
+      { label: 'Pricing', value: 'Ex Works' }
+    ],
+    factory: [
+      { label: 'Daily capacity', value: '2,000 pcs' },
+      { label: 'Established', value: 'Dec 2023' },
+      { label: 'Product series', value: '8' },
+      { label: 'Movements', value: 'CE / RoHS' }
+    ]
+  };
+
+  const facts = FACTS[slug];
+  const list = (categories || []).filter((c) => counts?.[c.id]);
+
+  return (
+    <aside className="page-rail">
+      {facts && (
+        <div className="rail-block">
+          <h2>Key figures</h2>
+          <dl>
+            {facts.map((f) => (
+              <div key={f.label}>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {list.length > 0 && (
+        <div className="rail-block">
+          <h2>Product range</h2>
+          <ul>
+            {list.map((c) => (
+              <li key={c.id}>
+                <Link href={`/products/${c.id}`}>
+                  <span>{c.name}</span>
+                  <b>{counts![c.id]}</b>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/products" className="rail-all">
+            All products →
+          </Link>
+        </div>
+      )}
+
+      <div className="rail-block">
+        <h2>Next step</h2>
+        <p>
+          Send a reference, a sample or a sketch. A quotation comes back
+          within {quoteHours || 12} hours with no obligation.
+        </p>
+        <Link href="/#inquiry" className="btn btn-primary btn-sm rail-cta">
+          Request a Quote
+        </Link>
+      </div>
+    </aside>
   );
 }
 
