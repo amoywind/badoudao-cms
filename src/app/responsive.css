@@ -74,21 +74,15 @@
   .pd { grid-template-columns: 1fr; gap: 32px; }
   .split { grid-template-columns: 1fr; gap: 32px; }
 
-  /* The product dropdown is 560px wide and anchored near the left of the
-     nav. Below this the nav is a vertical panel, so it has to become part
-     of that flow — a hover panel with no hover is unreachable, which is
-     why the old rule hid it and left the Products link going to
-     /products. Showing the categories is better than hiding them. */
-  .navdrop-wrap { width: 100%; }
-  .navdrop {
-    position: static; opacity: 1; visibility: visible; transform: none;
-    box-shadow: none; border: 0;
-    border-left: 2px solid var(--brandSoft);
-    border-radius: 0; padding: 0 0 0 12px; margin: 4px 0 8px;
-    min-width: 0; background: #fafbfc;
-  }
-  .navdrop::before { display: none; }
-  .navdrop-all { padding: 10px 0; }
+  /* The products dropdown is a hover panel: 560px wide, anchored near the
+     left of the nav, with no hover on a tablet. Between 860 and 600 the
+     menu is still a horizontal row, so the panel has nowhere to sit and
+     must simply stay hidden — the Products link itself goes to /products,
+     so nothing is lost.
+
+     It becomes a visible indented list only below 600px, inside the
+     collapsed panel, where there is room for it and a reason to show it. */
+  .navdrop { display: none; }
   .menu .navdrop-trigger svg { display: none; }
 
   .showroom-strip img { min-height: 0; }
@@ -213,6 +207,24 @@
   .nav-checkbox:checked ~ .nav > .menu,
   .nav-checkbox:checked ~ .nav > .nav-cta { display: flex; }
   .nav-checkbox:checked ~ .nav { border-top: 1px solid var(--line2); }
+
+  /* Inside the open panel there is room for the categories, and this is
+     the one place a touch visitor can reach them: a hover panel is
+     unreachable without a pointer. Shown as an indented list under
+     Products, in the flow, so it needs no positioning and cannot
+     overflow. */
+  .navdrop-wrap { width: 100%; }
+  .nav-checkbox:checked ~ .nav .navdrop {
+    display: block; position: static;
+    opacity: 1; visibility: visible; transform: none;
+    box-shadow: none; border: 0; min-width: 0;
+    border-left: 2px solid var(--brandSoft);
+    border-radius: 0; padding: 2px 0 2px 12px;
+    margin: 2px 0 8px; background: #fafbfc;
+  }
+  .nav-checkbox:checked ~ .nav .navdrop::before { display: none; }
+  .navdrop-all { padding: 10px 0; }
+  .drop-grid { grid-template-columns: 1fr; }
 
   .menu a {
     padding: 13px 0; font-size: 15.5px;
