@@ -108,6 +108,13 @@
   section, .section { padding: 48px 0; }
   .hero .wrap { padding: 38px var(--pad) 40px; }
 
+  /* The 1024px range sets the hero back to two columns, which is right
+     for a landscape tablet and wrong for a phone. One column here, and the
+     image after the text, so the headline and the quote button are what a
+     phone visitor meets first. */
+  .hero .wrap { grid-template-columns: 1fr; gap: 26px; }
+  .hero-img { max-width: none; }
+
   /* Everything single column. A two-column product grid at 390px gives
      170px cards, which is too narrow to judge a clock from. */
   .grid-3, .grid-2, .related-grid, .faq-grid, .f-grid, .fg2,
@@ -115,6 +122,13 @@
     grid-template-columns: 1fr;
   }
   .news-item { grid-template-columns: 1fr; gap: 16px; }
+
+  /* .pd, .split and the quality layout are already single column at 860px.
+     Repeating it here is deliberate: the 1024px range sets .pd back to two
+     columns, and a gap at exactly this boundary is the bug that put a
+     two-column hero on every phone. Stated once per bucket it cannot be
+     missed the next time the 1024px values are edited. */
+  .pd, .split, .quality-layout { grid-template-columns: 1fr; }
   .trust-item { border-bottom: 1px solid rgba(255,255,255,.1); }
   .showroom-grid { grid-template-columns: 1fr; }
 
