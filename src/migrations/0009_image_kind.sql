@@ -1,0 +1,11 @@
+-- Label what each product photo shows.
+--
+-- The gallery shows five angles and a thumbnail has to say which is which:
+-- a buyer looking at the movement shot and the dial close-up needs to tell
+-- them apart, and "image 3" does not. Without this the kind column in
+-- getProduct has nothing to return and every thumbnail reads as a copy of
+-- the same label.
+--
+-- Front / back / movement / packaging / detail, nullable: existing rows
+-- stay NULL and are treated as front views, so this needs no backfill.
+ALTER TABLE product_images ADD COLUMN kind TEXT;

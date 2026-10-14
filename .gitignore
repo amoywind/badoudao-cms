@@ -27,3 +27,6 @@ scripts/.*.tmp
 scripts/.*.ts
 tmp-*.html
 tmp-*.txt
+
+# session token for shoot-admin.js
+scripts/.tok

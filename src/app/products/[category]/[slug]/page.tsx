@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
+import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, FAQS, seoTagsFor } from '@/lib/product-detail';
+import { ProductGallery, CustomisationPicker } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -109,6 +111,24 @@ export default async function ProductPage({ params }) {
 
   const mainImg = product.images[0];
 
+  /* The gallery wants every shot with its angle noted, ordered so the
+     front-on view leads. product.images is already sort-ordered; the kind
+     is carried through because the thumbnail needs to say whether it is
+     showing the back or the movement. */
+  const shots = product.images.map((im) => ({
+    url: im.url,
+    alt: im.alt || product.name,
+    kind: im.kind || ''
+  }));
+
+  const tags = seoTagsFor({
+    category,
+    specs: product.specs,
+    moveLevel: product.moveLevel
+  });
+
+  const moq = product.moq || s.moq || 500;
+
   /* Wrapped in .site so the responsive layer's bare-element selectors —
      h1, section, table — apply here and not in the admin, which shares the
      root layout and therefore this stylesheet. The admin's own layout
@@ -136,77 +156,82 @@ export default async function ProductPage({ params }) {
         <section>
           <div className="wrap">
             <div className="pd">
-              <div className="pd-gallery">
-                <div className="main">
-                  {mainImg
-                    ? <img src={mainImg.url} alt={mainImg.alt || product.name}
-                        width={1200} height={1200} />
-                    : <div className="pd-noimg">
-                        <span>No product image yet</span>
-                        <a href="#inquiry">Ask us for photos →</a>
-                      </div>}
-                </div>
+              {/* Gallery left, decision column right.
 
-                {videos.length > 0 && (
-                  <div className="pd-videos">
-                    {videos.map((v) => (
-                      <a key={v.id} className="pd-video"
-                        href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                        target="_blank" rel="noopener noreferrer"
-                        aria-label={`Play video: ${v.title || product.name}`}>
-                        <img
-                          src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                          alt={v.title || `${product.name} video thumbnail`}
-                          width={480} height={360} loading="lazy" />
-                        <span className="pd-video-play" aria-hidden="true">
-                          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </span>
-                        <span className="pd-video-t">
-                          {v.title || 'Product video'}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  The right column is the argument: what it is, who can make
+                  it, what it costs, how to start. The MOQ gets its own card
+                  rather than a row in the facts table, because "500 pieces
+                  minimum" is the number that decides whether a buyer keeps
+                  reading or closes the tab — it is not one fact among six. */}
+              <ProductGallery name={product.name} images={shots} />
 
               <div className="pd-info">
+                <div className="pd-badges">
+                  <span className="pd-badge pd-badge-brand">OEM / ODM Available</span>
+                  <span className="pd-badge">Factory Direct</span>
+                </div>
+
                 <h1>{product.name}</h1>
-                <p style={{ fontSize: 16, color: 'var(--ink2)' }}>{product.summary}</p>
+                <p className="pd-lede">{product.summary}</p>
 
                 <div className="pd-price">
                   <span className="amt">${product.priceMin.toFixed(2)}–${product.priceMax.toFixed(2)}</span>
                   <span className="lbl">Ex Works (factory price)<br />per piece, before freight</span>
                 </div>
 
+                {/* The MOQ as a standalone card. A buyer deciding whether
+                    this factory is viable needs it before anything else, and
+                    in a facts list it reads as one of several parameters
+                    rather than as a threshold. */}
+                <a href="#inquiry" className="pd-moq">
+                  <span className="pd-moq-l">Minimum order quantity</span>
+                  <span className="pd-moq-v">{moq} pcs</span>
+                  <span className="pd-moq-n">Mixed designs welcome if the total meets it</span>
+                </a>
+
+                {tags.length > 0 && (
+                  <div className="pd-tags">
+                    <h3>Material &amp; craftsmanship</h3>
+                    <div className="pd-taglist">
+                      {tags.map((t) => (
+                        <Link key={t.label} href={t.href} className="pd-tag">{t.label}</Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <CustomisationPicker groups={OPTION_GROUPS} moq={moq} />
+
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>
-                  <div className="pd-fact"><dt>Minimum order</dt><dd>{product.moq} pcs</dd></div>
                   <div className="pd-fact"><dt>Lead time</dt><dd>{product.leadTime}</dd></div>
                   <div className="pd-fact"><dt>Sample time</dt><dd>{s.sampleDays || '7-10'} days</dd></div>
                   {product.moveLevel && <div className="pd-fact"><dt>Movement</dt><dd>{product.moveLevel}</dd></div>}
                 </dl>
 
-                <div className="cta-panel" style={{ marginBottom: 26 }}>
-                  <h3>Request pricing for {product.id}</h3>
-                  <p>Tell us your quantity and whether you need custom artwork. We reply within {s.quoteHours || 12} hours.</p>
-                  <a href="#inquiry" className="btn btn-primary" style={{ width: '100%' }}>Get a Quote for this Model</a>
+                {/* QC claims as links: each one is a claim a buyer can check
+                    us on, so each goes to the page that substantiates it
+                    rather than standing here as an adjective. */}
+                <div className="pd-qc">
+                  {QC_CLAIMS.map((q) => (
+                    <Link key={q.label} href={q.href} className="pd-qc-i" title={q.note}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2.4"
+                        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                      <b>{q.label}</b>
+                      <span>{q.note}</span>
+                    </Link>
+                  ))}
                 </div>
 
-                {product.options.length > 0 && (
-                  <>
-                    <h3 style={{ fontFamily: 'var(--sans)', fontSize: 16, marginBottom: 10 }}>Customisation available</h3>
-                    <div className="chip-list" style={{ marginBottom: 26 }}>
-                      {product.options.map((o) => (
-                        <span key={o.id} className="badge badge-brand">
-                          {o.label}{o.priceDelta > 0 ? ` (+$${o.priceDelta.toFixed(2)})` : ''}
-                        </span>
-                      ))}
-                    </div>
-                  </>
-                )}
+                <a href="#inquiry" className="btn btn-primary pd-cta">
+                  Get Factory Quote / Send Inquiry
+                </a>
+                <p className="pd-cta-note">
+                  Reply within {s.quoteHours || 12} hours · No obligation · Ex Works
+                </p>
               </div>
             </div>
           </div>
@@ -235,6 +260,85 @@ export default async function ProductPage({ params }) {
             </div>
           </section>
         )}
+
+        {/* Packaging, as four choices with what each is for rather than four
+            pictures of boxes. A buyer choosing packaging is choosing a unit
+            cost and a sales channel: closed box for containers, display box
+            for shelves. Saying so is more use than showing a carton. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-tag">Packaging</div>
+            <h2 style={{ fontSize: 30 }}>Four standard packaging options</h2>
+            <p className="sec-sub" style={{ marginBottom: 34 }}>
+              Every model can ship in any of these. Custom structure and print
+              are available on the colour box, with tooling cost quoted before
+              you commit.
+            </p>
+
+            <div className="pd-pack">
+              {PACKAGING_OPTIONS.map((p) => (
+                <div key={p.key} className="pd-pack-c">
+                  {/* Placeholder until a packaging photo is uploaded. A
+                      drawn box outline reads as intentional; an empty grey
+                      square reads as a broken image. */}
+                  <div className="pd-pack-img" aria-hidden="true">
+                    <svg viewBox="0 0 64 48" fill="none" stroke="currentColor"
+                      strokeWidth="1.6" strokeLinejoin="round">
+                      <path d="M32 6l24 10v22L32 48 8 38V16z" />
+                      <path d="M8 16l24 10 24-10M32 26v22" />
+                    </svg>
+                    <span>Photo pending</span>
+                  </div>
+                  <h3>{p.title}</h3>
+                  <p>{p.note}</p>
+                  <span className="pd-pack-fit">{p.fit}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* The four OEM/ODM steps, horizontally. Each states what we do
+                and what comes back, so a buyer can see where their own
+                input is needed — step one is the only place a quote starts. */}
+            <div className="pd-process">
+              <h2 className="pd-process-h">How an OEM order runs</h2>
+              <ol>
+                {PROCESS_STEPS.map((st) => (
+                  <li key={st.n}>
+                    <span className="pd-process-n" aria-hidden="true">{st.n}</span>
+                    <h3>{st.title}</h3>
+                    <p>{st.note}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        {/* The questions that decide whether to enquire at all. Four, no
+            more: past that it stops being scannable and starts being a
+            document. */}
+        <section>
+          <div className="wrap">
+            <div className="sec-tag">Before you order</div>
+            <h2 style={{ fontSize: 30 }}>Common questions</h2>
+
+            <div className="pd-faq">
+              {FAQS.map((f) => (
+                <details key={f.q} className="pd-faq-i">
+                  <summary>
+                    {f.q}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2.2"
+                      strokeLinecap="round" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {others.length > 0 && (
           <section>

@@ -243,7 +243,7 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       row.id
     ),
     all(
-      `SELECT m.*, pi.sort_order AS image_order, pi.is_main
+      `SELECT m.*, pi.sort_order AS image_order, pi.is_main, pi.kind AS shot_kind
        FROM product_images pi
        JOIN media m ON m.id = pi.media_id
        WHERE pi.product_id = ?
@@ -270,7 +270,10 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       url: m.url,
       alt: m.alt || '',
       filename: m.filename,
-      isMain: m.is_main === 1
+      isMain: m.is_main === 1,
+      /* Which angle this shot is: front, back, movement, packaging, detail.
+         Null on older rows, which the gallery treats as the front view. */
+      kind: m.shot_kind || ''
     }))
   });
 }

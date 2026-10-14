@@ -387,3 +387,37 @@
 @media (min-width: 1600px) {
   .wrap { max-width: 1400px; }
 }
+
+/* ---- product detail ----
+   The product page is the one page a buyer reads on a phone before writing
+   to the factory, so it has to fold to a single column without the decision
+   column ending up below the specification text. The gallery and the MOQ
+   card both come first on a phone: the photo answers "what is it" and the
+   MOQ answers "can I afford it" before anything else is read. */
+
+@media (max-width: 1024px) {
+  /* Four packaging cards become two: at four across each is about 180px,
+     which is narrower than the text inside it. */
+  .site .pd-pack { grid-template-columns: repeat(2, 1fr); }
+
+  /* The process steps go vertical and lose their connector line, which has
+     nowhere to run once the boxes stack. */
+  .site .pd-process ol { grid-template-columns: 1fr 1fr; gap: 24px 20px; }
+  .site .pd-process li::before { display: none; }
+}
+
+@media (max-width: 700px) {
+  .site .pd-qc { grid-template-columns: 1fr; }
+  .site .pd-pack { grid-template-columns: 1fr; }
+  .site .pd-process ol { grid-template-columns: 1fr; }
+
+  /* The lightbox needs the full width on a phone; side arrows at 44px each
+     eat a third of a 390px screen. */
+  .site .pd-lightbox { padding: 20px 12px; }
+  .site .pd-lb-nav { width: 36px; height: 36px; font-size: 24px; }
+  .site .pd-lb-nav.prev { left: 4px; }
+  .site .pd-lb-nav.next { right: 4px; }
+
+  .site .pd-moq-v { font-size: 26px; }
+  .site .pd-thumb { width: 56px; height: 56px; }
+}
