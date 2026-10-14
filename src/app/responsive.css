@@ -408,6 +408,10 @@
 
 @media (max-width: 700px) {
   .site .pd-qc { grid-template-columns: 1fr; }
+
+  /* The customisation row label and values stack on a phone. */
+  .site .pd-cr { flex-direction: column; gap: 4px; }
+  .site .pd-cr-i { min-width: 0; }
   .site .pd-pack { grid-template-columns: 1fr; }
   .site .pd-process ol { grid-template-columns: 1fr; }
 

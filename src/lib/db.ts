@@ -229,7 +229,7 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
   );
   if (!row) return null;
 
-  const [specs, options, prices, images] = await Promise.all([
+  const [specs, options, prices, images, customs] = await Promise.all([
     all(
       'SELECT * FROM product_specs WHERE product_id = ? ORDER BY sort_order, id',
       row.id
@@ -274,6 +274,13 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       /* Which angle this shot is: front, back, movement, packaging, detail.
          Null on older rows, which the gallery treats as the front view. */
       kind: m.shot_kind || ''
+    })),
+    /* Which customisation values apply to this model. The groups live in
+       product-detail.ts; this records the owner's per-product picks. */
+    customisations: customs.map((c) => ({
+      groupKey: c.group_key,
+      value: c.value,
+      priceDelta: c.price_delta || 0
     }))
   });
 }

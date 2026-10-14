@@ -727,31 +727,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   font-size: 11.5px; color: var(--ink3);
 }
 
-.pd-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
-.pd-thumb {
-  width: 66px; height: 66px; padding: 0;
-  border: 1px solid var(--line); border-radius: 8px;
-  background: #fff; overflow: hidden; cursor: pointer;
-  position: relative; transition: border-color .15s;
-}
-.pd-thumb:hover { border-color: var(--brand); }
-.pd-thumb.on { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brandSoft); }
-.pd-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.pd-thumb-t {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  background: rgba(17,20,23,.7); color: #fff;
-  font-size: 9.5px; text-align: center; padding: 2px 0;
-  text-transform: uppercase; letter-spacing: .04em;
-}
-.pd-thumb-empty {
-  display: grid; place-items: center; cursor: default;
-  background: var(--bg2); border-style: dashed;
-}
-.pd-thumb-empty span {
-  font-size: 10px; color: var(--ink3); text-align: center;
-  padding: 0 4px; line-height: 1.25;
-}
-
 .pd-lightbox {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(12,14,16,.94);
@@ -827,45 +802,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 }
 .pd-tag:hover { border-color: var(--brand); color: var(--brand); }
 
-/* ---- configuration picker ---- */
-.pd-custom {
-  border: 1px solid var(--line); border-radius: 10px;
-  padding: 20px; margin-bottom: 24px; background: #fff;
-}
-.pd-custom-head { margin-bottom: 16px; }
-.pd-custom-head h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 0 0 5px; }
-.pd-custom-head p { font-size: 13px; color: var(--ink3); line-height: 1.5; margin: 0; }
-
-.pd-opgroup { border: 0; padding: 0; margin: 0 0 16px; }
-.pd-opgroup legend {
-  display: flex; align-items: center; gap: 7px;
-  font-family: var(--sans); font-size: 13.5px; font-weight: 600;
-  color: var(--ink); margin-bottom: 9px; padding: 0;
-}
-.pd-opgroup legend em {
-  font-style: normal; font-size: 11px; font-weight: 500;
-  color: var(--brand); background: var(--brandSoft);
-  padding: 2px 7px; border-radius: 10px;
-}
-.pd-opvals { display: flex; flex-wrap: wrap; gap: 7px; }
-
-/* The input stays in the DOM for keyboard and screen readers; the label is
-   the visible control. Hiding it with display:none would take it out of the
-   tab order, which is the usual way a custom picker becomes unusable. */
-.pd-op input { position: absolute; opacity: 0; width: 0; height: 0; }
-.pd-op {
-  display: inline-flex; align-items: center;
-  padding: 7px 13px; border-radius: 7px;
-  border: 1px solid var(--line); background: #fff;
-  font-size: 13px; color: var(--ink2); cursor: pointer;
-  transition: border-color .15s, background .15s;
-}
-.pd-op:hover { border-color: var(--brand); }
-.pd-op.on { border-color: var(--brand); background: var(--brandSoft); color: var(--brand); font-weight: 500; }
-.pd-op:focus-within { outline: 2px solid var(--brand); outline-offset: 2px; }
-
-.pd-custom-note { font-size: 12px; color: var(--ink3); margin: 0; line-height: 1.5; }
-
 /* ---- QC row ---- */
 .pd-qc {
   display: grid; grid-template-columns: repeat(2, 1fr);
@@ -934,20 +870,63 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .pd-process h3 { font-family: var(--sans); font-size: 15.5px; font-weight: 600; margin: 0 0 7px; }
 .pd-process p { font-size: 13.5px; color: var(--ink2); line-height: 1.55; margin: 0; }
 
-/* ---- FAQ ---- */
-.pd-faq { margin-top: 26px; max-width: 780px; }
-.pd-faq-i { border-bottom: 1px solid var(--line); }
-.pd-faq-i summary {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 18px 0; cursor: pointer;
-  font-family: var(--sans); font-size: 16px; font-weight: 600; color: var(--ink);
-  list-style: none;
+
+/* ---- customisation list (read-only) ----
+   Rows, not a picker. A visitor cannot order from this page — a wholesale
+   quote needs a conversation about quantity and artwork — so controls would
+   imply they can commit to a configuration here, and they cannot. What
+   belongs here is what the factory offers on this model, chosen by the
+   owner per product in the admin.
+
+   Horizontal: six groups stacked vertically is taller than the price and
+   the MOQ above them, which pushes the quote button off the first screen.
+   Each row is "this model, this specification" in one line. */
+
+.pd-custom {
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 20px; background: #fff;
 }
-.pd-faq-i summary::-webkit-details-marker { display: none; }
-.pd-faq-i summary:hover { color: var(--brand); }
-.pd-faq-i summary svg { flex-shrink: 0; color: var(--ink3); transition: transform .2s; }
-.pd-faq-i[open] summary svg { transform: rotate(180deg); }
-.pd-faq-i p {
-  font-size: 14.5px; color: var(--ink2); line-height: 1.65;
-  margin: 0 0 18px; max-width: 68ch;
+.pd-custom-h {
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+  margin: 0 0 12px;
 }
+.pd-custom-rows { display: grid; gap: 0; }
+
+.pd-cr {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+.pd-cr:last-child { border-bottom: 0; padding-bottom: 2px; }
+
+.pd-cr-i {
+  display: flex; align-items: center; gap: 7px;
+  flex-shrink: 0; min-width: 118px;
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  color: var(--ink3);
+}
+.pd-cr-i svg { color: var(--ink3); flex-shrink: 0; }
+
+.pd-cr-v {
+  flex: 1; font-size: 13.5px; color: var(--ink2); line-height: 1.45;
+}
+
+.pd-custom-note {
+  font-size: 11.5px; color: var(--ink3); margin: 12px 0 0; line-height: 1.5;
+}
+
+/* ---- left column: gallery + description ----
+   The description moved under the photograph. The two-column grid still
+   governs the hero; the description stacks below the gallery so the buyer
+   reads it right after seeing what the clock looks like, not a screen
+   later past the price and the MOQ. */
+.pd-left { display: grid; gap: 22px; align-content: start; }
+.pd-desc h2 {
+  font-size: 21px; margin: 0 0 12px;
+  font-family: var(--sans); font-weight: 600;
+}
+.pd-desc .content-block { max-width: none; }
+.pd-desc .content-block p:first-child { margin-top: 0; }
+
+/* Specs table full-width now that the description column is gone */
+.pd-spec { margin-top: 18px; max-width: 620px; }

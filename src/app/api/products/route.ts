@@ -100,6 +100,10 @@ export async function POST(request) {
     );
   });
 
+  if (Array.isArray(body.customisations)) {
+    stmts.push(...customisationStatements(db, id, body.customisations));
+  }
+
   (body.prices || []).forEach((p) => {
     if (!p || p.unitPrice === '' || p.unitPrice == null) return;
     stmts.push(
@@ -277,4 +281,29 @@ export async function DELETE(request) {
   await log(user.id, 'delete', 'products', id, row.name);
 
   return NextResponse.json({ ok: true });
+}
+/* Persist the owner's per-product customisation picks.
+
+   Written as delete-then-insert rather than a diff: the admin sends the
+   whole set every time, and the set is at most six groups of five values,
+   so reconciling it costs more in code than re-inserting it does in
+   statements. The UNIQUE (product_id, group_key, value) is what stops a
+   double tick becoming two rows. */
+function customisationStatements(db, productId, list) {
+  const stmts = [db.prepare('DELETE FROM product_customisations WHERE product_id = ?').bind(productId)];
+  (list || []).forEach((c, i) => {
+    if (!c?.groupKey || !c?.value) return;
+    stmts.push(
+      db.prepare(
+        'INSERT OR REPLACE INTO product_customisations (product_id, group_key, value, price_delta, sort_order) VALUES (?,?,?,?,?)'
+      ).bind(
+        productId,
+        String(c.groupKey).slice(0, 40),
+        String(c.value).slice(0, 80),
+        Number(c.priceDelta) || 0,
+        i
+      )
+    );
+  });
+  return stmts;
 }

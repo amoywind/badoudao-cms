@@ -1,116 +1,104 @@
 /**
- * Customisation groups and SEO tags for a product page.
+ * Customisation groups, shown on a product page.
  *
- * The six option groups are the same on every model — frame, hands, dial
- * plate, printing, movement, packaging — because they are what a buyer
- * specifies on an order, and a list that changed per product would make two
- * pages impossible to compare. What varies is which values apply to a
- * given model: a wooden wall clock has no acrylic frame, and offering one
+ * The six groups are the same across the catalogue because they are what a
+ * buyer specifies on an order. What differs is which values apply to a
+ * given model: a wooden wall clock has no acrylic frame, and listing one
  * anyway costs a question in the reply.
  *
- * Kept in code rather than in product_options because product_options is a
- * flat label list with a price delta and no grouping, and because these are
- * catalogue-wide facts rather than per-order data. A buyer chooses from
- * them while reading, not while ordering.
- *
- * The tags are the material and movement attributes as links. They go to
- * the category page that covers the attribute, which is the internal
- * linking a B2B site wants: a page about MDF wood clocks links to other MDF
- * wood clocks, and the pages it links to are pages with the same shape.
+ * So the groups live here, and product_customisations records the
+ * selections per product. The owner ticks them in the admin; the page
+ * renders whatever is ticked. A group with nothing ticked is not shown —
+ * an empty "Frame" heading with no options under it reads as a broken
+ * section rather than as an absent one.
  */
 
-/* A value that no product in the range actually offers is worse than a
-   short list — it invites a buyer to ask for something the factory does
-   not do. `only` narrows a group to the categories it applies to. */
+/* Inline SVG rather than emoji. Emoji render differently per platform and
+   sit on a coloured square, which does not match the outlined icons used
+   elsewhere on the site; these are stroked to match at 1.6px. */
+export type GroupIcon =
+  | 'frame' | 'hands' | 'dial' | 'print' | 'movement' | 'package';
+
 export type OptionGroup = {
   key: string;
-  icon: string;
+  icon: GroupIcon;
   label: string;
-  /* Category ids this group applies to. Absent means all of them. */
-  only?: string[];
   values: string[];
 };
 
 export const OPTION_GROUPS: OptionGroup[] = [
   {
     key: 'frame',
-    icon: '🖼',
+    icon: 'frame',
     label: 'Frame',
     values: ['Plastic', 'Metal', 'MDF Wood', 'Solid Wood', 'Acrylic']
   },
   {
     key: 'hands',
-    icon: '📍',
+    icon: 'hands',
     label: 'Clock hands',
     values: ['Metal', 'Wood', 'Luminous', 'Custom shape']
   },
   {
     key: 'dial',
-    icon: '🎨',
+    icon: 'dial',
     label: 'Dial plate',
     values: ['Paper', 'PVC', 'MDF', 'Glass', 'Acrylic', 'Metal']
   },
   {
-    key: 'printing',
-    icon: '🖨',
+    key: 'print',
+    icon: 'print',
     label: 'Logo printing',
     values: ['Silk screen', 'UV printing', 'Laser engraving']
   },
   {
     key: 'movement',
-    icon: '⚙️',
+    icon: 'movement',
     label: 'Movement',
     values: ['Standard tick', 'Silent sweep', 'Radio controlled', 'Luminous', 'Musical']
   },
   {
-    key: 'packaging',
-    icon: '📦',
+    key: 'package',
+    icon: 'package',
     label: 'Packaging',
     values: ['Closed box', 'Mail-order box', 'Open display box', 'Custom colour box']
   }
 ];
 
-/* QC claims, phrased as what the buyer can hold us to rather than as
-   adjectives. Each links to the quality page that substantiates it. */
-export const QC_CLAIMS = [
-  { label: '±1s/day', note: 'movement accuracy', href: '/p/quality' },
-  { label: '<20dB', note: 'silent sweep', href: '/p/quality' },
-  { label: '72h', note: 'powered ageing test', href: '/p/quality' },
-  { label: 'CE / RoHS', note: 'movement certified', href: '/p/certification' }
-];
-
-/* The four standard packaging options. Each says what it is for, because a
-   buyer choosing packaging is choosing a cost and a shelf, not a look. */
+/* The four packaging options, kept as data because the packaging section
+   explains the catalogue rather than one product's choices. Each says what
+   it is for: a buyer choosing packaging is choosing a unit cost and a
+   sales channel, not a look. */
 export const PACKAGING_OPTIONS = [
   {
     key: 'closed',
     title: 'Closed box',
     note: 'Plain white carton, printed label only. The lowest cost per unit and the default for bulk shipments.',
-    fit: 'Best for: wholesale orders, containers'
+    fit: 'Wholesale orders, containers'
   },
   {
     key: 'pizza',
     title: 'Pizza / mail-order box',
     note: 'Reinforced two-layer board with corner protection, passed drop testing for courier handling.',
-    fit: 'Best for: e-commerce, single-item shipping'
+    fit: 'E-commerce, single-item shipping'
   },
   {
     key: 'display',
     title: 'Open display box',
     note: 'Clear PET window so the dial reads without unpacking. Needs a printed header card.',
-    fit: 'Best for: retail shelves, gift sets'
+    fit: 'Retail shelves, gift sets'
   },
   {
     key: 'color',
     title: 'Custom colour box',
-    note: 'Full-colour litho print to your artwork. MOQ applies per print run, not per clock.',
-    fit: 'Best for: brand retail, marketplaces'
+    note: 'Full-colour litho print to your artwork. The print run has its own MOQ, separate from the clock quantity.',
+    fit: 'Brand retail, marketplaces'
   }
 ];
 
 /* The four OEM/ODM steps. Timings are ours: 7–10 days is the sample lead
-   the settings page already quotes, and production runs on the per-quantity
-   bands the site states everywhere else. */
+   the settings page quotes, and production follows the per-quantity bands
+   stated across the site. */
 export const PROCESS_STEPS = [
   {
     n: '1',
@@ -134,25 +122,13 @@ export const PROCESS_STEPS = [
   }
 ];
 
-/* Questions a buyer asks before the first order. Kept to four: the ones
-   that decide whether to enquire at all. */
-export const FAQS = [
-  {
-    q: 'How long does a custom sample take?',
-    a: '7–10 days from artwork approval, including one revision round. Stock models can ship in 1–2 days if you already have the sample or accept ours.'
-  },
-  {
-    q: 'How long does bulk production take?',
-    a: '7 days for orders of 50–500 pieces, 20 days for 500 and above. Lead time is counted from the day the deposit and final artwork arrive, not from the enquiry.'
-  },
-  {
-    q: 'What is covered by the movement warranty?',
-    a: 'Movements carry CE and RoHS. Against batch quantities over 1,000 pieces we replace faulty movements free; below that, the usual route is a replacement batch in the next shipment.'
-  },
-  {
-    q: 'Can you produce to my own design?',
-    a: 'Yes, ODM is the larger half of what we do. Send a sketch or a reference and we return a 3D render with tooling cost before anything is committed. Tooling is a one-off; unit price drops from the second order.'
-  }
+/* QC claims, phrased as what the buyer can hold us to rather than as
+   adjectives. Each links to the page that substantiates it. */
+export const QC_CLAIMS = [
+  { label: '±1s/day', note: 'movement accuracy', href: '/p/quality' },
+  { label: '<20dB', note: 'silent sweep', href: '/p/quality' },
+  { label: '72h', note: 'powered ageing test', href: '/p/quality' },
+  { label: 'CE / RoHS', note: 'movement certified', href: '/p/certification' }
 ];
 
 /* ------------------------------------------------------------------
@@ -160,7 +136,7 @@ export const FAQS = [
    ------------------------------------------------------------------ */
 
 /* A tag is an attribute a buyer would search for — "silent sweep", "MDF"
-   — rendered as a link to the page that collects everything with that
+   — rendered as a link to the page collecting everything with that
    attribute. A tag with no destination is a keyword, not a link, and the
    internal linking it was meant to create does not happen. */
 export type SeoTag = { label: string; href: string };
@@ -172,8 +148,8 @@ export function seoTagsFor(p: {
 }): SeoTag[] {
   const tags: SeoTag[] = [];
 
-  /* Movement first: it is the attribute that decides whether a clock suits
-     a bedroom or a shop, and it is what most B2B searches name. */
+  /* Movement first: it decides whether a clock suits a bedroom or a shop,
+     and it is what most B2B searches name. */
   const movement = (p.moveLevel || '').toLowerCase();
   const MOVEMENT_LINKS: [RegExp, SeoTag][] = [
     [/silent/, { label: 'Silent Sweep', href: '/products?q=silent+sweep' }],
@@ -209,17 +185,13 @@ export function seoTagsFor(p: {
     }
   }
 
-  /* Dimensions are searchable and specific: "12 inch wall clock" is a
-     real query, and a tag that says so is worth more than another
-     material synonym. */
+  /* Dimensions are searchable and specific: "12 inch wall clock" is a real
+     query, and a tag that says so is worth more than a material synonym. */
   const dim = p.specs.find((s) => /size|diameter|dimension/i.test(s.label));
   if (dim) {
     const inch = String(dim.value).match(/(\d+(?:\.\d+)?)\s*(?:inch|")/i);
     if (inch) {
-      tags.push({
-        label: `${inch[1]} inch`,
-        href: `/products?q=${inch[1]}+inch`
-      });
+      tags.push({ label: `${inch[1]} inch`, href: `/products?q=${inch[1]}+inch` });
     }
   }
 

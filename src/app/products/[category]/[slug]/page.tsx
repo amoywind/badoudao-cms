@@ -2,8 +2,8 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
-import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, FAQS, seoTagsFor } from '@/lib/product-detail';
-import { ProductGallery, CustomisationPicker } from '../../_pd-client';
+import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
+import { ProductGallery, CustomisationList } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryForm } from '../../../InquiryForm';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -129,6 +129,20 @@ export default async function ProductPage({ params }) {
 
   const moq = product.moq || s.moq || 500;
 
+  /* The owner's per-product picks, folded onto the catalogue groups. A
+     group with nothing ticked is dropped rather than rendered empty: an
+     empty "Frame" heading with nothing under it reads as a broken section. */
+  const customGroups = OPTION_GROUPS
+    .map((g) => ({
+      key: g.key,
+      label: g.label,
+      icon: g.icon,
+      values: (product.customisations || [])
+        .filter((c) => c.groupKey === g.key)
+        .map((c) => c.value)
+    }))
+    .filter((g) => g.values.length > 0);
+
   /* Wrapped in .site so the responsive layer's bare-element selectors —
      h1, section, table — apply here and not in the admin, which shares the
      root layout and therefore this stylesheet. The admin's own layout
@@ -163,7 +177,22 @@ export default async function ProductPage({ params }) {
                   rather than a row in the facts table, because "500 pieces
                   minimum" is the number that decides whether a buyer keeps
                   reading or closes the tab — it is not one fact among six. */}
-              <ProductGallery name={product.name} images={shots} />
+              <div className="pd-left">
+                <ProductGallery name={product.name} images={shots} />
+
+                {/* The description sits under the photograph rather than in
+                    the specification section further down. It is what the
+                    buyer reads after seeing what the clock looks like, and
+                    putting it a screen below means they scroll past the
+                    price and the MOQ to get to the part that says what this
+                    model actually is. */}
+                {product.content && (
+                  <section className="pd-desc">
+                    <h2>Product description</h2>
+                    <div className="content-block" dangerouslySetInnerHTML={{ __html: product.content }} />
+                  </section>
+                )}
+              </div>
 
               <div className="pd-info">
                 <div className="pd-badges">
@@ -200,7 +229,7 @@ export default async function ProductPage({ params }) {
                   </div>
                 )}
 
-                <CustomisationPicker groups={OPTION_GROUPS} moq={moq} />
+                <CustomisationList groups={customGroups} />
 
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>
@@ -239,24 +268,16 @@ export default async function ProductPage({ params }) {
 
         {product.specs.length > 0 && (
           <section className="alt">
-            <div className="wrap split">
-              <div>
-                <div className="sec-tag">Specifications</div>
-                <h2 style={{ fontSize: 28 }}>Technical detail</h2>
-                <table className="spec-table" style={{ marginTop: 20 }}>
-                  <tbody>
-                    {product.specs.map((sp) => (
-                      <tr key={sp.id}><th scope="row">{sp.label}</th><td>{sp.value}</td></tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {product.content && (
-                <div>
-                  <div className="sec-tag">Product description</div>
-                  <div className="content-block" dangerouslySetInnerHTML={{ __html: product.content }} />
-                </div>
-              )}
+            <div className="wrap">
+              <div className="sec-tag">Specifications</div>
+              <h2 style={{ fontSize: 28 }}>Technical detail</h2>
+              <table className="spec-table pd-spec">
+                <tbody>
+                  {product.specs.map((sp) => (
+                    <tr key={sp.id}><th scope="row">{sp.label}</th><td>{sp.value}</td></tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}
@@ -310,32 +331,6 @@ export default async function ProductPage({ params }) {
                   </li>
                 ))}
               </ol>
-            </div>
-          </div>
-        </section>
-
-        {/* The questions that decide whether to enquire at all. Four, no
-            more: past that it stops being scannable and starts being a
-            document. */}
-        <section>
-          <div className="wrap">
-            <div className="sec-tag">Before you order</div>
-            <h2 style={{ fontSize: 30 }}>Common questions</h2>
-
-            <div className="pd-faq">
-              {FAQS.map((f) => (
-                <details key={f.q} className="pd-faq-i">
-                  <summary>
-                    {f.q}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2.2"
-                      strokeLinecap="round" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </summary>
-                  <p>{f.a}</p>
-                </details>
-              ))}
             </div>
           </div>
         </section>

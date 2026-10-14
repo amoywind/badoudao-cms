@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Toast, useToast } from '../../_ui';
+import { OPTION_GROUPS } from '@/lib/product-detail';
+import { GroupGlyph } from '../../../products/_icons';
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -24,7 +26,7 @@ export default function EditProductPage() {
         priceMin: 0, priceMax: 0, moq: 500, leadTime: '20-30 days',
         moveLevel: 'China quartz', difficulty: 'simple', content: '',
         featured: false, status: 'draft',
-        specs: [], options: [], prices: [], images: []
+        specs: [], options: [], prices: [], images: [], customisations: []
       });
     }
     fetch(`/api/products${isNew ? '' : `?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`}`)
@@ -106,7 +108,7 @@ export default function EditProductPage() {
             规格参数
             {!product.specs.length && <span className="n">空</span>}
           </button>
-          <button className={`tab ${tab === 'options' ? 'on' : ''}`} onClick={() => setTab('options')}>定制选项</button>
+          <button className={`tab ${tab === 'options' ? 'on' : ''}`} onClick={() => setTab('options')}>可定制项</button>
           <button className={`tab ${tab === 'prices' ? 'on' : ''}`} onClick={() => setTab('prices')}>价格阶梯</button>
           <button className={`tab ${tab === 'images' ? 'on' : ''}`} onClick={() => setTab('images')}>
             图片
@@ -216,39 +218,58 @@ export default function EditProductPage() {
           {tab === 'options' && (
             <div className="card">
               <div className="card-h">
-                <h3>定制选项</h3>
-                <span className="sub">会显示在前台产品页和询盘表单</span>
-                <div className="r">
-                  <button className="btn btn-sm" onClick={() => set('options', [...product.options, { label: '', priceDelta: 0 }])}>
-                    + 添加
-                  </button>
-                </div>
+                <h3>可定制项</h3>
+                <span className="sub">勾选本产品实际能做的项，前台显示为只读列表</span>
               </div>
               <div className="card-b">
                 <div className="note note-i">
-                  这些字段直接驱动前端的定制选择器，勾选的项目买家在询盘时能勾选。
+                  六个分组固定（表框、指针、表盘、印刷、机芯、包装）。只勾选这个型号真的能做的选项——
+                  木质挂钟没有亚克力表框，列出来只会让买家多问一句。没勾任何项的分组不会显示在前台。
                 </div>
-                {product.options.map((o, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                    <input className="inp" style={{ flex: 1 }} value={o.label} placeholder="选项名（LOGO 印刷）"
-                      onChange={(e) => {
-                        const next = [...product.options];
-                        next[i] = { ...o, label: e.target.value };
-                        set('options', next);
-                      }} />
-                    <input className="inp" style={{ width: 100 }} type="number" step="0.01" value={o.priceDelta}
-                      placeholder="加价"
-                      onChange={(e) => {
-                        const next = [...product.options];
-                        next[i] = { ...o, priceDelta: Number(e.target.value) };
-                        set('options', next);
-                      }} />
-                    <button className="btn btn-sm btn-d" onClick={() => set('options', product.options.filter((_, j) => j !== i))}>×</button>
-                  </div>
-                ))}
-                {product.options.length === 0 && (
-                  <p style={{ color: '#767f8c', fontSize: 13.5 }}>还没有定制选项</p>
-                )}
+
+                {OPTION_GROUPS.map((g) => {
+                  const picked = (product.customisations || []).filter(c => c.groupKey === g.key);
+                  const has = (v) => picked.some(c => c.value === v);
+
+                  const toggle = (value) => {
+                    const rest = (product.customisations || []).filter(
+                      c => !(c.groupKey === g.key && c.value === value)
+                    );
+                    set('customisations', has(value) ? rest : [...rest, { groupKey: g.key, value, priceDelta: 0 }]);
+                  };
+
+                  return (
+                    <fieldset key={g.key} style={{ border: 0, padding: 0, margin: '0 0 22px' }}>
+                      <legend style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13.5, fontWeight: 600, marginBottom: 9, padding: 0 }}>
+                        <GroupGlyph name={g.icon} />
+                        {g.label}
+                        {picked.length > 0 && (
+                          <em style={{ fontStyle: 'normal', fontSize: 11, color: '#15803d', background: '#dcfce7', padding: '2px 7px', borderRadius: 10 }}>
+                            已选 {picked.length}
+                          </em>
+                        )}
+                      </legend>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                        {g.values.map((v) => {
+                          const on = has(v);
+                          return (
+                            <label key={v} style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 6,
+                              padding: '7px 13px', borderRadius: 7, cursor: 'pointer',
+                              border: `1px solid ${on ? '#15803d' : '#e6e8eb'}`,
+                              background: on ? '#dcfce7' : '#fff',
+                              color: on ? '#15803d' : '#3d4450',
+                              fontSize: 13, fontWeight: on ? 500 : 400
+                            }}>
+                              <input type="checkbox" checked={on} onChange={() => toggle(v)} style={{ margin: 0, accentColor: '#15803d' }} />
+                              {v}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+                  );
+                })}
               </div>
             </div>
           )}
