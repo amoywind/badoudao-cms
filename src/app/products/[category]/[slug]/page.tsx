@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
+import { listSeoTags } from '@/lib/seo-tags';
 import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
 import { ProductGallery, CustomisationList } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
@@ -75,10 +76,15 @@ export default async function ProductPage({ params }) {
 
   if (!product || product.category !== category) notFound();
 
-  const [related, s, videos] = await Promise.all([
+  /* The tag catalogue rides along with the rest. A failed read falls back
+     to an empty list, which makes seoTagsFor derive tags from the specs
+     instead — a product page with no tags is a worse outcome than one with
+     derived ones. */
+  const [related, s, videos, managedTags] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
-    listProductVideos(product.id).catch(() => [])
+    listProductVideos(product.id).catch(() => []),
+    listSeoTags().catch(() => [])
   ]);
   const others = related.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -130,11 +136,10 @@ export default async function ProductPage({ params }) {
     kind: im.kind || ''
   }));
 
-  const tags = seoTagsFor({
-    category,
-    specs: product.specs,
-    moveLevel: product.moveLevel
-  });
+  const tags = seoTagsFor(
+    { category, specs: product.specs, moveLevel: product.moveLevel },
+    managedTags as any
+  );
 
   const moq = product.moq || s.moq || 500;
 

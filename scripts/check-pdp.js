@@ -34,7 +34,10 @@ const ITEMS = [
   ['Spec rows',                  /<th scope="row">Diameter</],
   ['4 packaging cards',         /class="pd-pack-c"/],
   ['Process flow 4 steps',      /class="pd-process"/],
-  ['FAQ accordion',             /<details/],
+  ['Customisation rows',        /class="pd-cr"/],
+  ['Customisation is read-only', /class="pd-custom"[\s\S]{0,80}pd-custom-rows/],
+  ['Description under gallery',  /pd-desc/],
+  ['No thumbnail strip',         /^(?!.*pd-thumbs).*$/],
   ['Inquiry form',              /id="inquiry"/],
   ['File upload',               /type="file"/]
 ];
@@ -53,14 +56,14 @@ for (const [name, re] of ITEMS) {
 /* Counts, not just presence: "four packaging options" is not satisfied by
    one card that happens to exist. */
 const packCards = (html.match(/class="pd-pack-c"/g) || []).length;
-const faqItems = (html.match(/<details/g) || []).length;
+const customRows = (html.match(/class="pd-cr"/g) || []).length;
 const steps = (html.match(/class="pd-process-n"/g) || []).length;
 const qcItems = (html.match(/class="pd-qc-i"/g) || []).length;
 
 console.log('\n数量:');
 const COUNTS = [
   ['包装卡片 = 4', packCards, 4],
-  ['FAQ 条目 ≥ 3', faqItems, 3],
+  ['定制项行 ≥ 3', customRows, 3],
   ['流程步骤 = 4', steps, 4],
   ['QC 徽章 = 4', qcItems, 4]
 ];

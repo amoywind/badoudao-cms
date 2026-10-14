@@ -141,12 +141,45 @@ export const QC_CLAIMS = [
    internal linking it was meant to create does not happen. */
 export type SeoTag = { label: string; href: string };
 
-export function seoTagsFor(p: {
-  category: string;
-  specs: { label: string; value: string }[];
-  moveLevel?: string | null;
-}): SeoTag[] {
+/* A tag from the admin: managed, so its destination is editable. */
+export type ManagedTag = {
+  key: string;
+  label: string;
+  href: string;
+  scope: string;
+  scopeValue: string | null;
+};
+
+/**
+ * Tags for one product.
+ *
+ * The owner's tags come first and win: if the admin says a product carries
+ * "MDF Wood", the generated one for the same attribute is dropped rather
+ * than shown twice. Only when the catalogue is empty — a fresh install, or
+ * nobody has set any tags up yet — does this fall back to deriving them
+ * from the spec rows, so a new product is never tagless while the tags are
+ * still being written.
+ */
+export function seoTagsFor(
+  p: {
+    category: string;
+    specs: { label: string; value: string }[];
+    moveLevel?: string | null;
+  },
+  managed: ManagedTag[] = []
+): SeoTag[] {
   const tags: SeoTag[] = [];
+
+  if (managed.length) {
+    for (const t of managed) {
+      /* scope = 'category' only applies to the product's own category.
+         A tag scoped to metal-clocks on a wooden clock is a link to the
+         wrong thing, which is worse than no link. */
+      if (t.scope === 'category' && t.scopeValue && t.scopeValue !== p.category) continue;
+      tags.push({ label: t.label, href: t.href });
+    }
+    return tags;
+  }
 
   /* Movement first: it decides whether a clock suits a bedroom or a shop,
      and it is what most B2B searches name. */

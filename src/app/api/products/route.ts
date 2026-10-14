@@ -201,6 +201,14 @@ export async function PUT(request) {
   );
 
   /* replace child collections wholesale — simpler and always consistent */
+
+  /* Not gated on `limited`: the customisation ticks are a separate editor
+     from the field list, and saving the text fields must not silently drop
+     them. Ticks are checked and reset from their own screen. */
+  if (Array.isArray(body.customisations)) {
+    stmts.push(...customisationStatements(db, body.id, body.customisations));
+  }
+
   if (!limited && Array.isArray(body.specs)) {
     stmts.push(db.prepare('DELETE FROM product_specs WHERE product_id = ?').bind(body.id));
     body.specs.forEach((s, i) => {
@@ -245,11 +253,23 @@ export async function PUT(request) {
   if (!limited && Array.isArray(body.images)) {
     stmts.push(db.prepare('DELETE FROM product_images WHERE product_id = ?').bind(body.id));
     body.images.forEach((img, i) => {
-      if (!img?.mediaId) return;
+      /* The picker writes { mediaId }, but a product loaded from GET
+         carries { id } — the id of the product_images row, not of the
+         media file. Accepting only mediaId meant every image was skipped on
+         save, and since the delete above already ran, saving a product
+         silently wiped its images. Take either, preferring mediaId. */
+      const mediaId = img?.mediaId ?? (img?.kind !== undefined ? img?.id : undefined) ?? img?.id;
+      if (!mediaId) return;
       stmts.push(
         db.prepare(
-          'INSERT INTO product_images (product_id, media_id, sort_order, is_main) VALUES (?,?,?,?)'
-        ).bind(body.id, img.mediaId, i, i === 0 ? 1 : 0)
+          'INSERT INTO product_images (product_id, media_id, sort_order, is_main, kind) VALUES (?,?,?,?,?)'
+        ).bind(
+          body.id,
+          mediaId,
+          i,
+          i === 0 ? 1 : 0,
+          img?.kind ? String(img.kind).slice(0, 20) : null
+        )
       );
     });
   }

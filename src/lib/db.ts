@@ -293,6 +293,10 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       unitPrice: p.unit_price
     })),
     images: images.map((m) => ({
+      /* mediaId is the file's id in the media table — product_images.id is
+         a different number, and the admin's save path needs the file's id.
+         Both are returned so an image can be sent back unchanged. */
+      mediaId: m.media_id,
       id: m.id,
       url: m.url,
       alt: m.alt || '',
