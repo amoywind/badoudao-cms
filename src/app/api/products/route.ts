@@ -20,7 +20,13 @@ export async function GET(request) {
   if (id) {
     const product = await getProduct(id);
     if (!product) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    return NextResponse.json({ product });
+
+    /* The categories come back on this branch too. The product editor reads
+       them from this same response — the name field, the category dropdown,
+       the filtered product list all arrive in one fetch — so returning only
+       the product left the dropdown empty on every edit screen. */
+    const categories = await listCategories();
+    return NextResponse.json({ product, categories });
   }
 
   const products = await listProducts({

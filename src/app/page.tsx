@@ -123,7 +123,27 @@ export default async function HomePage() {
             <div className="grid-3">
               {cats.map((c) => (
                 <Link key={c.id} href={`/products/${c.id}`} className="card">
-                  <div className="c-visual" style={{ background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }} />
+                  {/* The category's newest product with a photo. Six grey
+                      gradients in a row read as a page that has not loaded;
+                      the pictures are what let a buyer recognise a clock
+                      shape before clicking. Falls back to the gradient when
+                      nothing in the category has an image yet. */}
+                  <div
+                    className={`c-visual${c.imageUrl ? ' has-img' : ''}`}
+                    style={c.imageUrl
+                      ? { background: '#f4f5f7' }
+                      : { background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }}
+                  >
+                    {c.imageUrl && (
+                      <img
+                        src={c.imageUrl}
+                        alt={c.name}
+                        loading="lazy"
+                        width={600}
+                        height={600}
+                      />
+                    )}
+                  </div>
                   <div className="c-body">
                     <h3>{c.name}</h3>
                     <p>{c.description}</p>

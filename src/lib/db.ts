@@ -21,6 +21,10 @@ export type Category = {
   status?: string;
   seoTitle?: string;
   seoDescription?: string;
+  /* The newest product's main image, used as the category card's picture.
+     Absent when no product in the category has an image yet. */
+  imageUrl?: string;
+  productCount?: number;
 };
 
 export type ProductSpec = { id?: string | number; label: string; value: string };
@@ -385,6 +389,45 @@ export async function listProducts(
 
 export async function listCategories(): Promise<Category[]> {
   const rows = await cached<any[]>('SELECT * FROM categories ORDER BY sort_order, name');
+
+  /* Cover image per category: the most recently updated published product
+     that actually has a main image.
+
+     Newest, because that is the product being promoted — a category whose
+     picture is three years old shows a model the factory has moved on from.
+     "Actually has one", because a category whose newest product has no photo
+     but an older one does should still show something.
+
+     Row_number partitioned by category rather than a join on max(): the
+     join picks one product and returns nothing at all when that product has
+     no image, and a category card with no picture is the thing this is
+     meant to fix. */
+  const covers = await cached<any[]>(
+    `SELECT category, url FROM (
+       SELECT p.category AS category, m.url AS url,
+              ROW_NUMBER() OVER (
+                PARTITION BY p.category
+                ORDER BY p.updated_at DESC, p.id DESC
+              ) AS rn
+         FROM products p
+         JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
+         JOIN media m ON m.id = pi.media_id
+        WHERE p.status = 'published'
+     ) WHERE rn = 1`
+  );
+
+  /* First row per category wins; the query is already ordered so the newest
+     comes first within each partition. */
+  const coverByCat = new Map<string, string>();
+  for (const row of covers) {
+    if (!coverByCat.has(row.category)) coverByCat.set(row.category, row.url);
+  }
+
+  const counts = await cached<any[]>(
+    `SELECT category, COUNT(*) AS n FROM products WHERE status = 'published' GROUP BY category`
+  );
+  const countByCat = new Map(counts.map((r) => [r.category, r.n]));
+
   return rows.map((r) => ({
     id: r.id,
     name: r.name,
@@ -394,7 +437,9 @@ export async function listCategories(): Promise<Category[]> {
     price_range: r.price_range,
     status: r.status,
     seoTitle: r.seo_title || '',
-    seoDescription: r.seo_description || ''
+    seoDescription: r.seo_description || '',
+    imageUrl: coverByCat.get(r.id) || '',
+    productCount: countByCat.get(r.id) || 0
   }));
 }
 

@@ -110,7 +110,7 @@ export default async function CategoryPage({ params }) {
                   <div className="grid-3">
                     {products.map((p) => (
                       <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
-                        <div className="c-visual">
+                        <div className={`c-visual${p.images.length ? ' has-img' : ''}`}>
                           {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
                         </div>
                         <div className="c-body">
