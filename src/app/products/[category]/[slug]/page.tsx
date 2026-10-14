@@ -62,29 +62,16 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductPage({ params }) {
   const { category, slug } = params;
-  /* Temporary: surface the real reason a product page 404s. The catch that
-     turns a database error into null is why every product detail page
-     started returning 404 while the list page worked — getProduct threw,
-     the catch swallowed it into null, and notFound() reported it as a
-     missing product. Removed once the cause is fixed. */
-  let product = null;
-  let loadError: string | null = null;
-  try {
-    product = await getProduct(slug, { includeDrafts: false });
-  } catch (e) {
-    loadError = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
-  }
+  /* No catch here on purpose.
 
-  if (loadError) {
-    return (
-      <div className="site">
-        <main><section><div className="wrap">
-          <h1>Load error</h1>
-          <pre style={{ whiteSpace: 'pre-wrap', fontSize: 13 }}>{loadError}</pre>
-        </div></section></main>
-      </div>
-    );
-  }
+     This line used to read getProduct(...).catch(() => null), which turned
+     a database error into "product not found" — every detail page then
+     answered 404 while the list page worked, because the list query
+     happened not to be the broken one. A missing product and a broken
+     query are different problems and only one of them is a 404.
+
+     Letting it throw means the error page shows what actually happened. */
+  const product = await getProduct(slug, { includeDrafts: false });
 
   if (!product || product.category !== category) notFound();
 

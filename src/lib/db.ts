@@ -23,10 +23,19 @@ export type Category = {
   seoDescription?: string;
 };
 
-export type ProductSpec = { label: string; value: string };
+export type ProductSpec = { id?: string | number; label: string; value: string };
 export type ProductOption = { label: string; priceDelta: number };
 export type ProductPrice = { minQty: number; maxQty: number | null; unitPrice: number };
-export type ProductImage = { url: string; alt?: string; isMain?: boolean };
+export type ProductImage = { url: string; alt?: string; isMain?: boolean; kind?: string };
+
+/* Which customisation values the owner ticked for this model. The group
+   keys and the values themselves live in product-detail.ts; this is only
+   the per-product selection. */
+export type ProductCustomisation = {
+  groupKey: string;
+  value: string;
+  priceDelta: number;
+};
 
 export type Product = {
   id: string;
@@ -55,6 +64,10 @@ export type Product = {
   options: ProductOption[];
   prices: ProductPrice[];
   images: ProductImage[];
+  /* Only the detail page loads these. Optional so the list query, which
+     does not join the table, still satisfies the type — and the page reads
+     it as `product.customisations || []` for the same reason. */
+  customisations?: ProductCustomisation[];
 };
 
 export type SiteSettings = Record<string, string>;
@@ -214,7 +227,12 @@ export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
     specs: (extras.specs as ProductSpec[]) || [],
     options: (extras.options as ProductOption[]) || [],
     prices: (extras.prices as ProductPrice[]) || [],
-    images: (extras.images as ProductImage[]) || []
+    images: (extras.images as ProductImage[]) || [],
+    /* Empty rather than omitted when the caller did not load them: the
+       detail page reads product.customisations.length directly, and an
+       undefined here is the same class of bug as the missing fifth
+       Promise.all entry — the field has to always exist. */
+    customisations: (extras.customisations as ProductCustomisation[]) || []
   };
 }
 
@@ -248,6 +266,15 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
        JOIN media m ON m.id = pi.media_id
        WHERE pi.product_id = ?
        ORDER BY pi.is_main DESC, pi.sort_order`,
+      row.id
+    ),
+    /* The owner's per-product customisation picks. This has to be the fifth
+       entry: the destructuring above reads five names off this array, and a
+       short array leaves customs undefined — which surfaced as a 404,
+       because the page calls getProduct inside a .catch(() => null) and
+       reports a thrown error as a missing product. */
+    all(
+      'SELECT group_key, value, price_delta FROM product_customisations WHERE product_id = ? ORDER BY group_key, sort_order',
       row.id
     )
   ]);
