@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
 import { SeoBox } from '../_seo';
 import { MarkdownEditor } from '../_md';
+import { ImagePicker } from '../_image-picker';
 import { htmlToMd } from '@/lib/markdown';
 
 const BLANK = {
@@ -35,6 +36,7 @@ function fromRow(p) {
 export default function PostsPage() {
   const [posts, setPosts] = useState(null);
   const [edit, setEdit] = useState(null);
+  const [coverPick, setCoverPick] = useState(false);
   const [view, setView] = useState('list');
   const { toast, show } = useToast();
 
@@ -135,17 +137,56 @@ export default function PostsPage() {
               </div>
             </div>
 
-            {edit.type === 'news' && (
-              <div className="fg">
-                <label className="fl">封面图<span className="hint">列表与分享卡片用</span></label>
-                <input className="inp" value={edit.cover}
-                  onChange={(e) => setEdit({ ...edit, cover: e.target.value })}
-                  placeholder="/media/news/exhibition.jpg" />
+            {/* Cover, for both post types.
+
+                This used to be gated on type === 'news' and asked for a
+                pasted URL. So an article — which the listing pages read
+                `cover` from, articles and news alike — had no way to set
+                one at all, and the card rendered as an empty grey square.
+                The URL field also assumed the writer knew the path to a file
+                they had just uploaded through a different screen.
+
+                Same picker as the editor: choose from the library or upload
+                in place. */}
+            <div className="fg">
+              <label className="fl">
+                封面图
+                <span className="hint">列表卡片和分享卡片用，可留空</span>
+              </label>
+
+              <div className="cover-row">
+                <button
+                  type="button"
+                  className={`cover-box${edit.cover ? ' has' : ''}`}
+                  onClick={() => setCoverPick((v) => !v)}
+                >
+                  {edit.cover
+                    ? <img src={edit.cover} alt="" />
+                    : <span>选择封面图</span>}
+                </button>
+
                 {edit.cover && (
-                  <img className="cover-prev" src={edit.cover} alt="" />
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-d"
+                    onClick={() => setEdit({ ...edit, cover: '' })}
+                  >
+                    移除
+                  </button>
                 )}
               </div>
-            )}
+
+              {coverPick && (
+                <ImagePicker
+                  open={coverPick}
+                  onClose={() => setCoverPick(false)}
+                  onPick={(m) => {
+                    setEdit({ ...edit, cover: m.url });
+                    setCoverPick(false);
+                  }}
+                />
+              )}
+            </div>
 
             <div className="fg">
               <label className="fl">目标关键词<span className="hint">这篇要抢的搜索词</span></label>

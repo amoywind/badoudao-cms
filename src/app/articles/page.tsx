@@ -88,7 +88,7 @@ export default async function ArticlesPage() {
               <div className="grid-3">
                 {posts.map((p) => (
                   <Link key={p.slug} href={`/articles/${p.slug}/`} className="card">
-                    <div className="c-visual">
+                    <div className={`c-visual${p.cover ? ' has-img' : ''}`}>
                       {p.cover && <img src={p.cover} alt={p.title} />}
                     </div>
                     <div className="c-body">
