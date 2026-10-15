@@ -86,6 +86,16 @@ export default async function HomePage() {
                   difference between the text appearing immediately and
                   waiting 30ms behind an image nobody has looked at yet.
 
+                  Spread rather than written inline: React 18 does not know
+                  this attribute and passes unknown props through with their
+                  case intact, so fetchPriority renders as fetchPriority —
+                  not the HTML attribute, and a warning on every render.
+                  fetchpriority is what the parser reads. The spread keeps
+                  it out of JSX's typed attribute list, where only the
+                  camelCase spelling exists and is wrong at runtime. React
+                  19 ships the lowercase form and this can go back to a
+                  plain prop.
+
                   No loading="lazy" here — it is the one image on the page
                   that is above the fold, and lazy would defer it. */}
               <img
@@ -93,7 +103,7 @@ export default async function HomePage() {
                 alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs"
                 width={1400}
                 height={788}
-                fetchPriority="high"
+                {...{ fetchpriority: 'high' }}
                 decoding="async"
               />
             </div>
