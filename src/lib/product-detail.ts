@@ -66,45 +66,38 @@ export const OPTION_GROUPS: OptionGroup[] = [
 ];
 
 /* The four packaging options, kept as data because the packaging section
-   explains the catalogue rather than one product's choices. Each says what
-   it is for: a buyer choosing packaging is choosing a unit cost and a
-   sales channel, not a look.
+   explains the catalogue rather than one product's choices.
 
-   The copy describes the photographs. An earlier version said "plain white
-   carton" over a photograph of a kraft box, and "clear PET window" over an
-   open box with no window at all — a buyer who receives a different box
-   stops believing the rest of the page.
+   Names only. An earlier version carried two paragraphs per box — the
+   board, the foam, the drop test, the MOQ on the print run — and the
+   pictures say all of it: a buyer looking at the kraft box is being told
+   what the kraft box is. Written out beside the photograph it read as
+   duplication, and a claim written beside its own photo is a claim that
+   can fall out of step with the photo.
 
-   image is a media id under folder = 'packaging'. Null falls back to the
-   drawn box outline, so a missing picture is a placeholder rather than a
-   broken image; upload-packaging.js writes the rows. */
+   title is the packing name a buyer uses when specifying an order. image is
+   a media id under folder = 'packaging'; a missing one falls back to the
+   drawn outline, so a missing picture is a placeholder rather than a
+   broken image. upload-packaging.js writes the rows. */
 export const PACKAGING_OPTIONS = [
   {
     key: 'closed',
     title: 'Closed box',
-    note: 'Kraft board with a printed label and a QR code for the QC record. The lowest cost per unit and the default for bulk shipments.',
-    fit: 'Wholesale orders, containers',
     image: 'img_250ecfa3dbaa2cb3908c9534'
   },
   {
     key: 'pizza',
-    title: 'Pizza / mail-order box',
-    note: 'Reinforced board with an EPS foam tray that holds the clock in place. Drop-tested for courier handling.',
-    fit: 'E-commerce, single-item shipping',
+    title: 'Pizza box',
     image: 'img_80df9ff030608586e96bb5c2'
   },
   {
     key: 'display',
     title: 'Open display box',
-    note: 'Lid-off box so the dial reads without unpacking. Needs a printed header card for the shelf.',
-    fit: 'Retail shelves, gift sets',
     image: 'img_06012a4a562a1159577986c3'
   },
   {
     key: 'color',
-    title: 'Custom colour box',
-    note: 'Full-colour litho print to your artwork — the one shown carries our own mark. The print run has its own MOQ, separate from the clock quantity.',
-    fit: 'Brand retail, marketplaces',
+    title: 'Colour box',
     image: 'img_ef2a1d96934f692adf68d460'
   }
 ];

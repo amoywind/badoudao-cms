@@ -32,11 +32,15 @@ const FOLDER = 'packaging';
 const LONG_EDGE = 1200;
 const QUALITY = 82;
 
+/* Alt text names the box and stops there. The card carries no descriptive
+   copy, so an alt that described the board and the foam was saying twice
+   what the page had already chosen not to say — and a screen reader
+   announcing a paragraph is as unwelcome there as one reading it. */
 const SOURCES = [
-  { file: '包装盒01_牛皮纸闭口盒_白底.jpg', alt: 'Kraft paper closed box with a printed label' },
-  { file: '包装盒02_飞机盒+保丽龙内托_白底.jpg', alt: 'Mail-order box with an EPS foam insert holding the clock' },
-  { file: '包装盒04_开口盒_装钟展示.jpg', alt: 'Open display box, clock visible without unpacking' },
-  { file: '包装盒05_闭口盒彩盒_巴豆岛定制.jpg', alt: 'Custom printed colour box with the Badoudao logo' }
+  { file: '包装盒01_牛皮纸闭口盒_白底.jpg', alt: 'Closed box packaging' },
+  { file: '包装盒02_飞机盒+保丽龙内托_白底.jpg', alt: 'Pizza box packaging' },
+  { file: '包装盒04_开口盒_装钟展示.jpg', alt: 'Open display box packaging' },
+  { file: '包装盒05_闭口盒彩盒_巴豆岛定制.jpg', alt: 'Colour box packaging' }
 ];
 
 const SRC_DIR = 'D:/AI/PP磨砂板挂钟_包装盒';

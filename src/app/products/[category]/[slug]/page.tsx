@@ -296,18 +296,21 @@ export default async function ProductPage({ params }) {
           </section>
         )}
 
-        {/* Packaging, as four choices with what each is for rather than four
-            pictures of boxes. A buyer choosing packaging is choosing a unit
-            cost and a sales channel: closed box for containers, display box
-            for shelves. Saying so is more use than showing a carton. */}
+        {/* Packaging: four photographs and their names.
+
+            This section carried two paragraphs per box — the board, the
+            foam, the drop test, the MOQ on the print run — and the owner
+            asked for names only, which is right: a buyer looking at the
+            kraft box is being told what the kraft box is, and a claim
+            written beside its own photograph is one that can fall out of
+            step with it. */}
         <section className="alt">
           <div className="wrap">
             <div className="sec-tag">Packaging</div>
             <h2 style={{ fontSize: 30 }}>Four standard packaging options</h2>
             <p className="sec-sub" style={{ marginBottom: 34 }}>
-              Every model can ship in any of these. Custom structure and print
-              are available on the colour box, with tooling cost quoted before
-              you commit.
+              Every model ships in any of these. Custom print and structure quoted
+              on request.
             </p>
 
             <div className="pd-pack">
@@ -338,8 +341,6 @@ export default async function ProductPage({ params }) {
                     )}
                   </div>
                   <h3>{p.title}</h3>
-                  <p>{p.note}</p>
-                  <span className="pd-pack-fit">{p.fit}</span>
                 </div>
               ))}
             </div>

@@ -870,12 +870,9 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   transition: transform .35s;
 }
 .pd-pack-c:hover .pd-pack-img.has-img img { transform: scale(1.04); }
-.pd-pack-c h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 0 0 8px; }
-.pd-pack-c p { font-size: 13.5px; color: var(--ink2); line-height: 1.55; margin: 0 0 12px; }
-.pd-pack-fit {
-  display: inline-block; font-size: 11.5px; font-weight: 500;
-  color: var(--brand); background: var(--brandSoft);
-  padding: 4px 10px; border-radius: 5px;
+.pd-pack-c h3 {
+  font-family: var(--sans); font-size: 15.5px; font-weight: 600;
+  margin: 0; text-align: center;
 }
 
 /* ---- process ---- */
