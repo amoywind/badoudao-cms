@@ -469,3 +469,59 @@ select.inp { cursor: pointer; }
 .sg-grid { display: flex; gap: 20px; flex-wrap: wrap; }
 .sg-grid a { font-size: 13.5px; color: var(--brand); font-weight: 500; }
 .sg-grid a:hover { text-decoration: underline; }
+
+/* ------------------------------------------------------------------
+   Image picker (markdown editor)
+   ------------------------------------------------------------------
+   The editor's image button opens this rather than inserting a markdown
+   placeholder. It is a dialog because picking an image is a decision
+   about a file, not a thing to type — a picker that lives inline would
+   push the text down every time it opened.
+
+   Width is capped at 720px: the media grid inside is a picker, not a
+   gallery, and six columns of thumbnails on a wide screen means the eye
+   travels further to reach the filename under the one being considered. */
+.ipk {
+  background: #fff; border-radius: 10px;
+  width: min(720px, 100%); max-height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.24);
+  overflow: hidden;
+}
+.ipk-h {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+}
+.ipk-h h3 { font-size: 16px; margin: 0; }
+.ipk-b { padding: 20px; overflow-y: auto; }
+
+.ipk-bar {
+  display: flex; gap: 10px; margin-bottom: 16px;
+}
+.ipk-bar .inp { flex: 1; }
+
+.ipk-err {
+  margin: 0 0 12px; padding: 9px 12px;
+  background: #fef2f2; border: 1px solid #fecaca;
+  border-radius: 6px; color: #991b1b; font-size: 13px;
+}
+
+.ipk-preview {
+  width: 100%; max-height: 260px; object-fit: contain;
+  background: #f4f5f7; border: 1px solid var(--line);
+  border-radius: 7px; display: block;
+}
+
+.ipk-row {
+  display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 20px;
+}
+
+/* On a phone the filter and the upload button stop sharing a row: the
+   button's label is four characters in Chinese and the field needs the
+   width more than the button needs the row. */
+@media (max-width: 560px) {
+  .ipk-bar { flex-direction: column; }
+  .ipk-row { flex-direction: column-reverse; }
+  .ipk-row .btn { width: 100%; justify-content: center; }
+}

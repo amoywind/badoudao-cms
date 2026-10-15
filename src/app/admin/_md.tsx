@@ -1,7 +1,8 @@
 'use client';
 
-import { Fragment, useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState, useCallback } from 'react';
 import { mdToHtml, countWords } from '@/lib/markdown';
+import { ImagePicker } from './_image-picker';
 
 /**
  * Markdown editor with a live preview.
@@ -25,7 +26,10 @@ type Tool = {
   key: string;
   label: string;
   title: string;
-  run: (sel: Selection) => Selection;
+  /* A picker tool opens a dialog instead of editing the text, so it has no
+     run. Only one exists — the image button. */
+  run?: (sel: Selection) => Selection;
+  opensPicker?: boolean;
   block?: boolean;
 };
 
@@ -147,10 +151,11 @@ const TOOLS: Tool[] = [
   },
   {
     key: 'img', label: '🖼', title: '插入图片',
-    run: (s) => {
-      const t = '![alt text](/media/folder/image.jpg)';
-      return { text: s.text.slice(0, s.from) + t + s.text.slice(s.to), from: s.from, to: s.from + t.length };
-    }
+    /* No `run`: this button opens the picker rather than editing the text.
+       It used to insert ![alt text](/media/folder/image.jpg) — a line of
+       code that renders as a broken image on a published page, with nothing
+       in the editor asking for a file. */
+    opensPicker: true
   },
   { key: 'br', label: '↵', title: '段内换行', run: (s) => insertBreak(s.text, s.to), block: true },
   { key: 'ul', label: '• 列表', title: '无序列表', run: (s) => setLinePrefix(s.text, s.from, s.to, '- ') },
@@ -203,6 +208,10 @@ export function MarkdownEditor({
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<'write' | 'preview'>('write');
+  const [picking, setPicking] = useState(false);
+  /* Where the caret was when the picker opened. The dialog moves focus, so
+     without this the image lands at position 0. */
+  const caretRef = useRef<number>(0);
 
   const html = useMemo(() => mdToHtml(value), [value]);
   const words = countWords(value);
@@ -210,6 +219,14 @@ export function MarkdownEditor({
   function apply(tool: Tool) {
     const el = ref.current;
     if (!el) return;
+
+    if (tool.opensPicker) {
+      caretRef.current = el.selectionStart ?? value.length;
+      setPicking(true);
+      return;
+    }
+    if (!tool.run) return;
+
     const from = el.selectionStart;
     const to = el.selectionEnd;
     const out = tool.run({ text: value, from, to });
@@ -221,6 +238,27 @@ export function MarkdownEditor({
       el.setSelectionRange(out.from, out.to);
     });
   }
+
+  /* The caret has to be captured before the dialog opens, because clicking
+     into the picker collapses the textarea's selection. */
+  const insertImage = useCallback((img: { url: string; alt: string }) => {
+    const el = ref.current;
+    const text = value;
+    /* Newline before and after: a bare ![](x) between two paragraphs is
+       absorbed into the previous line by most markdown renderers, and the
+       image ends up inside the paragraph above it. */
+    const snippet = `\n\n![${img.alt || '图片'}](${img.url})\n\n`;
+    const at = Math.min(caretRef.current, text.length);
+
+    onChange(text.slice(0, at) + snippet + text.slice(at));
+
+    /* Put the caret on the blank line after the image. */
+    const next = at + snippet.length;
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(next, next);
+    });
+  }, [value, onChange]);
 
   return (
     <div className="md">
@@ -274,6 +312,12 @@ export function MarkdownEditor({
         <span>{words} 词</span>
         <span className="md-hint">支持 Markdown：## 标题、**粗体**、- 列表、[链接](url)、表格、段内换行用 ↵</span>
       </div>
+
+      <ImagePicker
+        open={picking}
+        onClose={() => setPicking(false)}
+        onPick={insertImage}
+      />
     </div>
   );
 }
