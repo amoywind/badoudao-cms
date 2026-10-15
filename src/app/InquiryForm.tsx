@@ -172,13 +172,22 @@ export function InquiryForm({
       <form onSubmit={submit} ref={formRef} noValidate={false}>
         <div className="fg">
           <label className="fl" htmlFor="if-name">Your name<span className="req">*</span></label>
-          <input className="inp" id="if-name" name="name" required placeholder="Mark Smith" />
+          <input className="inp" id="if-name" name="name" required placeholder="Mark Smith"
+            autoComplete="name" />
         </div>
 
         <div className="fg">
           <label className="fl" htmlFor="if-email">Business email<span className="req">*</span></label>
           <input className="inp" id="if-email" name="email" type="email" required
-            placeholder="you@company.com" />
+            placeholder="you@company.com"
+            autoComplete="email"
+            /* A business buyer fills this in on a phone and a laptop in
+               the same sitting. "email" is a contact field to Chrome, so
+               the address they typed here is offered again on the next
+               form on the same site. */
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false} />
         </div>
 
         <div className="fg">
@@ -192,6 +201,14 @@ export function InquiryForm({
             </select>
             <input className="inp wa-num" id="if-wa" name="whatsapp" required
               inputMode="tel" placeholder="13800138000"
+              /* tel rather than "tel-national": the number is stored with the
+                 dialling code chosen in the select beside it, so the field
+                 holds a national number and must not carry the country
+                 prefix twice. */
+              autoComplete="tel-national"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
               title="Include your area code if not listed" />
           </div>
           <div className="help">Spaces and dashes are fine</div>
@@ -208,7 +225,11 @@ export function InquiryForm({
         <div className="fg">
           <label className="fl" htmlFor="if-msg">Your requirements<span className="req">*</span></label>
           <textarea className="inp" id="if-msg" name="message" required rows={5}
-            placeholder={DEFAULT_MESSAGE} />
+            placeholder={DEFAULT_MESSAGE}
+            /* Deliberately not autofilled. The placeholder is a
+               pre-written requirements paragraph, and letting a browser
+               replace it would make the buyer edit someone else's words
+               before they had decided what they needed. */ />
         </div>
 
         <div className="fg">

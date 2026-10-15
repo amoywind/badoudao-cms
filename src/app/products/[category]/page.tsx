@@ -108,10 +108,17 @@ export default async function CategoryPage({ params }) {
                   </p>
                 ) : (
                   <div className="grid-3">
-                    {products.map((p) => (
+                    {products.map((p, i) => (
                       <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
                         <div className={`c-visual${p.images.length ? ' has-img' : ''}`}>
-                          {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
+                          {p.images.length ? (
+                          <img
+                            src={p.images[0].url}
+                            alt={p.name}
+                            decoding="async"
+                            {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
+                          />
+                        ) : null}
                         </div>
                         <div className="c-body">
                           <h3 style={{ fontSize: 18 }}>{p.name}</h3>

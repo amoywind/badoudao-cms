@@ -86,10 +86,17 @@ export default async function ArticlesPage() {
               </div>
             ) : (
               <div className="grid-3">
-                {posts.map((p) => (
+                {posts.map((p, i) => (
                   <Link key={p.slug} href={`/articles/${p.slug}/`} className="card">
                     <div className={`c-visual${p.cover ? ' has-img' : ''}`}>
-                      {p.cover && <img src={p.cover} alt={p.title} />}
+                      {p.cover && (
+                        <img
+                          src={p.cover}
+                          alt={p.title}
+                          decoding="async"
+                          {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
+                        />
+                      )}
                     </div>
                     <div className="c-body">
                       <h3 style={{ fontSize: 17 }}>{p.title}</h3>

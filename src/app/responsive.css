@@ -425,3 +425,26 @@
   .site .pd-moq-v { font-size: 26px; }
   .site .pd-thumb { width: 56px; height: 56px; }
 }
+
+/* iOS Safari zooms the viewport when a focused input's font-size is under
+   16px, and does not zoom back out when the field loses focus. A buyer who
+   taps the email field on a phone ends up filling the rest of the form
+   magnified, with the quantity select and the message box off screen, and
+   has to pinch back to see what they are typing.
+
+   16px is the threshold, so on anything narrow the inputs get exactly 16.
+   Only below 900px — on a desktop the smaller type is deliberate and
+   matches the surrounding body copy. */
+@media (max-width: 900px) {
+  .site .inp,
+  .site select.inp,
+  .site textarea.inp {
+    font-size: 16px;
+  }
+
+  /* The line-height that goes with it: 14.5px text at 1.2 left the box
+     looking cramped once the glyphs grew, and iOS also rounds the padding
+     of a focused field, so a little more vertical room avoids the field
+     appearing to jump as it takes focus. */
+  .site .inp { line-height: 1.45; }
+}
