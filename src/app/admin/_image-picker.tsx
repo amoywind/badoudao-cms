@@ -22,6 +22,11 @@ type Media = {
   url: string;
   alt?: string;
   folder?: string;
+  width?: number;
+  height?: number;
+  /* Set by the upload route when an image is not 1:1. Present on the POST
+     response, absent on GET — hence optional rather than two types. */
+  notice?: string;
 };
 
 export function ImagePicker({
@@ -39,11 +44,15 @@ export function ImagePicker({
   const [picked, setPicked] = useState<Media | null>(null);
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState('');
+  /* A note rather than a failure — the upload worked. Sharing one variable
+     made "not square" render in the same red as a rejected file. */
+  const [warn, setWarn] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) return;
     setErr('');
+    setWarn('');
     fetch('/api/media')
       .then((r) => r.json())
       .then((d) => setMedia(d.media || []))
@@ -73,6 +82,7 @@ export function ImagePicker({
     if (!files || !files.length) return;
     setUploading(true);
     setErr('');
+    setWarn('');
 
     const form = new FormData();
     Array.from(files).forEach((f) => form.append('file', f));
@@ -86,19 +96,33 @@ export function ImagePicker({
         setErr(d.error || '上传失败');
         return;
       }
-      /* The response carries the stored rows under `media` when several
-         files went up, and a single row under `url` for one file. Handle
-         both so an upload can be picked straight away. */
-      const added: Media[] = d.media?.length
-        ? d.media
-        : d.url
-          ? [{ id: d.id, filename: d.filename || files[0].name, url: d.url, alt: '' }]
-          : [];
+      /* The route returns { ok, saved, errors }. It did not return `media`,
+         so the upload appeared to succeed and then failed on a missing url
+         — the file was in the library the whole time, just not in the
+         response. Read `saved`; `errors` is per-file, so a batch with one
+         rejected file still returns the ones that worked. */
+      const added: Media[] = Array.isArray(d.saved) ? d.saved : [];
 
       if (!added.length) {
-        setErr('上传完成，但没有返回可用的图片地址');
+        const why = Array.isArray(d.errors) && d.errors.length
+          ? d.errors[0]?.error || d.errors[0]
+          : d.error;
+        setErr(why ? `上传失败：${why}` : '上传失败，请重试');
         return;
       }
+
+      /* A batch can partially succeed. Say so rather than silently showing
+         only the files that worked. */
+      const failed = Array.isArray(d.errors) ? d.errors.length : 0;
+      if (failed) setErr(`${added.length} 张上传成功，${failed} 张失败`);
+      else setWarn('');
+
+      /* The route flags images that are not 1:1, because the main image
+         slot on a product prefers square. In an article the shape does not
+         matter the same way, but a 2000x300 phone photo in a four-column
+         grid does look wrong, so the warning is worth passing on. */
+      const warned = added.find((m) => m.notice)?.notice;
+      if (!failed && warned) setWarn(warned);
 
       setMedia((old) => [...added, ...(old || [])]);
       setPicked(added[0]);
@@ -184,6 +208,7 @@ export function ImagePicker({
             </div>
 
             {err ? <p className="ipk-err">{err}</p> : null}
+            {warn ? <p className="ipk-warn">{warn}</p> : null}
 
             {media === null ? (
               <p style={{ color: 'var(--ink3)', fontSize: 13.5, padding: '20px 0' }}>
