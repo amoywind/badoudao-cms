@@ -68,31 +68,44 @@ export const OPTION_GROUPS: OptionGroup[] = [
 /* The four packaging options, kept as data because the packaging section
    explains the catalogue rather than one product's choices. Each says what
    it is for: a buyer choosing packaging is choosing a unit cost and a
-   sales channel, not a look. */
+   sales channel, not a look.
+
+   The copy describes the photographs. An earlier version said "plain white
+   carton" over a photograph of a kraft box, and "clear PET window" over an
+   open box with no window at all — a buyer who receives a different box
+   stops believing the rest of the page.
+
+   image is a media id under folder = 'packaging'. Null falls back to the
+   drawn box outline, so a missing picture is a placeholder rather than a
+   broken image; upload-packaging.js writes the rows. */
 export const PACKAGING_OPTIONS = [
   {
     key: 'closed',
     title: 'Closed box',
-    note: 'Plain white carton, printed label only. The lowest cost per unit and the default for bulk shipments.',
-    fit: 'Wholesale orders, containers'
+    note: 'Kraft board with a printed label and a QR code for the QC record. The lowest cost per unit and the default for bulk shipments.',
+    fit: 'Wholesale orders, containers',
+    image: 'img_250ecfa3dbaa2cb3908c9534'
   },
   {
     key: 'pizza',
     title: 'Pizza / mail-order box',
-    note: 'Reinforced two-layer board with corner protection, passed drop testing for courier handling.',
-    fit: 'E-commerce, single-item shipping'
+    note: 'Reinforced board with an EPS foam tray that holds the clock in place. Drop-tested for courier handling.',
+    fit: 'E-commerce, single-item shipping',
+    image: 'img_80df9ff030608586e96bb5c2'
   },
   {
     key: 'display',
     title: 'Open display box',
-    note: 'Clear PET window so the dial reads without unpacking. Needs a printed header card.',
-    fit: 'Retail shelves, gift sets'
+    note: 'Lid-off box so the dial reads without unpacking. Needs a printed header card for the shelf.',
+    fit: 'Retail shelves, gift sets',
+    image: 'img_06012a4a562a1159577986c3'
   },
   {
     key: 'color',
     title: 'Custom colour box',
-    note: 'Full-colour litho print to your artwork. The print run has its own MOQ, separate from the clock quantity.',
-    fit: 'Brand retail, marketplaces'
+    note: 'Full-colour litho print to your artwork — the one shown carries our own mark. The print run has its own MOQ, separate from the clock quantity.',
+    fit: 'Brand retail, marketplaces',
+    image: 'img_ef2a1d96934f692adf68d460'
   }
 ];
 

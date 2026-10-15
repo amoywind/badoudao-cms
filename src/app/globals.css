@@ -846,6 +846,30 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 }
 .pd-pack-img svg { width: 46px; height: 34px; opacity: .5; }
 .pd-pack-img span { font-size: 11px; }
+
+/* Packaging photographs.
+
+   Shot on white, so the frame is white too and the dashed border is
+   dropped: a dashed outline around a clean product shot reads as "unfinished"
+   and draws the eye to the edge instead of the box. Square rather than 4:3
+   because that is how they were shot, and letterboxing a square into 4:3
+   leaves grey bars top and bottom that look like a loading failure.
+
+   object-fit contain rather than cover: these show a whole box including its
+   open lid, and cropping to fill a 4:3 frame cuts the lid off — which is the
+   part that tells a buyer it is an open box. */
+.pd-pack-img.has-img {
+  aspect-ratio: 1/1;
+  background: #fff;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.pd-pack-img.has-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  transition: transform .35s;
+}
+.pd-pack-c:hover .pd-pack-img.has-img img { transform: scale(1.04); }
 .pd-pack-c h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .pd-pack-c p { font-size: 13.5px; color: var(--ink2); line-height: 1.55; margin: 0 0 12px; }
 .pd-pack-fit {

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
-import { listSeoTags } from '@/lib/seo-tags';
+import { listSeoTags, packagingImages } from '@/lib/seo-tags';
 import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
 import { ProductGallery, CustomisationList } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
@@ -80,11 +80,12 @@ export default async function ProductPage({ params }) {
      to an empty list, which makes seoTagsFor derive tags from the specs
      instead — a product page with no tags is a worse outcome than one with
      derived ones. */
-  const [related, s, videos, managedTags] = await Promise.all([
+  const [related, s, videos, managedTags, packShots] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
     listProductVideos(product.id).catch(() => []),
-    listSeoTags().catch(() => [])
+    listSeoTags().catch(() => []),
+    packagingImages(PACKAGING_OPTIONS.map((o) => o.image).filter(Boolean) as string[]).catch(() => ({}))
   ]);
   const others = related.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -312,16 +313,29 @@ export default async function ProductPage({ params }) {
             <div className="pd-pack">
               {PACKAGING_OPTIONS.map((p) => (
                 <div key={p.key} className="pd-pack-c">
-                  {/* Placeholder until a packaging photo is uploaded. A
-                      drawn box outline reads as intentional; an empty grey
-                      square reads as a broken image. */}
-                  <div className="pd-pack-img" aria-hidden="true">
-                    <svg viewBox="0 0 64 48" fill="none" stroke="currentColor"
-                      strokeWidth="1.6" strokeLinejoin="round">
-                      <path d="M32 6l24 10v22L32 48 8 38V16z" />
-                      <path d="M8 16l24 10 24-10M32 26v22" />
-                    </svg>
-                    <span>Photo pending</span>
+                  {/* The photograph when there is one, the drawn outline when
+                      there is not. A drawn box reads as a placeholder someone
+                      intended; an empty grey square reads as a page that
+                      failed to load. */}
+                  <div className={`pd-pack-img${p.image && packShots[p.image] ? ' has-img' : ''}`}>
+                    {p.image && packShots[p.image] ? (
+                      <img
+                        src={packShots[p.image].url}
+                        alt={packShots[p.image].alt || `${p.title} packaging`}
+                        width={1200}
+                        height={1200}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 64 48" fill="none" stroke="currentColor"
+                          strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M32 6l24 10v22L32 48 8 38V16z" />
+                          <path d="M8 16l24 10 24-10M32 26v22" />
+                        </svg>
+                        <span>Photo pending</span>
+                      </>
+                    )}
                   </div>
                   <h3>{p.title}</h3>
                   <p>{p.note}</p>

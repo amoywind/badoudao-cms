@@ -14,6 +14,31 @@
  */
 import { all, one, run } from './db';
 
+/**
+ * Packaging photographs, by media id.
+ *
+ * Ids come from PACKAGING_OPTIONS rather than being written as URLs here:
+ * the media row owns the url, so a file that moves from D1 to R2 when the
+ * bucket is enabled changes one place. A missing id yields no row rather
+ * than a broken request, and the card falls back to its drawn outline.
+ */
+export async function packagingImages(
+  ids: string[]
+): Promise<Record<string, { url: string; alt: string }>> {
+  const wanted = ids.filter(Boolean);
+  if (!wanted.length) return {};
+
+  const placeholders = wanted.map(() => '?').join(',');
+  const rows = (await all(
+    `SELECT id, url, alt FROM media WHERE id IN (${placeholders})`,
+    ...wanted
+  )) as { id: string; url: string; alt: string }[];
+
+  const map: Record<string, { url: string; alt: string }> = {};
+  for (const r of rows) map[r.id] = { url: r.url, alt: r.alt || '' };
+  return map;
+}
+
 export type SeoTagRow = {
   id: number;
   key: string;
