@@ -328,6 +328,7 @@ export default async function ProductPage({ params }) {
                         width={1200}
                         height={1200}
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <>

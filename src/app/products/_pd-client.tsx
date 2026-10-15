@@ -22,6 +22,22 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
   const [origin, setOrigin] = useState('50% 50%');
   const frameRef = useRef<HTMLDivElement>(null);
 
+  /* Whether the pointer can hover at all.
+
+     A tap on a touchscreen also fires mouseenter, and because there is no
+     mouseleave until you touch somewhere else, the photo stayed scaled to
+     1.75 under the lightbox and after it closed — on a phone, where the
+     zoom cannot be used anyway because a finger is on the glass. The hint
+     and the zoom both follow this. */
+  const [canHover, setCanHover] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover)');
+    setCanHover(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setCanHover(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const shots = images.length ? images : [];
   const current = shots[0];
 
@@ -61,8 +77,8 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
       <div
         ref={frameRef}
         className={`pd-main${zoom && current ? ' zoom' : ''}`}
-        onMouseEnter={() => setZoom(true)}
-        onMouseLeave={() => setZoom(false)}
+        onMouseEnter={() => { if (canHover) setZoom(true); }}
+        onMouseLeave={() => { if (canHover) setZoom(false); }}
         onMouseMove={onMove}
       >
         {current ? (
@@ -78,7 +94,14 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
               width={1200}
               height={1200}
               style={{ transformOrigin: origin }}
-              fetchPriority="high"
+              /* Lowercase via a spread. This was written as fetchPriority
+                 and React 18 rendered it verbatim, casing intact — not the
+                 HTML attribute, so the browser ignored it and the product
+                 photo, the largest thing on the page, was never actually
+                 prioritised. tsc only accepts the camelCase spelling, which
+                 is the one that does not work at runtime. */
+              {...{ fetchpriority: 'high' }}
+              decoding="async"
             />
           </button>
         ) : (

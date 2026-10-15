@@ -734,7 +734,17 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   font-size: 11px; letter-spacing: .02em;
   pointer-events: none; opacity: 0; transition: opacity .2s;
 }
-.pd-main:hover .pd-zoom-hint { opacity: 1; }
+
+/* The hint is how a buyer learns the photo opens full size, and there is no
+   hover on a touchscreen — there :hover latches on after the first tap and
+   stays, so the hint either never appears or never goes away. Devices that
+   genuinely hover get it on hover; ones that cannot get it always. */
+@media (hover: hover) {
+  .pd-main:hover .pd-zoom-hint { opacity: 1; }
+}
+@media (hover: none) {
+  .pd-zoom-hint { opacity: 1; }
+}
 
 /* Where a photo is missing, say what to shoot. An empty square is a broken
    image; a list of angles is a work list the owner can act on today. */
