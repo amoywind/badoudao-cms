@@ -53,8 +53,8 @@ export async function POST(request) {
   if (dup) return NextResponse.json({ error: 'This page already exists' }, { status: 409 });
 
   await run(
-    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order, placement, show_in_nav)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order, placement, footer_slot, show_in_nav)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     String(body.id).slice(0, 60),
     String(body.slug || body.id).slice(0, 80),
     String(body.title).slice(0, 200),
@@ -66,6 +66,7 @@ export async function POST(request) {
     body.status || 'published',
     Number(body.sortOrder) || 0,
     normPlacement(body.placement),
+    normPlacement(body.footerSlot),
     body.show_in_nav ? 1 : 0
   );
 
@@ -93,7 +94,7 @@ export async function PUT(request) {
        while the columns stayed blank. */
     `UPDATE pages SET
        title = ?, heading = ?, intro = ?, body = ?,
-       seo_title = ?, seo_description = ?, status = ?, sort_order = ?, placement = ?, show_in_nav = ?,
+       seo_title = ?, seo_description = ?, status = ?, sort_order = ?, placement = ?, footer_slot = ?, show_in_nav = ?,
        updated_at = datetime('now')
      WHERE id = ?`,
     String(body.title ?? existing.title).slice(0, 200),
@@ -109,9 +110,11 @@ export async function PUT(request) {
     body.placement === undefined
       ? (existing.placement || '')
       : normPlacement(body.placement),
-    /* Every footer column goes through this filter, so a page assigned to a
-       column but left switched off never appears — which is exactly how the
-       columns looked empty even with the assignments in place. */
+    body.footerSlot === undefined
+      ? (existing.footer_slot || '')
+      : normPlacement(body.footerSlot),
+    /* Both the header and the footer filter on this, so a page assigned to
+       either but left switched off appears in neither. */
     body.show_in_nav === undefined
       ? (existing.show_in_nav ?? 0)
       : (body.show_in_nav ? 1 : 0),

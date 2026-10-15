@@ -12,12 +12,17 @@ import { htmlToMd } from '@/lib/markdown';
 const BLANK = {
   id: '', slug: '', title: '', heading: '', intro: '',
   body: '', seoTitle: '', seoDescription: '', status: 'published',
-  placement: ''
+  placement: 'top_nav', footerSlot: ''
 };
 
-/* The three footer columns, named as the footer shows them. Products is
-   not here: it is built from the category list, so putting a page in it
-   would add a fourth kind of thing to a column that is already full. */
+/* Two independent places. They were one field once, and filling the footer
+   meant emptying the header of six pages — placement holds top_nav, so a
+   page set to a footer column left the nav. A page can now be in both. */
+const NAV_SLOTS = [
+  { value: 'top_nav', label: '顶部导航' },
+  { value: '', label: '不放在任何导航栏' }
+];
+
 const FOOTER_SLOTS = [
   { value: '', label: '不显示在页脚' },
   { value: 'footer_2', label: 'SERVICES（服务）' },
@@ -118,17 +123,33 @@ export default function PagesAdmin() {
               <span className="hint">用于页脚和面包屑，例如「工厂」</span>
             </div>
             <div className="fg">
-              <label className="fl">页脚栏位</label>
+              <label className="fl">导航位置</label>
               <select
                 className="inp"
                 value={edit.placement || ''}
                 onChange={(e) => setEdit({ ...edit, placement: e.target.value })}
               >
+                {NAV_SLOTS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <span className="hint">顶部导航由此决定，与页脚栏位互不影响。</span>
+            </div>
+            <div className="fg">
+              <label className="fl">页脚栏位</label>
+              <select
+                className="inp"
+                value={edit.footerSlot || ''}
+                onChange={(e) => setEdit({ ...edit, footerSlot: e.target.value })}
+              >
                 {FOOTER_SLOTS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
-              <span className="hint">页脚只有三栏可填。留空则此页不出现在页脚。</span>
+              <span className="hint">
+                独立的栏位。同一页可以同时在顶部导航和页脚里 ——
+                之前两者共用一个字段，结果页脚一填，导航就空了。
+              </span>
             </div>
             <div className="fg">
               <label className="fl">在导航中出现</label>

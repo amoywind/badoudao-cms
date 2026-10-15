@@ -1,0 +1,21 @@
+-- A separate slot for the footer, because placement cannot hold both.
+--
+-- placement answers "where in the navigation does this page appear" —
+-- top_nav, or a footer column. One value per page, so a page is in the
+-- header or in the footer and never both.
+--
+-- That coupling produced a footer with no content: filling the footer
+-- columns meant moving OEM/ODM, Quality, Factory, Small Batch, Contact and
+-- Certification out of the header, and the header is worth more than the
+-- footer to a first-time visitor. The six items disappeared from the nav
+-- and the footer gained them, which is a bad trade in both places.
+--
+-- footer_slot is independent of placement. A page can be in the top nav
+-- and in the footer, which is what a site map actually looks like: the
+-- header is how you get around, the footer is the index at the end.
+--
+--   footer_slot   'footer_2' | 'footer_3' | 'footer_4' | '' (not in footer)
+--
+-- NULL/'' rather than a default of 'top_nav' so a row written before this
+-- column existed is simply not in the footer, which is the safe reading.
+ALTER TABLE pages ADD COLUMN footer_slot TEXT DEFAULT '';

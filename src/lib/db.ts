@@ -512,11 +512,31 @@ export async function listProductVideos(productId: string): Promise<ProductVideo
  * show_in_nav = 0 is skipped rather than deleted — that is how a campaign
  * page is hidden without breaking a bookmarked link.
  */
-export async function listNav(placement: string): Promise<NavItem[]> {
+/**
+ * Nav entries, for either the header or a footer column.
+ *
+ * placement is the header's column and footer_slot is the footer's, and
+ * they are separate because one value cannot mean both: filling the footer
+ * columns by moving pages out of placement is what emptied the header of
+ * OEM/ODM, Quality, Factory, Small Batch, Contact and Certification.
+ *
+ * The href logic is identical for both — a footer entry points at a page
+ * the same way a nav entry does — so this stays one function with the
+ * column named rather than two that drift apart.
+ */
+export async function listNav(
+  placement: string,
+  { column = 'placement' }: { column?: 'placement' | 'footer_slot' } = {}
+): Promise<NavItem[]> {
+  /* Not interpolated from user input: the two callers pass literals, and a
+     column name cannot be a bind parameter in SQLite. The whitelist below
+     is what makes that safe. */
+  const col = column === 'footer_slot' ? 'footer_slot' : 'placement';
+
   const rows = await cached<any[]>(
     `SELECT id, title, nav_label, external_key, placement, nav_order, target
        FROM pages
-      WHERE show_in_nav = 1 AND placement = ?
+      WHERE show_in_nav = 1 AND ${col} = ?
       ORDER BY nav_order, id`,
     placement
   );

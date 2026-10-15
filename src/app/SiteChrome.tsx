@@ -132,11 +132,21 @@ export async function Footer() {
     cats = await listCategories();
   } catch {}
 
-  /* Each footer column comes from the pages table. If one fails the column
-     renders empty rather than taking the whole footer down. */
+  /* Footer columns come from pages.footer_slot, not pages.placement.
+
+     placement holds top_nav, so a page set to a footer column left the
+     header — which is how OEM/ODM, Small Batch, Factory, Quality, Contact
+     and Certification came to be missing from the nav. One column cannot
+     mean both places. The two are now separate fields and a page can be in
+     both, which is what a site map actually looks like: the header is how
+     you move around, the footer is the index at the end. */
   cols = await Promise.all(
     FOOTER_COLUMNS.map(async (c) => {
-      try { return await listNav(c.area); } catch { return []; }
+      try {
+        return await listNav(c.area, { column: 'footer_slot' });
+      } catch {
+        return [];
+      }
     })
   );
 
