@@ -78,7 +78,24 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="hero-img">
-              <img src="/hero-clocks.jpg" alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs" width={1400} height={788} />
+              {/* fetchpriority="high" because this is the largest
+                  contentful paint element: the browser was otherwise free to
+                  treat it as one more image in the queue and start it after
+                  the stylesheet, the runtime and the fold. decoding="async"
+                  moves the JPEG decode off the main thread, which is the
+                  difference between the text appearing immediately and
+                  waiting 30ms behind an image nobody has looked at yet.
+
+                  No loading="lazy" here — it is the one image on the page
+                  that is above the fold, and lazy would defer it. */}
+              <img
+                src="/hero-clocks.jpg"
+                alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs"
+                width={1400}
+                height={788}
+                fetchPriority="high"
+                decoding="async"
+              />
             </div>
           </div>
         </section>
@@ -139,6 +156,7 @@ export default async function HomePage() {
                         src={c.imageUrl}
                         alt={c.name}
                         loading="lazy"
+                        decoding="async"
                         width={600}
                         height={600}
                       />
@@ -188,7 +206,19 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="hero-img">
-              <img src="/workshop-floor.jpg" alt="Our assembly floor: staff fitting dials and movements before packing" width={1400} height={933} />
+              {/* 211 KB, well below the fold on every viewport measured.
+                  Left eager it competed with the hero for bandwidth on a
+                  phone; lazy lets the hero finish first. No fetchpriority —
+                  that would put it back in the queue it was just removed
+                  from. */}
+              <img
+                src="/workshop-floor.jpg"
+                alt="Our assembly floor: staff fitting dials and movements before packing"
+                width={1400}
+                height={933}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
         </section>
