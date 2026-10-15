@@ -11,8 +11,19 @@ import { htmlToMd } from '@/lib/markdown';
    API converts on save. */
 const BLANK = {
   id: '', slug: '', title: '', heading: '', intro: '',
-  body: '', seoTitle: '', seoDescription: '', status: 'published'
+  body: '', seoTitle: '', seoDescription: '', status: 'published',
+  target: ''
 };
+
+/* The three footer columns, named as the footer shows them. Products is
+   not here: it is built from the category list, so putting a page in it
+   would add a fourth kind of thing to a column that is already full. */
+const FOOTER_SLOTS = [
+  { value: '', label: '不显示在页脚' },
+  { value: 'footer_2', label: 'SERVICES（服务）' },
+  { value: 'footer_3', label: 'COMPANY（公司）' },
+  { value: 'footer_4', label: 'RESOURCES（资源）' }
+];
 
 const STATUS = {
   published: { label: '已发布', cls: 'pl-g' },
@@ -106,6 +117,22 @@ export default function PagesAdmin() {
               <input className="inp" value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} placeholder="Certification" />
               <span className="hint">用于页脚和面包屑，例如「工厂」</span>
             </div>
+            <div className="fg">
+              <label className="fl">页脚栏位</label>
+              <select
+                className="inp"
+                value={edit.target || ''}
+                onChange={(e) => setEdit({ ...edit, target: e.target.value })}
+              >
+                {FOOTER_SLOTS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <span className="hint">页脚只有三栏可填。留空则此页不出现在页脚。</span>
+            </div>
+          </div>
+
+          <div className="fg2">
             <div className="fg">
               <label className="fl">URL 别名</label>
               <input className="inp" value={edit.slug} onChange={(e) => setEdit({ ...edit, slug: e.target.value })} placeholder="留空则同 ID" />

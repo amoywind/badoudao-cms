@@ -179,8 +179,7 @@ export default async function HomePage() {
                 ))}
               </div>
               <div className="certs">
-                <span className="cert">CE (movement)</span>
-                <span className="cert">RoHS (movement)</span>
+                <span className="cert">CE &amp; RoHS movements</span>
                 <span className="cert">QC: IQC / IPQC / FQC / OQC</span>
               </div>
               <p style={{ fontSize: 13, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.6 }}>

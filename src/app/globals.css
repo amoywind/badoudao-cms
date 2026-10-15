@@ -169,6 +169,16 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 
 .site-footer { background: var(--ink); color: #9aa1ac; font-size: 14px; padding: 66px 0 0; }
 .f-grid { display: grid; grid-template-columns: 1.6fr repeat(4,1fr); gap: 44px; padding-bottom: 52px; }
+
+/* Four link columns, minus any left empty. A fixed repeat(4) with a
+   missing column leaves a gap at the right edge; :has() counts the
+   children actually rendered. Falls back to the fixed four where :has()
+   is unsupported, which is the current layout anyway. */
+@supports selector(:has(*)) {
+  .f-grid:has(> :nth-child(4)) { grid-template-columns: 1.6fr repeat(3,1fr); }
+  .f-grid:not(:has(> :nth-child(5))) { grid-template-columns: 1.6fr repeat(2,1fr); }
+  .f-grid:not(:has(> :nth-child(4))) { grid-template-columns: 1.6fr 1fr; }
+}
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
 .f-brand p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
 .f-h { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 17px; }

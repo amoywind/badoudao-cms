@@ -30,6 +30,14 @@ export async function GET(request) {
   return NextResponse.json({ pages });
 }
 
+/* Whitelist the column names the footer actually renders. Anything else
+   written here would sit in the database and never appear, which is the
+   state the field was in before. */
+function normTarget(v) {
+  const t = String(v ?? '').trim();
+  return ['footer_2', 'footer_3', 'footer_4'].includes(t) ? t : '';
+}
+
 export async function POST(request) {
   const user = await currentUser(request);
   if (!user || !can(user.role, 'content', 'write')) {
@@ -45,8 +53,8 @@ export async function POST(request) {
   if (dup) return NextResponse.json({ error: 'This page already exists' }, { status: 409 });
 
   await run(
-    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order)
-     VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order, target)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
     String(body.id).slice(0, 60),
     String(body.slug || body.id).slice(0, 80),
     String(body.title).slice(0, 200),
@@ -56,7 +64,8 @@ export async function POST(request) {
     String(body.seoTitle || '').slice(0, 200),
     String(body.seoDescription || '').slice(0, 300),
     body.status || 'published',
-    Number(body.sortOrder) || 0
+    Number(body.sortOrder) || 0,
+    normTarget(body.target)
   );
 
   await log(user.id, 'create', 'pages', body.id, body.title);
@@ -76,9 +85,13 @@ export async function PUT(request) {
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   await run(
+    /* target places the page in a footer column. It was in the schema and
+       written by a migration, but never read or written by this route — the
+       field existed and nothing could change it, which is how the Company
+       and Resources columns ended up permanently empty. */
     `UPDATE pages SET
        title = ?, heading = ?, intro = ?, body = ?,
-       seo_title = ?, seo_description = ?, status = ?, sort_order = ?,
+       seo_title = ?, seo_description = ?, status = ?, sort_order = ?, target = ?,
        updated_at = datetime('now')
      WHERE id = ?`,
     String(body.title ?? existing.title).slice(0, 200),
@@ -89,6 +102,9 @@ export async function PUT(request) {
     String(body.seoDescription ?? existing.seo_description).slice(0, 300),
     body.status ?? existing.status,
     Number(body.sortOrder ?? existing.sort_order) || 0,
+    /* null means "not sent" — keep what is there. An empty string is a
+       deliberate unassignment, so the page leaves the column. */
+    body.target === undefined ? (existing.target || '') : normTarget(body.target),
     body.id
   );
 

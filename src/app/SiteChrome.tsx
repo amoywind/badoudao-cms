@@ -147,9 +147,14 @@ export async function Footer() {
           <div className="f-brand">
             <div className="logo">BADOU<span>DAO</span></div>
             <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 500} pieces.</p>
+            {/* The certification belongs to the movement, not to the clock —
+                that distinction is the whole compliance note, and printing
+                "(movement)" on a badge was a note to myself that shipped.
+                The clockmaker's licence question comes up on the
+                certification page; a footer badge has room for the claim
+                and not for the caveat. */}
             <div className="certs" style={{ marginTop: 20 }}>
-              <span className="cert">CE (movement)</span>
-              <span className="cert">RoHS (movement)</span>
+              <span className="cert">CE &amp; RoHS movements</span>
             </div>
           </div>
           <div>
@@ -160,16 +165,25 @@ export async function Footer() {
               ))}
             </div>
           </div>
-          {FOOTER_COLUMNS.map((c, i) => (
-            <div key={c.area}>
-              <div className="f-h">{c.heading}</div>
-              <div className="f-list">
-                {cols[i].map((n) => (
-                  <Link key={n.id} href={n.href}>{n.label}</Link>
-                ))}
+          {/* A column with nothing in it is not rendered at all.
+
+              Rendering the heading alone leaves a heading over blank space,
+              which reads as a page that failed to finish loading — and it
+              pushes the columns that do have links into a narrower grid, so
+              one unassigned page degrades the whole footer. The grid is
+              fixed at four, so the remaining columns widen to fill. */}
+          {FOOTER_COLUMNS.map((c, i) =>
+            cols[i].length === 0 ? null : (
+              <div key={c.area}>
+                <div className="f-h">{c.heading}</div>
+                <div className="f-list">
+                  {cols[i].map((n) => (
+                    <Link key={n.id} href={n.href}>{n.label}</Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
         <div className="f-bot">
           <span>© {new Date().getFullYear()} {s.siteName}. All rights reserved.</span>
