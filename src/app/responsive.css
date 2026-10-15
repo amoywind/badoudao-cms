@@ -306,6 +306,24 @@
   .topbar .wrap { flex-direction: column; gap: 2px; text-align: center; padding: 8px var(--pad); }
   .topbar .hide-sm { display: none; }
 
+  /* Each span is a flex item, and a flex item's min-width is auto by
+     default — it refuses to be narrower than its longest word. The first
+     one is "Badoudao · Quartz clock manufacturer · OEM / ODM small-batch
+     production", which at 12px is wider than a 390px phone, so it pushed
+     the bar past the viewport and every element below it inherited the
+     widened page.
+
+     min-width: 0 lets the item shrink to the column; overflow-wrap then
+     breaks the text at a space rather than at the viewport edge. This was
+     the origin of the horizontal scroll on every page — the topbar, the
+     hero paragraph and the form below were all the same overflow seen at
+     three heights. */
+  .topbar .wrap > * {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
   .breadcrumb { font-size: 12.5px; }
   .sec-sub { font-size: 14px; }
   .card .c-body { padding: 18px; }
