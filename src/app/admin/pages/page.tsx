@@ -12,7 +12,7 @@ import { htmlToMd } from '@/lib/markdown';
 const BLANK = {
   id: '', slug: '', title: '', heading: '', intro: '',
   body: '', seoTitle: '', seoDescription: '', status: 'published',
-  target: ''
+  placement: ''
 };
 
 /* The three footer columns, named as the footer shows them. Products is
@@ -121,14 +121,31 @@ export default function PagesAdmin() {
               <label className="fl">页脚栏位</label>
               <select
                 className="inp"
-                value={edit.target || ''}
-                onChange={(e) => setEdit({ ...edit, target: e.target.value })}
+                value={edit.placement || ''}
+                onChange={(e) => setEdit({ ...edit, placement: e.target.value })}
               >
                 {FOOTER_SLOTS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
               <span className="hint">页脚只有三栏可填。留空则此页不出现在页脚。</span>
+            </div>
+            <div className="fg">
+              <label className="fl">在导航中出现</label>
+              <label className="switch-row">
+                <input
+                  type="checkbox"
+                  checked={edit.show_in_nav === 1 || edit.show_in_nav === true}
+                  onChange={(e) => setEdit({ ...edit, show_in_nav: e.target.checked ? 1 : 0 })}
+                />
+                <span>
+                  显示这一页
+                  <em>
+                    页脚的每一栏也由这个开关控制。关掉时栏位里看不到它 ——
+                    上一版把栏位选好了却依然不显示，就是这个原因。
+                  </em>
+                </span>
+              </label>
             </div>
           </div>
 

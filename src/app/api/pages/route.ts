@@ -31,9 +31,9 @@ export async function GET(request) {
 }
 
 /* Whitelist the column names the footer actually renders. Anything else
-   written here would sit in the database and never appear, which is the
-   state the field was in before. */
-function normTarget(v) {
+   would sit in the database and never appear, which is the state this field
+   was in before. */
+function normPlacement(v) {
   const t = String(v ?? '').trim();
   return ['footer_2', 'footer_3', 'footer_4'].includes(t) ? t : '';
 }
@@ -53,8 +53,8 @@ export async function POST(request) {
   if (dup) return NextResponse.json({ error: 'This page already exists' }, { status: 409 });
 
   await run(
-    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order, target)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+    `INSERT INTO pages (id, slug, title, heading, intro, body, seo_title, seo_description, status, sort_order, placement, show_in_nav)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
     String(body.id).slice(0, 60),
     String(body.slug || body.id).slice(0, 80),
     String(body.title).slice(0, 200),
@@ -65,7 +65,8 @@ export async function POST(request) {
     String(body.seoDescription || '').slice(0, 300),
     body.status || 'published',
     Number(body.sortOrder) || 0,
-    normTarget(body.target)
+    normPlacement(body.placement),
+    body.show_in_nav ? 1 : 0
   );
 
   await log(user.id, 'create', 'pages', body.id, body.title);
@@ -85,13 +86,14 @@ export async function PUT(request) {
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   await run(
-    /* target places the page in a footer column. It was in the schema and
-       written by a migration, but never read or written by this route — the
-       field existed and nothing could change it, which is how the Company
-       and Resources columns ended up permanently empty. */
+    /* placement is the footer column. target is a different thing — it
+       holds a sibling row's id, which listNav resolves for a nav entry that
+       mirrors another page. Writing the column name into target is what
+       this first did, and it produced links to pages that do not exist
+       while the columns stayed blank. */
     `UPDATE pages SET
        title = ?, heading = ?, intro = ?, body = ?,
-       seo_title = ?, seo_description = ?, status = ?, sort_order = ?, target = ?,
+       seo_title = ?, seo_description = ?, status = ?, sort_order = ?, placement = ?, show_in_nav = ?,
        updated_at = datetime('now')
      WHERE id = ?`,
     String(body.title ?? existing.title).slice(0, 200),
@@ -102,9 +104,17 @@ export async function PUT(request) {
     String(body.seoDescription ?? existing.seo_description).slice(0, 300),
     body.status ?? existing.status,
     Number(body.sortOrder ?? existing.sort_order) || 0,
-    /* null means "not sent" — keep what is there. An empty string is a
-       deliberate unassignment, so the page leaves the column. */
-    body.target === undefined ? (existing.target || '') : normTarget(body.target),
+    /* undefined means "not sent" — keep what is there. An empty string is
+       a deliberate unassignment, so the page leaves the column. */
+    body.placement === undefined
+      ? (existing.placement || '')
+      : normPlacement(body.placement),
+    /* Every footer column goes through this filter, so a page assigned to a
+       column but left switched off never appears — which is exactly how the
+       columns looked empty even with the assignments in place. */
+    body.show_in_nav === undefined
+      ? (existing.show_in_nav ?? 0)
+      : (body.show_in_nav ? 1 : 0),
     body.id
   );
 
