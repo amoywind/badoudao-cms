@@ -171,13 +171,18 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .f-grid { display: grid; grid-template-columns: 1.6fr repeat(4,1fr); gap: 44px; padding-bottom: 52px; }
 
 /* Four link columns, minus any left empty. A fixed repeat(4) with a
-   missing column leaves a gap at the right edge; :has() counts the
-   children actually rendered. Falls back to the fixed four where :has()
-   is unsupported, which is the current layout anyway. */
+   missing column leaves a gap at the right edge; these count the children
+   actually rendered. The brand block is always child 1, so the column
+   count is children - 1: five children means four columns.
+
+   The first version tested :has(> :nth-child(4)), which is true for the
+   full four-column footer and so set it to three — which pushed Resources
+   onto a second row while the other three stayed on the first. Count from
+   the end instead, where the count is unambiguous. */
 @supports selector(:has(*)) {
-  .f-grid:has(> :nth-child(4)) { grid-template-columns: 1.6fr repeat(3,1fr); }
-  .f-grid:not(:has(> :nth-child(5))) { grid-template-columns: 1.6fr repeat(2,1fr); }
-  .f-grid:not(:has(> :nth-child(4))) { grid-template-columns: 1.6fr 1fr; }
+  .f-grid:has(> :nth-child(5))                 { grid-template-columns: 1.6fr repeat(4, 1fr); }
+  .f-grid:not(:has(> :nth-child(5))):has(> :nth-child(4)) { grid-template-columns: 1.6fr repeat(3, 1fr); }
+  .f-grid:not(:has(> :nth-child(4)))           { grid-template-columns: 1.6fr repeat(2, 1fr); }
 }
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
 .f-brand p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
