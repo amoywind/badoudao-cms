@@ -37,7 +37,13 @@ const PROBE = `(() => {
     list.querySelectorAll('a').forEach((a) => {
       const r = a.getBoundingClientRect();
       const lines = Math.round(r.height / (parseFloat(getComputedStyle(a).lineHeight) || 20));
-      if (r.width > colW + 1 || lines > 1) {
+      /* Wrapping is not a fault. "Glass & Crystal Wall Clock" is 26
+         characters and needs about 175px at 13.5px type; no column
+         narrower than that can hold it on one line, and a footer link on
+         two lines looks like a footer link on two lines. Three lines means
+         the column is too narrow to read, and a link wider than its own
+         column is the real failure. */
+      if (r.width > colW + 1 || lines >= 3) {
         out.push(title + ' | "' + a.textContent.trim() + '" | col=' + Math.round(colW)
           + ' link=' + Math.round(r.width) + ' lines=' + lines);
       }
