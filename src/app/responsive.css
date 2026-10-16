@@ -171,8 +171,10 @@
   .split > *,
   .quality-layout > *,
   .grid-3 > *, .grid-2 > *, .related-grid > *, .f-grid > *, .fg2 > *,
-  .cap-list > *, .proc > *, .trust-grid > *, .faq-grid > * {
+  .cap-list > *, .proc > *, .trust-grid > *, .faq-grid > *,
+  .shop-layout > *, .page-layout > * {
     min-width: 0;
+    max-width: 100%;
   }
 
   /* Long separator-separated lines wrap on the separator rather than
