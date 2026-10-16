@@ -23,7 +23,11 @@ export default function CategoriesPage() {
 
   useEffect(() => { load(); }, []);
 
-  const descLen = (editing.description || '').length;
+  /* Optional chaining, because editing starts as null and this runs on the
+     first render, before any row has been clicked. Reading
+     editing.description directly threw "Cannot read properties of null"
+     and took the whole admin page down before the list even appeared. */
+  const descLen = (editing?.description || '').length;
 
   async function save() {
     const res = await fetch('/api/categories', {

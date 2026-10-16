@@ -54,6 +54,17 @@ const PROBE = `(() => {
     }
     if (!deepest) return;
 
+    /* Skip anything inside a deliberate horizontal scroller. The category
+       filter on a phone is a row of pills you swipe sideways — the items
+       are meant to be wider than the screen, and the ul that holds them
+       carries overflow-x: auto. The same applies to a table with its own
+       scroller. Content that overflows where nothing asked it to is the
+       fault; content that overflows inside a scroller is the design. */
+    for (let a = el; a && a !== document.body; a = a.parentElement) {
+      const ox = getComputedStyle(a).overflowX;
+      if (ox === 'auto' || ox === 'scroll') return;
+    }
+
     const cls = (typeof el.className === 'string' ? el.className : '')
       .trim().split(/\\s+/).slice(0, 2).join('.');
     const chain = [];
