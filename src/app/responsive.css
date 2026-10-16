@@ -202,6 +202,43 @@
   }
   .news-item { grid-template-columns: 1fr; gap: 16px; }
 
+  /* The single-column rule above does not reach the footer.
+
+     globals.css sets the column count with .f-grid:has(> :nth-child(5)),
+     which is a two-class selector and outranks the plain .f-grid here — a
+     later stylesheet does not win against a heavier one. So at 390px the
+     footer still laid out five columns with a 44px gap: 176px of the 358
+     available went on gaps, and "Plastic Wall Clocks" got 33px, five lines
+     tall, in a column meant to hold one.
+
+     Same trick as the desktop rule: count the children, at the weight the
+     :has() rules carry. Two columns rather than one, because at 390px a
+     link column is 171px — enough for "Glass & Crystal Wall Clock" on two
+     lines, which reads better than a single tall list down the page. */
+  .f-grid {
+    gap: 26px 22px;
+  }
+  .f-grid:has(> :nth-child(5)),
+  .f-grid:not(:has(> :nth-child(5))) {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* The brand block reads as a header rather than a column, so it gets the
+     full width and the links follow beneath it. */
+  .f-grid > *:first-child {
+    grid-column: 1 / -1;
+  }
+  .f-brand p { max-width: none; }
+
+  /* A category name the owner adds later could still be longer than the
+     column. Breaking inside the name beats a link that runs off the edge,
+     and hyphens are the right break point for a compound like
+     "Glass & Crystal". */
+  .f-list a {
+    min-width: 0;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
   /* .pd, .split and the quality layout are already single column at 860px.
      Repeating it here is deliberate: the 1024px range sets .pd back to two
      columns, and a gap at exactly this boundary is the bug that put a

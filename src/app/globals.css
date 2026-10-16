@@ -1007,5 +1007,23 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .cat-desc-body {
   display: block;
   color: var(--ink2);
-  max-width: 72ch;
+
+  /* Fill the measure instead of hugging it.
+
+     These descriptions run 560–600 characters. Held to a 72ch reading
+     measure — correct for prose, and right for the eye on a column of
+     text — the block stopped 612px into a 1152px page and left the right
+     half of the header empty on every category. Two CSS columns let the
+     text occupy the full width at roughly 40 characters per line, which is
+     inside the readable range, and the browser balances them rather than
+     splitting the text by hand.
+
+     One column below 900px, where two columns would be 18 characters wide. */
+  column-count: 2;
+  column-gap: 56px;
+  max-width: none;
+}
+
+@media (max-width: 900px) {
+  .cat-desc-body { column-count: 1; }
 }
