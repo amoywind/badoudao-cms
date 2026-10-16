@@ -576,3 +576,8 @@ select.inp { cursor: pointer; }
   display: block; font-style: normal; font-size: 11.5px;
   color: var(--ink3); margin-top: 3px;
 }
+
+/* Character counter under the category description. Turns red past the
+   limit, because the previous 600-character cut was invisible until the
+   saved text ended mid-word on the live page. */
+.hint.over { color: #b4232a; font-weight: 500; }

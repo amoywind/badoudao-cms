@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
+import { DESC_MAX } from '@/lib/category-limits';
 
 const BLANK = {
   id: '', name: '', short: '', description: '',
@@ -22,6 +23,8 @@ export default function CategoriesPage() {
 
   useEffect(() => { load(); }, []);
 
+  const descLen = (editing.description || '').length;
+
   async function save() {
     const res = await fetch('/api/categories', {
       method: editing.id ? 'PUT' : 'POST',
@@ -30,7 +33,14 @@ export default function CategoriesPage() {
     });
     const d = await res.json();
     if (!res.ok) { show(d.error || '保存失败', 'err'); return; }
-    show('已保存');
+    /* The API reports what it could not store. Saying 已保存 and nothing
+       else is what let three descriptions end mid-word without anyone
+       noticing until the page was live. */
+    if (d.dropped > 0) {
+      show(`已保存，但有 ${d.dropped} 个字符超出 ${d.limit} 未保存，请缩短后重新保存`, 'err');
+    } else {
+      show('已保存');
+    }
     setEditing(null);
     load();
   }
@@ -144,10 +154,20 @@ export default function CategoriesPage() {
               </div>
 
               <div className="fg">
-                <label className="fl">说明<span className="hint">出现在前台分类页</span></label>
+                <label className="fl">说明
+                  <span className="hint">出现在前台分类页</span>
+                </label>
                 <textarea className="inp" value={editing.description}
                   placeholder="Round, square and vintage styles in plastic, metal and MDF…"
                   onChange={(e) => setEditing({ ...editing, description: e.target.value })} />
+                {/* Counter, not a silent cut. The count goes red past the
+                    limit so the shortfall is visible while typing rather
+                    than after saving. */}
+                <div className={'hint' + (descLen > DESC_MAX ? ' over' : '')}>
+                  {descLen > DESC_MAX
+                    ? `超出 ${descLen - DESC_MAX} 字符，超出部分不会保存`
+                    : `${descLen} / ${DESC_MAX} 字符`}
+                </div>
               </div>
 
               <div className="fg2">
