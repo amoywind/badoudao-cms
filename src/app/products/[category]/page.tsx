@@ -79,42 +79,28 @@ export default async function CategoryPage({ params }) {
             <div className="sec-tag">{cat?.short} · Wholesale &amp; OEM</div>
             <h1>{title}</h1>
             <p className="sec-sub">
-              {/* The description the owner wrote in the admin, shown as
-                  written. It was already going out as the meta description
-                  and into the schema, so the page and the search result
-                  were saying different things about the same category.
+              {/* The description the owner wrote, as one block of body text.
 
-                  The first line is treated as a subheading — every category
-                  has one — and the rest as the body, because the admin
-                  field is a title and a paragraph in one and collapsing it
-                  into a single run of text loses that.
+                  It was already going out as the meta description and into
+                  the schema, so the page and the search result were saying
+                  different things about the same category.
 
-                  The fallback is only for a category whose description was
-                  never filled in; the wording is the one that was here
-                  before, unchanged. */}
-              {(() => {
-                const raw = (cat?.description || '').trim();
-                if (!raw) {
-                  return (
-                    <>
-                      Looking for a {(cat?.short || category).toLowerCase()} supplier? Badoudao manufactures in-house
-                      with MOQ from {s.moq || 500} pieces, custom dial artwork and retail-ready packaging.
-                      Ex Works pricing shown — freight and duties quoted separately.
-                    </>
-                  );
-                }
-                const [first, ...rest] = raw.split('\n');
-                return (
-                  <>
-                    <strong className="cat-desc-lead">{first}</strong>
-                    {rest.length > 0 && (
-                      <span className="cat-desc-body">
-                        {rest.join(' ').trim()}
-                      </span>
-                    )}
-                  </>
-                );
-              })()}
+                  No splitting on the first line. An earlier version treated
+                  line one as a subheading and bolded it — so an owner who
+                  wrote a single paragraph with no line break in it got the
+                  whole paragraph rendered in bold, as a heading, with no
+                  way to see that from the admin. Whatever shape the text
+                  arrives in, it is displayed as the body copy it is.
+
+                  The fallback covers a category whose description was never
+                  filled in; that wording is unchanged from before. */}
+              {(cat?.description || '').trim() || (
+                <>
+                  Looking for a {(cat?.short || category).toLowerCase()} supplier? Badoudao manufactures in-house
+                  with MOQ from {s.moq || 500} pieces, custom dial artwork and retail-ready packaging.
+                  Ex Works pricing shown — freight and duties quoted separately.
+                </>
+              )}
             </p>
           </div>
         </div>
