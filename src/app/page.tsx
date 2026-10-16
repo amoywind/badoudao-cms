@@ -174,7 +174,14 @@ export default async function HomePage() {
                   </div>
                   <div className="c-body">
                     <h3>{c.name}</h3>
-                    <p>{c.description}</p>
+                    {/* No description here. It is the category's own page
+                        copy — a headline and three paragraphs written for
+                        someone already decided on that category — and on a
+                        card it became nine dense lines competing with the
+                        picture, ending mid-sentence because the equal-height
+                        row ran out of space. The card answers "what is it,
+                        how many, what does it cost"; the link answers
+                        everything else. */}
                     <div className="c-meta">
                       <span><b>{c.designs}</b> designs</span>
                       <span className="exw">EXW {c.price_range}</span>
