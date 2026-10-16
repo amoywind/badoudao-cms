@@ -204,15 +204,15 @@ export function seoTagsFor(
      rows are already written per product, and duplicating them into a tag
      list is a second place for them to disagree. */
   const MATERIAL_LINKS: Record<string, SeoTag> = {
-    mdf: { label: 'MDF Wood', href: '/products/wood-clocks' },
-    'solid wood': { label: 'Solid Wood', href: '/products/wood-clocks' },
-    oak: { label: 'Solid Oak', href: '/products/wood-clocks' },
-    metal: { label: 'Metal', href: '/products/metal-clocks' },
-    brass: { label: 'Brass Finish', href: '/products/metal-clocks' },
-    plastic: { label: 'Plastic', href: '/products/wall-clocks' },
-    acrylic: { label: 'Acrylic', href: '/products/wall-clocks' },
-    glass: { label: 'Glass', href: '/products/wall-clocks' },
-    resin: { label: 'Resin', href: '/products/metal-clocks' }
+    mdf: { label: 'MDF Wood', href: '/products/wood-wall-clocks' },
+    'solid wood': { label: 'Solid Wood', href: '/products/wood-wall-clocks' },
+    oak: { label: 'Solid Oak', href: '/products/wood-wall-clocks' },
+    metal: { label: 'Metal', href: '/products/metal-wall-clocks' },
+    brass: { label: 'Brass Finish', href: '/products/metal-wall-clocks' },
+    plastic: { label: 'Plastic', href: '/products/plastic-wall-clocks' },
+    acrylic: { label: 'Acrylic', href: '/products/acrylic-wall-clocks' },
+    glass: { label: 'Glass', href: '/products/glass-crystal-wall-clocks' },
+    resin: { label: 'Resin', href: '/products/resin-wall-clocks' }
   };
 
   for (const s of p.specs) {

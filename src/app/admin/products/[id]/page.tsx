@@ -22,7 +22,7 @@ export default function EditProductPage() {
   useEffect(() => {
     if (isNew) {
       setProduct({
-        id: '', slug: '', name: '', category: 'wall-clocks', summary: '',
+        id: '', slug: '', name: '', category: 'plastic-wall-clocks', summary: '',
         priceMin: 0, priceMax: 0, moq: 500, leadTime: '20-30 days',
         moveLevel: 'China quartz', difficulty: 'simple', content: '',
         featured: false, status: 'draft',
