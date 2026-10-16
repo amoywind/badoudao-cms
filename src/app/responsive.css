@@ -212,17 +212,20 @@
      tall, in a column meant to hold one.
 
      Same trick as the desktop rule: count the children, at the weight the
-     :has() rules carry. Two columns, because at 390px a link column is
-     171px — the longest category name wraps to two lines there, which is
-     what a link column is for. One column wastes the width; three would
-     leave 96px, too narrow to read a clock type in. Four links over two
-     rows of two lines each is 400px of footer instead of 900. */
+     :has() rules carry, so the count matches what is actually rendered —
+     four link columns plus the brand block, five children. */
   .f-grid {
     gap: 26px 22px;
   }
+  /* Two columns, because the brand block above spans the full width and
+     four link columns then have three or four tracks to share. At three
+     tracks the fourth wrapped and rendered 105px against its neighbours'
+     105px on a second row — an uneven column that read as a mistake. Two
+     tracks give two even rows of two columns each: 171px apiece, which
+     fits the longest category name on two lines. */
   .f-grid:has(> :nth-child(5)),
   .f-grid:not(:has(> :nth-child(5))) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
   }
   /* The brand block reads as a header rather than a column, so it gets the
      full width and the links follow beneath it. */

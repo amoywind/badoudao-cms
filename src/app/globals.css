@@ -185,16 +185,29 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
   .f-grid:not(:has(> :nth-child(4)))           { grid-template-columns: 1.6fr repeat(2, 1fr); }
 }
 
-/* Four equal link columns need enough width for the longest category
-   name — "Glass & Crystal Wall Clock", 26 characters. At 1024px four
-   columns give 142px and that name wraps; three give 205px and it fits.
-   This sits after the @supports block on purpose: the rules above are
-   the same weight, so source order decides, and placing it before them
-   would lose. Below 900px responsive.css takes over. */
+/* Five columns, not four, on a tablet.
+
+   Four link columns plus the brand block need five tracks. Declaring
+   four — brand, then three links — left Resources without a track: it
+   wrapped to a second row and picked up the 1.6fr, rendering at 291px
+   while the other three sat at 182px. The count has to match what is
+   actually rendered.
+
+   The gap comes down instead, which is what buys the link columns their
+   width: 182px fits "Glass & Crystal Wall Clock" on two lines where
+   142px at a 44px gap made three. Below 900px responsive.css takes over. */
 @media (max-width: 1100px) and (min-width: 901px) {
-  .f-grid:has(> :nth-child(5)),
-  .f-grid:not(:has(> :nth-child(5))) {
+  .f-grid:has(> :nth-child(5)) {
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap: 28px;
+  }
+  .f-grid:not(:has(> :nth-child(5))):has(> :nth-child(4)) {
     grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 28px;
+  }
+  .f-grid:not(:has(> :nth-child(4))) {
+    grid-template-columns: 1.6fr repeat(2, 1fr);
+    gap: 28px;
   }
 }
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
