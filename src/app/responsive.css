@@ -85,7 +85,7 @@
      becomes one, but at 860 the cards are still ~380px wide, which is
      what makes them readable and tappable. */
   .grid-3, .related-grid, .faq-grid, .f-grid, .fg2 { grid-template-columns: 1fr 1fr; }
-  .trust-grid { grid-template-columns: repeat(3, 1fr); }
+  .trust-grid { grid-template-columns: 1fr 1fr; }
   .trust-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 16px; }
   .proc { grid-template-columns: 1fr 1fr; }
 
@@ -212,15 +212,17 @@
      tall, in a column meant to hold one.
 
      Same trick as the desktop rule: count the children, at the weight the
-     :has() rules carry. Two columns rather than one, because at 390px a
-     link column is 171px — enough for "Glass & Crystal Wall Clock" on two
-     lines, which reads better than a single tall list down the page. */
+     :has() rules carry. Two columns, because at 390px a link column is
+     171px — the longest category name wraps to two lines there, which is
+     what a link column is for. One column wastes the width; three would
+     leave 96px, too narrow to read a clock type in. Four links over two
+     rows of two lines each is 400px of footer instead of 900. */
   .f-grid {
     gap: 26px 22px;
   }
   .f-grid:has(> :nth-child(5)),
   .f-grid:not(:has(> :nth-child(5))) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
   /* The brand block reads as a header rather than a column, so it gets the
      full width and the links follow beneath it. */
