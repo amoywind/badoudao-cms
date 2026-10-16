@@ -61,6 +61,48 @@ export default function InquiriesPage() {
     load();
   }
 
+  async function remove(inq) {
+    /* Two tiers. A test enquiry — nobody assigned, still at "new", no quote
+       against it — is one click. Anything that looks like real business gets
+       a typed confirmation as well, because an enquiry carries the buyer's
+       email, their WhatsApp number, their requirements and any file they
+       uploaded, and none of it can be recovered once the row is gone.
+
+       The prompt names the customer rather than saying "this enquiry", so the
+       wrong row cannot be deleted by reflex. */
+    const looksReal = Boolean(inq.owner)
+      || inq.status !== 'new'
+      || (inq.quote_count || 0) > 0;
+
+    const who = [inq.name, inq.company].filter(Boolean).join(' / ') || inq.email;
+    const when = (inq.created_at || '').slice(0, 10);
+
+    let message = `删除询盘：${who}\n邮箱 ${inq.email}\n时间 ${when}\n\n`
+      + '买家上传的文件会一并删除，无法恢复。';
+
+    if (looksReal) {
+      message += `\n这条询盘已有跟进记录（状态 ${inq.status}`
+        + (inq.owner ? `，负责人 ${inq.owner}` : '')
+        + (inq.quote_count ? `，${inq.quote_count} 条报价` : '')
+        + '）。\n确认删除请输入 DELETE：';
+    }
+
+    if (!confirm(message)) return;
+
+    if (looksReal) {
+      const typed = prompt('请输入 DELETE 以确认：');
+      if (typed !== 'DELETE') return;
+    }
+
+    const res = await fetch(`/api/inquiries?id=${encodeURIComponent(inq.id)}`, {
+      method: 'DELETE'
+    });
+    const d = await res.json();
+    if (!res.ok) { show(d.error || '删除失败', 'err'); return; }
+    show('已删除');
+    load();
+  }
+
   if (!data) return <div className="empty"><span className="spin" /></div>;
   const s = data.stats;
 
@@ -164,6 +206,8 @@ export default function InquiriesPage() {
                         <div style={{ display: 'flex', gap: 5 }}>
                           <Link href={`/admin/inquiries/${i.id}`} className="btn btn-sm">打开</Link>
                           {!i.owner && <button className="btn btn-sm" onClick={() => claim(i)}>认领</button>}
+                          <button className="btn btn-sm btn-danger-ghost" onClick={() => remove(i)}
+                            title="删除这条询盘及买家上传的文件">删除</button>
                         </div>
                       </td>
                     </tr>

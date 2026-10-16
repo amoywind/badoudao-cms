@@ -581,3 +581,18 @@ select.inp { cursor: pointer; }
    limit, because the previous 600-character cut was invisible until the
    saved text ended mid-word on the live page. */
 .hint.over { color: #b4232a; font-weight: 500; }
+
+/* Delete button on an enquiry row.
+
+   The one destructive control on a screen that is otherwise full of
+   harmless ones, so it is red but outlined — present when wanted, not
+   shouting when the row is merely being read. */
+.app .btn-danger-ghost {
+  color: #b4232a;
+  border-color: #f0c4c6;
+  background: #fff;
+}
+.app .btn-danger-ghost:hover {
+  background: #fef3f3;
+  border-color: #e39a9e;
+}

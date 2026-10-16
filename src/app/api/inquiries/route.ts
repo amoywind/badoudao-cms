@@ -124,8 +124,20 @@ export async function GET(request) {
   }
 
   const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  /* quote_count so the list can tell a test enquiry from a live lead: a row
+     with a quote against it is real business, and the delete button asks for
+     a typed confirmation before touching it.
+
+     A correlated subquery rather than a JOIN with an alias. The filter
+     clause above is shared with the stats query two lines down, which reads
+     the same table with no alias — so qualifying these columns as i.status
+     would break that one. Keeping the unqualified names lets both queries
+     share the clause unchanged. */
   const inquiries = await all(
-    `SELECT * FROM inquiries ${clause} ORDER BY created_at DESC LIMIT 300`,
+    `SELECT *,
+            (SELECT COUNT(*) FROM quotes q WHERE q.inquiry_id = inquiries.id) AS quote_count
+       FROM inquiries ${clause}
+      ORDER BY created_at DESC LIMIT 300`,
     ...params
   );
 
