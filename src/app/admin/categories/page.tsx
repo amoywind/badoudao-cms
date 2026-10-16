@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
 import { DESC_MAX } from '@/lib/category-limits';
+import { SeoBox } from '../_seo';
 
 const BLANK = {
   id: '', name: '', short: '', description: '',
-  designs: '', priceRange: '', sortOrder: 0, status: 'published'
+  designs: '', priceRange: '', sortOrder: 0, status: 'published',
+  seoTitle: '', seoDescription: ''
 };
 
 export default function CategoriesPage() {
@@ -110,7 +112,8 @@ export default function CategoriesPage() {
                           id: c.id, name: c.name, short: c.short,
                           description: c.description || '', designs: c.designs || '',
                           priceRange: c.price_range || '', sortOrder: c.sort_order,
-                          status: c.status
+                          status: c.status,
+                          seoTitle: c.seo_title || '', seoDescription: c.seo_description || ''
                         })}>编辑</button>
                       <button className="btn btn-sm btn-d" onClick={() => remove(c)}>删</button>
                     </div>
@@ -202,6 +205,26 @@ export default function CategoriesPage() {
                   </select>
                 </div>
               </div>
+
+              {/* Search results for this category, and nothing else on this
+                  screen that changes them: the page title and the meta
+                  description were generated from the name and the
+                  description field, with no way to override either. A
+                  category whose id says alarm-clocks but whose name is
+                  Wood Wall Clock therefore went out under a title built
+                  from the wrong word. The SeoBox writes to the
+                  seo_title and seo_description columns, which buildMeta
+                  already prefers over the generated pair; left blank they
+                  fall back exactly as before. */}
+              <SeoBox
+                value={{ title: editing.seoTitle, description: editing.seoDescription }}
+                onChange={(v) => setEditing({
+                  ...editing, seoTitle: v.title, seoDescription: v.description
+                })}
+                fallbackTitle={`Wholesale ${editing.name || editing.short || 'Category'} — OEM Manufacturer | Badoudao`}
+                fallbackDescription={editing.description}
+                path={`/products/${editing.id || 'category'}/`}
+              />
             </div>
           </div>
         </div>

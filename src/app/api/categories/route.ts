@@ -43,8 +43,10 @@ export async function POST(request) {
   const desc = clipDescription(body.description);
 
   await run(
-    `INSERT INTO categories (id, name, short, description, designs, price_range, sort_order, status)
-     VALUES (?,?,?,?,?,?,?,?)`,
+    `INSERT INTO categories
+       (id, name, short, description, designs, price_range, sort_order, status,
+        seo_title, seo_description)
+     VALUES (?,?,?,?,?,?,?,?,?,?)`,
     id,
     String(body.name).slice(0, 120),
     String(body.short || body.name).slice(0, 60),
@@ -52,7 +54,12 @@ export async function POST(request) {
     String(body.designs || '').slice(0, 40),
     String(body.priceRange || '').slice(0, 60),
     Number(body.sortOrder) || 0,
-    body.status || 'published'
+    body.status || 'published',
+    /* Blank means "use the generated pair" — buildMeta falls back to the
+       name and the description, which is how every category behaved
+       before these columns had anywhere to be written from. */
+    String(body.seoTitle || '').slice(0, 160),
+    String(body.seoDescription || '').slice(0, 320)
   );
 
   await log(user.id, 'create', 'categories', id, body.name);
@@ -89,7 +96,8 @@ export async function PUT(request) {
   await run(
     `UPDATE categories SET
        name = ?, short = ?, description = ?, designs = ?,
-       price_range = ?, sort_order = ?, status = ?
+       price_range = ?, sort_order = ?, status = ?,
+       seo_title = ?, seo_description = ?
      WHERE id = ?`,
     String(body.name ?? existing.name).slice(0, 120),
     String(body.short ?? existing.short).slice(0, 60),
@@ -98,6 +106,11 @@ export async function PUT(request) {
     String(body.priceRange ?? existing.price_range).slice(0, 60),
     Number(body.sortOrder ?? existing.sort_order) || 0,
     body.status ?? existing.status,
+    /* ?? rather than ||: an empty string here is a deliberate "stop
+       overriding, use the generated title" and must overwrite whatever
+       was there. || would turn clearing the field into "no change". */
+    String(body.seoTitle ?? existing.seo_title ?? '').slice(0, 160),
+    String(body.seoDescription ?? existing.seo_description ?? '').slice(0, 320),
     body.id
   );
 
