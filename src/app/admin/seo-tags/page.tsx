@@ -25,7 +25,7 @@ export default function SeoTagsPage() {
   const [tags, setTags] = useState(null);
   const [editing, setEditing] = useState(null);
   const [busy, setBusy] = useState(false);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   async function load() {
     const res = await fetch('/api/seo-tags');
@@ -240,7 +240,7 @@ export default function SeoTagsPage() {
         </div>
       )}
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

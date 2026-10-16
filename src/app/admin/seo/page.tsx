@@ -19,7 +19,7 @@ import { Toast, useToast } from '../_ui';
 export default function SeoCenter() {
   const [s, setS] = useState(null);
   const [busy, setBusy] = useState(false);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   useEffect(() => {
     (async () => {
@@ -182,7 +182,7 @@ export default function SeoCenter() {
         </div>
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

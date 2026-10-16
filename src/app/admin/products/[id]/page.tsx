@@ -10,7 +10,7 @@ import { GroupGlyph } from '../../../products/_icons';
 export default function EditProductPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
   const isNew = id === 'new';
 
   const [product, setProduct] = useState(null);
@@ -421,7 +421,7 @@ export default function EditProductPage() {
         )}
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

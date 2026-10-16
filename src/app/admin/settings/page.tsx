@@ -5,7 +5,7 @@ import { Toast, useToast } from '../_ui';
 
 export default function SettingsPage() {
   const [s, setS] = useState(null);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   useEffect(() => {
     fetch('/api/settings').then((r) => r.json()).then((d) => setS(d.settings));
@@ -50,7 +50,7 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

@@ -17,7 +17,7 @@ export default function InquiriesPage() {
   const [data, setData] = useState(null);
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
   /* "How long has this been sitting" depends on the clock, so it is only
      rendered in the browser. The server cannot know it, and guessing would
      hand React two different trees to reconcile. */
@@ -175,7 +175,7 @@ export default function InquiriesPage() {
         </div>
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

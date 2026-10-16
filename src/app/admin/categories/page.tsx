@@ -11,7 +11,7 @@ const BLANK = {
 export default function CategoriesPage() {
   const [cats, setCats] = useState(null);
   const [editing, setEditing] = useState(null);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   async function load() {
     const res = await fetch('/api/categories');
@@ -183,7 +183,7 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

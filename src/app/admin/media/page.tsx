@@ -10,7 +10,7 @@ export default function MediaPage() {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef(null);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   async function load() {
     const res = await fetch(`/api/media${folder ? `?folder=${folder}` : ''}`);
@@ -181,7 +181,7 @@ export default function MediaPage() {
         </div>
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

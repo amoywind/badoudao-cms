@@ -53,7 +53,7 @@ function toEdit(p) {
 export default function PagesAdmin() {
   const [pages, setPages] = useState(null);
   const [edit, setEdit] = useState(null);
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   async function load() {
     const res = await fetch('/api/pages');
@@ -269,7 +269,7 @@ export default function PagesAdmin() {
         种子数据已预置工厂介绍、小批量优势、认证说明等 5 个页面的标题与 SEO 信息，你只需填正文。
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

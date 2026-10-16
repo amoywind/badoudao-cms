@@ -991,3 +991,21 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 
 /* Specs table full-width now that the description column is gone */
 .pd-spec { margin-top: 18px; max-width: 620px; }
+
+/* Category description, as written in the admin.
+
+   The field holds a headline and a paragraph. Running them together as
+   one paragraph loses the line the owner broke it on, so the first line
+   reads as a lead-in and the rest follows it. Both are the owner's words —
+   no template, no inserted product count, no rewritten offer. */
+.cat-desc-lead {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.cat-desc-body {
+  display: block;
+  color: var(--ink2);
+  max-width: 72ch;
+}

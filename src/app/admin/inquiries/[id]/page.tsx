@@ -19,7 +19,7 @@ function money(v) {
 export default function InquiryDetail() {
   const { id } = useParams();
   const router = useRouter();
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   const [d, setD] = useState(null);
   const [note, setNote] = useState('');
@@ -320,7 +320,7 @@ export default function InquiryDetail() {
         </div>
       </div>
 
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }

@@ -38,7 +38,7 @@ export default function PostsPage() {
   const [edit, setEdit] = useState(null);
   const [coverPick, setCoverPick] = useState(false);
   const [view, setView] = useState('list');
-  const { toast, show } = useToast();
+  const {toast, show, dismiss } = useToast();
 
   async function load() {
     const res = await fetch('/api/posts');
@@ -228,7 +228,7 @@ export default function PostsPage() {
             />
           </div>
         </div>
-        <Toast toast={toast} />
+        <Toast toast={toast} dismiss={dismiss} />
       </>
     );
   }
@@ -299,7 +299,7 @@ export default function PostsPage() {
           )}
         </div>
       </div>
-      <Toast toast={toast} />
+      <Toast toast={toast} dismiss={dismiss} />
     </>
   );
 }
