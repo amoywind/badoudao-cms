@@ -54,12 +54,21 @@ export async function Header() {
           A checkbox is the version that behaves the same on both: the
           markup is identical at every width, the peer selector
           (#nav-toggle:checked ~ .nav) does the rest in CSS, and the
-          labels stay in the document for crawlers and screen readers. The
-          label wraps a real <button> so it is reachable by keyboard and
-          announced as a button, with the checkbox itself hidden from
-          assistive tech to avoid announcing it twice. */}
+          labels stay in the document for crawlers and screen readers.
+
+          The checkbox takes tabIndex={-1} and nothing else. It previously
+          carried aria-hidden="true" as well, which is invalid on a
+          focusable element — the console rejected it, with "Blocked
+          aria-hidden on an element because its descendant retained focus",
+          on every page load. Hiding a control from assistive tech while
+          leaving it reachable by keyboard is the opposite of what either
+          audience needs.
+
+          So it stays out of the tab order, and the label keeps the accessible
+          name "Menu" — the checkbox is a CSS state holder, not something a
+          person operates. */}
       <input type="checkbox" id="nav-toggle" className="nav-checkbox"
-        aria-hidden="true" tabIndex={-1} />
+        tabIndex={-1} />
       <label className="nav-toggle" htmlFor="nav-toggle">
         <span className="nav-toggle-bars" aria-hidden="true">
           <span /><span /><span />

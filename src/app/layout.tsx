@@ -46,7 +46,17 @@ function plausibleDomain(input: unknown, siteHost: string): string {
  */
 export const metadata = {
   title: 'Badoudao',
-  description: 'Quartz clock manufacturer.'
+  description: 'Quartz clock manufacturer.',
+  /* Declared here rather than left to the browser's default probe.
+
+     public/ holds favicon.svg and no favicon.ico, and with no <link rel=icon>
+     the browser requests /favicon.ico by default — which 404s, on every page,
+     and shows up in the console as a failed resource. Pointing at the SVG
+     that does exist removes the request entirely. */
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/favicon.svg' }]
+  }
 };
 
 export const viewport = {
