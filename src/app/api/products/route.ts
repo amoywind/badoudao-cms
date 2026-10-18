@@ -82,7 +82,7 @@ export async function POST(request) {
       id, slug, String(body.name).slice(0, 200), body.category,
       body.summary || '', Number(body.priceMin) || 0, Number(body.priceMax) || 0,
       Number(body.moq) || 500, body.leadTime || '20-30 days',
-      body.moveLevel || 'China quartz', body.difficulty || 'simple',
+      body.moveLevel || '中国机芯', body.difficulty || 'simple',
       body.content || '', body.featured ? 1 : 0,
       body.status || 'draft', Number(body.sortOrder) || 0
     )

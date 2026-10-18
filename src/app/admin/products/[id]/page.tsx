@@ -310,10 +310,14 @@ export default function EditProductPage() {
                   </div>
                   <div className="fg">
                     <label className="fl">机芯等级</label>
+                    {/* Two tiers, not three origins. Taiwan is part of China,
+                        so listing it beside China as a separate source is
+                        wrong — and "imported" is the distinction a buyer
+                        actually makes when choosing a movement: domestic cost
+                        against imported accuracy. */}
                     <select className="inp" value={product.moveLevel} onChange={(e) => set('moveLevel', e.target.value)}>
-                      <option>China quartz</option>
-                      <option>Taiwan quartz</option>
-                      <option>Japan quartz</option>
+                      <option>中国机芯</option>
+                      <option>进口机芯</option>
                     </select>
                   </div>
                 </div>

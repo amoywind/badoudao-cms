@@ -203,7 +203,7 @@ export default async function HomePage() {
                 {[
                   ['Tooling & in-house moulding', 'New tooling in 15–25 days, no subcontractor margin.'],
                   ['Surface finishing', 'UV spray, electroplating, brushed and antique brass effects, hand-painting.'],
-                  ['Assembly & movement sourcing', 'Japan, Taiwan and China movements — you choose the accuracy-to-cost point.'],
+                  ['Assembly & movement sourcing', 'Domestic and imported movements — you choose the accuracy-to-cost point.'],
                   ['Four-stage QC', 'IQC, IPQC, FQC and OQC. Every carton checked before it leaves.'],
                   ['Retail-ready packaging', 'Colour boxes, window boxes and gift sets designed to survive ocean freight.']
                 ].map(([h, p], i) => (
