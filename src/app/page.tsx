@@ -144,7 +144,7 @@ export default async function HomePage() {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">Product Range</div>
-              <h2>Wall clocks, alarm clocks and movements — factory direct</h2>
+              <h2>Wall clocks in plastic, wood, metal, acrylic, glass and resin — factory direct</h2>
               <p className="sec-sub">All categories available with custom dials, logos, hands and packaging. Prices shown are <strong>Ex Works (factory) prices</strong> at MOQ {s.moq || 500} — freight and duties quoted separately.</p>
             </div>
             <div className="grid-3">

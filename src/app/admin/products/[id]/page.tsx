@@ -376,7 +376,13 @@ export default function EditProductPage() {
               <h3>产品图片</h3>
               <span className="sub">第一张为主图</span>
               <div className="r">
-                <Link href="/admin/media" className="btn btn-sm">去图片库</Link>
+                {/* target="_blank" because the media library is a trip, not a
+                    step: following it in this tab threw away every unsaved
+                    field on the product form, since the editor keeps state
+                    in React and never persists it until Save. rel="noopener"
+                    for the usual reason. */}
+                <a href="/admin/media" target="_blank" rel="noopener"
+                  className="btn btn-sm">去图片库 ↗</a>
               </div>
             </div>
             <div className="card-b">
@@ -403,7 +409,8 @@ export default function EditProductPage() {
               <h4 style={{ fontSize: 13, fontWeight: 600, margin: '0 0 10px' }}>从图片库选择</h4>
               {media.length === 0 ? (
                 <p style={{ color: '#767f8c', fontSize: 13 }}>
-                  图片库还是空的，先去<a href="/admin/media" style={{ color: '#0f5c4a' }}>图片库</a>上传。
+                  图片库还是空的，先去<a href="/admin/media" target="_blank" rel="noopener"
+                    style={{ color: '#0f5c4a' }}>图片库 ↗</a>上传（新窗口打开，本页填写的内容不会丢失）。
                 </p>
               ) : (
                 <div className="mgrid" style={{ maxHeight: 460, overflowY: 'auto' }}>
