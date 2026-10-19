@@ -24,18 +24,26 @@ import { all, one, run } from './db';
  */
 export async function packagingImages(
   ids: string[]
-): Promise<Record<string, { url: string; alt: string }>> {
+): Promise<Record<string, { url: string; alt: string; thumbUrl: string | null }>> {
   const wanted = ids.filter(Boolean);
   if (!wanted.length) return {};
 
   const placeholders = wanted.map(() => '?').join(',');
+  /* thumb is here for the same reason as everywhere else: the packaging card
+     is roughly 300px and the file is 1200px. */
   const rows = (await all(
-    `SELECT id, url, alt FROM media WHERE id IN (${placeholders})`,
+    `SELECT id, url, alt, thumb FROM media WHERE id IN (${placeholders})`,
     ...wanted
-  )) as { id: string; url: string; alt: string }[];
+  )) as { id: string; url: string; alt: string; thumb: string | null }[];
 
-  const map: Record<string, { url: string; alt: string }> = {};
-  for (const r of rows) map[r.id] = { url: r.url, alt: r.alt || '' };
+  const map: Record<string, { url: string; alt: string; thumbUrl: string | null }> = {};
+  for (const r of rows) {
+    map[r.id] = {
+      url: r.url,
+      alt: r.alt || '',
+      thumbUrl: r.thumb ? `/api/media-thumb/${r.id}` : null
+    };
+  }
   return map;
 }
 

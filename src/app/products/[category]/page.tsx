@@ -131,8 +131,14 @@ export default async function CategoryPage({ params }) {
                       <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
                         <div className={`c-visual${p.images.length ? ' has-img' : ''}`}>
                           {p.images.length ? (
+                          /* The 640px copy, not the 2048px original. This was
+                             the single heaviest item on the site: 954 KB of
+                             file for a 609px frame, which PageSpeed counted
+                             as 893 KB of the 2.2 MB the home page carried.
+                             The detail page still loads the original, so the
+                             full-resolution shot is one click away. */
                           <img
-                            src={p.images[0].url}
+                            src={p.images[0].thumbUrl || p.images[0].url}
                             alt={p.name}
                             decoding="async"
                             {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}

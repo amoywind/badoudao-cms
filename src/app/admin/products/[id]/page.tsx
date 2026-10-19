@@ -404,7 +404,16 @@ export default function EditProductPage() {
                     set('images', next);
                   }} title="点击移除">
                     {i === 0 && <span className="mi-badge">主图</span>}
-                    <div className="mi-img"><img src={img.url} alt="" /></div>
+                    <div className="mi-img">
+                      <img
+                        src={img.thumbUrl || img.url}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width={150}
+                        height={150}
+                      />
+                    </div>
                     <div className="mi-f"><b>移除此图</b></div>
                   </div>
                 ))}
@@ -420,8 +429,23 @@ export default function EditProductPage() {
                 <div className="mgrid" style={{ maxHeight: 460, overflowY: 'auto' }}>
                   {media.slice(0, 40).map((m) => (
                     <div key={m.id} className="mi"
-                      onClick={() => set('images', [...product.images, { mediaId: m.id, url: m.url, alt: m.alt }])}>
-                      <div className="mi-img"><img src={m.url} alt="" /></div>
+                      onClick={() => set('images', [...product.images, {
+                        mediaId: m.id, url: m.url, thumbUrl: m.thumb, alt: m.alt
+                      }])}
+                    >
+                      <div className="mi-img">
+                        {/* 640px copy in a 150px cell. The originals were
+                            954 KB each; opening this tab used to download
+                            every one of them. */}
+                        <img
+                          src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          width={150}
+                          height={150}
+                        />
+                      </div>
                       <div className="mi-f"><b>{m.filename}</b></div>
                     </div>
                   ))}

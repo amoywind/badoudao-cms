@@ -8,6 +8,11 @@ export const runtime = 'edge';
    so a 1 MB cap keeps pages fast without rejecting real shots. */
 const MAX_UPLOAD = 1024 * 1024;
 
+/* Thumbnails are ~20-35 KB. This ceiling is not about what a legitimate
+   640px WebP weighs — it is about not letting a malformed client park 1 MB
+   of base64 per file in a column nothing reads. */
+const MAX_THUMB = 256 * 1024;
+
 /**
  * Bytes to base64, without spending the CPU budget on string building.
  *
@@ -62,8 +67,23 @@ export async function GET(request) {
   if (folder) { where.push('folder = ?'); params.push(folder); }
   if (tag) { where.push('tag = ?'); params.push(tag); }
 
+  /* Column list, not SELECT *.
+
+     The `data` column holds the file's base64 — for this library that is
+     9.26 MB across 23 images. SELECT * dragged every byte of it into the
+     response, so listing the media library meant reading and JSON-serialising
+     nine megabytes of binary on a Worker whose CPU budget is 10 ms of work
+     per request. That is what produced the "exceeded resource limits"
+     failures in the admin, and it happened on the media page, on every
+     product editor, and every time the markdown editor's image picker opened
+     — three separate entry points to the same expensive query.
+
+     Metadata is what a grid needs. The bytes are fetched on demand by
+     /api/media-file/[id], one image at a time. */
   const media = await all(
-    `SELECT * FROM media ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
+    `SELECT id, filename, url, mime, size, width, height, alt, folder, tag,
+            created_at, thumb
+     FROM media ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
      ORDER BY created_at DESC LIMIT 500`,
     ...params
   );
@@ -115,12 +135,21 @@ export async function POST(request) {
   const tag = String(form.get('tag') || '');
   const alt = String(form.get('alt') || '');
 
+  /* Thumbnails, paired with the files by position. The browser makes these
+     before uploading — the edge runtime cannot resize, and asking it to
+     would spend the very CPU budget that was blowing up on these pages.
+     A file with no thumb is fine: the column stays NULL and every front-end
+     caller falls back to the original. */
+  const thumbs = form
+    .getAll('thumb')
+    .filter((f) => typeof f === 'object' && f && 'arrayBuffer' in f) as File[];
+
   /* R2 is optional. Without it images go to D1, which is slower to serve but
    free at this site's scale and, more importantly, available at all. */
   const saved = [];
   const errors = [];
 
-  for (const file of files) {
+  for (const [index, file] of files.entries()) {
     /* file.size is metadata the multipart parser already has. Reading the
        body first and measuring afterwards meant a 20 MB photo was fully
        loaded into the isolate before being rejected — the memory spike
@@ -176,6 +205,19 @@ export async function POST(request) {
 
     const dims = await imageSize(buf).catch(() => ({ width: 0, height: 0 }));
 
+    /* The 640px copy, when the browser sent one. Capped well below the
+       original's ceiling: a thumbnail is 20-35 KB in practice, and a client
+       that sent something enormous has either misunderstood the field or is
+       not the client this route was written for. */
+    let thumbB64: string | null = null;
+    const thumbFile = thumbs[index];
+    if (thumbFile) {
+      const thumbBuf = await thumbFile.arrayBuffer();
+      if (thumbBuf.byteLength > 0 && thumbBuf.byteLength <= MAX_THUMB) {
+        thumbB64 = await toBase64(new Uint8Array(thumbBuf));
+      }
+    }
+
     /* Warn rather than reject on aspect ratio: a non-square image still
        displays correctly thanks to the square crop, and sometimes a wide
        shot is genuinely the better reference. The main-image slot is what
@@ -183,8 +225,8 @@ export async function POST(request) {
     const isSquare = dims.width > 0 && dims.height > 0 && dims.width === dims.height;
 
     await run(
-      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag, data)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag, data, thumb)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
       id,
       file.name.slice(0, 200),
       url,
@@ -195,12 +237,14 @@ export async function POST(request) {
       alt,
       folder,
       tag,
-      b64
+      b64,
+      thumbB64
     );
 
     saved.push({
       id,
       url,
+      thumbUrl: thumbB64 ? `/api/media-thumb/${id}` : null,
       filename: file.name,
       width: dims.width,
       height: dims.height,

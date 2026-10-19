@@ -14,7 +14,14 @@ import { GroupGlyph } from './_icons';
  * that depends on this running.
  */
 
-type Shot = { url: string; alt: string; kind?: string };
+type Shot = {
+  url: string;
+  /* 640px copy of the same photo, when one exists. Null on images uploaded
+     before thumbnails did — every caller falls back to `url`. */
+  thumbUrl?: string | null;
+  alt: string;
+  kind?: string;
+};
 
 export function ProductGallery({ name, images }: { name: string; images: Shot[] }) {
   const [zoom, setZoom] = useState(false);
@@ -89,7 +96,7 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
             aria-label={`Enlarge ${name} photo`}
           >
             <img
-              src={current.url}
+              src={current.thumbUrl || current.url}
               alt={current.alt || name}
               width={1200}
               height={1200}
@@ -101,6 +108,18 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
                  prioritised. tsc only accepts the camelCase spelling, which
                  is the one that does not work at runtime. */
               {...{ fetchpriority: 'high' }}
+              /* This frame zooms to 1.75x on hover and opens full-screen in
+                 the lightbox, so on a wide screen the original is the right
+                 file — but it is 954 KB, and a phone never renders more than
+                 the 640px copy. srcset lets the browser decide: phones take
+                 the thumbnail, desktops take the full-resolution shot when
+                 they are about to zoom into it. */
+              {...(current.thumbUrl
+                ? {
+                    srcSet: `${current.thumbUrl} 640w, ${current.url} 2048w`,
+                    sizes: '(max-width: 900px) 92vw, 620px'
+                  }
+                : {})}
               decoding="async"
             />
           </button>

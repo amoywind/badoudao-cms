@@ -15,11 +15,15 @@
  * not to go and create it somewhere else first and come back.
  */
 import { useEffect, useRef, useState } from 'react';
+import { buildUploadForm } from './_thumb';
 
 type Media = {
   id: string;
   filename: string;
   url: string;
+  /* Present when a 640px copy was generated — at upload time in the browser,
+     or by scripts/backfill-thumbs.js for the existing library. */
+  thumb?: string | null;
   alt?: string;
   folder?: string;
   width?: number;
@@ -84,11 +88,11 @@ export function ImagePicker({
     setErr('');
     setWarn('');
 
-    const form = new FormData();
-    Array.from(files).forEach((f) => form.append('file', f));
-    form.append('folder', 'uploads');
-
     try {
+      /* Resized in the browser before sending — see _thumb.ts. The route
+         cannot do it and would spend its CPU budget trying. */
+      const form = await buildUploadForm(files, 'uploads');
+
       const r = await fetch('/api/media', { method: 'POST', body: form });
       const d = await r.json();
 
@@ -224,7 +228,20 @@ export function ImagePicker({
               <div className="mgrid" style={{ maxHeight: 380, overflowY: 'auto' }}>
                 {shown.map((m) => (
                   <div key={m.id} className="mi" onClick={() => { setPicked(m); setAlt(m.alt || ''); }}>
-                    <div className="mi-img"><img src={m.url} alt="" loading="lazy" /></div>
+                    <div className="mi-img">
+                      {/* The 640px copy, not the original. This grid used to
+                          pull down all 23 full-size images — 9.26 MB — to draw
+                          150px cells, which is a large part of why opening
+                          the picker kept failing. */}
+                      <img
+                        src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width={150}
+                        height={150}
+                      />
+                    </div>
                     <div className="mi-f"><b>{m.filename}</b></div>
                   </div>
                 ))}

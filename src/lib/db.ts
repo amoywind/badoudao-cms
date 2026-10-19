@@ -30,7 +30,16 @@ export type Category = {
 export type ProductSpec = { id?: string | number; label: string; value: string };
 export type ProductOption = { label: string; priceDelta: number };
 export type ProductPrice = { minQty: number; maxQty: number | null; unitPrice: number };
-export type ProductImage = { url: string; alt?: string; isMain?: boolean; kind?: string };
+export type ProductImage = {
+  url: string;
+  /* 640px copy of the same photo, when one has been generated. Null on
+     images uploaded before thumbnails existed — every caller falls back to
+     `url`. */
+  thumbUrl?: string | null;
+  alt?: string;
+  isMain?: boolean;
+  kind?: string;
+};
 
 /* Which customisation values the owner ticked for this model. The group
    keys and the values themselves live in product-detail.ts; this is only
@@ -264,8 +273,14 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       'SELECT * FROM product_prices WHERE product_id = ? ORDER BY min_qty',
       row.id
     ),
+    /* Named columns, not m.*. The media table carries the file's base64 in
+       `data`, which this query never needs — it only wants the metadata and
+       the product_images flags. Reading it meant pulling a megabyte of
+       binary per product off D1 and throwing it away on a page every buyer
+       loads. */
     all(
-      `SELECT m.*, pi.sort_order AS image_order, pi.is_main, pi.kind AS shot_kind
+      `SELECT m.id, m.url, m.alt, m.filename, m.thumb,
+              pi.sort_order AS image_order, pi.is_main, pi.kind AS shot_kind
        FROM product_images pi
        JOIN media m ON m.id = pi.media_id
        WHERE pi.product_id = ?
@@ -303,6 +318,12 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
       mediaId: m.media_id,
       id: m.id,
       url: m.url,
+      /* The display-sized copy, when one has been generated. Cards, grids and
+         galleries render this; `url` stays the full-resolution original for
+         the detail view and for anyone who asks to see it large. Null on
+         images uploaded before thumbnails existed, and the callers fall back
+         to `url`. */
+      thumbUrl: m.thumb ? `/api/media-thumb/${m.id}` : null,
       alt: m.alt || '',
       filename: m.filename,
       isMain: m.is_main === 1,
@@ -359,11 +380,11 @@ export async function listProducts(
      trip each. On a category page with 40 products that is 41 queries for
      data that has one obvious join. The window function picks the same row
      per product (is_main first, then sort order) in a single pass. */
-  const mainByProduct: Record<string, { id: string; url: string; alt: string }> = {};
+  const mainByProduct: Record<string, { id: string; url: string; alt: string; thumbUrl: string | null }> = {};
 
   if (rows.length) {
     const imgs = await cached<any[]>(
-      `SELECT pi.product_id, m.id, m.url, m.alt,
+      `SELECT pi.product_id, m.id, m.url, m.alt, m.thumb,
               ROW_NUMBER() OVER (
                 PARTITION BY pi.product_id
                 ORDER BY pi.is_main DESC, pi.sort_order, pi.id
@@ -375,14 +396,21 @@ export async function listProducts(
     );
 
     imgs.forEach((i) => {
-      if (i.rn === 1) mainByProduct[i.product_id] = { id: i.id, url: i.url, alt: i.alt || '' };
+      if (i.rn === 1) {
+        mainByProduct[i.product_id] = {
+          id: i.id, url: i.url, alt: i.alt || '',
+          thumbUrl: i.thumb ? `/api/media-thumb/${i.id}` : null
+        };
+      }
     });
   }
 
   return rows.map((row) => {
     const img = mainByProduct[row.id];
     return mapProduct(row, {
-      images: img ? [{ id: img.id, url: img.url, alt: img.alt, isMain: true }] : []
+      images: img
+        ? [{ id: img.id, url: img.url, thumbUrl: img.thumbUrl, alt: img.alt, isMain: true }]
+        : []
     });
   });
 }
@@ -403,8 +431,9 @@ export async function listCategories(): Promise<Category[]> {
      no image, and a category card with no picture is the thing this is
      meant to fix. */
   const covers = await cached<any[]>(
-    `SELECT category, url FROM (
-       SELECT p.category AS category, m.url AS url,
+    `SELECT category, url, thumb, media_id FROM (
+       SELECT p.category AS category, m.url AS url, m.thumb AS thumb,
+              m.id AS media_id,
               ROW_NUMBER() OVER (
                 PARTITION BY p.category
                 ORDER BY p.updated_at DESC, p.id DESC
@@ -418,9 +447,14 @@ export async function listCategories(): Promise<Category[]> {
 
   /* First row per category wins; the query is already ordered so the newest
      comes first within each partition. */
-  const coverByCat = new Map<string, string>();
+  const coverByCat = new Map<string, { url: string; thumbUrl: string | null }>();
   for (const row of covers) {
-    if (!coverByCat.has(row.category)) coverByCat.set(row.category, row.url);
+    if (!coverByCat.has(row.category)) {
+      coverByCat.set(row.category, {
+        url: row.url,
+        thumbUrl: row.thumb ? `/api/media-thumb/${row.media_id}` : null
+      });
+    }
   }
 
   const counts = await cached<any[]>(
@@ -428,19 +462,25 @@ export async function listCategories(): Promise<Category[]> {
   );
   const countByCat = new Map(counts.map((r) => [r.category, r.n]));
 
-  return rows.map((r) => ({
-    id: r.id,
-    name: r.name,
-    short: r.short || '',
-    description: r.description,
-    designs: r.designs,
-    price_range: r.price_range,
-    status: r.status,
-    seoTitle: r.seo_title || '',
-    seoDescription: r.seo_description || '',
-    imageUrl: coverByCat.get(r.id) || '',
-    productCount: countByCat.get(r.id) || 0
-  }));
+  return rows.map((r) => {
+    const cover = coverByCat.get(r.id);
+    return {
+      id: r.id,
+      name: r.name,
+      short: r.short || '',
+      description: r.description,
+      designs: r.designs,
+      price_range: r.price_range,
+      status: r.status,
+      seoTitle: r.seo_title || '',
+      seoDescription: r.seo_description || '',
+      imageUrl: cover?.url || '',
+      /* Display-sized copy for the card. Null on images uploaded before
+         thumbnails existed — the caller falls back to imageUrl. */
+      imageThumbUrl: cover?.thumbUrl || null,
+      productCount: countByCat.get(r.id) || 0
+    };
+  });
 }
 
 /**

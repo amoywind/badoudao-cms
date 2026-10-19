@@ -162,8 +162,13 @@ export default async function HomePage() {
                       : { background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }}
                   >
                     {c.imageUrl && (
+                      /* imageThumbUrl is a 640px copy of the same photo; the
+                         original is 2048px and 954 KB. Six cards rendered the
+                         originals carried 2.2 MB on mobile, 88% of it pixels
+                         the 400px card never shows. The full-size file stays
+                         one click away on the category page. */
                       <img
-                        src={c.imageUrl}
+                        src={c.imageThumbUrl || c.imageUrl}
                         alt={c.name}
                         loading="lazy"
                         decoding="async"

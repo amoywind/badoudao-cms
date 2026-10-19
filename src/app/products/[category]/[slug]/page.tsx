@@ -323,7 +323,7 @@ export default async function ProductPage({ params }) {
                   <div className={`pd-pack-img${p.image && packShots[p.image] ? ' has-img' : ''}`}>
                     {p.image && packShots[p.image] ? (
                       <img
-                        src={packShots[p.image].url}
+                        src={packShots[p.image].thumbUrl || packShots[p.image].url}
                         alt={packShots[p.image].alt || `${p.title} packaging`}
                         width={1200}
                         height={1200}
@@ -375,7 +375,14 @@ export default async function ProductPage({ params }) {
                 {others.map((p) => (
                   <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
                     <div className="c-visual">
-                      {p.images.length ? <img src={p.images[0].url} alt={p.name} /> : null}
+                      {p.images.length ? (
+                      <img
+                        src={p.images[0].thumbUrl || p.images[0].url}
+                        alt={p.name}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : null}
                     </div>
                     <div className="c-body">
                       <h3 style={{ fontSize: 16 }}>{p.name}</h3>

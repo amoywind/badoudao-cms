@@ -143,7 +143,15 @@ export default function ProductsPage() {
                   <tr key={p.id}>
                     <td>
                       {p.images.length
-                        ? <img className="thumb" src={p.images[0].url} alt="" />
+                        ? <img
+                            className="thumb"
+                            src={p.images[0].thumbUrl || p.images[0].url}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            width={44}
+                            height={44}
+                          />
                         : <div className="thumb-ph">!</div>}
                     </td>
                     <td>

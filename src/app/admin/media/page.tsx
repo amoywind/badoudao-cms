@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Toast, useToast } from '../_ui';
+import { buildUploadForm } from '../_thumb';
 
 export default function MediaPage() {
   const [media, setMedia] = useState(null);
@@ -51,11 +52,13 @@ export default function MediaPage() {
     if (!files || !files.length) return;
     setUploading(true);
 
-    const fd = new FormData();
-    Array.from(files as FileList).forEach((f) => fd.append('file', f as unknown as Blob));
-    fd.append('folder', folder || 'uploads');
-
     try {
+      /* The browser resizes each file to 640px before sending. The server
+         cannot — it runs on an edge runtime with no image library — and
+         asking it to would spend the CPU budget that this page was already
+         blowing through. */
+      const fd = await buildUploadForm(files as FileList, folder || 'uploads');
+
       const res = await fetch('/api/media', { method: 'POST', body: fd });
       const data = await res.json();
       if (!res.ok) { show(data.error || '上传失败', 'err'); return; }
@@ -131,7 +134,7 @@ export default function MediaPage() {
               <path d="M12 5v14M5 12h14" strokeLinecap="round" />
             </svg>
             <div className="big">{uploading ? '上传中…' : '拖拽图片到这里，或点击选择'}</div>
-            <div className="sm">支持 JPG / PNG / WebP / GIF · 单张最大 8MB · 一次最多 12 张</div>
+            <div className="sm">支持 JPG / PNG / WebP / GIF · 单张最大 1MB · 一次最多 12 张 · 上传时自动生成缩略图</div>
           </div>
           <input ref={fileRef} type="file" accept="image/*" multiple hidden
             onChange={(e) => { upload(e.target.files); e.target.value = ''; }} />
@@ -151,7 +154,14 @@ export default function MediaPage() {
                 {media.map((m) => (
                   <div key={m.id} className="mi">
                     <div className="mi-img">
-                      <img src={m.url} alt={m.alt} />
+                      <img
+                      src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                      alt={m.alt}
+                      loading="lazy"
+                      decoding="async"
+                      width={150}
+                      height={150}
+                    />
                       {m.usedBy.length > 0 && <span className="mi-used">被 {m.usedBy.length} 个产品使用</span>}
                     </div>
                     <div className="mi-f">

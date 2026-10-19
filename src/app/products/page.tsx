@@ -73,7 +73,7 @@ export default async function ProductsIndex() {
                       <div className="c-visual">
                         {p.images.length ? (
                           <img
-                            src={p.images[0].url}
+                            src={p.images[0].thumbUrl || p.images[0].url}
                             alt={p.name}
                             decoding="async"
                             {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
