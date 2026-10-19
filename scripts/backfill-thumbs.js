@@ -24,6 +24,11 @@ const ACCOUNT = process.env.CF_ACCOUNT_ID || '086d893ed76ae09ae6abac33113d7eab';
 const DB_ID = process.env.CF_DATABASE_ID || 'aba203a7-d49a-4c93-b4f9-aa931aa219c7';
 
 const WIDTH = 640;
+/* The middle tier. A 390px phone at 2x needs about 718 device pixels, so a
+   srcset of 640w and 2048w leaves the phone with no good option and it takes
+   the original. Only the product gallery needs this, but that is the page a
+   buyer lands on from Google. */
+const WIDTH_LG = 1024;
 /* 78 rather than 80. Product photos are flat colour and hard edges on a
    white background, which is where JPEG's ringing is most visible — the
    clock's rim against the backdrop. The 2 KB a photo saves across 23 images
@@ -62,11 +67,13 @@ async function main() {
 
   const where = [];
   const params = [];
-  if (!force) where.push('thumb IS NULL');
+  if (!force) where.push('(thumb IS NULL OR thumb_lg IS NULL)');
   if (only) { where.push('id = ?'); params.push(only); }
 
   const rows = await sql(
-    `SELECT id, filename, width, height, size, mime, data
+    `SELECT id, filename, width, height, size, mime, data,
+            thumb IS NOT NULL AS has_thumb,
+            thumb_lg IS NOT NULL AS has_thumb_lg
        FROM media
       WHERE data IS NOT NULL ${where.length ? 'AND ' + where.join(' AND ') : ''}
       ORDER BY size DESC`,
@@ -88,28 +95,36 @@ async function main() {
     try {
       const buf = Buffer.from(row.data, 'base64');
 
-      const meta = await sharp(buf).metadata();
-      /* Already narrower than the target: a thumbnail would be an upscale, so
-         it would be softer than the original and larger than it. Store the
-         original instead — a card showing a 480px image is already small. */
-      const resized = (meta.width || 0) > WIDTH;
-      const out = await sharp(buf)
+      const resized = (row.width || 0) > WIDTH;
+      const small = await sharp(buf)
         .resize({ width: WIDTH, withoutEnlargement: true })
         .webp({ quality: QUALITY })
         .toBuffer();
+      const large = await sharp(buf)
+        .resize({ width: WIDTH_LG, withoutEnlargement: true })
+        .webp({ quality: QUALITY })
+        .toBuffer();
 
-      const saved = row.size - out.length;
-      if (savedBytes > 0) savedBytes += saved;
+      const saved = row.size - small.length;
+      savedBytes += Math.max(0, saved);
 
       console.log(
         `  ${resized ? '✓' : '·'} ${label}\n` +
-        `      ${Math.round(row.size / 1024)} KB → ${Math.round(out.length / 1024)} KB` +
+        `      ${Math.round(row.size / 1024)} KB → ${Math.round(small.length / 1024)} KB` +
         ` (${resized ? 'resize' : '原图已够小，不放大'})` +
+        ` / ${Math.round(large.length / 1024)} KB` +
         `  省 ${Math.max(0, Math.round(saved / 1024))} KB`
       );
 
+      /* Written one tier at a time so a partial run still helps: if the
+         1024w step fails, the 640w copies are already in place. */
       if (!dry) {
-        await sql('UPDATE media SET thumb = ? WHERE id = ?', [out.toString('base64'), row.id]);
+        if (!row.has_thumb) {
+          await sql('UPDATE media SET thumb = ? WHERE id = ?', [small.toString('base64'), row.id]);
+        }
+        if (!row.has_thumb_lg) {
+          await sql('UPDATE media SET thumb_lg = ? WHERE id = ?', [large.toString('base64'), row.id]);
+        }
       }
       ok++;
     } catch (err) {
@@ -119,9 +134,10 @@ async function main() {
   }
 
   console.log(`\n成功 ${ok}，失败 ${failed}`);
-  if (!dry) {
+  if (!dry && rows.length) {
     console.log(`每张页面少传约 ${Math.round(savedBytes / rows.length / 1024)} KB（均值）`);
-    console.log('缩略图已写入 media.thumb；/api/media-thumb/[id] 会自动开始服务。');
+    console.log('缩略图已写入 media.thumb / media.thumb_lg；');
+    console.log('/api/media-thumb/[id] 与 ?w=1024 会自动开始服务。');
   }
   console.log('');
 }

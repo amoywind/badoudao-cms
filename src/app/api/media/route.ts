@@ -47,6 +47,40 @@ async function toBase64(bytes: Uint8Array): Promise<string> {
 }
 
 /**
+ * Collect the thumbnails belonging to file `index`, split by tier.
+ *
+ * The client names each blob thumb-<fileIndex>-<width>-<n>.webp and appends
+ * them in order, so both the pairing and the tier come out of the filename.
+ * Anything unrecognised is ignored rather than guessed at — a misrouted
+ * thumbnail would show the wrong picture size on a live page, and storing
+ * nothing just falls back to the original.
+ */
+async function readThumbs(
+  thumbs: File[],
+  index: number
+): Promise<{ thumb: string | null; thumbLg: string | null }> {
+  const out: { thumb: string | null; thumbLg: string | null } = {
+    thumb: null,
+    thumbLg: null
+  };
+
+  for (const f of thumbs) {
+    const m = /thumb-(\d+)-(\d+)-/.exec(f.name || '');
+    if (!m) continue;
+    if (parseInt(m[1], 10) !== index) continue;
+
+    const buf = await f.arrayBuffer();
+    if (buf.byteLength === 0 || buf.byteLength > MAX_THUMB) continue;
+
+    const b64 = await toBase64(new Uint8Array(buf));
+    if (parseInt(m[2], 10) >= 1024) out.thumbLg = b64;
+    else out.thumb = b64;
+  }
+
+  return out;
+}
+
+/**
  * Images live in Cloudflare R2, bound as MEDIA_BUCKET. Uploads go
  * straight to the bucket through this route so the admin session is the
  * only way in.
@@ -147,8 +181,10 @@ export async function POST(request) {
   /* Thumbnails, paired with the files by position. The browser makes these
      before uploading — the edge runtime cannot resize, and asking it to
      would spend the very CPU budget that was blowing up on these pages.
-     A file with no thumb is fine: the column stays NULL and every front-end
-     caller falls back to the original. */
+     Each filename carries its target width (thumb-<index>-<width>-<n>.webp)
+     so the route knows which column it belongs in. A file with no thumb is
+     fine: the columns stay NULL and every front-end caller falls back to the
+     original. */
   const thumbs = form
     .getAll('thumb')
     .filter((f) => typeof f === 'object' && f && 'arrayBuffer' in f) as File[];
@@ -214,18 +250,11 @@ export async function POST(request) {
 
     const dims = await imageSize(buf).catch(() => ({ width: 0, height: 0 }));
 
-    /* The 640px copy, when the browser sent one. Capped well below the
-       original's ceiling: a thumbnail is 20-35 KB in practice, and a client
-       that sent something enormous has either misunderstood the field or is
-       not the client this route was written for. */
-    let thumbB64: string | null = null;
-    const thumbFile = thumbs[index];
-    if (thumbFile) {
-      const thumbBuf = await thumbFile.arrayBuffer();
-      if (thumbBuf.byteLength > 0 && thumbBuf.byteLength <= MAX_THUMB) {
-        thumbB64 = await toBase64(new Uint8Array(thumbBuf));
-      }
-    }
+    /* The 640px and 1024px copies, when the browser sent them. Capped well
+       below the original's ceiling: a thumbnail is 20-90 KB in practice, and
+       a client that sent something enormous has either misunderstood the
+       field or is not the client this route was written for. */
+    const tiers = await readThumbs(thumbs, index);
 
     /* Warn rather than reject on aspect ratio: a non-square image still
        displays correctly thanks to the square crop, and sometimes a wide
@@ -234,8 +263,8 @@ export async function POST(request) {
     const isSquare = dims.width > 0 && dims.height > 0 && dims.width === dims.height;
 
     await run(
-      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag, data, thumb)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO media (id, filename, url, mime, size, width, height, alt, folder, tag, data, thumb, thumb_lg)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       id,
       file.name.slice(0, 200),
       url,
@@ -247,13 +276,14 @@ export async function POST(request) {
       folder,
       tag,
       b64,
-      thumbB64
+      tiers.thumb,
+      tiers.thumbLg
     );
 
     saved.push({
       id,
       url,
-      thumbUrl: thumbB64 ? `/api/media-thumb/${id}` : null,
+      thumbUrl: tiers.thumb ? `/api/media-thumb/${id}` : null,
       filename: file.name,
       width: dims.width,
       height: dims.height,

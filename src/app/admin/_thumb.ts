@@ -13,22 +13,16 @@
  */
 
 const THUMB_WIDTH = 640;
+/* The product gallery's middle tier. A 390px phone at 2x needs about 718
+   device pixels, so a 640px copy alone makes the srcset jump straight to the
+   954 KB original. 1024w covers the phone properly; the desktop layout still
+   gets the full-resolution file. */
+const THUMB_LG_WIDTH = 1024;
 const QUALITY = 0.78;
 
-/**
- * Returns a WebP blob for `file`, or null when a thumbnail cannot be made.
- *
- * Null is a normal outcome, not a failure: a HEIC the browser cannot decode,
- * an image already narrower than the target, or a browser without
- * canvas.toBlob. In every case the original is still uploaded and the
- * front-end falls back to the full-size file, so the worst outcome is a
- * slower page rather than a broken one.
- */
-export async function makeThumb(file: File): Promise<Blob | null> {
-  /* Below the target already. Upscaling would make it both larger and
-     softer than the original, so there is nothing to gain. */
-  if (file.size < 24 * 1024) return null;
+type Tier = { width: number; blob: Blob };
 
+async function resizeTo(file: File, width: number): Promise<Blob | null> {
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
@@ -37,11 +31,11 @@ export async function makeThumb(file: File): Promise<Blob | null> {
   }
 
   try {
-    if (bitmap.width <= THUMB_WIDTH) return null;
+    if (bitmap.width <= width) return null;
 
-    const scale = THUMB_WIDTH / bitmap.width;
+    const scale = width / bitmap.width;
     const canvas = document.createElement('canvas');
-    canvas.width = THUMB_WIDTH;
+    canvas.width = width;
     canvas.height = Math.round(bitmap.height * scale);
 
     const ctx = canvas.getContext('2d');
@@ -49,7 +43,7 @@ export async function makeThumb(file: File): Promise<Blob | null> {
     ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 
-    const blob = await new Promise<Blob | null>((resolve) => {
+    return await new Promise<Blob | null>((resolve) => {
       /* WebP where the browser has it — a third the bytes of the JPEG at the
          same quality on the flat white product shots. Safari 14+ has it;
          older Safari silently returns a PNG here, which is still correct,
@@ -60,8 +54,6 @@ export async function makeThumb(file: File): Promise<Blob | null> {
         resolve(null);
       }
     });
-
-    return blob;
   } catch {
     return null;
   } finally {
@@ -70,10 +62,44 @@ export async function makeThumb(file: File): Promise<Blob | null> {
 }
 
 /**
- * Read a File as base64, for the thumb column.
+ * Build the display-sized copies of an image, smallest first.
+ *
+ * Null entries are a normal outcome, not a failure: a HEIC the browser cannot
+ * decode, an image already narrower than the target, or a browser without
+ * canvas.toBlob. In every case the original is still uploaded and the
+ * front-end falls back to the full-size file, so the worst outcome is a
+ * slower page rather than a broken one.
+ */
+export async function makeThumbs(file: File): Promise<Tier[]> {
+  /* Below the smallest target already. Upscaling would make it both larger
+     and softer than the original, so there is nothing to gain. */
+  if (file.size < 24 * 1024) return [];
+
+  /* One decode for both sizes — createImageBitmap is the expensive part. */
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    return [];
+  }
+  bitmap.close?.();
+
+  const [small, large] = await Promise.all([
+    resizeTo(file, THUMB_WIDTH),
+    resizeTo(file, THUMB_LG_WIDTH)
+  ]);
+
+  const out: Tier[] = [];
+  if (small) out.push({ width: THUMB_WIDTH, blob: small });
+  if (large) out.push({ width: THUMB_LG_WIDTH, blob: large });
+  return out;
+}
+
+/**
+ * Read a Blob as base64, for a thumb column.
  *
  * Done with FileReader rather than a manual byte loop: the point of the
- * previous CPU fix was to stop assembling megabyte strings byte by byte on
+ * earlier CPU fix was to stop assembling megabyte strings byte by byte on
  * the server, and reintroducing that on the client would be the same mistake
  * in a place that cannot afford it either.
  */
@@ -93,12 +119,13 @@ export function blobToBase64(blob: Blob): Promise<string> {
 }
 
 /**
- * Build the FormData for an upload, attaching a thumbnail per file.
+ * Build the FormData for an upload, attaching thumbnails per file.
  *
- * The thumb travels as a parallel `thumbs` field in the same order as
- * `files`, rather than as a named field per file: the route reads
- * form.getAll('thumbs') and pairs by index, and a file with no thumb simply
- * stores NULL and falls back to the original on the front end.
+ * The thumbs travel as parallel `thumbs` fields in the same order as
+ * `files`, with the target width in the field name, rather than one named
+ * field per file: the route reads form.getAll('thumbs') and pairs by index,
+ * and a file with no thumbnail simply stores NULL and falls back to the
+ * original on the front end.
  */
 export async function buildUploadForm(
   files: FileList | File[],
@@ -108,13 +135,13 @@ export async function buildUploadForm(
   const list = Array.from(files);
   const form = new FormData();
 
-  const thunks = list.map((f) => makeThumb(f));
-  const thumbs = await Promise.all(thunks);
+  const tiers = await Promise.all(list.map((f) => makeThumbs(f)));
 
   list.forEach((f, i) => {
     form.append('file', f);
-    const t = thumbs[i];
-    if (t) form.append('thumb', t, `thumb-${i}.webp`);
+    tiers[i].forEach(({ width, blob }, n) => {
+      form.append('thumb', blob, `thumb-${i}-${width}-${n}.webp`);
+    });
   });
 
   form.append('folder', folder);

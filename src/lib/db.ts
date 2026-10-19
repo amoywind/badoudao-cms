@@ -36,6 +36,8 @@ export type ProductImage = {
      images uploaded before thumbnails existed — every caller falls back to
      `url`. */
   thumbUrl?: string | null;
+  /* 1024px tier, for the product gallery's srcset. */
+  thumbLgUrl?: string | null;
   alt?: string;
   isMain?: boolean;
   kind?: string;
@@ -279,7 +281,7 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
        binary per product off D1 and throwing it away on a page every buyer
        loads. */
     all(
-      `SELECT m.id, m.url, m.alt, m.filename, m.thumb,
+      `SELECT m.id, m.url, m.alt, m.filename, m.thumb, m.thumb_lg,
               pi.sort_order AS image_order, pi.is_main, pi.kind AS shot_kind
        FROM product_images pi
        JOIN media m ON m.id = pi.media_id
@@ -324,6 +326,9 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
          images uploaded before thumbnails existed, and the callers fall back
          to `url`. */
       thumbUrl: m.thumb ? `/api/media-thumb/${m.id}` : null,
+      /* The 1024px tier. The product gallery is the one place that needs
+         more than the 640px copy — see _pd-client's srcset. */
+      thumbLgUrl: m.thumb_lg ? `/api/media-thumb/${m.id}?w=1024` : null,
       alt: m.alt || '',
       filename: m.filename,
       isMain: m.is_main === 1,

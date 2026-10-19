@@ -19,6 +19,8 @@ type Shot = {
   /* 640px copy of the same photo, when one exists. Null on images uploaded
      before thumbnails did — every caller falls back to `url`. */
   thumbUrl?: string | null;
+  /* 1024px tier for the srcset below. */
+  thumbLgUrl?: string | null;
   alt: string;
   kind?: string;
 };
@@ -108,15 +110,22 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
                  prioritised. tsc only accepts the camelCase spelling, which
                  is the one that does not work at runtime. */
               {...{ fetchpriority: 'high' }}
-              /* This frame zooms to 1.75x on hover and opens full-screen in
-                 the lightbox, so on a wide screen the original is the right
-                 file — but it is 954 KB, and a phone never renders more than
-                 the 640px copy. srcset lets the browser decide: phones take
-                 the thumbnail, desktops take the full-resolution shot when
-                 they are about to zoom into it. */
+              /* Three tiers, and the middle one is not optional. This frame
+                 zooms to 1.75x and opens full-screen, so a desktop wants the
+                 original — but with only 640w and 2048w on offer, a 390px
+                 phone at 2x needs ~718 device pixels, finds nothing close,
+                 and takes the next candidate up: the 954 KB original, for an
+                 image shown 356 CSS px wide. The 1024w tier is what the
+                 phone actually wants. Measured 751 KB before this line. */
               {...(current.thumbUrl
                 ? {
-                    srcSet: `${current.thumbUrl} 640w, ${current.url} 2048w`,
+                    srcSet: [
+                      `${current.thumbUrl} 640w`,
+                      current.thumbLgUrl ? `${current.thumbLgUrl} 1024w` : null,
+                      `${current.url} 2048w`
+                    ]
+                      .filter(Boolean)
+                      .join(', '),
                     sizes: '(max-width: 900px) 92vw, 620px'
                   }
                 : {})}

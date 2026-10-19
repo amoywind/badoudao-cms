@@ -103,6 +103,14 @@ export default async function HomePage() {
                 alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs"
                 width={1400}
                 height={788}
+                /* 134 KB at 1400px, shown in a 358px frame on a phone. The
+                   720px copy is 27 KB and still sharper than the screen it
+                   is read on; the desktop layout spans most of the viewport
+                   and keeps the original. Same reasoning as the product
+                   thumbnails, for the two photos that live in public/
+                   rather than in the media library. */
+                srcSet="/hero-clocks-720.jpg 720w, /hero-clocks.jpg 1400w"
+                sizes="(max-width: 680px) 92vw, 78vw"
                 {...{ fetchpriority: 'high' }}
                 decoding="async"
               />
@@ -238,6 +246,11 @@ export default async function HomePage() {
                 alt="Our assembly floor: staff fitting dials and movements before packing"
                 width={1400}
                 height={933}
+                /* 206 KB for a photo that renders into half the viewport on
+                   desktop and a 358px frame on a phone. The 720px copy is
+                   44 KB. */
+                srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
+                sizes="(max-width: 900px) 92vw, 46vw"
                 loading="lazy"
                 decoding="async"
               />
