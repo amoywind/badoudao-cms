@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDB, one, all, run, getProduct, listProducts, listCategories, uid, slugify, log } from '@/lib/db';
+import { getDB, one, all, run, batch, getProduct, listProducts, listCategories, uid, slugify, log } from '@/lib/db';
 import { currentUser, can } from '@/lib/auth';
 
 export const runtime = 'edge';
@@ -133,7 +133,10 @@ export async function POST(request) {
     );
   });
 
-  await db.batch(stmts);
+  /* `batch()` from lib/db, not `db.batch()`: the wrapper is what drops the
+     cached reads. Called directly, the products index and the category pages
+     kept serving the pre-edit rows until the cache TTL expired. */
+  await batch(stmts);
   await log(user.id, 'create', 'products', id, body.name);
 
   return NextResponse.json({ ok: true, id, slug });
@@ -280,7 +283,7 @@ export async function PUT(request) {
     });
   }
 
-  await db.batch(stmts);
+  await batch(stmts);
   await log(user.id, 'update', 'products', body.id, body.name || '');
 
   return NextResponse.json({ ok: true });

@@ -141,22 +141,39 @@ export async function all(sql, ...params) {
 }
 
 /**
- * Memoise a read for the length of one request.
+ * Memoise a read — within the request, then across requests at the edge.
  *
- * Every public page loads the same handful of rows: the categories for the
- * header and the footer, the site settings for the top bar and the contact
- * details, the navigation. Measured on the product page, that was five
- * identical reads per view — and each one is a network round trip to D1,
- * which is where the ~1.3s was going.
+ * Two layers, because they answer different questions.
  *
- * Held on globalThis rather than a module variable so the cache lives for
- * the isolate, and the key includes the arguments: two products are two
- * different queries and must not collide.
+ * The in-memory map (globalThis, so it lives for the isolate) collapses
+ * repeated reads inside one render: the categories are needed by the header,
+ * the footer, the sidebar and the page body, and they used to be four
+ * identical round trips to D1. Storing the Promise rather than the value
+ * means two callers awaiting the same miss still cause one query.
  *
- * Writes call invalidateCache() so the next request sees the change. The
- * window is a single request either way, so there is nothing stale to
- * serve.
+ * The Cache API layer sits behind it and outlives the request. Every public
+ * page re-reads the same handful of rows, none of which differ between two
+ * visitors, and each read is a network round trip — measured at roughly
+ * 1.5s for the three queries `listCategories` needs. Caching the result
+ * rather than the rendered HTML removes that cost without touching the
+ * response body, which middleware cannot do (see src/middleware.ts for why
+ * the caching lives here instead of there).
+ *
+ * Two properties worth stating plainly:
+ *
+ *   - `cached()` never parallelises. It dedupes and it remembers; it does
+ *     not make independent queries concurrent. `listCategories` issues its
+ *     three inside a Promise.all for that reason.
+ *
+ *   - Every write path calls `invalidateCache()`, which clears the map and
+ *     drops the edge entries, so an edit is visible on the next request.
+ *     `batch()` counts as a write and did not used to invalidate — harmless
+ *     while the map lived for one request, not harmless now.
  */
+
+/** How long a cached read is served from the edge, in seconds. */
+const READ_TTL_SECONDS = 300;
+
 const CACHE = '__badoudao_read_cache__';
 
 type CacheBucket = Map<string, Promise<unknown>>;
@@ -171,7 +188,36 @@ function readKey(sql: string, params: unknown[]) {
   return `${sql}|${JSON.stringify(params)}`;
 }
 
-/** Run a query once per request and reuse the result after that. */
+/** Cache API keys must be URLs, so the query is hashed into one. */
+async function edgeKey(sql: string, params: unknown[]): Promise<string | null> {
+  const data = new TextEncoder().encode(readKey(sql, params));
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  const hex = [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  /* Keyed to the request host so two deployments on different domains do
+     not read each other's entries in a shared data centre. */
+  const host = (() => {
+    try {
+      return new URL((getRequestContext() as { request?: Request }).request?.url || 'https://local')
+        .host;
+    } catch {
+      return 'local';
+    }
+  })();
+  return `https://${host}/__bd-read/${hex}`;
+}
+
+/**
+ * The Cache API is unavailable in local dev and would silently swallow
+ * every error otherwise, so its absence is a normal state, not a fault.
+ */
+function edgeCache(): Cache | null {
+  const g = globalThis as unknown as { caches?: CacheStorage };
+  return g.caches?.default ?? null;
+}
+
+/** Run a query once, then reuse the result for the request and the edge. */
 export async function cached<T = Record<string, unknown>[]>(
   sql: string,
   ...params: unknown[]
@@ -185,17 +231,84 @@ export async function cached<T = Record<string, unknown>[]>(
   /* Promise, not value: two callers awaiting the same miss must not both
      reach the database. */
   const p = (async () => {
-    const rows = await all(sql, ...params);
-    return rows as T;
+    const edge = edgeCache();
+    const ekey = edge ? await edgeKey(sql, params) : null;
+
+    if (edge && ekey) {
+      try {
+        const stored = await edge.match(ekey);
+        if (stored) return (await stored.json()) as T;
+      } catch {
+        /* A cache miss must never be fatal — fall through to D1. */
+      }
+    }
+
+    const rows = (await all(sql, ...params)) as T;
+
+    if (edge && ekey) {
+      try {
+        await edge.put(
+          ekey,
+          new Response(JSON.stringify(rows), {
+            headers: {
+              'Content-Type': 'application/json',
+              /* Cache API reads the TTL from Cache-Control; max-age here is
+                 what expires the entry, s-maxage would not. */
+              'Cache-Control': `public, max-age=${READ_TTL_SECONDS}`
+            }
+          })
+        );
+        /* Remember the key so invalidateCache() can delete it — the Cache
+           API offers no way to enumerate what it holds. */
+        const g = globalThis as unknown as { __bd_edge_keys__?: Set<string> };
+        if (!g.__bd_edge_keys__) g.__bd_edge_keys__ = new Set();
+        g.__bd_edge_keys__.add(ekey);
+      } catch {
+        /* Storage refused — the value is still correct, just not cached. */
+      }
+    }
+
+    return rows;
   })();
 
   bucket.set(key, p);
   return p;
 }
 
-/** Drop memoised reads — call after anything that writes. */
+/**
+ * Drop memoised reads — call after anything that writes.
+ *
+ * Clears the in-memory map synchronously, and deletes from the edge every
+ * key this isolate has read so far. That second part is why the keys are
+ * tracked: Cache API has no wildcard delete and no listing API, so the only
+ * way to clear more than one entry is to know the keys.
+ *
+ * Tracking is per-isolate, so a write clears the keys its own instance read.
+ * An entry some other instance wrote stays until its TTL — at most
+ * READ_TTL_SECONDS. In practice the isolate that serves a request is the one
+ * that did the reading, and the admin write and the next page view usually
+ * land on the same one, so the common path is immediate.
+ *
+ * Deliberately not awaited. A write must not wait on the network to
+ * return, and the worst case of dropping out is the TTL the entry had
+ * anyway.
+ */
 export function invalidateCache() {
   cache().clear();
+
+  const edge = edgeCache();
+  if (!edge) return;
+
+  const keys = [...(globalThis as unknown as { __bd_edge_keys__?: Set<string> }).__bd_edge_keys__ ?? []];
+  (globalThis as unknown as { __bd_edge_keys__?: Set<string> }).__bd_edge_keys__ = new Set();
+
+  void Promise.all(
+    keys.map((k) =>
+      edge.delete(k).catch(() => {
+        /* already gone, or refused — the TTL covers it */
+      })
+    )
+  );
 }
 
 /** Run a write. */
@@ -206,10 +319,20 @@ export async function run(sql, ...params) {
   return r;
 }
 
-/** Run several writes in one transaction. */
+/**
+ * Run several writes in one transaction.
+ *
+ * Invalidates like `run()` does. It did not used to, which was invisible
+ * while the read cache lived for a single request — the next request always
+ * built a fresh map — and would have served the previous contents for the
+ * full TTL now that entries survive across requests. Both product create and
+ * product update come through here.
+ */
 export async function batch(statements) {
   const db = getDB();
-  return db.batch(statements);
+  const r = await db.batch(statements);
+  invalidateCache();
+  return r;
 }
 
 /* ------------------------------------------------------------------ */
@@ -421,10 +544,39 @@ export async function listProducts(
 }
 
 export async function listCategories(): Promise<Category[]> {
-  const rows = await cached<any[]>('SELECT * FROM categories ORDER BY sort_order, name');
+  /* Three independent reads, one round trip.
 
-  /* Cover image per category: the most recently updated published product
-     that actually has a main image.
+     These were three sequential awaits, which cost two extra network
+     round trips to D1 on every render of every public page — measured at
+     ~1.5s total for the set. Nothing here depends on anything above it:
+     the cover rows are keyed by category id afterwards, not read from
+     `rows`. So they go out together.
+
+     `cached()` does not help here. It dedupes repeated reads inside a
+     single request; it never parallelises anything. */
+  const [rows, covers, counts] = await Promise.all([
+    cached<any[]>('SELECT * FROM categories ORDER BY sort_order, name'),
+    cached<any[]>(
+      `SELECT category, url, thumb, media_id FROM (
+         SELECT p.category AS category, m.url AS url, m.thumb AS thumb,
+                m.id AS media_id,
+                ROW_NUMBER() OVER (
+                  PARTITION BY p.category
+                  ORDER BY p.updated_at DESC, p.id DESC
+                ) AS rn
+           FROM products p
+           JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
+           JOIN media m ON m.id = pi.media_id
+          WHERE p.status = 'published'
+       ) WHERE rn = 1`
+    ),
+    cached<any[]>(
+      `SELECT category, COUNT(*) AS n FROM products WHERE status = 'published' GROUP BY category`
+    )
+  ]);
+
+  /* Cover image per category: the newest published product that actually has
+     a main image.
 
      Newest, because that is the product being promoted — a category whose
      picture is three years old shows a model the factory has moved on from.
@@ -434,24 +586,8 @@ export async function listCategories(): Promise<Category[]> {
      Row_number partitioned by category rather than a join on max(): the
      join picks one product and returns nothing at all when that product has
      no image, and a category card with no picture is the thing this is
-     meant to fix. */
-  const covers = await cached<any[]>(
-    `SELECT category, url, thumb, media_id FROM (
-       SELECT p.category AS category, m.url AS url, m.thumb AS thumb,
-              m.id AS media_id,
-              ROW_NUMBER() OVER (
-                PARTITION BY p.category
-                ORDER BY p.updated_at DESC, p.id DESC
-              ) AS rn
-         FROM products p
-         JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
-         JOIN media m ON m.id = pi.media_id
-        WHERE p.status = 'published'
-     ) WHERE rn = 1`
-  );
-
-  /* First row per category wins; the query is already ordered so the newest
-     comes first within each partition. */
+     meant to fix. First row per category wins — the query is already
+     ordered so the newest comes first within each partition. */
   const coverByCat = new Map<string, { url: string; thumbUrl: string | null }>();
   for (const row of covers) {
     if (!coverByCat.has(row.category)) {
@@ -462,9 +598,6 @@ export async function listCategories(): Promise<Category[]> {
     }
   }
 
-  const counts = await cached<any[]>(
-    `SELECT category, COUNT(*) AS n FROM products WHERE status = 'published' GROUP BY category`
-  );
   const countByCat = new Map(counts.map((r) => [r.category, r.n]));
 
   return rows.map((r) => {
