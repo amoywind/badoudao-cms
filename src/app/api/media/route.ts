@@ -78,11 +78,14 @@ export async function GET(request) {
      product editor, and every time the markdown editor's image picker opened
      — three separate entry points to the same expensive query.
 
-     Metadata is what a grid needs. The bytes are fetched on demand by
-     /api/media-file/[id], one image at a time. */
+     `thumb` is reduced to a boolean on the way out for the same reason: it is
+     another 714 KB of base64, and the admin only ever asks "does this image
+     have one?" in order to build a URL. The payload is served by
+     /api/media-thumb/[id]. */
   const media = await all(
     `SELECT id, filename, url, mime, size, width, height, alt, folder, tag,
-            created_at, thumb
+            created_at,
+            CASE WHEN thumb IS NULL THEN 0 ELSE 1 END AS has_thumb
      FROM media ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
      ORDER BY created_at DESC LIMIT 500`,
     ...params
@@ -108,7 +111,13 @@ const folders = await all(
 );
 
   return NextResponse.json({
-    media: media.map((m) => ({ ...m, usedBy: usedBy[m.id] || [] })),
+    /* The flag becomes a URL here so no caller has to know it is a row count
+       rather than a path, and nothing downstream needs the column name. */
+    media: media.map(({ has_thumb, ...m }) => ({
+      ...m,
+      thumbUrl: has_thumb ? `/api/media-thumb/${m.id}` : null,
+      usedBy: usedBy[m.id] || []
+    })),
     folders
   });
 }

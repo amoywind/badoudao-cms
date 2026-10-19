@@ -23,7 +23,7 @@ type Media = {
   url: string;
   /* Present when a 640px copy was generated — at upload time in the browser,
      or by scripts/backfill-thumbs.js for the existing library. */
-  thumb?: string | null;
+  thumbUrl?: string | null;
   alt?: string;
   folder?: string;
   width?: number;
@@ -234,7 +234,7 @@ export function ImagePicker({
                           150px cells, which is a large part of why opening
                           the picker kept failing. */}
                       <img
-                        src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                        src={m.thumbUrl || m.url}
                         alt=""
                         loading="lazy"
                         decoding="async"

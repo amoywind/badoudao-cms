@@ -430,7 +430,7 @@ export default function EditProductPage() {
                   {media.slice(0, 40).map((m) => (
                     <div key={m.id} className="mi"
                       onClick={() => set('images', [...product.images, {
-                        mediaId: m.id, url: m.url, thumbUrl: m.thumb, alt: m.alt
+                        mediaId: m.id, url: m.url, thumbUrl: m.thumbUrl, alt: m.alt
                       }])}
                     >
                       <div className="mi-img">
@@ -438,7 +438,7 @@ export default function EditProductPage() {
                             954 KB each; opening this tab used to download
                             every one of them. */}
                         <img
-                          src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                          src={m.thumbUrl || m.url}
                           alt=""
                           loading="lazy"
                           decoding="async"

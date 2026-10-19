@@ -155,7 +155,7 @@ export default function MediaPage() {
                   <div key={m.id} className="mi">
                     <div className="mi-img">
                       <img
-                      src={m.thumb ? `/api/media-thumb/${m.id}` : m.url}
+                      src={m.thumbUrl || m.url}
                       alt={m.alt}
                       loading="lazy"
                       decoding="async"
