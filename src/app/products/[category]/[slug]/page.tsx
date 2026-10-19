@@ -130,9 +130,18 @@ export default async function ProductPage({ params }) {
   /* The gallery wants every shot with its angle noted, ordered so the
      front-on view leads. product.images is already sort-ordered; the kind
      is carried through because the thumbnail needs to say whether it is
-     showing the back or the movement. */
+     showing the back or the movement.
+
+     The two thumbnail URLs come along too. This used to rebuild the object
+     from url/alt/kind alone, which silently dropped them — the gallery
+     then had no thumbUrl, the srcset never rendered, and the page shipped
+     the 954 KB original on a phone. Rebuilding an object field by field is
+     where a new field goes to die; anything getProduct returns that the
+     gallery might want has to be listed here. */
   const shots = product.images.map((im) => ({
     url: im.url,
+    thumbUrl: im.thumbUrl,
+    thumbLgUrl: im.thumbLgUrl,
     alt: im.alt || product.name,
     kind: im.kind || ''
   }));
