@@ -1,0 +1,12 @@
+-- The specification string from the inquiry builder.
+--
+-- A buyer on a product page configures a movement, a hand set and a
+-- packaging tier, and the builder writes it as a code like
+-- `MDF-01-SWEEP-BRS-GIFT`. That code is what the factory needs, and
+-- asking the buyer to also describe the same thing in prose is how a
+-- configured enquiry turns back into a vague one.
+--
+-- Nullable, empty for every enquiry that did not come from a product
+-- page. The message column still carries the readable version, so
+-- nothing that used to work stops working.
+ALTER TABLE inquiries ADD COLUMN spec TEXT DEFAULT '';

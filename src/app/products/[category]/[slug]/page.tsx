@@ -6,6 +6,7 @@ import { listSeoTags, packagingImages } from '@/lib/seo-tags';
 import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
 import { ProductGallery, CustomisationList } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
+import { InquiryBuilder } from '../../../InquiryBuilder';
 import { InquiryForm } from '../../../InquiryForm';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -253,6 +254,12 @@ export default async function ProductPage({ params }) {
                 )}
 
                 <CustomisationList groups={customGroups} />
+
+                {/* The inquiry builder. The specification it generates is
+                    carried in a hidden field and travels with the enquiry,
+                    so the factory receives the configuration as a code
+                    rather than as a paragraph the buyer had to write. */}
+                <InquiryBuilder productId={product.id} productName={product.name} />
 
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>

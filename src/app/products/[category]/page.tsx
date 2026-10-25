@@ -4,6 +4,8 @@ import { listProducts, listCategories, getSettings, countProductsByCategory, bui
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { CategoryNav } from '../../CategoryNav';
 import { InquiryCTA } from '../../InquiryForm';
+import { TrustCards, Icons } from '../../TrustCards';
+import { MATERIALS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -49,6 +51,13 @@ export default async function CategoryPage({ params }) {
   ]);
 
   const title = cat ? `${cat.name} — wholesale & OEM manufacturer` : 'Products';
+
+  /* The process names for this material, from the shared vocabulary. A
+     category with no entry there — a new one the owner created in the
+     admin — simply has no tags, which is right: the tags describe what
+     the factory can do with that material, and a material nobody has
+     written about yet has no process list to show. */
+  const mat = MATERIALS.find((m) => m.slug === category);
 
   const schema = {
     '@context': 'https://schema.org',
@@ -105,6 +114,29 @@ export default async function CategoryPage({ params }) {
           </div>
         </div>
 
+        {/* ---- The material's craft tags and the category trust cards ---- */}
+        <section style={{ padding: '48px 0 0' }}>
+          <div className="wrap">
+            {mat && (
+              <div style={{ marginBottom: 28 }}>
+                <div className="spec-h" style={{ marginBottom: 12 }}>Processes for this material</div>
+                <div className="ctags">
+                  {mat.tags.map((t) => <span className="ctag on" key={t}>{t}</span>)}
+                </div>
+              </div>
+            )}
+
+            <TrustCards
+              items={[
+                { value: String(s.moq || 300), unit: ' pcs', title: 'MOQ — mixed specs allowed', detail: 'Colours and specifications in one order', icon: Icons.box },
+                { value: '100%', title: 'Silent sweep tested', detail: 'Every movement checked before packing', icon: Icons.clock },
+                { value: '3', unit: ' yr', title: 'Movement warranty', detail: 'Factory assurance on the movement', icon: Icons.shield },
+                { value: '24', unit: ' hours', title: 'Quote response', detail: 'With the 3D rendering', icon: Icons.spark }
+              ]}
+            />
+          </div>
+        </section>
+
         <section>
           <div className="wrap">
             {/* Sidebar beside the grid, not above it: a buyer who came
@@ -126,10 +158,10 @@ export default async function CategoryPage({ params }) {
                     <a href="#inquiry" style={{ color: 'var(--brand)' }}>Send us your requirement</a> and we will quote.
                   </p>
                 ) : (
-                  <div className="grid-3">
+                  <div className="pgrid">
                     {products.map((p, i) => (
-                      <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="card">
-                        <div className={`c-visual${p.images.length ? ' has-img' : ''}`}>
+                      <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="pcard">
+                        <div className="sq">
                           {p.images.length ? (
                           /* The 640px copy, not the 2048px original. This was
                              the single heaviest item on the site: 954 KB of
@@ -145,14 +177,28 @@ export default async function CategoryPage({ params }) {
                           />
                         ) : null}
                         </div>
-                        <div className="c-body">
-                          <h3 style={{ fontSize: 18 }}>{p.name}</h3>
-                          <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 130)}…</p>
-                          <div className="c-meta">
-                            <span>MOQ <b>{p.moq}</b> · {p.leadTime}</span>
-                            <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                        <div className="pcard-body">
+                          <h3>{p.name}</h3>
+                          {p.summary && (
+                            <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.55, marginBottom: 10 }}>
+                              {p.summary.slice(0, 110)}…
+                            </p>
+                          )}
+                          <div className="pcard-price">
+                            <span>EXW</span>
+                            <b>${p.priceMin.toFixed(2)}</b>
+                            <span>– ${p.priceMax.toFixed(2)}</span>
+                            <span style={{ marginLeft: 'auto' }}>MOQ {p.moq}</span>
                           </div>
                         </div>
+                        {/* The quick-inquire button. The whole card is a link
+                            to the product, so this is a second path to the
+                            same place rather than a separate action — it
+                            exists because the specification asks for a
+                            visible conversion point on the card, and a
+                            buyer who is not ready for the detail page can
+                            still start an enquiry from here. */}
+                        <span className="trend-cta">Quick inquire →</span>
                       </Link>
                     ))}
                   </div>

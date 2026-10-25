@@ -10,7 +10,13 @@ const MAX_BODY = 16 * 1024 * 1024;
 const MIN_MS = 3000;
 const MAX_MS = 86_400_000;
 
-const QUANTITIES = ['500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'];
+/* The quantity ranges the form offers. The list is a whitelist rather
+   than a free-text field so the two can be counted and compared — and it
+   has to match the form's own list exactly, because a value the form
+   offers but the API rejects is a 400 the buyer cannot act on. */
+const QUANTITIES = [
+  '300 - 499', '500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'
+];
 const DRAWING_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
 
 const clean = (v, max = 500) =>
@@ -88,6 +94,18 @@ export async function POST(request) {
   const email = clean(body.email, 254);
   const message = clean(body.message, 3000);
   const quantity = clean(body.quantity, 40);
+  /* The configuration code from the inquiry builder, e.g. MDF-01-SWEEP-BRS-GIFT.
+     Empty for an enquiry that did not start on a product page. */
+  const spec = clean(body.spec, 120);
+
+  /* The specification dropdowns. Each is optional; an empty string is
+     stored as an empty string rather than NULL so the admin can filter
+     on them without a COALESCE on every query. */
+  const material = clean(body.material, 60);
+  const movement = clean(body.movement, 60);
+  const hands = clean(body.hands, 60);
+  const packaging = clean(body.packaging, 60);
+  const timeline = clean(body.timeline, 60);
 
   /* The browser strips formatting before sending, but the API accepts
      calls from anywhere — normalise here too so "+1 555-123-4567" and
@@ -150,9 +168,10 @@ export async function POST(request) {
   await run(
     `INSERT INTO inquiries
       (id, email, name, company, country, whatsapp, products, quantity, custom_logo,
-       message, product_id, source_page, status, has_attachment,
+       message, spec, material, movement, hands, packaging, timeline,
+       product_id, source_page, status, has_attachment,
        utm_source, utm_medium, utm_campaign, referrer, ip, country_code)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?, 'new', ?, ?,?,?,?,?,?)`,
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', ?, ?,?,?,?,?,?)`,
     id,
     email,
     clean(body.name, 120),
@@ -163,6 +182,12 @@ export async function POST(request) {
     quantity,
     body.custom_logo === 'yes' ? 'yes' : 'no',
     message,
+    spec,
+    material,
+    movement,
+    hands,
+    packaging,
+    timeline,
     productId,
     clean(body.sourcePage, 300),
     /* The row is inserted before the file is stored, because
@@ -197,6 +222,12 @@ export async function POST(request) {
     id, email, message, products, quantity,
     company: clean(body.company, 200),
     whatsapp,
+    spec,
+    material,
+    movement,
+    hands,
+    packaging,
+    timeline,
     drawing: stored ? stored.filename : ''
   });
 
@@ -297,12 +328,26 @@ async function notify(d) {
     const { env } = getRequestContext();
     if (!env?.RESEND_API_KEY || !env?.INBOX_EMAIL) return;
 
+    /* The specification rows only appear when the buyer filled them in.
+       A row of em-dashes for every optional field makes the email harder
+       to read, and the fields that were left blank are the ones the
+       buyer did not want to say anything about. */
+    const specRows = [
+      ['Spec code', d.spec, true],
+      ['Material', d.material, false],
+      ['Movement', d.movement, false],
+      ['Hands', d.hands, false],
+      ['Packaging', d.packaging, false],
+      ['Target date', d.timeline, false]
+    ].filter(([, v]) => v);
+
     const rows = [
       ['Email', d.email, true],
       ['WhatsApp', d.whatsapp || '—', true],
       ['Company', d.company || '—', false],
       ['Products', d.products.length ? d.products.join('<br>') : '—', false],
       ['Quantity', d.quantity, true],
+      ...specRows,
       ['Attachment', d.drawing || '—', false]
     ]
       .map(

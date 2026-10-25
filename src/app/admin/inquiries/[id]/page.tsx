@@ -138,6 +138,25 @@ export default function InquiryDetail() {
                 <div><div className="help">数量</div><div style={{ fontSize: 13, fontWeight: 600 }}>{i.quantity}</div></div>
               </div>
 
+              {/* The buyer's configuration, when they filled it in. The
+                  row is hidden entirely when there is nothing to show —
+                  five rows of em-dashes is noise, and the enquiry that
+                  says nothing about the specification is the common case
+                  outside a product page. */}
+              {(i.spec || i.material || i.movement || i.hands || i.packaging || i.timeline) && (
+                <div className="fg" style={{ marginTop: 14 }}>
+                  <div className="help">产品规格</div>
+                  <div className="fg3" style={{ marginTop: 6 }}>
+                    {i.spec && <div><div className="help">配置编码</div><div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'ui-monospace, monospace' }}>{i.spec}</div></div>}
+                    {i.material && <div><div className="help">材质</div><div style={{ fontSize: 13 }}>{i.material}</div></div>}
+                    {i.movement && <div><div className="help">机芯</div><div style={{ fontSize: 13 }}>{i.movement}</div></div>}
+                    {i.hands && <div><div className="help">指针</div><div style={{ fontSize: 13 }}>{i.hands}</div></div>}
+                    {i.packaging && <div><div className="help">包装</div><div style={{ fontSize: 13 }}>{i.packaging}</div></div>}
+                    {i.timeline && <div><div className="help">交期</div><div style={{ fontSize: 13 }}>{i.timeline}</div></div>}
+                  </div>
+                </div>
+              )}
+
               <div className="fg2" style={{ marginTop: 14 }}>
                 <div><div className="help">来源页面</div><div style={{ fontSize: 12.5 }}>{i.source_page || '—'}</div></div>
                 <div><div className="help">提交时间</div><div style={{ fontSize: 12.5 }}>{i.created_at}</div></div>

@@ -18,7 +18,42 @@ import { useRef, useState } from 'react';
  * blocked with no visible reason and no way forward.
  */
 
-const QUANTITIES = ['500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'];
+const QUANTITIES = ['300 - 499', '500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'];
+
+/* The specification dropdowns.
+ *
+ * Every one of these is optional, and that is deliberate. The form used
+ * to carry five required fields and nothing else — the company, country
+ * and model pickers were removed at the owner's request, because the
+ * buyer already knows what they want and each extra field costs
+ * completions.
+ *
+ * The redesign asks for a fuller form, and it is right to ask: a buyer
+ * who picks a movement and a packaging tier here gets a quote that
+ * already matches what they need, and one who leaves them blank has said
+ * no more than they said before. Optional fields add information without
+ * adding friction, which is the difference between a form that helps and
+ * one that blocks.
+ *
+ * On a product page the inquiry builder fills these in for the buyer, so
+ * the common case is a pre-filled form. */
+const MATERIALS = [
+  'Plastic', 'Solid wood', 'Metal', 'Acrylic', 'Glass / crystal', 'Resin', 'Not sure yet'
+];
+const MOVEMENTS = [
+  'Silent sweep quartz', 'Step-second quartz', 'Radio-controlled', 'Chime',
+  'Mechanical', 'LCD calendar display', 'LED digital display', 'Not sure yet'
+];
+const HAND_MATERIALS = [
+  'Aluminium', 'Brass', 'Solid wood', 'Acrylic', 'Custom Pantone plastic', 'Not sure yet'
+];
+const PACKAGING = [
+  'Mail-order kraft box', 'Colour gift box', 'Acrylic display box',
+  'Custom foam insert', 'Not sure yet'
+];
+const TIMELINES = [
+  'Within 2 months', '2-4 months', '4-6 months', 'Just exploring', 'Not sure yet'
+];
 
 const DIAL_CODES = [
   ['+1', 'US/CA'], ['+44', 'UK'], ['+49', 'DE'], ['+33', 'FR'], ['+39', 'IT'],
@@ -33,7 +68,21 @@ const DIAL_CODES = [
 ];
 
 const MAX_DRAWING = 2 * 1024 * 1024;
-const DRAWING_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
+
+/* The design file types the factory actually receives. A buyer sends a
+   vector logo, a CAD drawing or a photograph of a dial — not a PDF
+   brochure. The accept list covers those, plus the archives buyers send
+   when they have bundled several files together.
+
+   The 2 MB cap is not the specification's 50 MB. It is what a single D1
+   row can hold: the file is stored as base64, so 50 MB becomes 67 MB of
+   text, and the database is the only place it can go while R2 is not
+   bound. Raising the cap needs object storage first. */
+const ACCEPT = '.ai,.pdf,.png,.jpg,.jpeg,.webp,.gif,.cad,.dxf,.eps,.svg,.zip,.step,.stp';
+const EXT_ALLOW = [
+  'ai', 'pdf', 'png', 'jpg', 'jpeg', 'webp', 'gif',
+  'cad', 'dxf', 'eps', 'svg', 'zip', 'step', 'stp'
+];
 
 const DEFAULT_MESSAGE =
   'Please describe your wall clock requirements — size, shape, movement, dial design, quantity and target price.';
@@ -64,15 +113,22 @@ export function InquiryForm({
     setFile(null);
     if (!f) return;
 
-    const looksImage = f.type.startsWith('image/');
-    const looksPdf = f.type === 'application/pdf';
-    if (!looksImage && !looksPdf) {
-      setFileError('Only images and PDF files are accepted.');
+    /* The extension is checked rather than the MIME type. A browser
+       reports an .ai or .cad file as application/octet-stream or
+       something equally unhelpful, and the previous check — image or PDF
+       only — rejected exactly the files a factory needs. */
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    if (!EXT_ALLOW.includes(ext)) {
+      setFileError(
+        `${ext ? `.${ext}` : 'That file type'} is not accepted. Use AI, PDF, PNG, JPG, CAD, DXF, EPS, SVG or ZIP.`
+      );
       return;
     }
     if (f.size > MAX_DRAWING) {
       const mb = (f.size / 1024 / 1024).toFixed(1);
-      setFileError(`${f.name} is ${mb} MB. The limit is 2 MB — please compress it or share a link instead.`);
+      setFileError(
+        `${f.name} is ${mb} MB. The limit is 2 MB here — email it to amoywind@gmail.com and we will match it to your enquiry.`
+      );
       return;
     }
     setFile(f);
@@ -106,6 +162,16 @@ export function InquiryForm({
       whatsapp,
       quantity: fd.get('quantity'),
       message: fd.get('message'),
+      company: fd.get('company') || '',
+      material: fd.get('material') || '',
+      movement: fd.get('movement') || '',
+      hands: fd.get('hands') || '',
+      packaging: fd.get('packaging') || '',
+      timeline: fd.get('timeline') || '',
+      /* The specification string from the inquiry builder, when the
+         enquiry was started from a product page. Empty everywhere else,
+         and the API ignores it when it is. */
+      spec: fd.get('spec') || '',
       /* The model comes from the page, not from a picker the buyer has to
          use — a product enquiry is still attributed to that product. */
       products: preset ? [preset] : [],
@@ -191,6 +257,14 @@ export function InquiryForm({
         </div>
 
         <div className="fg">
+          <label className="fl" htmlFor="if-co">Company / brand name
+            <span className="hint">optional</span>
+          </label>
+          <input className="inp" id="if-co" name="company" placeholder="Smith Home Decor LLC"
+            autoComplete="organization" />
+        </div>
+
+        <div className="fg">
           <label className="fl" htmlFor="if-wa">WhatsApp<span className="req">*</span></label>
           <div className="wa-row">
             <select className="inp wa-code" value={dial}
@@ -220,6 +294,56 @@ export function InquiryForm({
             <option value="">Select a range…</option>
             {QUANTITIES.map((q) => <option key={q}>{q}</option>)}
           </select>
+        </div>
+
+        {/* The specification dropdowns. Optional, and on a product page
+            the inquiry builder has already filled the equivalent fields
+            in — these let a buyer starting from scratch say the same
+            thing in one click each. */}
+        <div className="fg">
+          <div className="spec-h" style={{ marginBottom: 12 }}>Product specification · optional</div>
+
+          <div className="fg2" style={{ marginBottom: 14 }}>
+            <div>
+              <label className="fl" htmlFor="if-mat" style={{ fontSize: 12 }}>Main material</label>
+              <select className="inp" id="if-mat" name="material" defaultValue="">
+                <option value="">Select…</option>
+                {MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="fl" htmlFor="if-mov" style={{ fontSize: 12 }}>Preferred movement</label>
+              <select className="inp" id="if-mov" name="movement" defaultValue="">
+                <option value="">Select…</option>
+                {MOVEMENTS.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="fg2" style={{ marginBottom: 14 }}>
+            <div>
+              <label className="fl" htmlFor="if-hnd" style={{ fontSize: 12 }}>Hands material</label>
+              <select className="inp" id="if-hnd" name="hands" defaultValue="">
+                <option value="">Select…</option>
+                {HAND_MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="fl" htmlFor="if-pkg" style={{ fontSize: 12 }}>Packaging</label>
+              <select className="inp" id="if-pkg" name="packaging" defaultValue="">
+                <option value="">Select…</option>
+                {PACKAGING.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="fl" htmlFor="if-tml" style={{ fontSize: 12 }}>Target delivery time</label>
+            <select className="inp" id="if-tml" name="timeline" defaultValue="">
+              <option value="">Select…</option>
+              {TIMELINES.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
         </div>
 
         <div className="fg">
@@ -274,7 +398,7 @@ export function InquiryForm({
             )}
           </div>
 
-          <input ref={fileRef} type="file" hidden accept="image/*,application/pdf"
+          <input ref={fileRef} type="file" hidden accept={ACCEPT}
             onChange={(e) => chooseFile(e.target.files?.[0] || null)} />
 
           <div className="drop-alt">

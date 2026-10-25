@@ -159,7 +159,13 @@ export async function Footer() {
     })
   );
 
+  /* WhatsApp wants the number with no spaces and a leading +. The
+     settings field is written the way a person would type it. */
+  const waNumber = String(s.whatsapp || '').replace(/[^\d]/g, '');
+  const waLink = waNumber ? `https://wa.me/${waNumber}` : '/contact';
+
   return (
+    <>
     <footer className="site-footer">
       <div className="wrap">
         <div className="f-grid">
@@ -210,5 +216,28 @@ export async function Footer() {
         </div>
       </div>
     </footer>
+
+      {/* The sticky bar. §1.3 of the brief: on a phone the two things a
+          buyer wants are a way to talk to someone and a way to start an
+          enquiry, and neither should be more than a thumb away.
+
+          It lives here rather than in each page because the footer is the
+          one component every public page already renders. The WhatsApp
+          number comes from the same settings row as the contact details,
+          so there is one number on the site rather than two.
+
+          Hidden above 768px — the header already carries both actions
+          there, and a fixed bar over a desktop viewport would cover the
+          last row of a long form for no benefit. */}
+      <div className="mbar">
+        <a className="mbar-wa" href={waLink} target="_blank" rel="noopener noreferrer">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 11.5a8.5 8.5 0 01-12.3 7.6L3 21l1.9-5.5A8.5 8.5 0 1121 11.5z" />
+          </svg>
+          WhatsApp
+        </a>
+        <a className="mbar-q" href="/contact">Request quote</a>
+      </div>
+    </>
   );
 }

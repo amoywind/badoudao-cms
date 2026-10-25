@@ -50,10 +50,12 @@ const ZONES: Zone[] = [
 /** The browser's own zone, resolved once the page has hydrated. */
 function browserOffset(): number {
   try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    /* -new Date().getTimezoneOffset() converts the browser's UTC offset
-       into the sign the table above uses: east of UTC is positive. */
-    const minutes = -new Date(tz).getTimezoneOffset();
+    /* The offset is measured against the browser's own clock rather than
+       looked up from the zone name. `new Date("Asia/Shanghai")` is an
+       invalid date — a zone name is not a date — and getTimezoneOffset()
+       on it returns NaN, which put "UTCNaN" and a NaN clock on the page.
+       The browser already knows its own offset; that is what this reads. */
+    const minutes = -new Date().getTimezoneOffset();
     /* Round to the nearest half hour — the zones that use one are the
        ones a buyer is likely to be in, and a clock showing 5:30 for a
        zone that is actually 5:45 would be worse than one showing
