@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
       return { title: 'Product | Badoudao', robots: { index: false } };
     }
 
-    const moq = product.moq || 500;
+    const moq = product.moq || 300;
     const price = product.priceMin
       ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
       : '';
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }) {
     return {
       title: `${slug} | Badoudao Quartz Clocks`,
       description:
-        'OEM and ODM quartz clocks from Badoudao. MOQ from 500 pieces, Ex Works pricing.'
+        'OEM and ODM quartz clocks from Badoudao. MOQ from 300 pieces, Ex Works pricing.'
     };
   }
 }
@@ -151,7 +151,7 @@ export default async function ProductPage({ params }) {
     managedTags as any
   );
 
-  const moq = product.moq || s.moq || 500;
+  const moq = product.moq || s.moq || 300;
 
   /* The owner's per-product picks, folded onto the catalogue groups. A
      group with nothing ticked is dropped rather than rendered empty: an

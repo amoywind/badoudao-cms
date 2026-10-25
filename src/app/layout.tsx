@@ -1,7 +1,17 @@
 import './globals.css';
+import './tokens.css';
 import './responsive.css';
 import './admin.css';
 import { getSettings } from '@/lib/db';
+import { inter, spaceGrotesk, jetbrainsMono } from './fonts';
+
+/* The font variables are set on <html> rather than on a wrapper, because
+   the public pages and the admin are separate trees with different
+   wrappers and the admin keeps its own system font stack. Putting them on
+   <html> makes the variable available to both without either depending on
+   the other's markup — and the admin's own rules keep overriding
+   --font-body for its elements, so it is unaffected by the change. */
+const fontVars = `${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`;
 
 /**
  * Normalise whatever was pasted into the Plausible field down to a domain.
@@ -93,7 +103,7 @@ export default async function RootLayout({ children }) {
   const plausible = plausibleDomain(s.plausible_domain, siteHost);
 
   return (
-    <html lang="en">
+    <html lang="en" className={fontVars}>
       <head>
         {sc && <meta name="google-site-verification" content={sc} />}
         {bing && <meta name="msvalidate.01" content={bing} />}

@@ -14,7 +14,7 @@ const DEFAULTS = {
   address: 'Zhangzhou, Fujian, China',
   capacityMin: '2000',
   capacityMax: '2000',
-  moq: '500',
+  moq: '300',
   quoteHours: '12',
   sampleDays: '7-10',
   logoLight: '/logo-light.svg',

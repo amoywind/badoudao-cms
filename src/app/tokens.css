@@ -1,0 +1,1522 @@
+/* ===================================================================
+   Design tokens — the "industrial minimal" system
+   -------------------------------------------------------------------
+   A separate file rather than an edit to globals.css, so the change can be
+   compared against what it replaced and reverted in one move. globals.css
+   keeps the layout rules; this file holds the palette, the type scale and
+   the components the redesign introduces.
+
+   THE OVERRIDE PROBLEM. admin.css is imported after globals.css in the
+   root layout, and it declares its own :root block. Same specificity,
+   later in the cascade, so the admin's variables win — for the front end
+   too, because there is one <body> and one set of stylesheets for both
+   trees. That was invisible while the two :root blocks agreed on the
+   important values. The moment they disagree, the front end silently
+   renders in the admin's palette.
+
+   Two ways out. Scoping the admin's :root to .admin-root fixes it
+   properly, but :root is not a class and cannot be scoped that way; the
+   admin's variables would have to be redeclared on the admin's wrapper,
+   which means touching every admin rule that reads them. The pragmatic
+   answer is to keep both :root blocks in agreement on the shared tokens
+   and let the accent differ deliberately — the admin keeps its own
+   --brand, and the front end gets --accent, which nothing else uses.
+
+   So: --brand stays the admin's green and means nothing on the public
+   pages. --accent is the public Klein Blue. The public rules read
+   --accent; the admin rules keep reading --brand.
+
+   The public variables are redeclared on .site rather than on :root.
+   .site has higher specificity than :root, so the front end gets the
+   new palette and the admin keeps the old one — with no shared variable
+   left to disagree about. The admin's wrapper is .app.admin-root and has
+   no .site class, so nothing in it inherits the public palette.
+
+   Fonts are self-hosted. next/font/local with the woff2 files in
+   src/app/fonts/ — no request to Google at runtime, which keeps the
+   visitor's IP away from a third party and keeps the site out of the
+   consent-banner requirement that the analytics choice was made to
+   avoid. The files are the latin subset, 102 KB for all three.
+   =================================================================== */
+
+.site {
+  /* The public palette. Declared here rather than on :root so the
+     admin's own :root — which loads later and would otherwise win —
+     cannot pull the front end back to the old colours. */
+  --ink: #111111;
+  --ink2: #6B7280;
+  --ink3: #6B7280;
+  --line: #E5E7EB;
+  --line2: #F0F1F3;
+  --bg: #F9F9FB;
+  --bg2: #FFFFFF;
+
+  /* The old name still means "the accent" in the front-end rules, and
+     those rules are not all being rewritten in this pass. It points at
+     Klein Blue so every existing var(--brand) on the public side turns
+     blue at once. */
+  --brand: #0052CC;
+  --brandSoft: #E8F0FC;
+  --brass: #0052CC;
+
+  /* The serif is gone. Fraunces was a display face in the old design;
+     Space Grotesk replaces it, and the fallback is a system sans rather
+     than Georgia so nothing loads a second family for one heading. */
+  --serif: var(--font-display), 'Inter', sans-serif;
+  --sans: var(--font-body);
+
+  background: var(--bg);
+  color: var(--ink);
+
+  /* The page canvas is the off-white surface, and it has to cover the
+     whole scroll height — the footer is dark, and the area below it
+     would otherwise show the body's own background. `min-height: 100vh`
+     plus the flex column keeps the footer at the bottom of a short page
+     instead of floating in the middle of it. */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The <main> element grows to fill whatever the page has left over, so
+   the footer sits at the bottom rather than directly under the content. */
+.site > main {
+  flex: 1;
+}
+
+:root {
+  /* -- accent: the public site's action colour. Klein Blue, reserved for
+     primary CTAs, active configuration states and live indicators. */
+  --accent: #0052CC;
+  --accent-hover: #003D99;
+  --accent-soft: #E8F0FC;
+
+  /* -- surface: off-white page canvas, white cards. */
+  --surface: #F9F9FB;
+  --surface-card: #FFFFFF;
+
+  /* -- rule: hairlines. */
+  --rule: #E5E7EB;
+  --rule-soft: #F0F1F3;
+
+  /* -- text: charcoal, slate, and the muted grey for engineering labels. */
+  --text: #111111;
+  --text-2: #6B7280;
+
+  /* Type. Space Grotesk for display, Inter for everything else, JetBrains
+     Mono for measurements and spec tables. */
+  --font-display: var(--font-space-grotesk), 'Inter', -apple-system, sans-serif;
+  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-tech: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Controls. */
+  --radius-card: 8px;
+  --radius-btn: 4px;
+  --square: 1 / 1;
+
+  /* Section rhythm. The spec asks for 96–120px of vertical space between
+     sections; 88px is the value that keeps a page six screens deep rather
+     than eight without making the spacing feel slack. */
+  --section-y: 88px;
+}
+
+/* ===================================================================
+   Typography
+   =================================================================== */
+
+.site {
+  font-family: var(--font-body);
+  letter-spacing: -0.011em;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.site h1,
+.site h2,
+.site h3,
+.site h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+/* Numbers in the trust cards and spec tables are data, not prose. They get
+   the mono face and the accent colour so a scan down the page finds them
+   without reading them. */
+.tnum {
+  font-family: var(--font-tech);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.site .mono,
+.site code,
+.site pre {
+  font-family: var(--font-tech);
+}
+
+/* The section eyebrow. Mono, uppercase, accent — the same mark the
+   specification uses to open each module. */
+.site .sec-tag {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.site .eyebrow {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  background: var(--text);
+  color: #fff;
+  border-radius: var(--radius-btn);
+}
+
+/* ===================================================================
+   Buttons — the accent is used here and almost nowhere else.
+   =================================================================== */
+
+.site .btn {
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.site .btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.site .btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.site .btn-ghost {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.site .btn-ghost:hover {
+  background: var(--text);
+  color: #fff;
+}
+
+/* ===================================================================
+   Trust cards — §4.2
+   The number is the hook, so it is the largest thing on the card and the
+   only thing in accent colour.
+   =================================================================== */
+
+.tcards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.tcard {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 26px 24px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.tcard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -18px rgba(17, 17, 17, .3);
+  border-color: #D6D9DE;
+}
+
+.tcard-ico {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-btn);
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+}
+
+.tcard-n {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+
+.tcard-n small {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-left: 2px;
+}
+
+.tcard-t {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.tcard-d {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+/* The strip version, for the horizontal trust bar under the hero. */
+.tcards-strip {
+  background: var(--text);
+  padding: 34px 0;
+}
+
+.tcards-strip .tcard {
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 0;
+  padding: 0 26px;
+}
+
+.tcards-strip .tcard:last-child {
+  border-right: none;
+}
+
+.tcards-strip .tcard-ico {
+  background: rgba(0, 82, 204, .18);
+  color: #7FB0F0;
+}
+
+.tcards-strip .tcard-n {
+  color: #fff;
+}
+
+.tcards-strip .tcard-n small {
+  color: #7FB0F0;
+}
+
+.tcards-strip .tcard-t {
+  color: #fff;
+}
+
+.tcards-strip .tcard-d {
+  color: #9AA1AC;
+}
+
+/* ===================================================================
+   Craft tags — §7.2
+   The material-specific process labels that sit above a category grid.
+   =================================================================== */
+
+.ctags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ctag {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 7px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface-card);
+  color: var(--text-2);
+}
+
+.ctag.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ===================================================================
+   Square media frame — §1.2
+   Every product image container is 1:1 with object-fit: contain, and the
+   image background matches the card so there is no colour fringe where
+   the two meet.
+   =================================================================== */
+
+.sq {
+  aspect-ratio: var(--square);
+  background: var(--surface-card);
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.sq img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The hover reveal: a second layer that fades in over the still. Used for
+   the "alternate dial colour" hover the specification asks for on the
+   trending-platform cards, and reserved for a video once one exists. */
+.sq-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+
+.sq:hover .sq-alt {
+  opacity: 1;
+}
+
+/* ===================================================================
+   Media placeholder — the vertical video slots
+   -------------------------------------------------------------------
+   The specification calls for a lot of video: a 15-second sweep close-up
+   on every product card, four 9:16 factory QC clips, a drop test. There
+   is no video in the media library, and inventing placeholder art would
+   look like the page was finished when it is not.
+
+   So the slot says what it is waiting for. A buyer who lands on it
+   before the footage exists sees an honest label rather than a broken
+   player, and whoever produces the footage knows exactly which slot it
+   belongs in.
+   =================================================================== */
+
+.vslot {
+  aspect-ratio: 9 / 16;
+  background: #16181C;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  color: #6E7681;
+  position: relative;
+  overflow: hidden;
+}
+
+.vslot-16 {
+  aspect-ratio: 16 / 9;
+}
+
+.vslot-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #3A4048;
+  display: grid;
+  place-items: center;
+  color: #7A828D;
+}
+
+.vslot-t {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7A828D;
+}
+
+.vslot-d {
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 220px;
+}
+
+/* Once a real file exists, .vslot is replaced by the video element and
+   the placeholder styling never applies. */
+
+/* ===================================================================
+   Sticky mobile bar — §1.3
+   52px, fixed to the bottom, two actions. It is hidden on desktop where
+   the header already carries both, and it reserves its space so it never
+   covers the last line of a form.
+   =================================================================== */
+
+.mbar {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52px;
+  z-index: 300;
+  background: var(--surface-card);
+  border-top: 1px solid var(--rule);
+  box-shadow: 0 -4px 18px -8px rgba(17, 17, 17, .18);
+}
+
+.mbar a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mbar .mbar-wa {
+  color: var(--text);
+  border-right: 1px solid var(--rule);
+}
+
+.mbar .mbar-q {
+  background: var(--accent);
+  color: #fff;
+}
+
+.mbar .mbar-q:hover {
+  background: var(--accent-hover);
+}
+
+@media (max-width: 767px) {
+  .mbar {
+    display: flex;
+  }
+
+  /* The bar is fixed, so the page needs room under it or the last row of
+     a long form sits behind it and cannot be scrolled to. */
+  .site {
+    padding-bottom: 52px;
+  }
+
+  .tcards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .tcards-strip .tcard {
+    border-right: none;
+    padding: 0 14px;
+  }
+
+  .tcard {
+    padding: 20px 18px;
+  }
+
+  .tcard-n {
+    font-size: 25px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tcards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===================================================================
+   Live clock engine
+   =================================================================== */
+
+.clockbox {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 22px;
+}
+
+.clockbox-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 18px;
+}
+
+.clockbox-title {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.clockbox-sel {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 6px 9px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.clockbox-face {
+  display: grid;
+  place-items: center;
+  padding: 6px 0 14px;
+}
+
+.clockface {
+  width: 100%;
+  max-width: 236px;
+  height: auto;
+}
+
+.clockbox-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+}
+
+.clockbox-zone {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+.clockbox-time {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ===================================================================
+   Material matrix — the 1:1 category grid
+   =================================================================== */
+
+.mat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.mat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card:hover {
+  transform: translateY(-2px);
+  border-color: #D6D9DE;
+  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
+}
+
+.mat-card .sq {
+  border-bottom: 1px solid var(--rule);
+}
+
+.mat-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mat-body h3 {
+  font-size: 17px;
+  margin-bottom: 7px;
+}
+
+.mat-body p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.mat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.mat-foot b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ===================================================================
+   Trending platforms — the four highlighted shells
+   =================================================================== */
+
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.trend-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.trend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
+}
+
+/* The quick-inquire button slides up from the bottom edge on hover. On a
+   touch screen there is no hover, so the button stays visible there —
+   the media query at the end of this file does that. */
+.trend-cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 11px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform .22s ease;
+}
+
+.trend-card:hover .trend-cta {
+  transform: translateY(0);
+}
+
+.trend-body {
+  padding: 16px 18px 18px;
+}
+
+.trend-body h3 {
+  font-size: 15.5px;
+  margin-bottom: 6px;
+}
+
+.trend-body p {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.trend-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 11px;
+}
+
+.trend-tag {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+}
+
+/* ===================================================================
+   Components studio preview
+   =================================================================== */
+
+.studio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.studio-side {
+  padding: 30px;
+  border-right: 1px solid var(--rule);
+}
+
+.studio-side:last-child {
+  border-right: none;
+}
+
+.studio-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.studio-row:last-child {
+  border-bottom: none;
+}
+
+.studio-k {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.studio-v {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.studio-v.accent {
+  color: var(--accent);
+}
+
+/* ===================================================================
+   QC steps — the four-column video strip
+   =================================================================== */
+
+.qc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.qc-item h4 {
+  font-size: 15px;
+  margin: 14px 0 6px;
+}
+
+.qc-item p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+.qc-n {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* ===================================================================
+   The anatomy diagram — the exploded view
+   =================================================================== */
+
+.anat {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.anat-list {
+  display: grid;
+  gap: 2px;
+}
+
+.anat-i {
+  display: flex;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.anat-i:first-child {
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
+.anat-i:last-child {
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+}
+
+.anat-i + .anat-i {
+  margin-top: -1px;
+}
+
+.anat-i:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  position: relative;
+  z-index: 1;
+}
+
+.anat-n {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 26px;
+  padding-top: 1px;
+}
+
+.anat-i h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.anat-i p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* ===================================================================
+   Movement matrix — the spec table on the components page
+   =================================================================== */
+
+.mtx {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.mtx th {
+  text-align: left;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding: 0 14px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.mtx td {
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--text-2);
+  vertical-align: top;
+}
+
+.mtx td:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.mtx tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===================================================================
+   Collection layout — filter rail + grid
+   =================================================================== */
+
+.coll {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: 96px;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 22px;
+}
+
+.rail-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 14px;
+}
+
+.rail-grp {
+  margin-bottom: 20px;
+}
+
+.rail-grp:last-child {
+  margin-bottom: 0;
+}
+
+.rail-l {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 9px;
+}
+
+.rail-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rail-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.rail-opt input {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+}
+
+.rail-opt:hover {
+  color: var(--text);
+}
+
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pcard {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.pcard:hover {
+  transform: translateY(-2px);
+  border-color: #D6D9DE;
+  box-shadow: 0 12px 28px -18px rgba(17, 17, 17, .3);
+}
+
+.pcard-body {
+  padding: 15px 17px 17px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pcard-body h3 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.pcard-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-top: auto;
+  padding-top: 11px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.pcard-price b {
+  font-family: var(--font-tech);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ===================================================================
+   Product detail — the two-column layout the specification describes
+   =================================================================== */
+
+.pd2 {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 44px;
+  align-items: start;
+}
+
+.pd2-media .sq {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+}
+
+.pd-thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.pd-thumb {
+  aspect-ratio: 1/1;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  background: var(--surface-card);
+  display: grid;
+  place-items: center;
+  padding: 4px;
+}
+
+.pd-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pd2-info h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.pd2-moq {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.pd2-tag {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: var(--radius-btn);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pd2-tag.plain {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+}
+
+/* The spec builder. Each row is a label and a set of options; picking
+   one updates the summary at the bottom and the quote that gets sent. */
+.spec {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.spec-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 11px 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.spec-row:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.spec-lbl {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding-top: 7px;
+}
+
+.spec-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.spec-opt {
+  font-size: 12.5px;
+  padding: 6px 11px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: #fff;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+  font-family: inherit;
+}
+
+.spec-opt:hover {
+  border-color: #C4C8CE;
+}
+
+.spec-opt.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* The generated spec string the specification asks for — SKU-style, so
+   the buyer and the factory are talking about the same thing. */
+.spec-sum {
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  padding: 12px 14px;
+  background: var(--text);
+  color: #fff;
+  border-radius: var(--radius-btn);
+  margin-top: 14px;
+  word-break: break-all;
+}
+
+/* Carton freight estimate. */
+.freight {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.freight-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+
+.freight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+
+.freight-k {
+  font-size: 11.5px;
+  color: var(--text-2);
+  margin-bottom: 2px;
+}
+
+.freight-v {
+  font-family: var(--font-tech);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* The detail tabs. */
+.dtabs {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+
+.dtab-nav {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+}
+
+.dtab-btn {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 15px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dtab-btn.on {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.dtab-body {
+  padding: 24px;
+  font-size: 14.5px;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+.dtab-body h3 {
+  font-size: 17px;
+  margin: 0 0 10px;
+}
+
+.dtab-body ul {
+  margin: 10px 0 0 20px;
+}
+
+.dtab-body li {
+  margin-bottom: 7px;
+}
+
+/* ===================================================================
+   Responsive
+   =================================================================== */
+
+@media (max-width: 1024px) {
+  .coll {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .rail {
+    position: static;
+  }
+
+  .rail-opts {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .pgrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pd2 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .mat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trend-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .qc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .anat {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .studio {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-side {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 767px) {
+  .mat-grid,
+  .pgrid,
+  .qc-grid,
+  .trend-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spec-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .spec-lbl {
+    padding-top: 0;
+  }
+
+  /* No hover on a touch screen, so the quick-inquire button would never
+     appear. It stays visible instead. */
+  .trend-cta {
+    transform: none;
+    position: static;
+    border-radius: 0;
+  }
+
+  .freight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   Hero — the split layout with the live clock
+   =================================================================== */
+
+.hero2 {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero2-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 76px 24px 72px;
+}
+
+.hero2-h1 {
+  font-size: 46px;
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  margin-bottom: 20px;
+}
+
+.hero2-hl {
+  color: var(--text-2);
+  /* The accent underline marks the promise the headline makes — the
+     factory part, which is what differentiates this from a catalogue. */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  padding-bottom: 4px;
+}
+
+.hero2 .lede {
+  font-size: 16.5px;
+  color: var(--text-2);
+  max-width: 540px;
+  margin-bottom: 28px;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+
+  .hero2-h1 {
+    font-size: 32px;
+  }
+
+  .clockface {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero2-h1 {
+    font-size: 27px;
+  }
+}
+
+/* ===================================================================
+   Hero — the split layout with the live clock
+   =================================================================== */
+
+.hero2 {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero2-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 76px 24px 72px;
+}
+
+.hero2-h1 {
+  font-size: 46px;
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  margin-bottom: 20px;
+}
+
+.hero2-hl {
+  color: var(--text-2);
+  /* The accent underline marks the promise the headline makes — the
+     factory part, which is what differentiates this from a catalogue. */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  padding-bottom: 4px;
+}
+
+.hero2 .lede {
+  font-size: 16.5px;
+  color: var(--text-2);
+  max-width: 540px;
+  margin-bottom: 28px;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+
+  .hero2-h1 {
+    font-size: 32px;
+  }
+
+  .clockface {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero2-h1 {
+    font-size: 27px;
+  }
+}

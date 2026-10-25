@@ -18,7 +18,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Wholesale Quartz Clocks — OEM & ODM Catalogue | Badoudao',
     description:
-      `Browse ${products.length} quartz clock models from Badoudao: wall, alarm, desk, wood and metal clocks plus clock movements. MOQ from ${s.moq || 500} pcs, Ex Works factory pricing, custom dial artwork and logo printing available.`,
+      `Browse ${products.length} quartz clock models from Badoudao: wall, alarm, desk, wood and metal clocks plus clock movements. MOQ from ${s.moq || 300} pcs, Ex Works factory pricing, custom dial artwork and logo printing available.`,
     keywords:
       'wholesale quartz clocks, quartz clock catalogue, OEM clock models, clock movement supplier',
     path: '/products/'

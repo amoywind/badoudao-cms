@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listCategories, getSettings, buildMeta } from '@/lib/db';
+import { listCategories, listProducts, getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
-import { InquiryCTA } from './InquiryForm';
+import { InquiryForm } from './InquiryForm';
+import { TrustCards, Icons } from './TrustCards';
+import { LiveClock } from './LiveClock';
+import { MATERIALS, TRENDING, MOVEMENTS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -20,7 +23,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Quartz Clock Manufacturer China — OEM & ODM Wholesale | Badoudao',
     description:
-      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 500} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 12} hours.`,
+      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 300} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 12} hours.`,
     keywords:
       'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
     path: '/',
@@ -29,20 +32,34 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [cats, s] = await Promise.all([
+  const [cats, s, products] = await Promise.all([
     listCategories().catch(() => []),
-    getSettings().catch(() => ({} as SiteSettings))
+    getSettings().catch(() => ({} as SiteSettings)),
+    listProducts({ status: 'published' }).catch(() => [])
   ]);
 
-  /* No product grid on the home page.
+  const moq = Number(s.moq) || 300;
 
-     It was there, and it was wrong for this buyer. A wall of six clocks
-     with EXW prices tells a wholesale buyer who already knows what they
-     want to see, and tells everyone else nothing they can act on: they
-     cannot tell a 40-piece aluminium movement from a 60-piece brass one
-     from a photograph, and picking a product is a conversation, not a
-     click. The categories below carry the same information in a form a
-     buyer can use to navigate, and the enquiry form is one scroll away. */
+  /* The material cards need each category's cover photo and product count.
+     The vocabulary file holds the process tags; the database holds the
+     picture and the number. Joining them here rather than in either place
+     is what keeps the two from drifting. */
+  const mats = MATERIALS.map((m) => {
+    const c = cats.find((x) => x.id === m.slug);
+    return { ...m, image: c?.imageThumbUrl || c?.imageUrl || '', count: c?.productCount ?? 0 };
+  });
+
+  /* The trending platforms point at real products where one exists, so
+     the card leads somewhere. A trending card whose link goes nowhere is
+     worse than no card. */
+  const trending = TRENDING.map((t) => {
+    const p = products.find((x) => x.category === t.slug);
+    return {
+      ...t,
+      href: p ? `/products/${p.category}/${p.slug}` : `/products/${t.slug}`,
+      image: p?.images?.[0]?.thumbUrl || p?.images?.[0]?.url || ''
+    };
+  });
 
   const schema = {
     '@context': 'https://schema.org',
@@ -62,122 +79,73 @@ export default async function HomePage() {
       <Header />
 
       <main id="main">
-        <section className="hero">
-          <div className="wrap">
+        {/* ---- Hero: value proposition + live clock ---- */}
+        <section className="hero2">
+          <div className="wrap hero2-grid">
             <div>
-              <div className="eyebrow"><span style={{ width: 6, height: 6, borderRadius: 99, background: 'var(--brand)' }} />Quartz Clock Manufacturer · Small-Batch OEM</div>
-              <h1>Custom quartz clocks, built for <em>your brand</em></h1>
-              <p className="lede">Wall clocks, alarm clocks and table clocks in OEM and ODM form. MOQ from {s.moq || 500} pieces, custom dial artwork and packaging, and a quote back within {s.quoteHours || 12} hours.</p>
+              <div className="eyebrow">
+                <span style={{ width: 6, height: 6, borderRadius: 99, background: '#5DCAA5' }} />
+                OEM / ODM B2B production facility
+              </div>
+              <h1 className="hero2-h1">
+                Agile OEM wall clock manufacturing
+                <br />
+                <span className="hero2-hl">for modern global brands</span>
+              </h1>
+              <p className="lede">
+                Built for interior decor brands, corporate gifting and marketplace sellers.
+                Low MOQ {moq} pcs, drop-tested packaging, and 1,000+ clock hand
+                customisations — quoted in {s.quoteHours || 12} hours.
+              </p>
               <div className="hero-btns">
-                <a href="#inquiry" className="btn btn-primary">Request a Quote</a>
-                <Link href="/products" className="btn btn-ghost">View Products</Link>
+                <a href="#inquiry" className="btn btn-primary">Build a custom inquiry</a>
+                <Link href="/products" className="btn btn-ghost">View base platforms</Link>
               </div>
               <p className="hero-note">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f5c4a" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0052CC" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
                 Movements are CE and RoHS compliant · Certification arranged on request
               </p>
             </div>
-            <div className="hero-img">
-              {/* fetchpriority="high" because this is the largest
-                  contentful paint element: the browser was otherwise free to
-                  treat it as one more image in the queue and start it after
-                  the stylesheet, the runtime and the fold. decoding="async"
-                  moves the JPEG decode off the main thread, which is the
-                  difference between the text appearing immediately and
-                  waiting 30ms behind an image nobody has looked at yet.
-
-                  Spread rather than written inline: React 18 does not know
-                  this attribute and passes unknown props through with their
-                  case intact, so fetchPriority renders as fetchPriority —
-                  not the HTML attribute, and a warning on every render.
-                  fetchpriority is what the parser reads. The spread keeps
-                  it out of JSX's typed attribute list, where only the
-                  camelCase spelling exists and is wrong at runtime. React
-                  19 ships the lowercase form and this can go back to a
-                  plain prop.
-
-                  No loading="lazy" here — it is the one image on the page
-                  that is above the fold, and lazy would defer it. */}
-              <img
-                src="/hero-clocks.jpg"
-                alt="Quartz wall clocks we manufacture: pendulum, wood, metal, resin and novelty designs"
-                width={1400}
-                height={788}
-                /* 134 KB at 1400px, shown in a 358px frame on a phone. The
-                   720px copy is 27 KB and still sharper than the screen it
-                   is read on; the desktop layout spans most of the viewport
-                   and keeps the original. Same reasoning as the product
-                   thumbnails, for the two photos that live in public/
-                   rather than in the media library. */
-                srcSet="/hero-clocks-720.jpg 720w, /hero-clocks.jpg 1400w"
-                sizes="(max-width: 680px) 92vw, 78vw"
-                {...{ fetchpriority: 'high' }}
-                decoding="async"
-              />
-            </div>
+            <LiveClock />
           </div>
         </section>
 
-        <div className="trust">
-          <div className="wrap trust-grid">
-            <div className="trust-item">
-              <div className="trust-num">
-                {String(s.capacityMin) === String(s.capacityMax)
-                  ? s.capacityMin
-                  : `${s.capacityMin}-${s.capacityMax}`}
-                <small>pcs</small>
-              </div>
-              <div className="trust-lab">Daily Capacity</div>
-            </div>
-            <div className="trust-item">
-              <div className="trust-num"><small>{s.quoteHours || 12}</small>h</div>
-              <div className="trust-lab">Quote Response</div>
-            </div>
-            <div className="trust-item">
-              <div className="trust-num">20<small>&ndash;45</small>d</div>
-              <div className="trust-lab">Lead Time</div>
-            </div>
-            <div className="trust-item">
-              <div className="trust-num">7<small>&ndash;10</small>d</div>
-              <div className="trust-lab">Sample Time</div>
-            </div>
-            <div className="trust-item">
-              <div className="trust-num">{s.moq || 500}<small>pcs</small></div>
-              <div className="trust-lab">Starting MOQ</div>
-            </div>
+        {/* ---- Trust strip ---- */}
+        <div className="tcards-strip">
+          <div className="wrap">
+            <TrustCards
+              variant="strip"
+              items={[
+                { value: String(moq), unit: ' pcs', title: 'Flexible low MOQ', detail: 'Mixed colours and specs in one order', icon: Icons.box },
+                { value: '24', unit: ' hours', title: 'Fast 3D rendering', detail: 'Photorealistic mockups before you commit', icon: Icons.spark },
+                { value: '7', unit: ' days', title: 'Express sampling', detail: 'Physical sample shipped after approval', icon: Icons.clock },
+                { value: '1.2', unit: 'm drop', title: 'Certified packaging', detail: 'ISTA-1A tested for e-commerce shipping', icon: Icons.shield }
+              ]}
+            />
           </div>
         </div>
 
-        <section id="categories">
+        {/* ---- Material matrix ---- */}
+        <section id="materials">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">Product Range</div>
-              <h2>Wall clocks in plastic, wood, metal, acrylic, glass and resin — factory direct</h2>
-              <p className="sec-sub">All categories available with custom dials, logos, hands and packaging. Prices shown are <strong>Ex Works (factory) prices</strong> at MOQ {s.moq || 500} — freight and duties quoted separately.</p>
+              <div className="sec-tag">// 6 core materials</div>
+              <h2>Six material families, one factory</h2>
+              <p className="sec-sub">
+                Every category is available with custom dials, logos, hands and packaging.
+                Prices shown are <strong>Ex Works (factory) prices</strong> at MOQ {moq} —
+                freight and duties quoted separately.
+              </p>
             </div>
-            <div className="grid-3">
-              {cats.map((c) => (
-                <Link key={c.id} href={`/products/${c.id}`} className="card">
-                  {/* The category's newest product with a photo. Six grey
-                      gradients in a row read as a page that has not loaded;
-                      the pictures are what let a buyer recognise a clock
-                      shape before clicking. Falls back to the gradient when
-                      nothing in the category has an image yet. */}
-                  <div
-                    className={`c-visual${c.imageUrl ? ' has-img' : ''}`}
-                    style={c.imageUrl
-                      ? { background: '#f4f5f7' }
-                      : { background: 'linear-gradient(135deg,#f4f5f7,#e9eeec)' }}
-                  >
-                    {c.imageUrl && (
-                      /* imageThumbUrl is a 640px copy of the same photo; the
-                         original is 2048px and 954 KB. Six cards rendered the
-                         originals carried 2.2 MB on mobile, 88% of it pixels
-                         the 400px card never shows. The full-size file stays
-                         one click away on the category page. */
+
+            <div className="mat-grid">
+              {mats.map((m) => (
+                <Link key={m.slug} href={`/products/${m.slug}`} className="mat-card">
+                  <div className="sq">
+                    {m.image && (
                       <img
-                        src={c.imageThumbUrl || c.imageUrl}
-                        alt={c.name}
+                        src={m.image}
+                        alt={m.name}
                         loading="lazy"
                         decoding="async"
                         width={600}
@@ -185,19 +153,17 @@ export default async function HomePage() {
                       />
                     )}
                   </div>
-                  <div className="c-body">
-                    <h3>{c.name}</h3>
-                    {/* No description here. It is the category's own page
-                        copy — a headline and three paragraphs written for
-                        someone already decided on that category — and on a
-                        card it became nine dense lines competing with the
-                        picture, ending mid-sentence because the equal-height
-                        row ran out of space. The card answers "what is it,
-                        how many, what does it cost"; the link answers
-                        everything else. */}
-                    <div className="c-meta">
-                      <span><b>{c.designs}</b> designs</span>
-                      <span className="exw">EXW {c.price_range}</span>
+                  <div className="mat-body">
+                    <h3>{m.name}</h3>
+                    <p>{m.blurb}</p>
+                    <div className="ctags" style={{ marginTop: 12, marginBottom: 4 }}>
+                      {m.tags.slice(0, 3).map((t) => (
+                        <span className="ctag" key={t}>{t}</span>
+                      ))}
+                    </div>
+                    <div className="mat-foot">
+                      <span><b>{m.count}</b> designs</span>
+                      <span className="exw">MOQ {moq} pcs</span>
                     </div>
                   </div>
                 </Link>
@@ -206,12 +172,96 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ---- Trending platforms ---- */}
+        <section id="trending" className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Trending base shells</div>
+              <h2>Four shells that are moving right now</h2>
+              <p className="sec-sub">
+                Shown as platforms rather than finished SKUs — each one is a body your
+                buyers can put their own dial, hands and branding on.
+              </p>
+            </div>
+
+            <div className="trend-grid">
+              {trending.map((t) => (
+                <Link key={t.slug} href={t.href} className="trend-card">
+                  <div className="sq">
+                    {t.image && (
+                      <img src={t.image} alt={t.title} loading="lazy" decoding="async" width={600} height={600} />
+                    )}
+                  </div>
+                  <div className="trend-body">
+                    <h3>{t.title}</h3>
+                    <p>{t.note}</p>
+                    <div className="trend-tags">
+                      {t.tags.map((x) => <span className="trend-tag" key={x}>{x}</span>)}
+                    </div>
+                  </div>
+                  <span className="trend-cta">Quick inquire →</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Components studio preview ---- */}
+        <section id="studio">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Components studio</div>
+              <h2>Everything under the dial is a separate choice</h2>
+              <p className="sec-sub">
+                A clock is six components, and each one is customisable on its own.
+                The studio lists the movements we fit and the hands we hold.
+              </p>
+            </div>
+
+            <div className="studio">
+              <div className="studio-side">
+                <div className="spec-h">Movement matrix</div>
+                {MOVEMENTS.map((m) => (
+                  <div className="studio-row" key={m.name}>
+                    <span className="studio-k">{m.db}</span>
+                    <span className="studio-v">{m.name}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="studio-side">
+                <div className="spec-h">What you can change</div>
+                {[
+                  ['Hands', '1,000+ styles'],
+                  ['Movement', '7 movements'],
+                  ['Displays', '2 electronic'],
+                  ['Packaging', '3 tiers'],
+                  ['Logo', 'Free on dial'],
+                  ['Turnaround', '24h render']
+                ].map(([k, v]) => (
+                  <div className="studio-row" key={k}>
+                    <span className="studio-k">{k}</span>
+                    <span className="studio-v accent">{v}</span>
+                  </div>
+                ))}
+                <div style={{ marginTop: 20 }}>
+                  <Link href="/components" className="btn btn-ghost btn-sm">Open the components studio</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Factory capability ---- */}
         <section className="alt" id="capability">
           <div className="wrap split">
             <div>
-              <div className="sec-tag">Manufacturing</div>
+              <div className="sec-tag">// Manufacturing</div>
               <h2>Everything happens under one roof</h2>
-              <p className="sec-sub">From moulding to finished box. Keeping the whole process in-house means faster sampling, tighter tolerances and no surprises between you and the factory.</p>
+              <p className="sec-sub">
+                From moulding to finished box. Keeping the whole process in-house means
+                faster sampling, tighter tolerances and no surprises between you and
+                the factory.
+              </p>
               <div className="cap-list">
                 {[
                   ['Tooling & in-house moulding', 'New tooling in 15–25 days, no subcontractor margin.'],
@@ -230,25 +280,17 @@ export default async function HomePage() {
                 <span className="cert">CE &amp; RoHS movements</span>
                 <span className="cert">QC: IQC / IPQC / FQC / OQC</span>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.6 }}>
                 Quartz clocks themselves carry no mandatory certification requirement.{' '}
                 <Link href="/p/certification" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
               </p>
             </div>
             <div className="hero-img">
-              {/* 211 KB, well below the fold on every viewport measured.
-                  Left eager it competed with the hero for bandwidth on a
-                  phone; lazy lets the hero finish first. No fetchpriority —
-                  that would put it back in the queue it was just removed
-                  from. */}
               <img
                 src="/workshop-floor.jpg"
                 alt="Our assembly floor: staff fitting dials and movements before packing"
                 width={1400}
                 height={933}
-                /* 206 KB for a photo that renders into half the viewport on
-                   desktop and a 358px frame on a phone. The 720px copy is
-                   44 KB. */
                 srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
                 sizes="(max-width: 900px) 92vw, 46vw"
                 loading="lazy"
@@ -258,10 +300,11 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ---- Process ---- */}
         <section id="process">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">OEM / ODM Process</div>
+              <div className="sec-tag">// OEM / ODM process</div>
               <h2>From your idea to a shipped container</h2>
             </div>
             <div className="proc">
@@ -281,45 +324,42 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* The Popular Models grid that used to sit here is gone. See the note
-            on HomePage: a six-card product wall on the home page gives a
-            wholesale buyer nothing they can act on and pushes the enquiry
-            form a full screen further down. */}
-
-        <section id="inquiry">
+        {/* ---- RFQ ---- */}
+        <section id="inquiry" className="alt">
           <div className="wrap">
+            <div className="sec-head" style={{ maxWidth: 620 }}>
+              <div className="sec-tag">// Direct factory RFQ</div>
+              <h2>Tell us what you need built</h2>
+              <p className="sec-sub">
+                Send a reference photo, a sample or just a rough idea. You will get a
+                quotation and a 3D rendering within {s.quoteHours || 12} hours — no obligation.
+              </p>
+            </div>
             <div className="split" style={{ alignItems: 'start' }}>
               <div>
-                <div className="sec-tag">Request a Quote</div>
-                <h2 style={{ fontSize: 32 }}>Tell us what you need built</h2>
-                <p className="sec-sub">Send a reference photo, a sample or just a rough idea. You will get a quotation within {s.quoteHours || 12} hours — no obligation.</p>
-                <div className="certs" style={{ marginTop: 32 }}>
-                  <span className="cert">MOQ from {s.moq || 500} pcs</span>
+                <TrustCards
+                  items={[
+                    { value: '300', unit: ' pcs', title: 'Flexible low MOQ', detail: 'Mixed colours and specs in one order', icon: Icons.box },
+                    { value: '24', unit: ' hours', title: 'Fast 3D rendering', detail: 'Photorealistic mockups before you commit', icon: Icons.spark },
+                    { value: '7', unit: ' days', title: 'Express sampling', detail: 'Physical sample shipped after approval', icon: Icons.clock },
+                    { value: '1.2', unit: 'm drop', title: 'Certified packaging', detail: 'ISTA-1A tested for e-commerce shipping', icon: Icons.shield }
+                  ]}
+                />
+                <div className="certs" style={{ marginTop: 28 }}>
+                  <span className="cert">MOQ from {moq} pcs</span>
                   <span className="cert">Samples in {s.sampleDays || '7-10'} days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
-                {/* The homepage carries enough prompts already; a full form here
-                    competes with the product grid. Send visitors to the
-                    contact page instead. */}
-                <div style={{ marginTop: 32 }}>
-                  <a className="btn btn-primary" href="/contact">Send an enquiry →</a>
-                </div>
               </div>
-              <div className="sec-tag" style={{ marginBottom: 12 }}>What we need from you</div>
-              <InquiryCTA label="Five fields is all it takes" />
-              <ul className="tick-list">
-                <li>Your name, business email and WhatsApp</li>
-                <li>Estimated quantity — a range is fine</li>
-                <li>A sentence on size, style and target price</li>
-                <li>Optional: a drawing, photo or PDF to reference</li>
-              </ul>
+              <div>
+                <InquiryForm />
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       <Footer />
-        </div>
-
+    </div>
   );
 }

@@ -165,7 +165,7 @@ export async function Footer() {
         <div className="f-grid">
           <div className="f-brand">
             <div className="logo">BADOU<span>DAO</span></div>
-            <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 500} pieces.</p>
+            <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 300} pieces.</p>
             {/* The certification belongs to the movement, not to the clock —
                 that distinction is the whole compliance note, and printing
                 "(movement)" on a badge was a note to myself that shipped.
@@ -206,7 +206,7 @@ export async function Footer() {
         </div>
         <div className="f-bot">
           <span>© {new Date().getFullYear()} {s.siteName}. All rights reserved.</span>
-          <span>Ex Works pricing · MOQ from {s.moq || 500} pcs</span>
+          <span>Ex Works pricing · MOQ from {s.moq || 300} pcs</span>
         </div>
       </div>
     </footer>

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
     return buildMeta({
       title: `Wholesale ${label} — OEM Manufacturer | Badoudao`,
       description:
-        `${cat.description || label} from Badoudao, China. ${cat.designs || ''} designs, MOQ from 500 pcs, Ex Works factory pricing, custom dial artwork available.`.replace(
+        `${cat.description || label} from Badoudao, China. ${cat.designs || ''} designs, MOQ from 300 pcs, Ex Works factory pricing, custom dial artwork available.`.replace(
           /\s+/g,
           ' '
         ),
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
     console.error('generateMetadata failed:', (err as Error)?.message);
     return {
       title: `${params.category} | Badoudao Quartz Clocks`,
-      description: 'OEM and ODM quartz clocks from Badoudao, China. MOQ from 500 pieces, Ex Works pricing.'
+      description: 'OEM and ODM quartz clocks from Badoudao, China. MOQ from 300 pieces, Ex Works pricing.'
     };
   }
 }
@@ -97,7 +97,7 @@ export default async function CategoryPage({ params }) {
               {(cat?.description || '').trim() || (
                 <>
                   Looking for a {(cat?.short || category).toLowerCase()} supplier? Badoudao manufactures in-house
-                  with MOQ from {s.moq || 500} pieces, custom dial artwork and retail-ready packaging.
+                  with MOQ from {s.moq || 300} pieces, custom dial artwork and retail-ready packaging.
                   Ex Works pricing shown — freight and duties quoted separately.
                 </>
               )}

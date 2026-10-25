@@ -19,7 +19,7 @@ export async function generateMetadata() {
   try { s = await getSettings(); } catch {}
 
   const title = `Contact Badoudao | Get a Quotation for Wholesale Clocks`;
-  const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 500} pieces, Ex Works pricing, reply within ${s.quoteHours || 12} hours.`;
+  const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 300} pieces, Ex Works pricing, reply within ${s.quoteHours || 12} hours.`;
 
   /* buildMeta() rather than a hand-rolled object, so this route gets the
      absolute canonical and the siteUrl from settings like every other one.
@@ -110,7 +110,7 @@ export default async function ContactPage({
                 </div>
 
                 <div className="note" style={{ marginTop: 16 }}>
-                  <strong>MOQ {s.moq || 500} pcs.</strong> Small-batch and
+                  <strong>MOQ {s.moq || 300} pcs.</strong> Small-batch and
                   pilot runs are welcome — above {s.capacityMin || 2000} pcs per
                   day we can absorb repeat orders without a second shift.
                 </div>

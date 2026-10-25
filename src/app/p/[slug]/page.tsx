@@ -38,7 +38,7 @@ export async function generateMetadata({ params }) {
     description:
       page.seo_description ||
       page.intro ||
-      `${heading} — from Badoudao, an OEM and ODM quartz clock manufacturer. MOQ from 500 pieces, Ex Works pricing.`,
+      `${heading} — from Badoudao, an OEM and ODM quartz clock manufacturer. MOQ from 300 pieces, Ex Works pricing.`,
     seoTitle: page.seo_title,
     seoDescription: page.seo_description,
     path: `/p/${page.slug || params.slug}`
@@ -223,14 +223,14 @@ function PageRail({
 
   const CAPACITY: Record<string, { label: string; value: string }[]> = {
     'oem-odm': [
-      { label: 'MOQ from', value: `${moq || 500} pcs` },
+      { label: 'MOQ from', value: `${moq || 300} pcs` },
       { label: 'Sample lead time', value: '1 day' },
       { label: 'Bulk production', value: '7–20 days' },
       { label: 'Movement options', value: '6 types' },
       { label: 'Materials', value: '8 series' }
     ],
     'small-batch': [
-      { label: 'MOQ from', value: `${moq || 500} pcs` },
+      { label: 'MOQ from', value: `${moq || 300} pcs` },
       { label: 'Sample order', value: '1–2 pcs' },
       { label: 'Sample fee', value: 'Refunded on bulk' },
       { label: 'Sample lead time', value: '1 day' },
@@ -330,12 +330,12 @@ function LicencePanel() {
       </div>
       <a href="/media/factory/business-license.jpg" target="_blank" rel="noopener noreferrer">
         <img src="/media/factory/business-license.jpg"
-          alt="Xiamen Orange Cat Creative Home Co., Ltd. business licence, click to view full size"
+          alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
           width={1000} height={750} loading="lazy" />
       </a>
       <p>
-        Xiamen Orange Cat Creative Home Co., Ltd. Click the image for the
-        full-size licence.
+        Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. Click the
+        image for the full-size licence.
       </p>
     </aside>
   );
