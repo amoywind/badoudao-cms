@@ -44,9 +44,17 @@ function stamp(v) {
 export async function GET() {
   const [settings, pages, posts, products, cats] = await Promise.all([
     getSettings().catch(() => ({}) as Record<string, string>),
-    all("SELECT id, updated_at FROM pages WHERE status = 'published' ORDER BY sort_order").catch(
-      () => []
-    ),
+    /* The body length comes along because a page row with no body is a
+       navigation entry, not a page. The navigation lives in the same
+       table as the content — that is what makes it editable from the
+       admin — and the sitemap was listing every one of them as
+       /p/nav-home, /p/nav-products and so on. Those are not documents;
+       they are menu items pointing at routes that are already listed
+       elsewhere in this feed. */
+    all(
+      "SELECT id, updated_at, LENGTH(COALESCE(body,'')) AS body_len FROM pages " +
+        "WHERE status = 'published' ORDER BY sort_order"
+    ).catch(() => []),
     all(
       `SELECT slug, type, updated_at FROM posts WHERE status = 'published'
         ORDER BY created_at DESC`
@@ -88,6 +96,12 @@ export async function GET() {
   });
 
   pages.forEach((p) => {
+    /* Navigation entries have no body. Listing them would put a dozen
+       URLs in the feed that resolve to an empty page — a soft 404, which
+       is worse than a missing URL because it tells Google the page exists
+       and has no content. */
+    if (!Number(p.body_len)) return;
+
     entries.push(
       url(`${SITE}/p/${p.id}`, {
         priority: '0.6',
@@ -95,6 +109,18 @@ export async function GET() {
         lastmod: stamp(p.updated_at)
       })
     );
+  });
+
+  /* The four routes that are code rather than a database page. They are
+     real, indexable pages and they were missing from the feed entirely
+     because nothing scans the routes directory. */
+  [
+    ['/custom-services', '0.7'],
+    ['/components', '0.7'],
+    ['/craft-qc', '0.7'],
+    ['/about-us', '0.7']
+  ].forEach(([path, priority]) => {
+    entries.push(url(`${SITE}${path}`, { priority, changefreq: 'monthly', lastmod: today }));
   });
 
   /* Articles and company news are separate listings driven by posts.type, so
