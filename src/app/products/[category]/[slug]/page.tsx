@@ -7,6 +7,9 @@ import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor 
 import { ProductGallery, CustomisationList } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryBuilder } from '../../../InquiryBuilder';
+import { DetailTabs } from '../../../DetailTabs';
+import { TrustCards, Icons } from '../../../TrustCards';
+import { MOVEMENTS } from '@/lib/vocabulary';
 import { InquiryForm } from '../../../InquiryForm';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -291,6 +294,22 @@ export default async function ProductPage({ params }) {
                 <p className="pd-cta-note">
                   Reply within {s.quoteHours || 12} hours · No obligation · Ex Works
                 </p>
+
+                {/* The product-page trust bar. It sits directly under the
+                    enquiry button on purpose: these are the four reasons
+                    a buyer hesitates at exactly the point where they
+                    decide to send, and answering them there costs nothing
+                    extra in attention. */}
+                <div style={{ marginTop: 22 }}>
+                  <TrustCards
+                    items={[
+                      { value: '7', unit: ' day', title: 'Fast sampling', detail: 'Prototype turnaround', icon: Icons.clock },
+                      { value: '24', unit: ' h', title: '3D mockup', detail: 'Before you commit', icon: Icons.spark },
+                      { value: '1.2', unit: 'm', title: 'Drop certified', detail: 'ISTA-1A packaging', icon: Icons.shield },
+                      { value: 'Free', title: 'Custom logo', detail: 'On dial and backplate', icon: Icons.box }
+                    ]}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -311,6 +330,107 @@ export default async function ProductPage({ params }) {
             </div>
           </section>
         )}
+
+        {/* The three deep-dive panels. The specification's argument is
+            that a buyer opens the one they need rather than reading
+            three blocks of text to find it — the craft of this body, the
+            movement it can take, and the carton it travels in are three
+            separate questions. */}
+        <section>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Detail</div>
+              <h2>Material, mechanism and carton</h2>
+            </div>
+
+            <DetailTabs
+              tabs={[
+                {
+                  key: 'craft',
+                  label: 'Material & craft',
+                  body: (
+                    <>
+                      <h3>What this body is made of</h3>
+                      <p>
+                        Every clock is specified as six separate components, and the
+                        frame is the one that decides how the rest of it looks. Tell us
+                        the material and the finish and we will send a 3D rendering
+                        within 24 hours.
+                      </p>
+                      {product.specs.length > 0 && (
+                        <ul>
+                          {product.specs.map((sp) => (
+                            <li key={sp.id}><strong>{sp.label}:</strong> {sp.value}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </>
+                  )
+                },
+                {
+                  key: 'movement',
+                  label: 'Movement options',
+                  body: (
+                    <>
+                      <h3>What it can run on</h3>
+                      <p>
+                        The same body takes any of the movements below. The choice is
+                        mostly about where the clock ends up: a ticking movement for a
+                        kitchen, a silent sweep for a hotel room, a chime for a European
+                        style.
+                      </p>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table className="mtx">
+                          <thead>
+                            <tr>
+                              <th>Movement</th>
+                              <th>Sound</th>
+                              <th>Where it sells</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {MOVEMENTS.map((m) => (
+                              <tr key={m.name}>
+                                <td>{m.name}</td>
+                                <td className="tnum">{m.db}</td>
+                                <td>{m.scene}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
+                  )
+                },
+                {
+                  key: 'packaging',
+                  label: 'Packaging & drop test',
+                  body: (
+                    <>
+                      <h3>How it travels</h3>
+                      <p>
+                        Packaging is the difference between a clock that arrives intact
+                        and a return. Every carton is drop-tested from 1.2 metres on all
+                        six sides before it is closed, and the insert is cut to the
+                        clock rather than to the box.
+                      </p>
+                      <ul>
+                        <li>1.2m six-side drop test on the packed carton</li>
+                        <li>EPE foam or moulded pulp insert, cut to the body</li>
+                        <li>Kraft, colour gift box or acrylic display case</li>
+                        <li>Silk-screen or laser-printed logo on the backplate</li>
+                      </ul>
+                      <p>
+                        Full packaging options are shown below, and custom print and
+                        structure are quoted on request.
+                      </p>
+                    </>
+                  )
+                }
+              ]}
+            />
+          </div>
+        </section>
 
         {/* Packaging: four photographs and their names.
 

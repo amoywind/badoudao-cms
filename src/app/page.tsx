@@ -324,6 +324,44 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ---- Factory live shorts ---- */}
+        <section className="alt" id="factory-live">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Factory live</div>
+              <h2>The floor, not the brochure</h2>
+              <p className="sec-sub">
+                Four stages of the QC process, filmed in the building. Each clip is
+                vertical because that is the format the process reads in.
+              </p>
+            </div>
+
+            <div className="qc-grid">
+              {[
+                ['Raw material', 'Moisture content and scratch testing on timber, plastic and acrylic.'],
+                ['24-hour aging', 'Every movement runs under power for a day, checked for accuracy and measured for sound.'],
+                ['Pointer balance', 'Hand straightness and balance torque, so the sweep never catches.'],
+                ['Drop test', 'The packed carton dropped from 1.2 metres on all six sides.']
+              ].map(([t, d]) => (
+                <div className="qc-item" key={t}>
+                  <div className="vslot">
+                    <div className="vslot-ico">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M23 7l-7 5 7 5V7z" />
+                        <rect x="1" y="5" width="15" height="14" rx="2" />
+                      </svg>
+                    </div>
+                    <span className="vslot-t">Video pending</span>
+                    <span className="vslot-d">{t} — 9:16 factory footage</span>
+                  </div>
+                  <h4>{t}</h4>
+                  <p>{d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ---- RFQ ---- */}
         <section id="inquiry" className="alt">
           <div className="wrap">

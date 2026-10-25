@@ -1520,3 +1520,65 @@
     font-size: 27px;
   }
 }
+
+/* The trust bar on a product page sits in the right-hand column, which is
+   45% of the page. Four cards across that width are 130px each, and the
+   detail text under each number wraps to three lines. Two columns is the
+   point where the number still reads at a glance. */
+.pd2-info .tcards {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.pd2-info .tcard {
+  padding: 16px 15px;
+}
+
+.pd2-info .tcard-ico {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.pd2-info .tcard-n {
+  font-size: 22px;
+}
+
+.pd2-info .tcard-t {
+  font-size: 12.5px;
+}
+
+.pd2-info .tcard-d {
+  font-size: 11.5px;
+}
+
+/* The trust bar on a product page sits in the right-hand column, which is
+   45% of the page. Four cards across that width are 130px each, and the
+   detail text under each number wraps to three lines. Two columns is the
+   point where the number still reads at a glance. */
+.pd2-info .tcards {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.pd2-info .tcard {
+  padding: 16px 15px;
+}
+
+.pd2-info .tcard-ico {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.pd2-info .tcard-n {
+  font-size: 22px;
+}
+
+.pd2-info .tcard-t {
+  font-size: 12.5px;
+}
+
+.pd2-info .tcard-d {
+  font-size: 11.5px;
+}

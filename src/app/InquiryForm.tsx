@@ -388,7 +388,7 @@ export function InquiryForm({
             ) : (
               <>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                  stroke="#0f5c4a" strokeWidth="1.8" aria-hidden="true">
+                  stroke="#0052CC" strokeWidth="1.8" aria-hidden="true">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" strokeLinecap="round" />
                   <path d="M7 9l5-5 5 5" strokeLinecap="round" />
                   <path d="M12 4v12" strokeLinecap="round" />
@@ -426,7 +426,7 @@ export function InquiryForm({
 
         <p className="req-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="#0f5c4a" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+            stroke="#0052CC" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
           We reply within 12 hours. Your details are used only to answer this enquiry.
         </p>
       </form>
