@@ -23,7 +23,8 @@ export default function EditProductPage() {
     if (isNew) {
       setProduct({
         id: '', slug: '', name: '', category: 'plastic-wall-clocks', summary: '',
-        priceMin: 0, priceMax: 0, moq: 500, leadTime: '20-30 days',
+        priceMin: 0, priceMax: 0, moq: 300, leadTime: '20-30 days',
+        movementType: '', sizeInch: '', cartonQty: '', cartonL: '', cartonW: '', cartonH: '', cartonGw: '',
         moveLevel: 'China quartz', difficulty: 'simple', content: '',
         featured: false, status: 'draft',
         specs: [], options: [], prices: [], images: [], customisations: []
@@ -300,6 +301,216 @@ export default function EditProductPage() {
                     <label className="fl">MOQ（件）</label>
                     <input className="inp" type="number" value={product.moq}
                       onChange={(e) => set('moq', Number(e.target.value))} />
+                  </div>
+                </div>
+
+                {/* The filter attributes and the carton. These were
+                    added for the V8 collection page, and they are
+                    deliberately optional: a product with no recorded
+                    diameter still shows in the catalogue, and the
+                    collection page lists it under "not yet specified"
+                    rather than hiding it. */}
+                <div className="fg2" style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--line2)' }}>
+                  <div className="fg">
+                    <label className="fl">机芯类型（用于筛选）</label>
+                    <select className="inp" value={product.movementType || ''}
+                      onChange={(e) => set('movementType', e.target.value)}>
+                      <option value="">未指定</option>
+                      <option>Silent Sweep</option>
+                      <option>Step-Second</option>
+                      <option>Radio-Controlled</option>
+                      <option>Chime</option>
+                      <option>Mechanical</option>
+                      <option>Music</option>
+                      <option>Pendulum</option>
+                      <option>Digital</option>
+                    </select>
+                  </div>
+                  <div className="fg">
+                    <label className="fl">表盘直径（英寸）</label>
+                    <input className="inp" type="number" step="0.1" value={product.sizeInch}
+                      onChange={(e) => set('sizeInch', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg" style={{ marginTop: 8 }}>
+                  <label className="fl">
+                    箱规（用于运费测算）
+                    <span className="hint">留空则按常规值估算</span>
+                  </label>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">每箱数量（件）</label>
+                    <input className="inp" type="number" value={product.cartonQty}
+                      onChange={(e) => set('cartonQty', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">单箱毛重（kg）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonGw}
+                      onChange={(e) => set('cartonGw', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱长（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonL}
+                      onChange={(e) => set('cartonL', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">箱宽（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonW}
+                      onChange={(e) => set('cartonW', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱高（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonH}
+                      onChange={(e) => set('cartonH', e.target.value)} />
+                  </div>
+                </div>
+
+                {/* The filter attributes and the carton. These were
+                    added for the V8 collection page, and they are
+                    deliberately optional: a product with no recorded
+                    diameter still shows in the catalogue, and the
+                    collection page lists it under "not yet specified"
+                    rather than hiding it. */}
+                <div className="fg2" style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--line2)' }}>
+                  <div className="fg">
+                    <label className="fl">机芯类型（用于筛选）</label>
+                    <select className="inp" value={product.movementType || ''}
+                      onChange={(e) => set('movementType', e.target.value)}>
+                      <option value="">未指定</option>
+                      <option>Silent Sweep</option>
+                      <option>Step-Second</option>
+                      <option>Radio-Controlled</option>
+                      <option>Chime</option>
+                      <option>Mechanical</option>
+                      <option>Music</option>
+                      <option>Pendulum</option>
+                      <option>Digital</option>
+                    </select>
+                  </div>
+                  <div className="fg">
+                    <label className="fl">表盘直径（英寸）</label>
+                    <input className="inp" type="number" step="0.1" value={product.sizeInch}
+                      onChange={(e) => set('sizeInch', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg" style={{ marginTop: 8 }}>
+                  <label className="fl">
+                    箱规（用于运费测算）
+                    <span className="hint">留空则按常规值估算</span>
+                  </label>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">每箱数量（件）</label>
+                    <input className="inp" type="number" value={product.cartonQty}
+                      onChange={(e) => set('cartonQty', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">单箱毛重（kg）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonGw}
+                      onChange={(e) => set('cartonGw', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱长（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonL}
+                      onChange={(e) => set('cartonL', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">箱宽（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonW}
+                      onChange={(e) => set('cartonW', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱高（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonH}
+                      onChange={(e) => set('cartonH', e.target.value)} />
+                  </div>
+                </div>
+
+                {/* The filter attributes and the carton. These were
+                    added for the V8 collection page, and they are
+                    deliberately optional: a product with no recorded
+                    diameter still shows in the catalogue, and the
+                    collection page lists it under "not yet specified"
+                    rather than hiding it. */}
+                <div className="fg2" style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--line2)' }}>
+                  <div className="fg">
+                    <label className="fl">机芯类型（用于筛选）</label>
+                    <select className="inp" value={product.movementType || ''}
+                      onChange={(e) => set('movementType', e.target.value)}>
+                      <option value="">未指定</option>
+                      <option>Silent Sweep</option>
+                      <option>Step-Second</option>
+                      <option>Radio-Controlled</option>
+                      <option>Chime</option>
+                      <option>Mechanical</option>
+                      <option>Music</option>
+                      <option>Pendulum</option>
+                      <option>Digital</option>
+                    </select>
+                  </div>
+                  <div className="fg">
+                    <label className="fl">表盘直径（英寸）</label>
+                    <input className="inp" type="number" step="0.1" value={product.sizeInch}
+                      onChange={(e) => set('sizeInch', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg" style={{ marginTop: 8 }}>
+                  <label className="fl">
+                    箱规（用于运费测算）
+                    <span className="hint">留空则按常规值估算</span>
+                  </label>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">每箱数量（件）</label>
+                    <input className="inp" type="number" value={product.cartonQty}
+                      onChange={(e) => set('cartonQty', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">单箱毛重（kg）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonGw}
+                      onChange={(e) => set('cartonGw', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱长（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonL}
+                      onChange={(e) => set('cartonL', e.target.value)} />
+                  </div>
+                  <div className="fg">
+                    <label className="fl">箱宽（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonW}
+                      onChange={(e) => set('cartonW', e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="fg2">
+                  <div className="fg">
+                    <label className="fl">箱高（cm）</label>
+                    <input className="inp" type="number" step="0.1" value={product.cartonH}
+                      onChange={(e) => set('cartonH', e.target.value)} />
                   </div>
                 </div>
 

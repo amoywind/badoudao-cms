@@ -197,6 +197,32 @@ export async function PUT(request) {
   if (body.moq !== undefined) push('moq', Number(body.moq) || 500);
   if (body.leadTime !== undefined) push('lead_time', body.leadTime);
   if (body.moveLevel !== undefined && !limited) push('move_level', body.moveLevel);
+  /* The three groups the collection page filters on, plus the carton the
+     product ships in. They were left empty rather than guessed, and an
+     empty column nobody can fill is an empty column forever — so they
+     are editable here. */
+  if (body.movementType !== undefined && !limited) push('movement_type', body.movementType || '');
+  if (body.sizeInch !== undefined && !limited) {
+    push('size_inch', body.sizeInch === '' || body.sizeInch === null ? null : Number(body.sizeInch));
+  }
+  if (body.cartonQty !== undefined) push('carton_qty', body.cartonQty === '' || body.cartonQty === null ? null : Number(body.cartonQty));
+  if (body.cartonL !== undefined) push('carton_l', body.cartonL === '' || body.cartonL === null ? null : Number(body.cartonL));
+  if (body.cartonW !== undefined) push('carton_w', body.cartonW === '' || body.cartonW === null ? null : Number(body.cartonW));
+  if (body.cartonH !== undefined) push('carton_h', body.cartonH === '' || body.cartonH === null ? null : Number(body.cartonH));
+  if (body.cartonGw !== undefined) push('carton_gw', body.cartonGw === '' || body.cartonGw === null ? null : Number(body.cartonGw));
+  /* The three groups the collection page filters on, plus the carton the
+     product ships in. They were left empty rather than guessed, and an
+     empty column nobody can fill is an empty column forever — so they
+     are editable here. */
+  if (body.movementType !== undefined && !limited) push('movement_type', body.movementType || '');
+  if (body.sizeInch !== undefined && !limited) {
+    push('size_inch', body.sizeInch === '' || body.sizeInch === null ? null : Number(body.sizeInch));
+  }
+  if (body.cartonQty !== undefined) push('carton_qty', body.cartonQty === '' || body.cartonQty === null ? null : Number(body.cartonQty));
+  if (body.cartonL !== undefined) push('carton_l', body.cartonL === '' || body.cartonL === null ? null : Number(body.cartonL));
+  if (body.cartonW !== undefined) push('carton_w', body.cartonW === '' || body.cartonW === null ? null : Number(body.cartonW));
+  if (body.cartonH !== undefined) push('carton_h', body.cartonH === '' || body.cartonH === null ? null : Number(body.cartonH));
+  if (body.cartonGw !== undefined) push('carton_gw', body.cartonGw === '' || body.cartonGw === null ? null : Number(body.cartonGw));
   if (body.difficulty !== undefined && !limited) push('difficulty', body.difficulty);
   if (body.content !== undefined && !limited) push('content', body.content);
   if (body.featured !== undefined && !limited) push('featured', body.featured ? 1 : 0);
