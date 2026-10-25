@@ -23,8 +23,22 @@ export function SiteSchema({ s }: { s: SiteSettings }) {
   const site = String(s.siteUrl || 'https://oemwallclocks.com').replace(/\/+$/, '');
   const origin = site.replace(/^https?:\/\//, '');
 
-  const address = String(s.address || 'Xiamen, Fujian, China');
-  const [, city, region] = address.split(',').map((x) => x.trim());
+  /* The address is "City, Region, Country" — three parts. The first two
+     are the ones that matter here, and the country is always CN. The
+     destructuring used to skip the first element, which put "Fujian" in
+     the locality field and "China" in the region field: a PostalAddress
+     that says the company is in Fujian, region China, and that is
+     wrong in a way a search engine will file and a buyer will read.
+
+     An address with one part falls back to the city alone, and one with
+     two parts is read as city and region. */
+  const parts = String(s.address || 'Xiamen, Fujian, China')
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
+
+  const city = parts[0] || 'Xiamen';
+  const region = parts.length > 1 ? parts[1] : 'Fujian';
 
   const phone = String(s.phone || '').trim();
   const email = String(s.email || '').trim();
