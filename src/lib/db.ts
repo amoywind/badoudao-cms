@@ -846,7 +846,25 @@ export async function buildMeta({
   keywords?: string;
 }) {
   const t = String(seoTitle || title || '').trim().slice(0, 62);
-  const d = String(seoDescription || description || '').trim().slice(0, 158);
+
+  /* The MOQ is a number the factory can change, and the SEO copy is
+     written by hand — so a description that says "MOQ 500 pcs" stays
+     wrong after the minimum drops to 300, and a search result then
+     contradicts the page it links to.
+
+     Rather than making the writer remember to update six category
+     descriptions by hand, the number in the text is replaced with the
+     current one on the way out. Only the phrase "MOQ <number> pcs" is
+     touched; every other number in the copy is the writer's own and
+     stays exactly as written.
+
+     The pattern is deliberately narrow. A blanket number substitution
+     would rewrite the price range, the dimensions or a year. */
+  const moqNow = Number((await getSettings().catch(() => ({} as SiteSettings))).moq) || 0;
+  const syncMoq = (text: string) =>
+    moqNow > 0 ? text.replace(/MOQ\s+\d+(\s*pcs)?/gi, `MOQ ${moqNow} pcs`) : text;
+
+  const d = syncMoq(String(seoDescription || description || '').trim()).slice(0, 158);
   /* Read from settings rather than the constant: the canonical host is the
      one the owner chose, and a build-time constant means changing domain is
      a code edit and a redeploy. getSiteUrl() is itself memoised, so this
