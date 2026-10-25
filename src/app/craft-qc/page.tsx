@@ -3,7 +3,8 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
-import { MATERIALS, QC_STEPS } from '@/lib/vocabulary';
+import { SiteSchema } from '../SiteSchema';
+import { MATERIALS, QC_STEPS, FACTORY_FIGURES, CERTIFICATIONS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -39,6 +40,8 @@ export default async function CraftQcPage() {
 
   return (
     <div className="site">
+      <SiteSchema s={s} />
+      <SiteSchema s={s} />
       <TopBar />
       <Header />
 
@@ -125,6 +128,8 @@ export default async function CraftQcPage() {
                   <span className="qc-n">{q.n}</span>
                   <h4>{q.title}</h4>
                   <p>{q.detail}</p>
+                  <div className="qc-metric tnum">{q.metric}</div>
+                  <div className="qc-metric tnum">{q.metric}</div>
                 </div>
               ))}
             </div>
@@ -145,14 +150,15 @@ export default async function CraftQcPage() {
 
             <div className="grid-2">
               <div className="card" style={{ padding: 26 }}>
-                <h3 style={{ fontSize: 18, marginBottom: 12 }}>Certifications we hold</h3>
-                <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14.5, color: 'var(--text-2)', lineHeight: 1.8 }}>
-                  <li>ISO 9001 quality management</li>
-                  <li>BSCI social compliance</li>
-                  <li>CE and RoHS on all movements</li>
-                  <li>REACH on materials in contact with the dial</li>
-                  <li>ISTA-1A packaging drop test</li>
-                </ul>
+                <h3 style={{ fontSize: 18, marginBottom: 16 }}>Certifications we hold</h3>
+                <div className="cert-list">
+                  {CERTIFICATIONS.map((c) => (
+                    <div className="cert-row" key={c.code}>
+                      <span className="cert-code tnum">{c.code}</span>
+                      <span className="cert-name">{c.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="card" style={{ padding: 26 }}>
                 <h3 style={{ fontSize: 18, marginBottom: 12 }}>What to know</h3>
@@ -167,6 +173,30 @@ export default async function CraftQcPage() {
                   <span className="cert">Ex Works pricing</span>
                 </div>
               </div>
+            </div>
+
+            {/* The factory's own figures. These are the numbers a buyer
+                checks, so they are left empty until the factory confirms
+                them rather than filled in from the specification. The
+                structure is here, so the page is ready for the values. */}
+            <div className="spec" style={{ marginTop: 28 }}>
+              <div className="spec-h">Factory figures · pending confirmation</div>
+              <div className="fig-grid">
+                {FACTORY_FIGURES.map((f) => (
+                  <div className="fig" key={f.key}>
+                    <div className="fig-l">{f.label}</div>
+                    <div className="fig-v">
+                      <span className="fig-pending">—</span>
+                      <span className="fig-u">{f.unit}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.55 }}>
+                These figures are being confirmed by the factory and will be published
+                here once they are. Ask for them in your enquiry and we will send the
+                current numbers.
+              </p>
             </div>
           </div>
         </section>

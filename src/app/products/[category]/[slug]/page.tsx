@@ -9,6 +9,8 @@ import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryBuilder } from '../../../InquiryBuilder';
 import { DetailTabs } from '../../../DetailTabs';
 import { TrustCards, Icons } from '../../../TrustCards';
+import { SiteSchema } from '../../../SiteSchema';
+import { FreightEstimator } from '../../../FreightEstimator';
 import { MOVEMENTS } from '@/lib/vocabulary';
 import { InquiryForm } from '../../../InquiryForm';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -177,6 +179,8 @@ export default async function ProductPage({ params }) {
      carries .admin-root instead; see app/layout.tsx. */
   return (
     <div className="site">
+      <SiteSchema s={s} />
+      <SiteSchema s={s} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }} />
@@ -264,6 +268,24 @@ export default async function ProductPage({ params }) {
                     rather than as a paragraph the buyer had to write. */}
                 <InquiryBuilder productId={product.id} productName={product.name} />
 
+                {/* The carton and freight estimator. It sits above the
+                    facts table because it is the thing a buyer scrolls
+                    to after the price: how much space this takes and how
+                    heavy it is. The numbers it starts from are the
+                    factory's where they are recorded and a labelled
+                    assumption where they are not, and every one of them
+                    is editable. */}
+                <FreightEstimator
+                  productName={product.name}
+                  spec={{
+                    qty: product.cartonQty ?? null,
+                    l: product.cartonL ?? null,
+                    w: product.cartonW ?? null,
+                    h: product.cartonH ?? null,
+                    gw: product.cartonGw ?? null
+                  }}
+                />
+
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>
                   <div className="pd-fact"><dt>Lead time</dt><dd>{product.leadTime}</dd></div>
@@ -288,9 +310,23 @@ export default async function ProductPage({ params }) {
                   ))}
                 </div>
 
-                <a href="#inquiry" className="btn btn-primary pd-cta">
-                  Get Factory Quote / Send Inquiry
-                </a>
+                {/* The two actions §5.3-2 asks for, side by side: ask
+                    for a price, or take the numbers away. A buyer
+                    comparing this clock with another one wants the
+                    second one first, and asking for a quote should not
+                    be the only thing on offer. */}
+                <div className="pd-actions">
+                  <a href="#inquiry" className="btn btn-primary pd-cta">
+                    Request Custom Quote for this SKU
+                  </a>
+                  <a
+                    href={`/api/spec-sheet?slug=${encodeURIComponent(product.slug)}`}
+                    className="btn btn-ghost pd-spec-sheet"
+                    download
+                  >
+                    Download Spec Sheet (.TXT)
+                  </a>
+                </div>
                 <p className="pd-cta-note">
                   Reply within {s.quoteHours || 12} hours · No obligation · Ex Works
                 </p>

@@ -1,0 +1,25 @@
+-- Filterable attributes for the collection pages — §5.3-1.
+--
+-- The specification wants a filter panel with three groups: material,
+-- movement type, and size. Material is the category and needs no new
+-- column. The other two do.
+--
+-- move_level was not usable for this. It holds "China quartz",
+-- "中国机芯", "进口机芯" — where the movement came from, which is a
+-- question about cost and lead time, not about what the clock does. A
+-- buyer filtering by movement type is looking for "silent sweep" or
+-- "radio-controlled", and the two fields are not the same thing. So
+-- move_level stays as it is and a separate column carries the type.
+--
+--   movement_type  Silent Sweep / Step-Second / Radio-Controlled /
+--                  Chime / Mechanical / Music / Pendulum / Digital
+--   size_inch      the clock's nominal diameter in inches
+--
+-- Both are nullable and both are filled only where the answer is
+-- already recorded somewhere: the movement from a name that states it,
+-- the size from a dimension in the specification table. A value that
+-- would have to be guessed is left NULL, because a filter that offers
+-- "Silent Sweep" and puts a clock under it because it seemed likely is
+-- worse than no filter.
+ALTER TABLE products ADD COLUMN movement_type TEXT;
+ALTER TABLE products ADD COLUMN size_inch REAL;

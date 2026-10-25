@@ -6,6 +6,8 @@ import { CategoryNav } from '../../CategoryNav';
 import { InquiryCTA } from '../../InquiryForm';
 import { TrustCards, Icons } from '../../TrustCards';
 import { MATERIALS } from '@/lib/vocabulary';
+import { SiteSchema } from '../../SiteSchema';
+import { CollectionGrid } from '../../CollectionGrid';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -59,7 +61,11 @@ export default async function CategoryPage({ params }) {
      written about yet has no process list to show. */
   const mat = MATERIALS.find((m) => m.slug === category);
 
-  const schema = {
+  /* The collection page carries its own CollectionPage object on top of
+     the site-wide graph: the collection's name and description, and the
+     products it holds. The Organization and WebSite come from the
+     shared component, so the company is described once and in one way. */
+  const collection = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: cat ? `${cat.name} wholesale` : 'Products',
@@ -70,7 +76,8 @@ export default async function CategoryPage({ params }) {
   return (
     <div className="site">
 
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <SiteSchema s={s} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collection) }} />
       <TopBar />
       <Header />
 
@@ -139,72 +146,32 @@ export default async function CategoryPage({ params }) {
 
         <section>
           <div className="wrap">
-            {/* Sidebar beside the grid, not above it: a buyer who came
-                here for one category still needs the other seven one click
-                away, and the counts tell them which are worth opening. */}
-            <div className="shop-layout">
-              <CategoryNav cats={cats} current={category} counts={counts} />
-
-              <div>
-                <div className="sec-head">
-                  <div className="sec-tag">Available Models</div>
-                  <h2 style={{ fontSize: 30 }}>{products.length} {products.length === 1 ? 'model' : 'models'} in production</h2>
-                  <p className="sec-sub">Prices are per piece Ex Works. Larger orders step down.</p>
-                </div>
-
-                {products.length === 0 ? (
-                  <p style={{ color: 'var(--ink3)' }}>
-                    Models in this category are being added.{' '}
-                    <a href="#inquiry" style={{ color: 'var(--brand)' }}>Send us your requirement</a> and we will quote.
-                  </p>
-                ) : (
-                  <div className="pgrid">
-                    {products.map((p, i) => (
-                      <Link key={p.id} href={`/products/${category}/${p.slug}/`} className="pcard">
-                        <div className="sq">
-                          {p.images.length ? (
-                          /* The 640px copy, not the 2048px original. This was
-                             the single heaviest item on the site: 954 KB of
-                             file for a 609px frame, which PageSpeed counted
-                             as 893 KB of the 2.2 MB the home page carried.
-                             The detail page still loads the original, so the
-                             full-resolution shot is one click away. */
-                          <img
-                            src={p.images[0].thumbUrl || p.images[0].url}
-                            alt={p.name}
-                            decoding="async"
-                            {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
-                          />
-                        ) : null}
-                        </div>
-                        <div className="pcard-body">
-                          <h3>{p.name}</h3>
-                          {p.summary && (
-                            <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.55, marginBottom: 10 }}>
-                              {p.summary.slice(0, 110)}…
-                            </p>
-                          )}
-                          <div className="pcard-price">
-                            <span>EXW</span>
-                            <b>${p.priceMin.toFixed(2)}</b>
-                            <span>– ${p.priceMax.toFixed(2)}</span>
-                            <span style={{ marginLeft: 'auto' }}>MOQ {p.moq}</span>
-                          </div>
-                        </div>
-                        {/* The quick-inquire button. The whole card is a link
-                            to the product, so this is a second path to the
-                            same place rather than a separate action — it
-                            exists because the specification asks for a
-                            visible conversion point on the card, and a
-                            buyer who is not ready for the detail page can
-                            still start an enquiry from here. */}
-                        <span className="trend-cta">Quick inquire →</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* The filter panel and the grid. The panel filters the
+                catalogue in the browser — ten products do not need a
+                round trip — and the grid is four columns on a desktop
+                and two on a phone. */}
+            <CollectionGrid
+              activeCategory={category}
+              categories={cats.map((c) => ({
+                id: c.id,
+                name: c.name || c.short || c.id,
+                count: counts[c.id] ?? 0
+              }))}
+              products={products.map((p) => ({
+                id: p.id,
+                slug: p.slug,
+                name: p.name,
+                category: p.category,
+                summary: p.summary || '',
+                priceMin: p.priceMin,
+                priceMax: p.priceMax,
+                moq: p.moq,
+                leadTime: p.leadTime,
+                image: p.images[0]?.thumbUrl || p.images[0]?.url || '',
+                movementType: p.movementType ?? null,
+                sizeInch: p.sizeInch ?? null
+              }))}
+            />
           </div>
         </section>
 

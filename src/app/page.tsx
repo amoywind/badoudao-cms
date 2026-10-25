@@ -5,7 +5,9 @@ import { TopBar, Header, Footer } from './SiteChrome';
 import { InquiryForm } from './InquiryForm';
 import { TrustCards, Icons } from './TrustCards';
 import { LiveClock } from './LiveClock';
-import { MATERIALS, TRENDING, MOVEMENTS } from '@/lib/vocabulary';
+import { MATERIALS, TRENDING } from '@/lib/vocabulary';
+import { CustomizerHub } from './CustomizerHub';
+import { SiteSchema } from './SiteSchema';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -61,20 +63,10 @@ export default async function HomePage() {
     };
   });
 
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: s.siteName || 'Badoudao',
-    url: s.siteUrl || '',
-    email: s.email,
-    telephone: s.phone,
-    address: { '@type': 'PostalAddress', addressLocality: s.address, addressCountry: 'CN' }
-  };
-
   return (
     <div className="site">
 
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <SiteSchema s={s} />
       <TopBar />
       <Header />
 
@@ -206,48 +198,20 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ---- Components studio preview ---- */}
+        {/* ---- The customizer hub ---- */}
         <section id="studio">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Components studio</div>
-              <h2>Everything under the dial is a separate choice</h2>
+              <div className="sec-tag">// Customizer hub</div>
+              <h2>Four decisions, one specification</h2>
               <p className="sec-sub">
-                A clock is six components, and each one is customisable on its own.
-                The studio lists the movements we fit and the hands we hold.
+                The housing, the movement, the hands and the packaging. Choose them
+                here and the summary assembles itself into a code the factory quotes
+                against — no email describing options in prose.
               </p>
             </div>
 
-            <div className="studio">
-              <div className="studio-side">
-                <div className="spec-h">Movement matrix</div>
-                {MOVEMENTS.map((m) => (
-                  <div className="studio-row" key={m.name}>
-                    <span className="studio-k">{m.db}</span>
-                    <span className="studio-v">{m.name}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="studio-side">
-                <div className="spec-h">What you can change</div>
-                {[
-                  ['Hands', '1,000+ styles'],
-                  ['Movement', '7 movements'],
-                  ['Displays', '2 electronic'],
-                  ['Packaging', '3 tiers'],
-                  ['Logo', 'Free on dial'],
-                  ['Turnaround', '24h render']
-                ].map(([k, v]) => (
-                  <div className="studio-row" key={k}>
-                    <span className="studio-k">{k}</span>
-                    <span className="studio-v accent">{v}</span>
-                  </div>
-                ))}
-                <div style={{ marginTop: 20 }}>
-                  <Link href="/components" className="btn btn-ghost btn-sm">Open the components studio</Link>
-                </div>
-              </div>
-            </div>
+            <CustomizerHub />
           </div>
         </section>
 
@@ -390,7 +354,7 @@ export default async function HomePage() {
                 </div>
               </div>
               <div>
-                <InquiryForm />
+                <InquiryForm replyHours={Number(s.quoteHours) || 12} />
               </div>
             </div>
           </div>

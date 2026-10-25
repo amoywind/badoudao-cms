@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { one, run, uid } from '@/lib/db';
+import { one, all, run, uid } from '@/lib/db';
 
 export const runtime = 'edge';
 
@@ -140,6 +140,9 @@ export async function POST(request) {
 
   const id = uid('inq');
 
+  /* The work order number the buyer is quoted against. */
+  const workOrder = await nextWorkOrder().catch(() => '');
+
   /* Validate the drawing before anything is written, so a rejected file
      never leaves a half-finished enquiry behind. */
   if (drawing) {
@@ -168,10 +171,10 @@ export async function POST(request) {
   await run(
     `INSERT INTO inquiries
       (id, email, name, company, country, whatsapp, products, quantity, custom_logo,
-       message, spec, material, movement, hands, packaging, timeline,
+       message, spec, material, movement, hands, packaging, timeline, work_order,
        product_id, source_page, status, has_attachment,
        utm_source, utm_medium, utm_campaign, referrer, ip, country_code)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', ?, ?,?,?,?,?,?)`,
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', ?, ?,?,?,?,?,?)`,
     id,
     email,
     clean(body.name, 120),
@@ -188,6 +191,7 @@ export async function POST(request) {
     hands,
     packaging,
     timeline,
+    workOrder,
     productId,
     clean(body.sourcePage, 300),
     /* The row is inserted before the file is stored, because
@@ -219,7 +223,7 @@ export async function POST(request) {
   }
 
   notify({
-    id, email, message, products, quantity,
+    id, workOrder, email, message, products, quantity,
     company: clean(body.company, 200),
     whatsapp,
     spec,
@@ -241,6 +245,46 @@ export async function POST(request) {
       ? { warning: 'Enquiry saved, but the file could not be stored. Please email it to us.' }
       : {})
   });
+}
+
+/**
+ * The work order number — §6.2.
+ *
+ * WO-YYYY-XMN-NNNN: the year, the city the factory is in, and a
+ * sequence. The sequence is a count of the orders issued in the year,
+ * which is why it is not random: two enquiries in the same second
+ * still get consecutive numbers, and the number a buyer reads out on a
+ * call is the number on the order in the factory's book.
+ *
+ * The count is taken from the table rather than kept in memory, because
+ * a worker's process can restart between two enquiries and a counter
+ * held in memory would hand out the same number twice.
+ */
+async function nextWorkOrder() {
+  const year = new Date().getFullYear();
+  const prefix = `WO-${year}-XMN-`;
+
+  const row = await one(
+    `SELECT COUNT(*) AS n FROM inquiries WHERE work_order LIKE ?`,
+    `${prefix}%`
+  ).catch(() => null);
+
+  /* The count is the next number, unless a work order was deleted and
+     the count is now short of the highest number issued. Taking the
+     highest existing number and adding one closes that gap. */
+  const rows = await all(
+    `SELECT work_order FROM inquiries WHERE work_order LIKE ? ORDER BY work_order DESC LIMIT 1`,
+    `${prefix}%`
+  ).catch(() => []);
+
+  const highest = rows && rows[0]?.work_order
+    ? parseInt(String(rows[0].work_order).slice(prefix.length), 10)
+    : 0;
+
+  const count = Number(row?.n) || 0;
+  const next = Math.max(count, highest) + 1;
+
+  return prefix + String(next).padStart(4, '0');
 }
 
 /* ------------------------------------------------------------------ */
@@ -328,35 +372,49 @@ async function notify(d) {
     const { env } = getRequestContext();
     if (!env?.RESEND_API_KEY || !env?.INBOX_EMAIL) return;
 
-    /* The specification rows only appear when the buyer filled them in.
-       A row of em-dashes for every optional field makes the email harder
-       to read, and the fields that were left blank are the ones the
-       buyer did not want to say anything about. */
+    /* §6.2 gives the business's copy of the enquiry a four-part
+       structure, and it is worth keeping: the buyer profile, the
+       configuration, the attached asset and the notes are four different
+       things, and an engineer reading them in that order knows what to
+       do first. The earlier version was one long table, which read as
+       a form dump.
+
+       The rows for a section the buyer left empty are dropped rather
+       than shown as em-dashes. */
+    const profileRows = [
+      ['Full Name', d.name, true],
+      ['Business Email', d.email, true],
+      ['Company / Brand', d.company || '—', false],
+      ['WhatsApp / Phone', d.whatsapp || '—', false]
+    ];
+
     const specRows = [
-      ['Spec code', d.spec, true],
+      ['Base Platform', d.products.length ? d.products.join(', ') : '—', true],
+      ['Spec Code', d.spec, true],
       ['Material', d.material, false],
       ['Movement', d.movement, false],
       ['Hands', d.hands, false],
-      ['Packaging', d.packaging, false],
-      ['Target date', d.timeline, false]
+      ['Packaging Tier', d.packaging, false],
+      ['Order Volume', d.quantity, true],
+      ['Target Lead Time', d.timeline, false]
     ].filter(([, v]) => v);
 
-    const rows = [
-      ['Email', d.email, true],
-      ['WhatsApp', d.whatsapp || '—', true],
-      ['Company', d.company || '—', false],
-      ['Products', d.products.length ? d.products.join('<br>') : '—', false],
-      ['Quantity', d.quantity, true],
-      ...specRows,
-      ['Attachment', d.drawing || '—', false]
-    ]
+    const assetRows = [
+      ['Attached Design File', d.drawing || '—', false]
+    ];
+
+    const table = (rows) => rows
       .map(
         ([label, value, strong]) => `<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0f1f3;color:#6b7280;width:150px">${label}</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0f1f3;${strong ? 'font-weight:600' : ''}">${esc(value)}</td>
+      <td style="padding:9px 14px;border-bottom:1px solid #f0f1f3;color:#6b7280;width:170px">${label}</td>
+      <td style="padding:9px 14px;border-bottom:1px solid #f0f1f3;${strong ? 'font-weight:600' : ''}">${esc(value)}</td>
     </tr>`
       )
       .join('');
+
+    const section = (n, title, body) => `
+    <h3 style="margin:22px 0 8px;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#0052CC">${n}. ${title}</h3>
+    ${body}`;
 
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -368,17 +426,27 @@ async function notify(d) {
         from: env.MAIL_FROM || 'Badoudao Website <website@badoudao.com>',
         to: [env.INBOX_EMAIL],
         reply_to: d.email,
-        subject: `[Enquiry] ${d.products[0] || 'General'} — ${d.quantity}`.slice(0, 180),
-        html: `<div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto">
-  <div style="background:#0f5c4a;color:#fff;padding:18px 24px;font-weight:700;font-size:18px">BADOU<span style="color:#4db894">DAO</span></div>
+        subject: `NEW B2B WORK ORDER - ${d.company || d.email} - Target: ${d.products[0] || 'General'}`.slice(0, 180),
+        html: `<div style="font-family:system-ui,-apple-system,sans-serif;max-width:640px;margin:0 auto">
+  <div style="background:#111111;color:#fff;padding:18px 24px;font-weight:700;font-size:17px;letter-spacing:-.01em">OEMWALLCLOCKS<span style="color:#5B8DEF">.COM</span></div>
   <div style="padding:24px">
-    <h2 style="margin:0 0 4px;font-size:18px;color:#111417">New website enquiry</h2>
-    <p style="margin:0 0 18px;color:#6b7280;font-size:13px">${esc(d.id)} · ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC</p>
-    <table style="width:100%;border:1px solid #e5e7eb;border-radius:6px;font-size:14px;overflow:hidden">${rows}</table>
-    <div style="margin-top:18px;background:#fafbfc;border-left:3px solid #0f5c4a;padding:14px;font-size:14px;line-height:1.7;color:#3d4450;white-space:pre-wrap">${esc(d.message)}</div>
+    <h2 style="margin:0 0 4px;font-size:19px;color:#111111">New B2B work order</h2>
+    <p style="margin:0 0 4px;color:#0052CC;font-family:ui-monospace,monospace;font-size:14px;font-weight:700">${esc(d.workOrder || 'WO-PENDING')}</p>
+    <p style="margin:0 0 20px;color:#6b7280;font-size:12px">${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC · enquiry ${esc(d.id)}</p>
+
+    ${section('1', 'Buyer profile', `<table style="width:100%;border:1px solid #e5e7eb;border-radius:6px;font-size:14px;overflow:hidden">${table(profileRows)}</table>`)}
+    ${section('2', 'Configured specifications', `<table style="width:100%;border:1px solid #e5e7eb;border-radius:6px;font-size:14px;overflow:hidden">${table(specRows)}</table>`)}
+    ${section('3', 'Attached design asset', `<table style="width:100%;border:1px solid #e5e7eb;border-radius:6px;font-size:14px;overflow:hidden">${table(assetRows)}</table>`)}
+    ${section('4', 'Custom engineering notes', `<div style="background:#f9f9fb;border-left:3px solid #0052CC;padding:14px;font-size:14px;line-height:1.7;color:#3d4450;white-space:pre-wrap">${esc(d.message)}</div>`)}
+
+    <div style="margin-top:24px;padding:14px 16px;background:#111111;color:#fff;border-radius:6px;font-size:13px">
+      <strong>ACTION REQUIRED</strong><br>
+      Assign to a CAD engineer; deliver the 3D render and the FOB quote within 12 hours.
+    </div>
+
     <a href="${(env.SITE_URL || 'https://oemwallclocks.com').replace(/\/$/, '')}/admin/inquiries/${esc(d.id)}"
-       style="display:inline-block;margin-top:20px;background:#0f5c4a;color:#fff;padding:11px 22px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px">Open in dashboard</a>
-    <p style="margin:18px 0 0;font-size:12px;color:#9aa1ac">Reply within 12 hours to keep the enquiry.</p>
+       style="display:inline-block;margin-top:18px;background:#0052CC;color:#fff;padding:11px 22px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px">Open in dashboard</a>
+    <p style="margin:18px 0 0;font-size:12px;color:#9aa1ac">Reply within 12 hours to keep the order.</p>
   </div>
 </div>`
       })

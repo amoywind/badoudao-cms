@@ -133,7 +133,7 @@ export default function InquiryDetail() {
             </div>
             <div className="card-b">
               <div className="fg3">
-                <div><div className="help">邮箱</div><div className="pname" style={{ fontSize: 13 }}>{i.email}</div></div>
+                <div><div className="help">工单号</div><div className="pname" style={{ fontSize: 13, fontFamily: 'ui-monospace, monospace', fontWeight: 700, color: '#0052CC' }}>{i.work_order || '—'}</div></div>
                 <div><div className="help">电话</div><div style={{ fontSize: 13 }}>{i.name}</div></div>
                 <div><div className="help">数量</div><div style={{ fontSize: 13, fontWeight: 600 }}>{i.quantity}</div></div>
               </div>

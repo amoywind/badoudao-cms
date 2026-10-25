@@ -3,7 +3,8 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
-import { MOVEMENTS, DISPLAYS } from '@/lib/vocabulary';
+import { SiteSchema } from '../SiteSchema';
+import { MOVEMENTS, DISPLAYS, HAND_MATERIALS, HAND_SPEC_FIELDS, PACKAGING_TIERS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -35,6 +36,8 @@ export default async function ComponentsPage() {
 
   return (
     <div className="site">
+      <SiteSchema s={s} />
+      <SiteSchema s={s} />
       <TopBar />
       <Header />
 
@@ -81,8 +84,10 @@ export default async function ComponentsPage() {
                 <thead>
                   <tr>
                     <th>Movement</th>
-                    <th>Drive and characteristics</th>
-                    <th>Sound</th>
+                    <th>Core drive and structure</th>
+                    <th>Sound (dB)</th>
+                    <th>Daily drift</th>
+                    <th>Battery life</th>
                     <th>Where it sells</th>
                   </tr>
                 </thead>
@@ -92,6 +97,8 @@ export default async function ComponentsPage() {
                       <td>{m.name}</td>
                       <td>{m.drive}</td>
                       <td className="tnum">{m.db}</td>
+                      <td className="tnum">{m.drift}</td>
+                      <td className="tnum">{m.battery}</td>
                       <td>{m.scene}</td>
                     </tr>
                   ))}
@@ -128,29 +135,57 @@ export default async function ComponentsPage() {
         <section className="alt" style={{ padding: '64px 0' }}>
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Clock hands</div>
-              <h2>1,000+ hand styles, five materials</h2>
+              <div className="sec-tag">// Clock hands · 1,000+ moulded styles</div>
+              <h2>Five materials, one specification per style</h2>
               <p className="sec-sub">
-                Hands are the cheapest way to make a clock look like a different product.
-                Each style is moulded in aluminium, brass, solid wood, acrylic or plastic,
-                with glow-in-the-dark and Pantone matching on request.
+                Hands are the cheapest way to make a clock look like a different
+                product. Every style in the library is a mould that already exists,
+                so there is no tooling cost and no lead time for the hand itself.
               </p>
             </div>
 
-            <div className="grid-3">
-              {[
-                ['Aluminium', 'Light, crisp, the default for modern and industrial designs. Anodised in any Pantone.'],
-                ['Brass', 'Heavier and warmer, with a hand-polished or brushed finish. The traditional choice.'],
-                ['Solid wood', 'Cut from the same species as the frame, so the grain matches.'],
-                ['Acrylic', 'Transparent or frosted, and the only option that reads correctly over a printed dial.'],
-                ['Plastic', 'Injection moulded in the dial colour, for the volume end. Pantone matched.'],
-                ['Custom length', 'Hands cut to a specified length and counterweight for oversized or odd-shaped dials.']
-              ].map(([n, d]) => (
-                <div className="card" key={n} style={{ padding: 22 }}>
-                  <h3 style={{ fontSize: 16.5, marginBottom: 8 }}>{n}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
+            <div className="grid-3" style={{ marginBottom: 34 }}>
+              {HAND_MATERIALS.map((h) => (
+                <div className="card" key={h.key} style={{ padding: 22 }}>
+                  <h3 style={{ fontSize: 16.5, marginBottom: 8 }}>{h.name}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{h.note}</p>
                 </div>
               ))}
+            </div>
+
+            {/* The fields each style is recorded with. The list of styles
+                themselves is a thousand rows of a spreadsheet, and the
+                factory has not issued it yet — so the page shows the
+                structure the list will be loaded into rather than
+                inventing a handful of rows to look complete. */}
+            <div className="spec">
+              <div className="spec-h">What each style records</div>
+              <div style={{ overflowX: 'auto' }}>
+                <table className="mtx">
+                  <thead>
+                    <tr>
+                      {HAND_SPEC_FIELDS.map((f) => (
+                        <th key={f.key}>{f.label}</th>
+                      ))}
+                      <th>Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {HAND_SPEC_FIELDS.map((f) => (
+                        <td key={f.key}>{f.label}</td>
+                      ))}
+                      <td className="tnum">
+                        {HAND_SPEC_FIELDS.map((f) => f.example).join(' · ')}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.55 }}>
+                The style list is pending from the factory. Ask for the current
+                catalogue and we will send it with the quotation.
+              </p>
             </div>
           </div>
         </section>
@@ -162,21 +197,17 @@ export default async function ComponentsPage() {
               <div className="sec-tag">// Packaging</div>
               <h2>Three tiers, and what each one is for</h2>
               <p className="sec-sub">
-                Packaging is the difference between a clock that arrives intact and a
-                return. The tiers below are the ones the factory packs to.
+                Packaging is the difference between a clock that arrives intact and
+                a return. The tiers below are the ones the factory packs to.
               </p>
             </div>
 
             <div className="grid-3">
-              {[
-                ['Mail-order kraft box', 'Corrugated kraft, one clock per box. The economical choice, and the one that passes the 1.2m drop test as standard.'],
-                ['Colour gift box', 'Printed folding carton with an insert. What a direct-to-consumer brand needs for a shelf that looks like retail.'],
-                ['Custom foam insert', 'EPE foam or moulded pulp, cut to the clock. For fragile resin, acrylic and glass bodies, and for a gift presentation.']
-              ].map(([n, d], i) => (
-                <div className="card" key={n} style={{ padding: 24 }}>
-                  <div className="qc-n">Tier 0{i + 1}</div>
-                  <h3 style={{ fontSize: 17, margin: '4px 0 8px' }}>{n}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
+              {PACKAGING_TIERS.map((t) => (
+                <div className="card" key={t.tier} style={{ padding: 24 }}>
+                  <div className="qc-n">{t.tier}</div>
+                  <h3 style={{ fontSize: 17, margin: '4px 0 8px' }}>{t.name}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{t.detail}</p>
                 </div>
               ))}
             </div>

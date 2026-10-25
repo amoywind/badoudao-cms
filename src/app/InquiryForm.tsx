@@ -94,10 +94,13 @@ function digitsOnly(s: string) {
 
 export function InquiryForm({
   preset = '',
-  compact = false
+  compact = false,
+  replyHours = 12
 }: {
   preset?: string;
   compact?: boolean;
+  /** The response time promised on the form. */
+  replyHours?: number;
 }) {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -424,10 +427,18 @@ export function InquiryForm({
           </div>
         )}
 
+        {/* §6.1 asks for the privacy line to carry both the privacy
+            promise and the response commitment, and to say that an NDA
+            is available — a buyer sending a logo file is often worried
+            about who sees it, and the answer belongs next to the upload
+            box rather than in a policy page they have to find. */}
         <p className="req-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
             stroke="#0052CC" strokeWidth="2.4"><path d="M20 6L9 17l-5-5"/></svg>
-          We reply within 12 hours. Your details are used only to answer this enquiry.
+          <span>
+            100% privacy protection — your details are used only to answer this
+            enquiry. NDA available on request. We reply within {replyHours} hours.
+          </span>
         </p>
       </form>
     </div>

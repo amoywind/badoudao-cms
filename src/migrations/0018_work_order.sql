@@ -1,0 +1,17 @@
+-- The work order number.
+--
+-- §6.2 of the specification asks for a work order to be assigned
+-- automatically when an enquiry comes in, in the form WO-2026-XMN-XXXX,
+-- and for that number to appear in the business's copy of the enquiry.
+--
+-- It is a separate column rather than a replacement for the id. The id
+-- is the row's key and is used in the admin URL; the work order is the
+-- number the factory and the buyer quote against, and the two are not
+-- the same kind of thing. A work order also has to be quoted back to
+-- the buyer, so it cannot contain a character that needs escaping in a
+-- subject line.
+--
+-- Nullable, and filled in for every new enquiry. Existing rows keep
+-- their empty value rather than being backfilled with invented numbers:
+-- a work order that was never issued must not look like one that was.
+ALTER TABLE inquiries ADD COLUMN work_order TEXT DEFAULT '';

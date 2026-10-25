@@ -79,6 +79,22 @@ export type Product = {
   options: ProductOption[];
   prices: ProductPrice[];
   images: ProductImage[];
+  /* The carton the product ships in, used by the freight estimator on
+     the detail page. Every field is optional because the factory has
+     not recorded carton data for every model yet, and the estimator
+     falls back to a stated assumption when one is missing.
+
+     Rebuilt field by field in mapProduct below — a field added here
+     and not there is a field that arrives as undefined. */
+  cartonQty?: number | null;
+  cartonL?: number | null;
+  cartonW?: number | null;
+  cartonH?: number | null;
+  cartonGw?: number | null;
+  /* The two filterable attributes from §5.3-1. Both nullable, because
+     a value that would have to be guessed is left unset. */
+  movementType?: string | null;
+  sizeInch?: number | null;
   /* Only the detail page loads these. Optional so the list query, which
      does not join the table, still satisfies the type — and the page reads
      it as `product.customisations || []` for the same reason. */
@@ -349,7 +365,7 @@ export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
     summary: row.summary || '',
     priceMin: row.price_min ?? 0,
     priceMax: row.price_max ?? 0,
-    moq: row.moq ?? 500,
+    moq: row.moq ?? 300,
     leadTime: row.lead_time || '',
     moveLevel: row.move_level || '',
     difficulty: row.difficulty || 'simple',
@@ -366,6 +382,13 @@ export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
     options: (extras.options as ProductOption[]) || [],
     prices: (extras.prices as ProductPrice[]) || [],
     images: (extras.images as ProductImage[]) || [],
+    cartonQty: row.carton_qty ?? null,
+    cartonL: row.carton_l ?? null,
+    cartonW: row.carton_w ?? null,
+    cartonH: row.carton_h ?? null,
+    cartonGw: row.carton_gw ?? null,
+    movementType: row.movement_type || null,
+    sizeInch: row.size_inch ?? null,
     /* Empty rather than omitted when the caller did not load them: the
        detail page reads product.customisations.length directly, and an
        undefined here is the same class of bug as the missing fifth

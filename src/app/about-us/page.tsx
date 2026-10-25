@@ -3,6 +3,7 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
+import { SiteSchema } from '../SiteSchema';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -34,6 +35,8 @@ export default async function AboutUsPage() {
 
   return (
     <div className="site">
+      <SiteSchema s={s} />
+      <SiteSchema s={s} />
       <TopBar />
       <Header />
 

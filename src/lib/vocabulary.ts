@@ -96,49 +96,154 @@ export const TRENDING = [
   }
 ];
 
-/** The seven movements, §9.2. */
+/**
+ * The seven movements — §5.4-2 of the specification.
+ *
+ * The table carries six columns: the type, how it drives, how loud it
+ * is, how far it drifts in a day, how long the battery lasts, and where
+ * it sells. The drift and the battery life are what a buyer comparing
+ * two movements actually weighs them on, and neither was in the earlier
+ * version of this table.
+ *
+ * The numbers are the ones the specification gives for the movements it
+ * names. Where it names a movement by its usual trade description and
+ * the table here says the same thing, the two agree. A movement that is
+ * fitted but not in the specification — the LCD and the LED, which have
+ * their own section — carries a dash rather than a figure that was
+ * invented to fill the cell.
+ */
 export const MOVEMENTS = [
   {
-    name: 'Step-second quartz',
-    drive: 'Quartz drive, the second hand jumps once a second',
-    db: '< 30 dB',
+    name: 'Silent sweep',
+    drive: 'Quartz driven, the second hand sweeps without a gear step',
+    db: '< 10 dB (anechoic grade)',
+    drift: '±0.5s / day',
+    battery: '18 months (1× AA)',
+    scene: 'Bedrooms, boutique hotels, premium homeware'
+  },
+  {
+    name: 'Step-second',
+    drive: 'Quartz driven, the second hand steps once a second',
+    db: '28 dB (faint tick)',
+    drift: '±1.0s / day',
+    battery: '24 months (1× AA)',
     scene: 'Offices, kitchens, the volume seller'
-  },
-  {
-    name: 'Silent sweep quartz',
-    drive: 'Quartz drive, the second hand sweeps without a tick',
-    db: '< 10 dB',
-    scene: 'Bedrooms, hotel rooms, premium homeware'
-  },
-  {
-    name: 'Chime',
-    drive: 'Hourly and half-hourly electronic or mechanical chime',
-    db: 'Audible, adjustable',
-    scene: 'European classic styles, traditional homeware'
-  },
-  {
-    name: 'Mechanical',
-    drive: 'Spring-driven mechanical movement, no battery',
-    db: 'Mechanical escapement',
-    scene: 'Enthusiast buyers, vintage luxury pieces'
   },
   {
     name: 'Radio-controlled',
     drive: 'Receives WWVB / DCF77 / JJY / BPC and sets itself',
-    db: 'Silent or sweep',
-    scene: 'US, Europe, Japan, China — no manual setting'
+    db: '< 12 dB',
+    drift: 'Zero — corrected daily',
+    battery: '12 months (2× AA)',
+    scene: 'US, Europe and Japan markets, commercial spaces needing accuracy'
+  },
+  {
+    name: 'Westminster chime',
+    drive: 'Electronic or mechanical strike on the hour and half hour, with a light-sensitive night silence',
+    db: 'Adjustable volume',
+    drift: '±1.0s / day',
+    battery: '10 months (2× C)',
+    scene: 'European classic clocks, premium gifts'
+  },
+  {
+    name: 'Mechanical',
+    drive: 'Spring-driven mechanical movement, no battery, wound by hand',
+    db: 'Mechanical escapement',
+    drift: '±15s / day',
+    battery: 'Wound every 7 days',
+    scene: 'Enthusiasts, vintage luxury pieces'
   },
   {
     name: 'Music chime',
-    drive: 'Plays a built-in chip or music-box tune on the hour',
+    drive: 'Plays a built-in chip or music-box melody at set times',
     db: 'Melodic',
-    scene: 'Gift clocks, children’s clocks, seasonal editions'
+    drift: '±1.0s / day',
+    battery: '12 months',
+    scene: 'Wedding gifts, children’s clocks'
   },
   {
-    name: 'Pendulum',
-    drive: 'Quartz-driven decorative pendulum, or a mechanical escapement',
-    db: 'Varies by style',
-    scene: 'Living-room focal clocks, vintage hall clocks'
+    name: 'Magnetic pendulum',
+    drive: 'A magnetic coil drives the pendulum smoothly, with no escapement',
+    db: '< 10 dB',
+    drift: '±0.8s / day',
+    battery: '14 months (2× AA)',
+    scene: 'Designer toys and character clocks, large living-room clocks'
+  }
+];
+
+/**
+ * The hands library — §5.4-1.
+ *
+ * The specification asks for every style to carry a style number, the
+ * length of the minute and hour hands, the weight of the set, the
+ * balance standard and the glow rating. Those are per-style facts, and
+ * a hundred-and-thousand of them are a spreadsheet rather than a page.
+ *
+ * What is here is the structure: the five materials the specification
+ * names, and the six fields each style has to answer for. The rows
+ * themselves are left empty until the factory supplies the list — see
+ * the material requirements document.
+ */
+export const HAND_MATERIALS = [
+  {
+    key: 'brass',
+    name: 'Brass (H62)',
+    note: 'Solid brass, the traditional choice. Polished, brushed or antique finishes.'
+  },
+  {
+    key: 'aluminium',
+    name: 'Aluminium (aerospace grade)',
+    note: 'Light and crisp. Anodised in any Pantone, and the default for modern designs.'
+  },
+  {
+    key: 'walnut',
+    name: 'Walnut (solid timber)',
+    note: 'Cut from black walnut, so the grain can be matched to a wooden housing.'
+  },
+  {
+    key: 'acrylic',
+    name: 'Acrylic',
+    note: 'The only hand that reads correctly over a printed dial. Translucent or frosted.'
+  },
+  {
+    key: 'plastic',
+    name: 'Plastic (custom Pantone)',
+    note: 'Injection moulded in the dial colour. The economical option at volume.'
+  }
+];
+
+/** The fields every hand style has to answer for. */
+export const HAND_SPEC_FIELDS = [
+  { key: 'style', label: 'Style number', example: 'H-084' },
+  { key: 'minuteLen', label: 'Minute hand length', example: '95 mm' },
+  { key: 'hourLen', label: 'Hour hand length', example: '62 mm' },
+  { key: 'weight', label: 'Weight per set', example: '14 g' },
+  { key: 'balance', label: 'Counterweight standard', example: 'Balanced, ±0.2 g' },
+  { key: 'lume', label: 'Glow rating', example: 'Super-LumiNova, 4 h' }
+];
+
+/** The three packaging tiers — §5.4-4. */
+export const PACKAGING_TIERS = [
+  {
+    tier: 'Tier 1',
+    name: 'Mail-order and e-commerce',
+    detail:
+      '5-ply K=A corrugated carton with a 35mm high-density cut EPE foam insert. ' +
+      'Passes the ISTA-1A 1.2m six-side drop test.'
+  },
+  {
+    tier: 'Tier 2',
+    name: 'Retail and gift box',
+    detail:
+      'Rigid greyboard wrapped in matte art paper, magnetic closure, foil-stamped ' +
+      'logo and a velvet EVA liner.'
+  },
+  {
+    tier: 'Tier 3',
+    name: 'Collector display case',
+    detail:
+      '3mm high-transmission PMMA case, for designer toys and IP collaboration ' +
+      'launches.'
   }
 ];
 
@@ -212,26 +317,108 @@ export const SIMPLIFIED = [
   }
 ];
 
-/** The four QC steps, §10.2. */
+/**
+ * The four QC steps — §5.5-1 of the specification.
+ *
+ * The specification gives a measurable limit for each step, and those
+ * limits are what make the step checkable rather than a claim. A step
+ * that says "raw material is inspected" can be asserted by anyone; a
+ * step that says the moisture content is held between 8% and 12% can be
+ * audited with a meter.
+ *
+ * The two numbers in the specification that are stated as thresholds
+ * rather than ranges are both here: a movement measuring above 12dB is
+ * scrapped, and the vertical clearance between the hands is never less
+ * than 1.5mm.
+ */
 export const QC_STEPS = [
   {
     n: 'Step 01',
     title: 'Raw material QC',
-    detail: 'Moisture content testing on timber, scratch and impact testing on plastic and acrylic.'
+    detail:
+      'Moisture content in timber held between 8% and 12%, which is what keeps it ' +
+      'from cracking in a dry warehouse or moulding in a damp container. Metal ' +
+      'sheet is checked for a burr-free laser edge.',
+    metric: '8% – 12% moisture content'
   },
   {
     n: 'Step 02',
-    title: '24-hour aging QC',
-    detail: '100% of movements run under power for 24 hours. Accuracy verified and the tick measured with a sound meter.'
+    title: '24-hour movement aging QC',
+    detail:
+      'Every movement runs on power for 24 hours on the shelf, then accuracy is ' +
+      'verified and the tick is measured in an anechoic chamber. A movement ' +
+      'reading above 12dB is scrapped rather than adjusted.',
+    metric: '100% tested · scrap above 12dB'
   },
   {
     n: 'Step 03',
     title: 'Pointer balance & alignment',
-    detail: 'Hand straightness and balance torque checked on every hand set, so the sweep never catches.'
+    detail:
+      'The hands are pressed into their brass bushes on a pneumatic jig, and the ' +
+      'vertical clearance between the hour and minute hands is checked. It is ' +
+      'never allowed below 1.5mm, which is what stops the sweep from catching.',
+    metric: '≥ 1.5mm hand clearance'
   },
   {
     n: 'Step 04',
-    title: '1.2m drop-test packaging',
-    detail: 'International parcel handling simulated — a six-sided drop test from 1.2 metres on the packed carton.'
+    title: '1.2m ISTA-1A drop-test packaging QC',
+    detail:
+      'The finished carton is dropped onto concrete from 120cm — one corner, ' +
+      'three edges, six faces in sequence. A clock that cracks its lens or stops ' +
+      'running does not leave the building.',
+    metric: '120cm · 1 corner, 3 edges, 6 faces'
   }
+];
+
+/**
+ * The factory's own figures — §5.5-2.
+ *
+ * The specification names a floor area, a monthly output, the machine
+ * park and the number of export markets. None of these can be checked
+ * against anything the site already holds, and they are the kind of
+ * number a buyer checks. A floor area that turns out to be wrong is
+ * worse for a factory than no floor area at all.
+ *
+ * So the page shows the structure and leaves the values empty, marked
+ * as pending, and the material requirements document asks for them.
+ */
+export const FACTORY_FIGURES: { key: string; label: string; unit: string }[] = [
+  { key: 'floorArea', label: 'Manufacturing floor area', unit: 'm²' },
+  { key: 'monthlyOutput', label: 'Monthly output', unit: 'pcs' },
+  { key: 'exportMarkets', label: 'Export markets', unit: 'countries' },
+  { key: 'cncMachines', label: 'CNC machining centres', unit: 'units' },
+  { key: 'uvLines', label: 'UV flatbed print lines', unit: 'units' }
+];
+
+/**
+ * The certifications — §5.5-2, with the full designations.
+ *
+ * The earlier version of this list named the certificates without their
+ * numbers, which reads as vague to a buyer who is checking a supplier's
+ * paperwork: "ISO9001" could mean the 2008 or the 2015 revision, and
+ * "RoHS" without a version is not a specification.
+ */
+export const CERTIFICATIONS = [
+  { code: 'ISO 9001:2015', name: 'Quality management system' },
+  { code: 'BSCI', name: 'Social compliance standard' },
+  { code: 'CE (EMC)', name: 'Electromagnetic compatibility' },
+  { code: 'RoHS 2.0', name: 'Restriction of hazardous substances' },
+  { code: 'REACH (EC 1907/2006)', name: 'Chemical substances regulation' }
+];
+
+/**
+ * The 28-day manufacturing route — §5.2-3.
+ *
+ * Six milestones on a fixed calendar, from the first CAD drawing to the
+ * container leaving the port. The dates are the point: a buyer
+ * planning a launch needs to know when the goods ship, not just that
+ * they will.
+ */
+export const ROUTE_28 = [
+  { day: 'Day 01', title: '3D CAD and vector drawings', detail: 'Renderings and production drawings issued for approval.' },
+  { day: 'Day 03', title: 'CNC and laser cutting', detail: 'Precision cutting and the hand balancing tooling samples.' },
+  { day: 'Day 07', title: 'Sample assembled and shipped', detail: 'The first physical unit is built and sent by express courier.' },
+  { day: 'Day 10', title: 'Sample and packaging confirmed', detail: 'The buyer approves the sample and the packaging artwork.' },
+  { day: 'Day 25', title: 'Production complete', detail: 'The full run is finished and every movement enters the aging room.' },
+  { day: 'Day 28', title: 'Tested and shipped', detail: '100% aged, calibrated and drop-tested; the container leaves Xiamen.' }
 ];

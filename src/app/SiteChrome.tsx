@@ -21,11 +21,29 @@ const FALLBACK_TOP: NavItem[] = [
 export async function TopBar() {
   let s: SiteSettings = {};
   try { s = await getSettings(); } catch {}
+  /* The announcement bar. §5.1-1 specifies it exactly: 32px, #111111,
+     JetBrains Mono at 11px, and one fixed line of claims. The claims are
+     the ones the factory makes — minimum order, rendering turnaround and
+     the drop test — because a bar that says nothing worth reading is
+     just a second header.
+
+     The MOQ comes from the settings row rather than being written into
+     the sentence, so it cannot go stale the way a hand-written number
+     would. */
+  const moq = Number(s.moq) || 300;
+
   return (
     <div className="topbar">
-      <div className="wrap">
-        <span>{s.siteName || 'Badoudao'} · Quartz clock manufacturer · OEM / ODM small-batch production</span>
-        <span><b>Reply within {s.quoteHours || 12} hours</b> · <Link href="/#inquiry">Get a Quote</Link></span>
+      <div className="wrap topbar-in">
+        <span className="topbar-claim">
+          XIAMEN CHENGMAOMAO FACTORY DIRECT
+          <i />
+          FLEXIBLE MOQ {moq} PCS
+          <i />
+          24H 3D CAD TURNAROUND
+          <i />
+          1.2M DROP-TEST CERTIFIED
+        </span>
       </div>
     </div>
   );
@@ -77,7 +95,15 @@ export async function Header() {
       </label>
 
       <div className="wrap nav">
-          <Link className="logo" href="/">BADOU<span>DAO</span></Link>
+          {/* Zone 1 of the header contract: a single line of text.
+              §5.1-2 asks for the domain itself and rules out a
+              sub-line or an icon — the brand mark is the name of the
+              site, and nothing competes with it.
+
+              The Badoudao name is still the trademark, so it stays in
+              the footer where the company is described. What the header
+              shows is what the buyer is typing. */}
+          <Link className="logo" href="/">OEMWALLCLOCKS<span>.COM</span></Link>
 
           {/* Products opens a dropdown of the categories.
               CSS-only, using :hover and :focus-within: no JavaScript means no
@@ -117,9 +143,11 @@ export async function Header() {
           )}
         </nav>
 
+        {/* Zone 3: one action, not two. §5.1-2 asks for a single primary
+            button, and a second ghost button next to it competes for the
+            same click. The catalogue is one nav link away. */}
         <div className="nav-cta">
-          <Link href="/products" className="btn btn-ghost btn-sm">Browse Catalogue</Link>
-          <Link href="/#inquiry" className="btn btn-primary btn-sm">Get a Quote</Link>
+          <Link href="/#inquiry" className="btn btn-primary btn-sm">Request Quotation</Link>
         </div>
         </div>
     </header>
@@ -170,7 +198,7 @@ export async function Footer() {
       <div className="wrap">
         <div className="f-grid">
           <div className="f-brand">
-            <div className="logo">BADOU<span>DAO</span></div>
+            <div className="logo">OEMWALLCLOCKS<span>.COM</span></div>
             <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 300} pieces.</p>
             {/* The certification belongs to the movement, not to the clock —
                 that distinction is the whole compliance note, and printing

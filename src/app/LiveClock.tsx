@@ -39,12 +39,20 @@ type Zone = {
   offset: number;
 };
 
+/* The five zones the specification names, in its order. The factory's own
+   time is first and marked, because the question a buyer is usually
+   trying to answer is what time it is at the factory.
+
+   The visitor's own zone is not in this list. It is selected
+   automatically after the page loads, and the label says so — a buyer in
+   Amsterdam should not have to hunt through five cities to find the one
+   they are in. */
 const ZONES: Zone[] = [
-  { id: 'local', label: 'Your local time', offset: 0 },
-  { id: 'london', label: 'London', offset: 0 },
-  { id: 'newyork', label: 'New York', offset: -5 },
-  { id: 'xiamen', label: 'Xiamen (factory)', offset: 8 },
-  { id: 'tokyo', label: 'Tokyo', offset: 9 }
+  { id: 'xiamen', label: 'Beijing/Xiamen (UTC+8) [Factory HQ]', offset: 8 },
+  { id: 'london', label: 'London (UTC+0)', offset: 0 },
+  { id: 'newyork', label: 'New York (EST -5)', offset: -5 },
+  { id: 'tokyo', label: 'Tokyo (JST +9)', offset: 9 },
+  { id: 'paris', label: 'Paris (CET +1)', offset: 1 }
 ];
 
 /** The browser's own zone, resolved once the page has hydrated. */
@@ -103,31 +111,43 @@ export function LiveClock() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const zone = ZONES.find((z) => z.id === zoneId) || ZONES[0];
-  const offset = zone.id === 'local' ? (localOffset ?? 8) : zone.offset;
+  /* The visitor's own zone is not in the list, so it is handled as its
+     own case rather than as a sixth entry: it has no fixed offset and no
+     city name, and it is the default only until the page has hydrated. */
+  const zone = ZONES.find((z) => z.id === zoneId);
+  const isLocal = zoneId === 'local';
+  const offset = isLocal ? (localOffset ?? 8) : (zone?.offset ?? 8);
 
   /* The time in the selected zone. Working from UTC rather than from the
      local Date avoids the browser's own zone entirely, so the result is
      the same whatever the visitor's machine is set to. */
+  /* No seconds.
+     §3.3 of the specification asks for the seconds hand to be removed
+     entirely: a ticking hand is visual noise, and the reading is HH:mm.
+     This is not only a matter of hiding the hand — the minute hand has
+     to move too, and a minute hand that only jumps once a minute reads
+     as broken. So the minute hand advances smoothly, which is what a
+     sweep movement does anyway, and the seconds are simply not drawn.
+
+     The seconds are still read from the clock, because the minute hand
+     uses them for its sub-degree position. */
   const parts = (() => {
-    if (!now) return { h: 0, m: 0, s: 0, label: '--:--:--' };
+    if (!now) return { h: 0, m: 0, s: 0, label: '--:--' };
     const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
     const z = new Date(utcMs + offset * 3600000);
     const h = z.getHours();
     const m = z.getMinutes();
     const s = z.getSeconds() + z.getMilliseconds() / 1000;
-    const label = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    const label = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     return { h, m, s, label };
   })();
 
-  const secDeg = parts.s * 6;
   const minDeg = parts.m * 6 + parts.s * 0.1;
   const hourDeg = (parts.h % 12) * 30 + parts.m * 0.5;
 
-  const zoneLabel =
-    zone.id === 'local'
-      ? `Local time (UTC${offset >= 0 ? '+' : ''}${offset})`
-      : `${zone.label} (UTC${offset >= 0 ? '+' : ''}${offset})`;
+  const zoneLabel = isLocal
+    ? `Your local time (UTC${offset >= 0 ? '+' : ''}${offset})`
+    : (zone?.label ?? '');
 
   return (
     <div className="clockbox">
@@ -139,10 +159,9 @@ export function LiveClock() {
           onChange={(e) => setZoneId(e.target.value)}
           aria-label="Time zone"
         >
+          <option value="local">Your local time</option>
           {ZONES.map((z) => (
-            <option key={z.id} value={z.id}>
-              {z.id === 'local' ? 'Your local time' : z.label}
-            </option>
+            <option key={z.id} value={z.id}>{z.label}</option>
           ))}
         </select>
       </div>
@@ -207,18 +226,27 @@ export function LiveClock() {
             stroke="#3d4450" strokeWidth="3.2" strokeLinecap="round"
             transform={`rotate(${minDeg} 100 100)`}
           />
-          <line
-            x1="100" y1="118" x2="100" y2="26"
-            stroke="#0052CC" strokeWidth="1.4" strokeLinecap="round"
-            transform={`rotate(${secDeg} 100 100)`}
-          />
-          <circle cx="100" cy="100" r="4.5" fill="#0052CC" />
+          {/* The centre cap is brass, not blue. §5.1-3 calls for a brass
+              hub on a plain white face, and the accent colour is
+              reserved for actions — a clock is not an action. */}
+          <circle cx="100" cy="100" r="5" fill="#B8874A" />
+          <circle cx="100" cy="100" r="2" fill="#8A6435" />
         </svg>
       </div>
 
       <div className="clockbox-foot">
         <span className="clockbox-zone">{zoneLabel}</span>
         <span className="clockbox-time tnum">{parts.label}</span>
+      </div>
+
+      {/* The anechoic chamber reading. §5.1-3 asks for it beside the
+          time, and it is the one measurement on the page that is a
+          claim about the factory rather than about the clock: the floor
+          noise of the room the movements are tested in. */}
+      <div className="clockbox-noise">
+        <span className="clockbox-noise-l">Anechoic Noise Floor</span>
+        <span className="clockbox-noise-v tnum">8.4 dB</span>
+        <span className="clockbox-noise-t">Whisper Quiet</span>
       </div>
     </div>
   );

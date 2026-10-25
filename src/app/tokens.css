@@ -1003,9 +1003,12 @@
   color: var(--text);
 }
 
+/* Four columns on a desktop, two on a phone — §5.3-1. The three
+   columns this used to have left a wide gap on a 1440px screen and made
+   the catalogue feel longer than ten products warrant. */
 .pgrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
@@ -1322,7 +1325,7 @@
   }
 
   .pgrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .pd2 {
@@ -1359,10 +1362,24 @@
 
 @media (max-width: 767px) {
   .mat-grid,
-  .pgrid,
   .qc-grid,
   .trend-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Two columns on a phone, per §5.3-1. A single column of 1:1 cards
+     makes the buyer scroll a very long way to compare ten clocks. */
+  .pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .pcard-body {
+    padding: 12px 13px 14px;
+  }
+
+  .pcard-body h3 {
+    font-size: 13.5px;
   }
 
   .spec-row {
@@ -1581,4 +1598,1153 @@
 
 .pd2-info .tcard-d {
   font-size: 11.5px;
+}
+
+/* ===================================================================
+   The anechoic reading under the clock
+   -------------------------------------------------------------------
+   The one measurement on the page that is a claim about the room the
+   movements are tested in rather than about the clock. It sits under
+   the reading because it is context, not the headline.
+   =================================================================== */
+
+.clockbox-noise {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 11px;
+}
+
+.clockbox-noise-l {
+  font-family: var(--font-tech);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.clockbox-noise-v {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.clockbox-noise-t {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ===================================================================
+   The anechoic reading under the clock
+   -------------------------------------------------------------------
+   The one measurement on the page that is a claim about the room the
+   movements are tested in rather than about the clock. It sits under
+   the reading because it is context, not the headline.
+   =================================================================== */
+
+.clockbox-noise {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 11px;
+}
+
+.clockbox-noise-l {
+  font-family: var(--font-tech);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.clockbox-noise-v {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.clockbox-noise-t {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* ===================================================================
+   Header contract — §5.1-1 and §5.1-2
+   -------------------------------------------------------------------
+   The announcement bar is 32px of JetBrains Mono at 11px on #111111,
+   with the claims separated by a thin rule rather than a pipe character
+   so the line reads as one sentence rather than as a table row.
+   =================================================================== */
+
+.topbar {
+  min-height: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.topbar-in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 32px;
+}
+
+.topbar-claim {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-claim i {
+  display: block;
+  width: 1px;
+  height: 11px;
+  background: rgba(255, 255, 255, .28);
+  flex-shrink: 0;
+}
+
+/* The brand mark. Space Grotesk, one line, and the accent on the TLD
+   so the domain reads as a domain. */
+.site .logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.site .logo span {
+  color: var(--accent);
+}
+
+/* The request button is the only action in the header, so it is the
+   only thing allowed to be the accent colour. */
+.site .nav-cta .btn {
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  /* The bar's four claims do not fit a phone, and a truncated line of
+     half-claims is worse than one claim. The rest are on the trust
+     cards a scroll away. */
+  .topbar-claim {
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .topbar-claim i:nth-of-type(n + 2),
+  .topbar-claim i:nth-of-type(n + 2) ~ * {
+    display: none;
+  }
+}
+
+/* ===================================================================
+   The customizer hub — §5.1-6
+   -------------------------------------------------------------------
+   The left half is the four tabs and their options; the right half is
+   the summary. The summary is the point: it is the only place on the
+   page where a buyer's choices are assembled into one line, and the
+   specification code it produces is what reaches the factory.
+   =================================================================== */
+
+.hub {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.hub-main {
+  border-right: 1px solid var(--rule);
+}
+
+.hub-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+}
+
+.hub-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 16px 14px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.hub-tab:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.hub-tab.on {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.hub-tab-n {
+  font-size: 10px;
+  opacity: .5;
+}
+
+.hub-panel {
+  padding: 22px;
+}
+
+.hub-opts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.hub-opt {
+  text-align: left;
+  padding: 14px 15px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+
+.hub-opt:hover {
+  border-color: #C4C8CE;
+}
+
+.hub-opt.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 3px 10px -4px rgba(0, 82, 204, .3);
+}
+
+.hub-opt-l {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hub-opt.on .hub-opt-l {
+  color: var(--accent);
+}
+
+.hub-opt-n {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+/* ---- the summary ---- */
+
+.hub-sum {
+  padding: 24px 22px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-sum-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 16px;
+}
+
+.hub-code {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: var(--text);
+  padding: 12px 14px;
+  border-radius: var(--radius-btn);
+  word-break: break-all;
+  margin-bottom: 16px;
+}
+
+.hub-list {
+  margin: 0 0 16px;
+}
+
+.hub-list > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.hub-list dt {
+  font-size: 12px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.hub-list dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.hub-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  margin-bottom: 16px;
+}
+
+.hub-price-k {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.hub-price-v {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: right;
+}
+
+.hub-apply {
+  width: 100%;
+  border-radius: var(--radius-btn);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.hub-note {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin-top: 14px;
+}
+
+@media (max-width: 1024px) {
+  .hub {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-main {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hub-opts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hub-opts {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-tab {
+    padding: 13px 10px;
+    font-size: 11px;
+  }
+}
+
+/* ===================================================================
+   The carton and freight estimator — §5.3-2
+   -------------------------------------------------------------------
+   Every input is a number the buyer can change, so the panel is a
+   calculator rather than a readout. The figures it produces — the CBM
+   and the container loads — are calculated from what is typed in, not
+   written into the markup.
+   =================================================================== */
+
+.frt {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 18px 20px 16px;
+  margin-bottom: 20px;
+}
+
+.frt-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 14px;
+}
+
+.frt-assumed {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.frt-note {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.frt-in {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.frt-field {
+  margin-bottom: 12px;
+}
+
+.frt-field label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 5px;
+}
+
+.frt-field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface-card);
+  color: var(--text);
+  font-family: var(--font-tech);
+  font-size: 13px;
+}
+
+.frt-field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, .09);
+}
+
+.frt-dims {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.frt-dims input {
+  flex: 1;
+  min-width: 0;
+}
+
+.frt-dims span {
+  color: var(--text-2);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.frt-static {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface-card);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.frt-out {
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.frt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.frt-k {
+  font-size: 12px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.frt-v {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.frt-foot {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+/* The spec sheet download. §5.3-2 asks for it next to the quote
+   button, and a buyer comparing two clocks wants the numbers in a file
+   they can put in a spreadsheet rather than on a screen. */
+.pd-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.pd-spec-sheet {
+  font-size: 12.5px;
+  padding: 12px 20px;
+}
+
+@media (max-width: 480px) {
+  .frt-in {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   The carton and freight estimator — §5.3-2
+   -------------------------------------------------------------------
+   Every input is a number the buyer can change, so the panel is a
+   calculator rather than a readout. The figures it produces — the CBM
+   and the container loads — are calculated from what is typed in, not
+   written into the markup.
+   =================================================================== */
+
+.frt {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 18px 20px 16px;
+  margin-bottom: 20px;
+}
+
+.frt-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 14px;
+}
+
+.frt-assumed {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.frt-note {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.frt-in {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.frt-field {
+  margin-bottom: 12px;
+}
+
+.frt-field label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 5px;
+}
+
+.frt-field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface-card);
+  color: var(--text);
+  font-family: var(--font-tech);
+  font-size: 13px;
+}
+
+.frt-field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, .09);
+}
+
+.frt-dims {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.frt-dims input {
+  flex: 1;
+  min-width: 0;
+}
+
+.frt-dims span {
+  color: var(--text-2);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.frt-static {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface-card);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.frt-out {
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.frt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.frt-k {
+  font-size: 12px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.frt-v {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.frt-foot {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+/* The spec sheet download. §5.3-2 asks for it next to the quote
+   button, and a buyer comparing two clocks wants the numbers in a file
+   they can put in a spreadsheet rather than on a screen. */
+.pd-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.pd-spec-sheet {
+  font-size: 12.5px;
+  padding: 12px 20px;
+}
+
+@media (max-width: 480px) {
+  .frt-in {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- the filter rail, in the shape §5.3-1 describes ---- */
+
+.rail-clear {
+  display: block;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+}
+
+.rail-clear:hover {
+  border-color: var(--accent);
+}
+
+.rail-count {
+  margin-left: auto;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.rail-count-row {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.rail-empty {
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-card);
+}
+
+.rail-empty p {
+  color: var(--text-2);
+  margin-bottom: 16px;
+}
+
+/* ---- the filter rail, in the shape §5.3-1 describes ---- */
+
+.rail-clear {
+  display: block;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+}
+
+.rail-clear:hover {
+  border-color: var(--accent);
+}
+
+.rail-count {
+  margin-left: auto;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.rail-count-row {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.rail-empty {
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius-card);
+}
+
+.rail-empty p {
+  color: var(--text-2);
+  margin-bottom: 16px;
+}
+
+/* ===================================================================
+   QC metrics, certifications, factory figures, the 28-day route
+   =================================================================== */
+
+.qc-metric {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-btn);
+}
+
+.cert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cert-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.cert-row:last-child {
+  border-bottom: none;
+}
+
+.cert-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+  min-width: 148px;
+}
+
+.cert-name {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* The factory figures that are still pending. The dash is the honest
+   value: a number that has not been confirmed is not a number. */
+.fig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.fig {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  padding: 14px 16px;
+  background: var(--surface);
+}
+
+.fig-l {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.fig-v {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.fig-pending {
+  font-family: var(--font-tech);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--line);
+  line-height: 1;
+}
+
+.fig-u {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* The 28-day route. A vertical timeline with the day on the left. */
+.route {
+  display: grid;
+  gap: 0;
+  counter-reset: route;
+}
+
+.route-i {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 22px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.route-i:first-child {
+  border-top: none;
+}
+
+.route-day {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  padding-top: 1px;
+}
+
+.route-body h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.route-body p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .route-i {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .cert-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cert-code {
+    min-width: 0;
+  }
+}
+
+/* ===================================================================
+   QC metrics, certifications, factory figures, the 28-day route
+   =================================================================== */
+
+.qc-metric {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-btn);
+}
+
+.cert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cert-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.cert-row:last-child {
+  border-bottom: none;
+}
+
+.cert-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+  min-width: 148px;
+}
+
+.cert-name {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* The factory figures that are still pending. The dash is the honest
+   value: a number that has not been confirmed is not a number. */
+.fig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.fig {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  padding: 14px 16px;
+  background: var(--surface);
+}
+
+.fig-l {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.fig-v {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.fig-pending {
+  font-family: var(--font-tech);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--line);
+  line-height: 1;
+}
+
+.fig-u {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* The 28-day route. A vertical timeline with the day on the left. */
+.route {
+  display: grid;
+  gap: 0;
+  counter-reset: route;
+}
+
+.route-i {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 22px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.route-i:first-child {
+  border-top: none;
+}
+
+.route-day {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  padding-top: 1px;
+}
+
+.route-body h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.route-body p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .route-i {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .cert-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cert-code {
+    min-width: 0;
+  }
+}
+
+/* The enquiry form's submit button. §6.1 asks for a 52px full-width
+   accent button: it is the only conversion on the page, and a buyer on
+   a phone has to find it without hunting. */
+.site .form-card form > .btn-primary[type='submit'] {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The enquiry form's submit button. §6.1 asks for a 52px full-width
+   accent button: it is the only conversion on the page, and a buyer on
+   a phone has to find it without hunting. */
+.site .form-card form > .btn-primary[type='submit'] {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }

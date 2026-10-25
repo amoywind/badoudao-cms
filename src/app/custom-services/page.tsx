@@ -3,7 +3,8 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
-import { ANATOMY, SIMPLIFIED } from '@/lib/vocabulary';
+import { SiteSchema } from '../SiteSchema';
+import { ANATOMY, SIMPLIFIED, ROUTE_28 } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -36,6 +37,8 @@ export default async function CustomServicesPage() {
 
   return (
     <div className="site">
+      <SiteSchema s={s} />
+      <SiteSchema s={s} />
       <TopBar />
       <Header />
 
@@ -65,7 +68,7 @@ export default async function CustomServicesPage() {
         </section>
 
         {/* ---- The anatomy ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Visual anatomy</div>
@@ -108,26 +111,26 @@ export default async function CustomServicesPage() {
           </div>
         </section>
 
-        {/* ---- How we work ---- */}
+        {/* ---- The 28-day route ---- */}
         <section style={{ padding: '64px 0' }}>
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// How an order runs</div>
-              <h2>From a reference photo to a shipped container</h2>
+              <div className="sec-tag">// Agile manufacturing timeline</div>
+              <h2>Twenty-eight days from drawing to container</h2>
+              <p className="sec-sub">
+                A fixed calendar, not an estimate. A buyer planning a launch needs to
+                know when the goods leave the port, so every stage has a date on it.
+              </p>
             </div>
 
-            <div className="proc">
-              {[
-                ['Talk it through', 'Quantity, target price, market and packaging. A reference photo, a sample or a sketch is enough to start.'],
-                ['Specification & quote', `We propose the specification and quote Ex Works, within ${s.quoteHours || 12} hours.`],
-                ['Sample', `${s.sampleDays || '7-10'} days. The sample cost is credited against the first bulk order.`],
-                ['Mass production', 'In-process inspection, with photo and video updates as the run progresses.'],
-                ['Final inspection', 'Every carton checked before it is closed.'],
-                ['Shipment', 'Documents supplied, and we stay available afterwards.']
-              ].map(([h, p], i) => (
-                <div className="proc-i" key={h}>
-                  <span className="proc-n">STEP 0{i + 1}</span>
-                  <h4>{h}</h4><p>{p}</p>
+            <div className="route">
+              {ROUTE_28.map((r) => (
+                <div className="route-i" key={r.day}>
+                  <div className="route-day tnum">{r.day}</div>
+                  <div className="route-body">
+                    <h4>{r.title}</h4>
+                    <p>{r.detail}</p>
+                  </div>
                 </div>
               ))}
             </div>
