@@ -39,17 +39,14 @@
  * The dial is drawn with the centre locked at (120, 120), and every
  * radius in the specification is measured from that centre: the bezel
  * at 114, the guide track at 104, the minute ticks from 98, the hour
- * ticks from 92, the hour hand to 66, the minute hand to 42, the
- * second hand to 30 with its counterweight tail reaching 140 the
- * other way.
+ * ticks from 92, the hour hand 54 long, the minute hand 78, and the
+ * second hand 90 with a short counterweight tail the other way.
  *
- * The canvas is 240 wide and 272 tall rather than 240 square. The
- * counterweight tail reaches y=260 — 140 units the other way from
- * the centre — and a 240-unit canvas cut it off mid-stroke, which
- * looked like a drawing error rather than like a mechanical second
- * hand. The extra height holds the whole tail, and the dial sits
- * slightly above the middle of the frame, which is how a dial with a
- * counterweight is drawn in an engineering drawing anyway.
+ * The canvas is 240 square, as the specification says. An earlier
+ * version read the second hand's tail as reaching 140 units the other
+ * way, which put it outside the bezel entirely; the specification's
+ * 140 is the y-coordinate in the same way that 66 and 42 are the
+ * hour and minute hands' tip coordinates, not lengths.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -308,7 +305,7 @@ export function LiveClock() {
         <div className="clockbox-face">
           <svg
             className="clockface"
-            viewBox="0 0 240 272"
+            viewBox="0 0 240 240"
             role="img"
             aria-label={`Clock showing ${parts.label} in ${zoneLabel}`}
           >
@@ -403,32 +400,51 @@ export function LiveClock() {
               XIAMEN FACILITY · SILENT QUARTZ
             </text>
 
-            {/* The hour hand. */}
+            {/* The three hands.
+
+                The lengths are the specification's effective lengths —
+                54 for the hour hand, 78 for the minute, 90 for the
+                second — measured from the centre. The specification
+                also gives 66 and 42 for the hour and minute hands, and
+                those are the y-coordinates their tips land on in the
+                240-unit square, not distances: a hand whose tip sits
+                at y=66 is 120−66=54 units long.
+
+                Reading them as lengths puts the minute hand at 42 and
+                the hour at 66, which is backwards — the minute hand
+                would be shorter than the hour hand and shorter than
+                the numerals it has to clear. The design drawing shows
+                the minute hand reaching past the hour hand by a clear
+                margin, and the hands there measure about 0.7 and 0.5
+                of the dial radius. 78 and 54 are those numbers.
+
+                The second hand is a real watch second hand: a long thin
+                needle to the minute track with a short counterweight
+                tail on the other side of the pivot. The tail stays
+                inside the dial — a needle that stuck out past the
+                bezel would read as a drawing error rather than as a
+                balance weight. */}
             <line
-              x1="120" y1="120" x2="120" y2="54"
+              x1="120" y1="120" x2="120" y2="66"
               stroke={alloy.hour} strokeWidth="4.5" strokeLinecap="round"
               filter="url(#hand-shadow)"
               transform={`rotate(${hourDeg} 120 120)`}
             />
-            {/* The minute hand. */}
             <line
-              x1="120" y1="120" x2="120" y2="78"
+              x1="120" y1="120" x2="120" y2="42"
               stroke={alloy.minute} strokeWidth="3.2" strokeLinecap="round"
               transform={`rotate(${minDeg} 120 120)`}
             />
-            {/* The second hand and its counterweight tail. The tail is
-                what makes it a mechanical second hand rather than a
-                line — a real one is balanced about its pivot. */}
             <g transform={`rotate(${secDeg} 120 120)`}>
               <line
-                x1="120" y1="120" x2="120" y2="90"
+                x1="120" y1="120" x2="120" y2="30"
                 stroke={alloy.second} strokeWidth="1.4" strokeLinecap="round"
               />
               <line
-                x1="120" y1="120" x2="120" y2="260"
+                x1="120" y1="120" x2="120" y2="152"
                 stroke={alloy.second} strokeWidth="1.1" strokeLinecap="round"
               />
-              <circle cx="120" cy="260" r="3" fill={alloy.second} />
+              <circle cx="120" cy="152" r="3" fill={alloy.second} />
             </g>
 
             {/* The brass hub: a brass disc over a black lock nut. */}

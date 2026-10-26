@@ -4,8 +4,8 @@ import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
-import { SIMPLIFIED, ROUTE_28 } from '@/lib/vocabulary';
-import { AnatomyExplorer } from '../AnatomyExplorer';
+import { SIMPLIFIED } from '@/lib/vocabulary';
+import { AnatomyModule } from '../AnatomyModule';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -71,22 +71,7 @@ export default async function CustomServicesPage() {
         {/* ---- The anatomy ---- */}
         <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
           <div className="wrap">
-            {/* The kicker and the title are two lines of the same
-                heading rather than two elements: the specification
-                writes them side by side, and a buyer reading the
-                section should see them as one thing. */}
-            <div className="anx-head">
-              <span className="anx-head-k">// Custom services &amp; anatomy</span>
-              <span className="anx-head-s">Modular component deconstruction</span>
-            </div>
-            <h2 className="anx-title">6 Core Modular Components: Complete OEM Freedom</h2>
-            <p className="anx-lede">
-              Every wall clock produced in our Xiamen facility is engineered as a
-              modular system. Mix and match frames, dials, clock hands, movements,
-              and packaging with zero compromise on structural integrity.
-            </p>
-
-            <AnatomyExplorer />
+            <AnatomyModule />
 
             <div className="anx-simplified">
               <div className="spec-h">Simplified structures</div>
@@ -99,32 +84,6 @@ export default async function CustomServicesPage() {
                 <div className="card" key={s2.name}>
                   <h3>{s2.name}</h3>
                   <p>{s2.detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- The 28-day route ---- */}
-        <section style={{ padding: '64px 0' }}>
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Agile manufacturing timeline</div>
-              <h2>Twenty-eight days from drawing to container</h2>
-              <p className="sec-sub">
-                A fixed calendar, not an estimate. A buyer planning a launch needs to
-                know when the goods leave the port, so every stage has a date on it.
-              </p>
-            </div>
-
-            <div className="route">
-              {ROUTE_28.map((r) => (
-                <div className="route-i" key={r.day}>
-                  <div className="route-day tnum">{r.day}</div>
-                  <div className="route-body">
-                    <h4>{r.title}</h4>
-                    <p>{r.detail}</p>
-                  </div>
                 </div>
               ))}
             </div>

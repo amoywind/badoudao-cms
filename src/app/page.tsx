@@ -11,6 +11,7 @@ import { LiveClock } from './LiveClock';
 import { MATERIALS, TRENDING, FACTORY_SHOTS } from '@/lib/vocabulary';
 import { CustomizerHub } from './CustomizerHub';
 import { VideoSlot, VideoSlotHydrator } from './VideoSlot';
+import { AnatomyModule } from './AnatomyModule';
 import { SiteSchema } from './SiteSchema';
 
 export const runtime = 'edge';
@@ -293,6 +294,16 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ---- Anatomy and the delivery route ----
+            The specification puts this on the home page. It is the
+            argument for customisation — six parts, mixed freely — and
+            the calendar that says a small order will not drag. */}
+        <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
+          <div className="wrap">
+            <AnatomyModule />
           </div>
         </section>
 

@@ -65,7 +65,14 @@ export function AnatomyExplorer() {
             </linearGradient>
           </defs>
 
-          {/* Layer 6 — the backplate, furthest back. */}
+          {/* Layer 6 — the backplate, furthest back.
+
+              It is a disc, not an ellipse, and it sits behind and
+              below the dial so that the stack reads as one clock
+              pulled apart along its axis rather than as six parts
+              floating in a box. The battery hatch is a square
+              recess in the middle of it, the way a moulded back is
+              actually made. */}
           <g
             className={`anx-l${active === 5 ? ' on' : ''}`}
             onClick={() => setActive(5)}
@@ -73,9 +80,10 @@ export function AnatomyExplorer() {
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActive(5); }}
           >
-            <ellipse cx="210" cy="352" rx="96" ry="34" fill="#2C3138" opacity="0.95" />
-            <rect x="192" y="336" width="36" height="26" rx="4" fill="#1A1E24" />
-            <text x="210" y="353" textAnchor="middle" fontSize="7" fill="#7A828D"
+            <circle cx="210" cy="322" r="104" fill="#22262C" />
+            <circle cx="210" cy="322" r="104" fill="none" stroke="#111318" strokeWidth="1.5" />
+            <rect x="192" y="304" width="36" height="36" rx="4" fill="#14171B" />
+            <text x="210" y="326" textAnchor="middle" fontSize="6.5" fill="#5E6874"
               fontFamily="var(--font-tech), monospace">BATTERY</text>
           </g>
 
@@ -87,20 +95,20 @@ export function AnatomyExplorer() {
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActive(4); }}
           >
-            <circle cx="210" cy="268" r="62" fill="#EDF0F3" stroke="#C9CFD6" strokeWidth="1.5" />
-            <circle cx="210" cy="268" r="46" fill="none" stroke="#D6DBE1" strokeWidth="1" />
+            <circle cx="210" cy="256" r="62" fill="#EDF0F3" stroke="#C9CFD6" strokeWidth="1.5" />
+            <circle cx="210" cy="256" r="46" fill="none" stroke="#D6DBE1" strokeWidth="1" />
             {/* The gear train, drawn as a hint of what is behind the
                 dial rather than as an engineering drawing. */}
-            <circle cx="210" cy="268" r="30" fill="none" stroke="#B9C0C8" strokeWidth="2" />
-            <circle cx="210" cy="268" r="14" fill="none" stroke="#A7AEB7" strokeWidth="2" />
-            <circle cx="210" cy="268" r="5" fill="#B8874A" />
+            <circle cx="210" cy="256" r="30" fill="none" stroke="#B9C0C8" strokeWidth="2" />
+            <circle cx="210" cy="256" r="14" fill="none" stroke="#A7AEB7" strokeWidth="2" />
+            <circle cx="210" cy="256" r="5" fill="#B8874A" />
             {[0, 60, 120, 180, 240, 300].map((a) => {
               const rad = (a * Math.PI) / 180;
               return (
                 <circle
                   key={a}
                   cx={210 + Math.cos(rad) * 38}
-                  cy={268 + Math.sin(rad) * 38}
+                  cy={256 + Math.sin(rad) * 38}
                   r="6"
                   fill="#C4CBD3"
                 />
@@ -161,19 +169,26 @@ export function AnatomyExplorer() {
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActive(2); }}
           >
-            <line x1="150" y1="126" x2="270" y2="126" stroke="#C59B27" strokeWidth="4"
+            {/* The three hands, lifted clear of the dial and drawn as
+                real hands rather than as three parallel bars — the
+                buyer has to see that these are the parts that carry
+                the clearance tolerance. The hour and minute hands
+                are brass, the second hand is Klein blue, and the
+                little blue ball is the counterweight. */}
+            <line x1="150" y1="150" x2="212" y2="150" stroke="#C59B27" strokeWidth="4"
               strokeLinecap="round" />
-            <line x1="150" y1="112" x2="262" y2="112" stroke="#C59B27" strokeWidth="3"
+            <line x1="150" y1="136" x2="266" y2="136" stroke="#C59B27" strokeWidth="3"
               strokeLinecap="round" />
-            <line x1="150" y1="100" x2="286" y2="100" stroke="#0052CC" strokeWidth="1.6"
+            <line x1="150" y1="122" x2="290" y2="122" stroke="#0052CC" strokeWidth="1.6"
               strokeLinecap="round" />
-            <circle cx="288" cy="100" r="3.5" fill="#0052CC" />
+            <circle cx="292" cy="122" r="3.5" fill="#0052CC" />
+            <circle cx="148" cy="136" r="4" fill="#B8874A" />
             {/* The clearance dimension, which is the number the panel
                 quotes. Showing it on the drawing is what makes the
                 number mean something. */}
-            <line x1="150" y1="112" x2="150" y2="126" stroke="#D97706" strokeWidth="1"
+            <line x1="150" y1="136" x2="150" y2="150" stroke="#D97706" strokeWidth="1"
               strokeDasharray="2,2" />
-            <text x="144" y="122" textAnchor="end" fontSize="7" fill="#D97706"
+            <text x="144" y="146" textAnchor="end" fontSize="7" fill="#D97706"
               fontFamily="var(--font-tech), monospace">≥1.5</text>
           </g>
 
@@ -212,12 +227,12 @@ export function AnatomyExplorer() {
           {/* The callouts. They sit outside the drawing so the assembly
               is not crowded by its own labels. */}
           {[
-            { i: 0, x: 26, y: 92, anchor: 'start' },
-            { i: 1, x: 386, y: 122, anchor: 'end' },
-            { i: 2, x: 210, y: 76, anchor: 'middle' },
-            { i: 3, x: 386, y: 196, anchor: 'end' },
-            { i: 4, x: 26, y: 268, anchor: 'start' },
-            { i: 5, x: 210, y: 392, anchor: 'middle' }
+            { i: 0, x: 34, y: 148, anchor: 'start' },
+            { i: 1, x: 388, y: 118, anchor: 'end' },
+            { i: 2, x: 210, y: 82, anchor: 'middle' },
+            { i: 3, x: 34, y: 214, anchor: 'start' },
+            { i: 4, x: 388, y: 250, anchor: 'end' },
+            { i: 5, x: 210, y: 400, anchor: 'middle' }
           ].map((c) => {
             const on = active === c.i;
             const label = COMPONENTS[c.i].label.toUpperCase();

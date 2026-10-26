@@ -629,12 +629,11 @@
 
 .clockface {
   width: 100%;
-  /* The canvas is 240 wide and 272 tall — the extra height holds the
-     second hand's counterweight tail, which reaches 140 units below
-     the centre. The dial itself is 228 across, so the width is set
-     from that rather than from the canvas, or the dial would shrink
-     by the height the tail adds. */
-  max-width: 268px;
+  /* The canvas is 240 square and the dial is 228 across. The width is
+     set from the dial's own measurement rather than from the canvas,
+     so the bezel fills the frame without the face being scaled down
+     by the margin the viewBox leaves around it. */
+  max-width: 250px;
   height: auto;
 }
 
@@ -1727,49 +1726,7 @@
   color: var(--text-2);
 }
 
-/* The 28-day route. A vertical timeline with the day on the left. */
-.route {
-  display: grid;
-  gap: 0;
-  counter-reset: route;
-}
-
-.route-i {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 22px;
-  padding: 20px 0;
-  border-top: 1px solid var(--rule);
-}
-
-.route-i:first-child {
-  border-top: none;
-}
-
-.route-day {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-  padding-top: 1px;
-}
-
-.route-body h4 {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.route-body p {
-  font-size: 13.5px;
-  color: var(--text-2);
-  line-height: 1.6;
-}
-
 @media (max-width: 600px) {
-  .route-i {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
   .cert-row {
     flex-direction: column;
     gap: 3px;
@@ -1867,49 +1824,7 @@
   color: var(--text-2);
 }
 
-/* The 28-day route. A vertical timeline with the day on the left. */
-.route {
-  display: grid;
-  gap: 0;
-  counter-reset: route;
-}
-
-.route-i {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 22px;
-  padding: 20px 0;
-  border-top: 1px solid var(--rule);
-}
-
-.route-i:first-child {
-  border-top: none;
-}
-
-.route-day {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-  padding-top: 1px;
-}
-
-.route-body h4 {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.route-body p {
-  font-size: 13.5px;
-  color: var(--text-2);
-  line-height: 1.6;
-}
-
 @media (max-width: 600px) {
-  .route-i {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
   .cert-row {
     flex-direction: column;
     gap: 3px;
@@ -4059,5 +3974,138 @@
 .rail-link.on {
     border-left-color: var(--accent);
     border-bottom-color: transparent;
+  }
+}
+
+/* ===================================================================
+   The 28-day route
+   -------------------------------------------------------------------
+   A horizontal strip. The specification draws the calendar left to
+   right along the bottom of the anatomy module, and a calendar reads
+   that way: a buyer planning a launch wants to see where the order
+   sits on the line, not read six stacked paragraphs to find out.
+
+   The stages are joined by a rule that runs behind the markers, so
+   the strip reads as one line with six points on it. The markers are
+   drawn rather than inserted, which keeps the rule continuous
+   through them.
+   =================================================================== */
+
+.anx-route {
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+
+.route {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  position: relative;
+}
+
+.route-i {
+  position: relative;
+  padding: 0 18px 0 0;
+}
+
+/* The rule that joins the stages. It stops at the last one. */
+.route-line {
+  position: absolute;
+  top: 5px;
+  left: 13px;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* The marker on the line. */
+.route-node {
+  position: relative;
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  z-index: 1;
+}
+
+/* The last stage has no rule leaving it, so the strip ends cleanly
+   rather than trailing a line into the margin. */
+.route-i:last-child .route-line {
+  display: none;
+}
+
+.route-day {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 7px;
+}
+
+.route-title {
+  font-size: 14.5px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.route-detail {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* Below the tablet the strip wraps to two rows of three. The rule
+   still runs behind the markers, but a rule that crossed a row
+   boundary would read as a line that stopped and started, so it is
+   switched off and the markers carry the sequence on their own. */
+@media (max-width: 1024px) {
+  .route {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 34px;
+  }
+
+  .route-line {
+    display: none;
+  }
+}
+
+/* On a phone the strip becomes a column with the marker beside the
+   text, which is the one arrangement where a six-stage calendar fits
+   without shrinking the type past reading. */
+@media (max-width: 640px) {
+  .route {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .route-i {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    column-gap: 14px;
+    padding: 0 0 24px;
+  }
+
+  .route-node {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    margin-bottom: 0;
+  }
+
+  .route-day {
+    grid-column: 2;
+  }
+
+  .route-title {
+    grid-column: 2;
+    margin-bottom: 4px;
+  }
+
+  .route-detail {
+    grid-column: 2;
   }
 }
