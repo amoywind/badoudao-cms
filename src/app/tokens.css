@@ -2963,3 +2963,893 @@
 }
 
 
+/* ===================================================================
+   Restored rules
+   -------------------------------------------------------------------
+   A cleanup pass removed a range between two selectors, and one of
+   the two selectors also appears inside a media query, so the range it
+   removed was larger than the one it was meant to remove. These ninety
+   rules went with it: the hero, the product cards, the material and
+   trend grids, the customizer panel, the product detail layout, the
+   detail tabs, the freight estimator, the movement matrix and the
+   quality grid.
+
+   They are put back at the end of the file, grouped by the media
+   query each one belongs in, because a rule that was responsive
+   before it was lost is still responsive.
+   =================================================================== */
+
+/* ===================================================================
+   Material matrix — the 1:1 category grid
+   =================================================================== */
+.mat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.mat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card:hover {
+  transform: translateY(-2px);
+  border-color: #D6D9DE;
+  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
+}
+
+.mat-card .sq {
+  border-bottom: 1px solid var(--rule);
+}
+
+.mat-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mat-body h3 {
+  font-size: 17px;
+  margin-bottom: 7px;
+}
+
+.mat-body p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.mat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.mat-foot b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ===================================================================
+   Trending platforms — the four highlighted shells
+   =================================================================== */
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.trend-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.trend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
+}
+
+/* The quick-inquire button slides up from the bottom edge on hover. On a
+   touch screen there is no hover, so the button stays visible there —
+   the media query at the end of this file does that. */
+.trend-cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 11px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform .22s ease;
+}
+
+.trend-card:hover .trend-cta {
+  transform: translateY(0);
+}
+
+.trend-body {
+  padding: 16px 18px 18px;
+}
+
+.trend-body h3 {
+  font-size: 15.5px;
+  margin-bottom: 6px;
+}
+
+.trend-body p {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.trend-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 11px;
+}
+
+.trend-tag {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+}
+
+/* ===================================================================
+   Components studio preview
+   =================================================================== */
+.studio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.studio-side {
+  padding: 30px;
+  border-right: 1px solid var(--rule);
+}
+
+.studio-side:last-child {
+  border-right: none;
+}
+
+.studio-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.studio-row:last-child {
+  border-bottom: none;
+}
+
+.studio-k {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.studio-v {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+.studio-v.accent {
+  color: var(--accent);
+}
+
+/* ===================================================================
+   QC steps — the four-column video strip
+   =================================================================== */
+.qc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.qc-item h4 {
+  font-size: 15px;
+  margin: 14px 0 6px;
+}
+
+.qc-item p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+.qc-n {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* ===================================================================
+   Movement matrix — the spec table on the components page
+   =================================================================== */
+.mtx {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.mtx th {
+  text-align: left;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding: 0 14px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.mtx td {
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--text-2);
+  vertical-align: top;
+}
+
+.mtx td:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.mtx tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===================================================================
+   Collection layout — filter rail + grid
+   =================================================================== */
+.coll {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: 96px;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 22px;
+}
+
+.rail-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 14px;
+}
+
+/* Four columns on a desktop, two on a phone — §5.3-1. The three
+   columns this used to have left a wide gap on a 1440px screen and made
+   the catalogue feel longer than ten products warrant. */
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.pcard {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.pcard:hover {
+  transform: translateY(-2px);
+  border-color: #D6D9DE;
+  box-shadow: 0 12px 28px -18px rgba(17, 17, 17, .3);
+}
+
+.pcard-body {
+  padding: 15px 17px 17px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pcard-body h3 {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.pcard-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-top: auto;
+  padding-top: 11px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.pcard-price b {
+  font-family: var(--font-tech);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ===================================================================
+   Product detail — the two-column layout the specification describes
+   =================================================================== */
+.pd2 {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 44px;
+  align-items: start;
+}
+
+.pd2-media .sq {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+}
+
+.pd-thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.pd-thumb {
+  aspect-ratio: 1/1;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  overflow: hidden;
+  background: var(--surface-card);
+  display: grid;
+  place-items: center;
+  padding: 4px;
+}
+
+.pd-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pd2-info h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.pd2-moq {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.pd2-tag {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: var(--radius-btn);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pd2-tag.plain {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+}
+
+/* The spec builder. Each row is a label and a set of options; picking
+   one updates the summary at the bottom and the quote that gets sent. */
+.spec {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.spec-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 11px 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.spec-row:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.spec-lbl {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding-top: 7px;
+}
+
+.spec-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.spec-opt {
+  font-size: 12.5px;
+  padding: 6px 11px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: #fff;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+  font-family: inherit;
+}
+
+.spec-opt:hover {
+  border-color: #C4C8CE;
+}
+
+.spec-opt.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* The generated spec string the specification asks for — SKU-style, so
+   the buyer and the factory are talking about the same thing. */
+.spec-sum {
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  padding: 12px 14px;
+  background: var(--text);
+  color: #fff;
+  border-radius: var(--radius-btn);
+  margin-top: 14px;
+  word-break: break-all;
+}
+
+/* Carton freight estimate. */
+.freight {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.freight-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+
+.freight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+
+.freight-k {
+  font-size: 11.5px;
+  color: var(--text-2);
+  margin-bottom: 2px;
+}
+
+.freight-v {
+  font-family: var(--font-tech);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* The detail tabs. */
+.dtabs {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+
+.dtab-nav {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+}
+
+.dtab-btn {
+  font-family: var(--font-tech);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 15px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dtab-btn.on {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.dtab-body {
+  padding: 24px;
+  font-size: 14.5px;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+.dtab-body h3 {
+  font-size: 17px;
+  margin: 0 0 10px;
+}
+
+.dtab-body ul {
+  margin: 10px 0 0 20px;
+}
+
+.dtab-body li {
+  margin-bottom: 7px;
+}
+
+/* ===================================================================
+   Hero — the split layout with the live clock
+   =================================================================== */
+.hero2 {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero2-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 76px 24px 72px;
+}
+
+.hero2-h1 {
+  font-size: 46px;
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  margin-bottom: 20px;
+}
+
+.hero2-hl {
+  color: var(--text-2);
+  /* The accent underline marks the promise the headline makes — the
+     factory part, which is what differentiates this from a catalogue. */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  padding-bottom: 4px;
+}
+
+.hero2 .lede {
+  font-size: 16.5px;
+  color: var(--text-2);
+  max-width: 540px;
+  margin-bottom: 28px;
+  line-height: 1.65;
+}
+
+/* ===================================================================
+   Hero — the split layout with the live clock
+   =================================================================== */
+.hero2 {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero2-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 56px;
+  align-items: center;
+  padding: 76px 24px 72px;
+}
+
+.hero2-h1 {
+  font-size: 46px;
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  margin-bottom: 20px;
+}
+
+.hero2-hl {
+  color: var(--text-2);
+  /* The accent underline marks the promise the headline makes — the
+     factory part, which is what differentiates this from a catalogue. */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  padding-bottom: 4px;
+}
+
+.hero2 .lede {
+  font-size: 16.5px;
+  color: var(--text-2);
+  max-width: 540px;
+  margin-bottom: 28px;
+  line-height: 1.65;
+}
+
+/* The trust bar on a product page sits in the right-hand column, which is
+   45% of the page. Four cards across that width are 130px each, and the
+   detail text under each number wraps to three lines. Two columns is the
+   point where the number still reads at a glance. */
+.pd2-info .tcards {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.pd2-info .tcard {
+  padding: 16px 15px;
+}
+
+.pd2-info .tcard-ico {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.pd2-info .tcard-n {
+  font-size: 22px;
+}
+
+.pd2-info .tcard-t {
+  font-size: 12.5px;
+}
+
+.pd2-info .tcard-d {
+  font-size: 11.5px;
+}
+
+/* The trust bar on a product page sits in the right-hand column, which is
+   45% of the page. Four cards across that width are 130px each, and the
+   detail text under each number wraps to three lines. Two columns is the
+   point where the number still reads at a glance. */
+.pd2-info .tcards {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.pd2-info .tcard {
+  padding: 16px 15px;
+}
+
+.pd2-info .tcard-ico {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.pd2-info .tcard-n {
+  font-size: 22px;
+}
+
+.pd2-info .tcard-t {
+  font-size: 12.5px;
+}
+
+.pd2-info .tcard-d {
+  font-size: 11.5px;
+}
+
+@media ('(max-width: 1024px)',) {
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.coll {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.rail {
+    position: static;
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.pd2 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.mat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.trend-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.qc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.studio {
+    grid-template-columns: 1fr;
+  }
+/* ===================================================================
+   Responsive
+   =================================================================== */
+.studio-side {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media ('(max-width: 480px)',) {
+.hero2-h1 {
+    font-size: 27px;
+  }
+.hero2-h1 {
+    font-size: 27px;
+  }
+}
+
+@media ('(max-width: 767px)',) {
+.mat-grid,
+  .qc-grid,
+  .trend-grid {
+    grid-template-columns: 1fr;
+  }
+/* Two columns on a phone, per §5.3-1. A single column of 1:1 cards
+     makes the buyer scroll a very long way to compare ten clocks. */
+.pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+.pcard-body {
+    padding: 12px 13px 14px;
+  }
+.pcard-body h3 {
+    font-size: 13.5px;
+  }
+.spec-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+.spec-lbl {
+    padding-top: 0;
+  }
+/* No hover on a touch screen, so the quick-inquire button would never
+     appear. It stays visible instead. */
+.trend-cta {
+    transform: none;
+    position: static;
+    border-radius: 0;
+  }
+.freight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media ('(max-width: 900px)',) {
+.hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+.hero2-h1 {
+    font-size: 32px;
+  }
+.clockface {
+    max-width: 200px;
+  }
+.hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+.hero2-h1 {
+    font-size: 32px;
+  }
+.clockface {
+    max-width: 200px;
+  }
+}
