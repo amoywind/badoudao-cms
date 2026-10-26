@@ -674,14 +674,22 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* An option button. The label is truncated on one line rather than
-   wrapped, because a wrapped label makes the four buttons different
-   heights and the grid stops looking like a set. */
+/* An option button.
+
+   The label wraps rather than being cut off. It was truncated on one
+   line, and "Continuous Sweep" became "Continuo..." in a panel the
+   width of half a card — which is the one option a buyer most needs to
+   read, because it is the one that decides how quiet the clock is.
+
+   The swatch sits above the name rather than beside it, so the four
+   material buttons line up as a set of chips with their names under
+   them and the grid keeps its shape. */
 .ck-opt {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 9px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 9px 10px;
   border: 1px solid var(--rule);
   border-radius: var(--radius-btn);
   background: #fff;
@@ -705,9 +713,7 @@
   font-size: 11px;
   font-weight: 500;
   color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
   min-width: 0;
 }
 
@@ -718,10 +724,9 @@
 .ck-opt-s {
   font-family: var(--font-tech);
   font-size: 9.5px;
+  line-height: 1.4;
   color: var(--text-2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* The colour chip beside a material name. It is the whole point of
