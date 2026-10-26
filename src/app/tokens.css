@@ -3588,6 +3588,15 @@
   border-bottom: 1px solid var(--rule);
   position: relative;
   overflow: hidden;
+  /* The hero fills the screen and the content sits in the middle of
+     it. Without this the section is as tall as its content and the
+     headline starts 150 pixels below the navigation, which reads as
+     a page that has lost its top rather than as a page that has
+     room to breathe. Centred, the space above and below is the same
+     and the first thing on the screen is the promise. */
+  min-height: calc(100vh - 106px);
+  display: flex;
+  align-items: center;
 }
 
 /* The hero grid.
