@@ -263,7 +263,9 @@ export function AnatomyExplorer() {
 
       {/* ---- the engineering panel ---- */}
       <div className="anx-panel">
-        <div className="anx-kicker">Component deconstruction // part {part.n}</div>
+        <div className="anx-kicker">
+          Component deconstruction // part {part.n.padStart(2, '0')}
+        </div>
         <h3 className="anx-h">{part.n}. {part.name}</h3>
         <div className="anx-cn">{part.cn}</div>
         <p className="anx-sum">{part.summary}</p>
