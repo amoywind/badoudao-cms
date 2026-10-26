@@ -615,9 +615,16 @@
 }
 
 /* The dial and the panel beside it. */
+/* The dial takes the width it needs and the panel takes the rest.
+
+   The dial is a fixed 218 pixels, so a proportional column gave it
+   450 of the card's 1076 and left 232 of nothing beside it while
+   the panel — the part with the words in it — was squeezed to 600
+   and the material names were cut off. The dial column is sized to
+   its content instead, and the panel gets what is left. */
 .clockbox-body {
   display: grid;
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 26px;
   align-items: start;
 }
@@ -625,6 +632,7 @@
 .clockbox-face {
   display: grid;
   place-items: center;
+  width: 218px;
 }
 
 .clockface {
@@ -652,8 +660,8 @@
    options each and the drive mode carries two. */
 .clockbox-panel {
   display: grid;
-  grid-template-columns: 0.8fr 1.1fr 1.1fr;
-  gap: 18px;
+  grid-template-columns: 0.78fr 1.16fr 1.16fr;
+  gap: 16px;
   align-content: start;
 }
 
@@ -687,10 +695,11 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* The drive mode has two options and they read better side by side
-   across the full width of their group. */
-.ck-opts-wide {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* A stack of one column. Used for the drive mode, whose two options
+   have the longest names in the panel and need the full width of
+   their group rather than half of it. */
+.ck-opts-stack {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* An option button.

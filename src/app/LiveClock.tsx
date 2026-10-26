@@ -491,7 +491,11 @@ export function LiveClock() {
             <div className="ck-lbl">
               <span className="ck-n">1.</span> Movement drive mode
             </div>
-            <div className="ck-opts ck-opts-2">
+            {/* The two drive modes stack rather than sitting side by
+                side. Their names are the longest words in the panel
+                and there are only two of them, so a column gives each
+                the full width of its group instead of half of it. */}
+            <div className="ck-opts ck-opts-stack">
               {DRIVE_MODES.map((d) => (
                 <button
                   key={d.key}
