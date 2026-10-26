@@ -962,45 +962,64 @@
   margin-bottom: 14px;
 }
 
-.rail-grp {
-  margin-bottom: 20px;
+/* The category list.
+
+   The links are set as a list with the markers removed rather than as
+   a stack of blocks, because a list is what this is: a set of places
+   the buyer can go. The count sits on the right in the mono face, the
+   way a price does elsewhere on the site, so a buyer scanning the rail
+   reads the numbers in one column.
+
+   The current category is marked by the accent colour and a left rule
+   rather than by a filled background. A filled block the width of the
+   rail is a lot of ink for a state the buyer already knows about, and
+   it makes the list harder to read rather than easier. */
+.rail-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.rail-grp:last-child {
-  margin-bottom: 0;
+.rail-links li + li {
+  margin-top: 1px;
 }
 
-.rail-l {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 9px;
-}
-
-.rail-opts {
+.rail-link {
   display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.rail-opt {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 11px;
+  margin: 0 -11px;
+  border-left: 2px solid transparent;
+  font-size: 13.5px;
   color: var(--text-2);
-  cursor: pointer;
-  padding: 4px 0;
+  text-decoration: none;
+  transition: color .15s ease, background .15s ease, border-color .15s ease;
 }
 
-.rail-opt input {
-  accent-color: var(--accent);
-  width: 15px;
-  height: 15px;
-}
-
-.rail-opt:hover {
+.rail-link:hover {
   color: var(--text);
+  background: var(--surface);
+}
+
+.rail-link.on {
+  color: var(--accent);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* The line under the list, and the count of what is in this category.
+   It is the answer to the question the list raises: how much is there
+   here? */
+.rail-foot {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-2);
 }
 
 /* Four columns on a desktop, two on a phone — §5.3-1. The three
@@ -1318,10 +1337,29 @@
     position: static;
   }
 
-  .rail-opts {
-    flex-direction: row;
+  /* Below the tablet the rail sits above the grid, so the list runs
+     across rather than down. The counts still sit on the right of each
+     link, which is why the links are inline blocks rather than a
+     simple wrapped row of text. */
+  .rail-links {
+    display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 4px;
+  }
+
+  .rail-links li {
+    flex: 1 1 auto;
+  }
+
+  .rail-link {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    margin: 0;
+    padding: 8px 10px;
+  }
+
+  .rail-link.on {
+    border-bottom-color: var(--accent);
   }
 
   .pgrid {
@@ -2339,29 +2377,8 @@
   }
 }
 
-/* ---- the filter rail, in the shape §5.3-1 describes ---- */
 
-.rail-clear {
-  display: block;
-  width: 100%;
-  margin-bottom: 14px;
-  padding: 8px 12px;
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid transparent;
-  border-radius: var(--radius-btn);
-  cursor: pointer;
-}
-
-.rail-clear:hover {
-  border-color: var(--accent);
-}
-
+/* The count beside each category, and the count above the grid. */
 .rail-count {
   margin-left: auto;
   font-family: var(--font-tech);
@@ -2378,57 +2395,7 @@
   margin-bottom: 14px;
 }
 
-.rail-empty {
-  padding: 48px 24px;
-  text-align: center;
-  border: 1px dashed var(--rule);
-  border-radius: var(--radius-card);
-}
-
-.rail-empty p {
-  color: var(--text-2);
-  margin-bottom: 16px;
-}
-
-/* ---- the filter rail, in the shape §5.3-1 describes ---- */
-
-.rail-clear {
-  display: block;
-  width: 100%;
-  margin-bottom: 14px;
-  padding: 8px 12px;
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid transparent;
-  border-radius: var(--radius-btn);
-  cursor: pointer;
-}
-
-.rail-clear:hover {
-  border-color: var(--accent);
-}
-
-.rail-count {
-  margin-left: auto;
-  font-family: var(--font-tech);
-  font-size: 11px;
-  color: var(--text-2);
-}
-
-.rail-count-row {
-  font-family: var(--font-tech);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  margin-bottom: 14px;
-}
-
+/* The empty state for a category with nothing in it. */
 .rail-empty {
   padding: 48px 24px;
   text-align: center;

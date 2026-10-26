@@ -146,9 +146,11 @@ export default async function CategoryPage({ params }) {
 
         <section>
           <div className="wrap">
-            {/* The filter panel and the grid. The panel filters the
-                catalogue in the browser — ten products do not need a
-                round trip — and the grid is four columns on a desktop
+            {/* The category rail and the grid. The rail is a list of
+                links to the other categories rather than a filter over
+                this one — a category is a page with its own address,
+                and a buyer who reaches one through a link can send it
+                to a colleague. The grid is four columns on a desktop
                 and two on a phone. */}
             <CollectionGrid
               activeCategory={category}
@@ -167,9 +169,7 @@ export default async function CategoryPage({ params }) {
                 priceMax: p.priceMax,
                 moq: p.moq,
                 leadTime: p.leadTime,
-                image: p.images[0]?.thumbUrl || p.images[0]?.url || '',
-                movementType: p.movementType ?? null,
-                sizeInch: p.sizeInch ?? null
+                image: p.images[0]?.thumbUrl || p.images[0]?.url || ''
               }))}
             />
           </div>
