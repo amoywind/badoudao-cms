@@ -2652,6 +2652,15 @@
   opacity: 0.42;
 }
 
+/* The two structural parts keep their own value whatever is selected.
+   The backplate is a dark moulded disc and the frame is a metal ring;
+   fading them to 42% turned the backplate into a pale grey circle,
+   which reads as a different part rather than as the same part
+   waiting its turn. */
+.anx-l.anx-solid:not(.on) {
+  opacity: 0.85;
+}
+
 .anx-l.on {
   opacity: 1;
   filter: url(#anx-glow);

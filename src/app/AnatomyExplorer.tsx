@@ -74,7 +74,7 @@ export function AnatomyExplorer() {
               recess in the middle of it, the way a moulded back is
               actually made. */}
           <g
-            className={`anx-l${active === 5 ? ' on' : ''}`}
+            className={`anx-l anx-solid${active === 5 ? ' on' : ''}`}
             onClick={() => setActive(5)}
             role="button"
             tabIndex={0}
@@ -214,7 +214,7 @@ export function AnatomyExplorer() {
 
           {/* Layer 1 — the outer frame, the outermost ring. */}
           <g
-            className={`anx-l${active === 0 ? ' on' : ''}`}
+            className={`anx-l anx-solid${active === 0 ? ' on' : ''}`}
             onClick={() => setActive(0)}
             role="button"
             tabIndex={0}
