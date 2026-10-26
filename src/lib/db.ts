@@ -734,19 +734,23 @@ export const VIDEO_SLOTS = {
 } as const;
 
 export async function listSiteVideos(): Promise<SiteVideoSlot[]> {
-  /* Cached like the other reads. The table holds nine rows and changes
-     when the owner pastes a video — which is rare — and the home page
-     and the quality page both read it on every request.
+  /* Not cached, unlike the other reads on these pages.
+     The table holds nine rows and the query is a single indexed scan,
+     so the saving from caching it is a fraction of a millisecond. The
+     cost of caching it is real: a write that goes around the admin —
+     a migration, a direct edit in the D1 console, a fix applied by
+     hand after a mistake — leaves the old video on the page for the
+     length of the TTL, with nothing on screen to say why.
 
-     The cache holds the rows as they come out of the database — snake
-     case — and the mapping happens after. The alternative is to claim
-     the rows are already camel case, which would make the type say
-     `youtubeId` on a row that has `youtube_id`, and the field would
-     read as undefined at runtime while the compiler said it was a
-     string. */
-  const rows = await cached<
-    { slot: string; youtube_id: string; title: string; sort_order: number }[]
-  >(
+     That was not hypothetical. A video written straight to the database
+     during testing stayed invisible for five minutes after it was
+     committed, and the only symptom was a slot that said "Video
+     pending" beside a video that was plainly there.
+
+     The reads that carry real weight — the catalogue, the settings,
+     the navigation — stay cached. This one is cheap enough not to
+     need it. */
+  const rows = await all(
     'SELECT slot, youtube_id, title, sort_order FROM site_videos ORDER BY sort_order, slot'
   );
   return rows.map((r) => ({
