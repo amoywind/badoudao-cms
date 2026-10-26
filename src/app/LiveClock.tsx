@@ -36,12 +36,20 @@
  *
  * THE GEOMETRY
  *
- * The dial is drawn in a 240-unit square with the centre locked at
- * (120, 120), and every radius in the specification is measured from
- * that centre: the bezel at 114, the guide track at 104, the minute
- * ticks from 98, the hour ticks from 92, the hour hand to 66, the
- * minute hand to 42, the second hand to 30 with its counterweight
- * tail reaching 140 the other way.
+ * The dial is drawn with the centre locked at (120, 120), and every
+ * radius in the specification is measured from that centre: the bezel
+ * at 114, the guide track at 104, the minute ticks from 98, the hour
+ * ticks from 92, the hour hand to 66, the minute hand to 42, the
+ * second hand to 30 with its counterweight tail reaching 140 the
+ * other way.
+ *
+ * The canvas is 240 wide and 272 tall rather than 240 square. The
+ * counterweight tail reaches y=260 — 140 units the other way from
+ * the centre — and a 240-unit canvas cut it off mid-stroke, which
+ * looked like a drawing error rather than like a mechanical second
+ * hand. The extra height holds the whole tail, and the dial sits
+ * slightly above the middle of the frame, which is how a dial with a
+ * counterweight is drawn in an engineering drawing anyway.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -300,7 +308,7 @@ export function LiveClock() {
         <div className="clockbox-face">
           <svg
             className="clockface"
-            viewBox="0 0 240 240"
+            viewBox="0 0 240 272"
             role="img"
             aria-label={`Clock showing ${parts.label} in ${zoneLabel}`}
           >

@@ -215,12 +215,11 @@ export function AnatomyExplorer() {
             { i: 0, x: 26, y: 92, anchor: 'start' },
             { i: 1, x: 386, y: 122, anchor: 'end' },
             { i: 2, x: 210, y: 76, anchor: 'middle' },
-            { i: 3, x: 210, y: 196, anchor: 'middle', inside: true },
-            { i: 4, x: 386, y: 268, anchor: 'end' },
+            { i: 3, x: 386, y: 196, anchor: 'end' },
+            { i: 4, x: 26, y: 268, anchor: 'start' },
             { i: 5, x: 210, y: 392, anchor: 'middle' }
           ].map((c) => {
             const on = active === c.i;
-            if (c.inside) return null;
             const label = COMPONENTS[c.i].label.toUpperCase();
             return (
               <g key={c.i} className={`anx-callout${on ? ' on' : ''}`}>
