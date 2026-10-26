@@ -1399,6 +1399,31 @@
 }
 
 @media (max-width: 767px) {
+  /* On a phone the category list runs down the page rather than across
+     it. Two categories side by side on a 390px screen read as a table
+     row rather than as navigation, and the current category ends up
+     half hidden in the middle of the row instead of standing out as
+     where the buyer is. */
+  .rail-links {
+    display: block;
+  }
+
+  .rail-links li {
+    display: block;
+  }
+
+  .rail-link {
+    border-left: 2px solid transparent;
+    border-bottom: none;
+    margin: 0 -11px;
+    padding: 10px 11px;
+  }
+
+  .rail-link.on {
+    border-left-color: var(--accent);
+    border-bottom-color: transparent;
+  }
+
   .mat-grid,
   .qc-grid,
   .trend-grid {
