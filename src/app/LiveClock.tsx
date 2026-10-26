@@ -531,8 +531,11 @@ export function LiveClock() {
 
       {/* The configuration, carried into the enquiry as a hidden field
           so the factory receives it as a specification rather than as
-          a paragraph the buyer had to write. */}
-      <input type="hidden" id="clock-spec" name="clockSpec" value="" readOnly />
+          a paragraph the buyer had to write.
+
+          It is a hidden field rather than a React state value because
+          the enquiry form collects itself with FormData, and a field
+          the form does not contain is a field it cannot send. */}
     </div>
   );
 }

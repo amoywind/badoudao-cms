@@ -207,7 +207,17 @@ export function InquiryForm({
       /* The specification string from the inquiry builder, when the
          enquiry was started from a product page. Empty everywhere else,
          and the API ignores it when it is. */
-      spec: fd.get('spec') || '',
+      /* Two sources of the same thing. The inquiry builder writes the
+         configuration code for a product page, and the clock engine
+         writes the configuration the buyer assembled in the first
+         screen. They go into the one column, because the factory
+         quotes against a single specification and a second column
+         would only be a second thing to read.
+
+         The clock engine's configuration is joined rather than
+         replaced: a product page can have both, and the two answer
+         different halves of the same question. */
+      spec: [fd.get('spec'), fd.get('clockSpec')].filter(Boolean).join(' | '),
       /* The model comes from the page, not from a picker the buyer has to
          use — a product enquiry is still attributed to that product. */
       products: preset ? [preset] : [],
@@ -470,6 +480,15 @@ export function InquiryForm({
 
         <input type="text" name="website" tabIndex={-1} autoComplete="off"
           className="hp" aria-hidden="true" />
+
+        {/* The configuration the buyer assembled in the clock engine in
+            the first screen.
+
+            It lives inside the form because that is where FormData
+            reads from. A hidden field outside the form is a field the
+            form cannot send — the export button would appear to work
+            and the configuration would never reach the factory. */}
+        <input type="hidden" id="clock-spec" name="clockSpec" value="" readOnly />
 
         {/* The submit button is the only conversion on the page, so it
             says what the buyer gets rather than what they do — a quote,
