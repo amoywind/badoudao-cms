@@ -629,7 +629,12 @@
 
 .clockface {
   width: 100%;
-  max-width: 250px;
+  /* The canvas is 240 wide and 272 tall — the extra height holds the
+     second hand's counterweight tail, which reaches 140 units below
+     the centre. The dial itself is 228 across, so the width is set
+     from that rather than from the canvas, or the dial would shrink
+     by the height the tail adds. */
+  max-width: 268px;
   height: auto;
 }
 
