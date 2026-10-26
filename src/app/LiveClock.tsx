@@ -512,45 +512,48 @@ export function LiveClock() {
             </div>
           </div>
 
-          {/* 2. the dial face */}
-          <div className="ck-grp">
-            <div className="ck-lbl">
-              <span className="ck-n">2.</span> Dial face material
+          {/* 2 and 3. The dial face and the hands alloy share a
+              column. They are the same kind of choice — a material,
+              in each case — and a buyer picks them the same way. */}
+          <div className="ck-pair">
+            <div className="ck-grp">
+              <div className="ck-lbl">
+                <span className="ck-n">2.</span> Dial face material
+              </div>
+              <div className="ck-opts ck-opts-2">
+                {DIAL_FACES.map((f) => (
+                  <button
+                    key={f.key}
+                    type="button"
+                    className={`ck-opt${face.key === f.key ? ' on' : ''}`}
+                    onClick={() => setFaceKey(f.key)}
+                    title={f.note}
+                  >
+                    <span className="ck-swatch" style={{ background: f.bg, borderColor: f.bezel }} />
+                    <span className="ck-opt-t">{f.short}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="ck-opts ck-opts-2">
-              {DIAL_FACES.map((f) => (
-                <button
-                  key={f.key}
-                  type="button"
-                  className={`ck-opt${face.key === f.key ? ' on' : ''}`}
-                  onClick={() => setFaceKey(f.key)}
-                  title={f.note}
-                >
-                  <span className="ck-swatch" style={{ background: f.bg, borderColor: f.bezel }} />
-                  <span className="ck-opt-t">{f.short}</span>
-                </button>
-              ))}
-            </div>
-          </div>
 
-          {/* 3. the hands */}
-          <div className="ck-grp">
-            <div className="ck-lbl">
-              <span className="ck-n">3.</span> Custom hands alloy
-            </div>
-            <div className="ck-opts ck-opts-2">
-              {HAND_ALLOYS.map((a) => (
-                <button
-                  key={a.key}
-                  type="button"
-                  className={`ck-opt${alloy.key === a.key ? ' on' : ''}`}
-                  onClick={() => setAlloyKey(a.key)}
-                  title={a.note}
-                >
-                  <span className="ck-swatch" style={{ background: a.hour, borderColor: a.hour }} />
-                  <span className="ck-opt-t">{a.short}</span>
-                </button>
-              ))}
+            <div className="ck-grp">
+              <div className="ck-lbl">
+                <span className="ck-n">3.</span> Custom hands alloy
+              </div>
+              <div className="ck-opts ck-opts-2">
+                {HAND_ALLOYS.map((a) => (
+                  <button
+                    key={a.key}
+                    type="button"
+                    className={`ck-opt${alloy.key === a.key ? ' on' : ''}`}
+                    onClick={() => setAlloyKey(a.key)}
+                    title={a.note}
+                  >
+                    <span className="ck-swatch" style={{ background: a.hour, borderColor: a.hour }} />
+                    <span className="ck-opt-t">{a.short}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

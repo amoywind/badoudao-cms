@@ -658,9 +658,29 @@
    Each group takes a share of the width, with the material and alloy
    groups wider than the drive-mode group because they carry four
    options each and the drive mode carries two. */
+/* The configuration panel.
+
+   Two columns: the drive mode on its own, and the dial material and
+   the hands alloy together in the other. Three columns across would
+   put each option in about 60 pixels, which cuts "Architectural
+   White" into three lines and pushes the labels out of their
+   buttons.
+
+   The two that share a column share it because they are the same
+   kind of choice — a material, in each case — and a buyer picks
+   them the same way. The drive mode is a different kind of choice
+   and gets a column of its own. */
 .clockbox-panel {
   display: grid;
-  grid-template-columns: 0.78fr 1.16fr 1.16fr;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 16px;
+  align-content: start;
+}
+
+/* The two material groups sit side by side inside their column. */
+.ck-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   align-content: start;
 }
@@ -3537,11 +3557,33 @@
    Aligned at the top, the headline starts where the card starts,
    and the empty space falls below the headline where a buyer reads
    it as breathing room rather than as a gap in the layout. */
+/* The hero grid.
+
+   The two columns are aligned at the top rather than in the middle.
+   Centred, the 431-pixel headline block sat in the middle of a
+   700-pixel card with 150 pixels of nothing above and below it, and
+   the whole section ran past the bottom of the screen — the trust
+   strip below it never appeared.
+
+   Aligned at the top, the headline starts where the card starts,
+   and the empty space falls below the headline where a buyer reads
+   it as breathing room rather than as a gap in the layout.
+
+   The grid is wider than the page's own 1200-pixel measure. The
+   specification gives the clock engine five of the hero's twelve
+   columns, and five columns of a 1200-pixel grid is 460 pixels —
+   not enough for a dial and three columns of options side by side.
+   The hero is the one section that is allowed the full width; the
+   sections below it keep the measure that holds a line of text to a
+   readable length. */
 .hero2-grid {
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 56px;
   align-items: start;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   padding: 60px 24px 56px;
 }
 
