@@ -525,1214 +525,411 @@
    Live clock engine
    =================================================================== */
 
+/* ===================================================================
+   The live precision clock engine
+   -------------------------------------------------------------------
+   A card that reads as an instrument panel: the console header, the
+   dial on the left, the configuration on the right, and the two
+   readings along the bottom. The proportions follow the specification
+   — the dial takes the larger share because it is the thing the buyer
+   is looking at.
+   =================================================================== */
+
+/* ===================================================================
+   The live precision clock engine
+   -------------------------------------------------------------------
+   A card that reads as an instrument panel: the console header, the
+   dial on the left, the configuration on the right, and the two
+   readings along the bottom. The proportions follow the specification
+   - the dial takes the larger share because it is the thing the buyer
+   is looking at.
+   =================================================================== */
+
+/* ===================================================================
+   The live precision clock engine
+   -------------------------------------------------------------------
+   A card that reads as an instrument panel: the console header, the
+   dial on the left, the configuration on the right, and the two
+   readings along the bottom. The proportions follow the specification
+   - the dial takes the larger share because it is the thing the buyer
+   is looking at.
+   =================================================================== */
+
 .clockbox {
   background: var(--surface-card);
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
-  padding: 22px;
+  padding: 24px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .05);
 }
 
 .clockbox-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 14px;
+  gap: 16px;
+  padding-bottom: 15px;
   border-bottom: 1px solid var(--rule);
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+}
+
+.clockbox-titleblock {
+  min-width: 0;
 }
 
 .clockbox-title {
   font-family: var(--font-tech);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text);
+}
+
+.clockbox-sub {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin-top: 5px;
+}
+
+/* The zone selector, with the globe beside it. */
+.clockbox-selwrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  color: var(--text-2);
 }
 
 .clockbox-sel {
   font-family: var(--font-body);
   font-size: 12.5px;
-  padding: 6px 9px;
+  padding: 7px 10px;
   border: 1px solid var(--rule);
   border-radius: var(--radius-btn);
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
+  max-width: 220px;
+}
+
+/* The dial and the panel beside it. */
+.clockbox-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
 }
 
 .clockbox-face {
   display: grid;
   place-items: center;
-  padding: 6px 0 14px;
 }
 
 .clockface {
   width: 100%;
-  max-width: 236px;
+  max-width: 250px;
   height: auto;
 }
 
-.clockbox-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 13px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-}
-
-.clockbox-zone {
-  font-family: var(--font-tech);
-  font-size: 11.5px;
-  color: var(--text-2);
-}
-
-.clockbox-time {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-/* ===================================================================
-   Material matrix — the 1:1 category grid
-   =================================================================== */
-
-.mat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.mat-card {
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+/* The configuration panel. */
+.clockbox-panel {
   display: flex;
   flex-direction: column;
+  gap: 18px;
 }
 
-.mat-card:hover {
-  transform: translateY(-2px);
-  border-color: #D6D9DE;
-  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
-}
-
-.mat-card .sq {
-  border-bottom: 1px solid var(--rule);
-}
-
-.mat-body {
-  padding: 18px 20px 20px;
+.ck-grp {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 9px;
 }
 
-.mat-body h3 {
-  font-size: 17px;
-  margin-bottom: 7px;
-}
-
-.mat-body p {
-  font-size: 13.5px;
-  color: var(--text-2);
-  line-height: 1.55;
-  flex: 1;
-}
-
-.mat-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 13px;
-  border-top: 1px solid var(--rule-soft);
-  font-size: 12.5px;
-  color: var(--text-2);
-}
-
-.mat-foot b {
-  color: var(--text);
-  font-weight: 600;
-}
-
-/* ===================================================================
-   Trending platforms — the four highlighted shells
-   =================================================================== */
-
-.trend-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.trend-card {
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  position: relative;
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.trend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
-}
-
-/* The quick-inquire button slides up from the bottom edge on hover. On a
-   touch screen there is no hover, so the button stays visible there —
-   the media query at the end of this file does that. */
-.trend-cta {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 11px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 12.5px;
-  font-weight: 600;
-  text-align: center;
-  transform: translateY(100%);
-  transition: transform .22s ease;
-}
-
-.trend-card:hover .trend-cta {
-  transform: translateY(0);
-}
-
-.trend-body {
-  padding: 16px 18px 18px;
-}
-
-.trend-body h3 {
-  font-size: 15.5px;
-  margin-bottom: 6px;
-}
-
-.trend-body p {
-  font-size: 12.5px;
-  color: var(--text-2);
-  line-height: 1.5;
-}
-
-.trend-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 11px;
-}
-
-.trend-tag {
+.ck-lbl {
   font-family: var(--font-tech);
   font-size: 10.5px;
-  padding: 3px 7px;
-  border-radius: 3px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--text-2);
-}
-
-/* ===================================================================
-   Components studio preview
-   =================================================================== */
-
-.studio {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-}
-
-.studio-side {
-  padding: 30px;
-  border-right: 1px solid var(--rule);
-}
-
-.studio-side:last-child {
-  border-right: none;
-}
-
-.studio-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--rule-soft);
-}
-
-.studio-row:last-child {
-  border-bottom: none;
-}
-
-.studio-k {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.studio-v {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: right;
-}
-
-.studio-v.accent {
-  color: var(--accent);
-}
-
-/* ===================================================================
-   QC steps — the four-column video strip
-   =================================================================== */
-
-.qc-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.qc-item h4 {
-  font-size: 15px;
-  margin: 14px 0 6px;
-}
-
-.qc-item p {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.55;
-}
-
-.qc-n {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
-  display: block;
-}
-
-/* ===================================================================
-   The anatomy diagram — the exploded view
-   =================================================================== */
-
-.anat {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-.anat-list {
-  display: grid;
-  gap: 2px;
-}
-
-.anat-i {
-  display: flex;
-  gap: 16px;
-  padding: 16px 18px;
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  transition: border-color .2s ease, background .2s ease;
-}
-
-.anat-i:first-child {
-  border-radius: var(--radius-card) var(--radius-card) 0 0;
-}
-
-.anat-i:last-child {
-  border-radius: 0 0 var(--radius-card) var(--radius-card);
-}
-
-.anat-i + .anat-i {
-  margin-top: -1px;
-}
-
-.anat-i:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  position: relative;
-  z-index: 1;
-}
-
-.anat-n {
-  font-family: var(--font-tech);
-  font-size: 12px;
   font-weight: 500;
-  color: var(--accent);
-  flex-shrink: 0;
-  width: 26px;
-  padding-top: 1px;
-}
-
-.anat-i h4 {
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.anat-i p {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.5;
-}
-
-/* ===================================================================
-   Movement matrix — the spec table on the components page
-   =================================================================== */
-
-.mtx {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.mtx th {
-  text-align: left;
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-2);
-  padding: 0 14px 12px;
-  border-bottom: 1px solid var(--rule);
 }
 
-.mtx td {
-  padding: 15px 14px;
-  border-bottom: 1px solid var(--rule-soft);
-  color: var(--text-2);
-  vertical-align: top;
-}
-
-.mtx td:first-child {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.mtx tr:last-child td {
-  border-bottom: none;
-}
-
-/* ===================================================================
-   Collection layout — filter rail + grid
-   =================================================================== */
-
-.coll {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 40px;
-  align-items: start;
-}
-
-.rail {
-  position: sticky;
-  top: 96px;
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  padding: 22px;
-}
-
-.rail-h {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  padding-bottom: 11px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 14px;
-}
-
-/* The category list.
-
-   The links are set as a list with the markers removed rather than as
-   a stack of blocks, because a list is what this is: a set of places
-   the buyer can go. The count sits on the right in the mono face, the
-   way a price does elsewhere on the site, so a buyer scanning the rail
-   reads the numbers in one column.
-
-   The current category is marked by the accent colour and a left rule
-   rather than by a filled background. A filled block the width of the
-   rail is a lot of ink for a state the buyer already knows about, and
-   it makes the list harder to read rather than easier. */
-.rail-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.rail-links li + li {
-  margin-top: 1px;
-}
-
-.rail-link {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 9px 11px;
-  margin: 0 -11px;
-  border-left: 2px solid transparent;
-  font-size: 13.5px;
-  color: var(--text-2);
-  text-decoration: none;
-  transition: color .15s ease, background .15s ease, border-color .15s ease;
-}
-
-.rail-link:hover {
-  color: var(--text);
-  background: var(--surface);
-}
-
-.rail-link.on {
+.ck-n {
   color: var(--accent);
-  font-weight: 600;
-  border-left-color: var(--accent);
-  background: var(--accent-soft);
+  margin-right: 3px;
 }
 
-/* The line under the list, and the count of what is in this category.
-   It is the answer to the question the list raises: how much is there
-   here? */
-.rail-foot {
-  margin-top: 16px;
-  padding-top: 13px;
-  border-top: 1px solid var(--rule);
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-2);
-}
-
-/* Four columns on a desktop, two on a phone — §5.3-1. The three
-   columns this used to have left a wide gap on a 1440px screen and made
-   the catalogue feel longer than ten products warrant. */
-.pgrid {
+.ck-opts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.pcard {
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.pcard:hover {
-  transform: translateY(-2px);
-  border-color: #D6D9DE;
-  box-shadow: 0 12px 28px -18px rgba(17, 17, 17, .3);
-}
-
-.pcard-body {
-  padding: 15px 17px 17px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.pcard-body h3 {
-  font-size: 15px;
-  line-height: 1.35;
-  margin-bottom: 8px;
-}
-
-.pcard-price {
-  display: flex;
-  align-items: baseline;
   gap: 6px;
-  font-size: 13px;
-  color: var(--text-2);
-  margin-top: auto;
-  padding-top: 11px;
-  border-top: 1px solid var(--rule-soft);
 }
 
-.pcard-price b {
-  font-family: var(--font-tech);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent);
+.ck-opts-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* ===================================================================
-   Product detail — the two-column layout the specification describes
-   =================================================================== */
-
-.pd2 {
-  display: grid;
-  grid-template-columns: 55% 45%;
-  gap: 44px;
-  align-items: start;
-}
-
-.pd2-media .sq {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-}
-
-.pd-thumbs {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.pd-thumb {
-  aspect-ratio: 1/1;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  overflow: hidden;
-  background: var(--surface-card);
-  display: grid;
-  place-items: center;
-  padding: 4px;
-}
-
-.pd-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pd2-info h1 {
-  font-size: 32px;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.pd2-moq {
+/* An option button. The label is truncated on one line rather than
+   wrapped, because a wrapped label makes the four buttons different
+   heights and the grid stops looking like a set. */
+.ck-opt {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
-}
-
-.pd2-tag {
-  font-family: var(--font-tech);
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 6px 11px;
-  border-radius: var(--radius-btn);
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.pd2-tag.plain {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--text-2);
-}
-
-/* The spec builder. Each row is a label and a set of options; picking
-   one updates the summary at the bottom and the quote that gets sent. */
-.spec {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  background: var(--surface-card);
-  padding: 20px 22px;
-  margin-bottom: 20px;
-}
-
-.spec-h {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  margin-bottom: 14px;
-}
-
-.spec-row {
-  display: grid;
-  grid-template-columns: 116px 1fr;
-  gap: 14px;
-  align-items: start;
-  padding: 11px 0;
-  border-top: 1px solid var(--rule-soft);
-}
-
-.spec-row:first-of-type {
-  border-top: none;
-  padding-top: 0;
-}
-
-.spec-lbl {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  padding-top: 7px;
-}
-
-.spec-opts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.spec-opt {
-  font-size: 12.5px;
-  padding: 6px 11px;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 9px;
   border: 1px solid var(--rule);
   border-radius: var(--radius-btn);
   background: #fff;
-  color: var(--text-2);
   cursor: pointer;
-  transition: border-color .15s ease, background .15s ease, color .15s ease;
   font-family: inherit;
+  text-align: left;
+  min-width: 0;
+  transition: border-color .15s ease, background .15s ease;
 }
 
-.spec-opt:hover {
+.ck-opt:hover {
   border-color: #C4C8CE;
 }
 
-.spec-opt.on {
+.ck-opt.on {
   border-color: var(--accent);
   background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
 }
 
-/* The generated spec string the specification asks for — SKU-style, so
-   the buyer and the factory are talking about the same thing. */
-.spec-sum {
-  font-family: var(--font-tech);
-  font-size: 12.5px;
-  padding: 12px 14px;
-  background: var(--text);
-  color: #fff;
-  border-radius: var(--radius-btn);
-  margin-top: 14px;
-  word-break: break-all;
-}
-
-/* Carton freight estimate. */
-.freight {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  padding: 18px 20px;
-  margin-bottom: 20px;
-}
-
-.freight-h {
-  font-family: var(--font-tech);
+.ck-opt-t {
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  margin-bottom: 12px;
-}
-
-.freight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 20px;
-}
-
-.freight-k {
-  font-size: 11.5px;
-  color: var(--text-2);
-  margin-bottom: 2px;
-}
-
-.freight-v {
-  font-family: var(--font-tech);
-  font-size: 13.5px;
-  font-weight: 500;
   color: var(--text);
-}
-
-/* The detail tabs. */
-.dtabs {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
+  white-space: nowrap;
   overflow: hidden;
-  background: var(--surface-card);
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
-.dtab-nav {
-  display: flex;
-  border-bottom: 1px solid var(--rule);
-  overflow-x: auto;
+.ck-opt.on .ck-opt-t {
+  color: var(--accent);
 }
 
-.dtab-btn {
+.ck-opt-s {
   font-family: var(--font-tech);
+  font-size: 9.5px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The colour chip beside a material name. It is the whole point of
+   the swatch - the buyer sees the finish rather than reading about
+   it. */
+.ck-swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid;
+  flex-shrink: 0;
+}
+
+/* The two actions along the bottom of the panel. */
+.ck-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.ck-test {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
   font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 15px 20px;
+  color: var(--text-2);
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text-2);
+  padding: 0;
   cursor: pointer;
-  white-space: nowrap;
+  border-bottom: 1px dashed var(--text-2);
+  align-self: flex-start;
 }
 
-.dtab-btn.on {
+.ck-test:hover:not(:disabled) {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
 
-.dtab-body {
-  padding: 24px;
-  font-size: 14.5px;
-  color: var(--text-2);
-  line-height: 1.7;
+.ck-test:disabled {
+  opacity: .6;
+  cursor: default;
 }
 
-.dtab-body h3 {
-  font-size: 17px;
-  margin: 0 0 10px;
-}
-
-.dtab-body ul {
-  margin: 10px 0 0 20px;
-}
-
-.dtab-body li {
-  margin-bottom: 7px;
-}
-
-/* ===================================================================
-   Responsive
-   =================================================================== */
-
-@media (max-width: 1024px) {
-  .coll {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .rail {
-    position: static;
-  }
-
-  /* Below the tablet the rail sits above the grid, so the list runs
-     across rather than down. The counts still sit on the right of each
-     link, which is why the links are inline blocks rather than a
-     simple wrapped row of text. */
-  .rail-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .rail-links li {
-    flex: 1 1 auto;
-  }
-
-  .rail-link {
-    border-left: none;
-    border-bottom: 2px solid transparent;
-    margin: 0;
-    padding: 8px 10px;
-  }
-
-  .rail-link.on {
-    border-bottom-color: var(--accent);
-  }
-
-  .pgrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .pd2 {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .mat-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .trend-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .qc-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .anat {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .studio {
-    grid-template-columns: 1fr;
-  }
-
-  .studio-side {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
-  }
-}
-
-@media (max-width: 767px) {
-  /* On a phone the category list runs down the page rather than across
-     it. Two categories side by side on a 390px screen read as a table
-     row rather than as navigation, and the current category ends up
-     half hidden in the middle of the row instead of standing out as
-     where the buyer is. */
-  .rail-links {
-    display: block;
-  }
-
-  .rail-links li {
-    display: block;
-  }
-
-  .rail-link {
-    border-left: 2px solid transparent;
-    border-bottom: none;
-    margin: 0 -11px;
-    padding: 10px 11px;
-  }
-
-  .rail-link.on {
-    border-left-color: var(--accent);
-    border-bottom-color: transparent;
-  }
-
-  .mat-grid,
-  .qc-grid,
-  .trend-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* Two columns on a phone, per §5.3-1. A single column of 1:1 cards
-     makes the buyer scroll a very long way to compare ten clocks. */
-  .pgrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .pcard-body {
-    padding: 12px 13px 14px;
-  }
-
-  .pcard-body h3 {
-    font-size: 13.5px;
-  }
-
-  .spec-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .spec-lbl {
-    padding-top: 0;
-  }
-
-  /* No hover on a touch screen, so the quick-inquire button would never
-     appear. It stays visible instead. */
-  .trend-cta {
-    transform: none;
-    position: static;
-    border-radius: 0;
-  }
-
-  .freight-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ===================================================================
-   Hero — the split layout with the live clock
-   =================================================================== */
-
-.hero2 {
-  background: var(--surface);
-  border-bottom: 1px solid var(--rule);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero2-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 56px;
-  align-items: center;
-  padding: 76px 24px 72px;
-}
-
-.hero2-h1 {
-  font-size: 46px;
-  line-height: 1.14;
-  letter-spacing: -0.028em;
-  margin-bottom: 20px;
-}
-
-.hero2-hl {
-  color: var(--text-2);
-  /* The accent underline marks the promise the headline makes — the
-     factory part, which is what differentiates this from a catalogue. */
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-size: 100% 4px;
-  background-repeat: no-repeat;
-  background-position: 0 92%;
-  padding-bottom: 4px;
-}
-
-.hero2 .lede {
-  font-size: 16.5px;
-  color: var(--text-2);
-  max-width: 540px;
-  margin-bottom: 28px;
-  line-height: 1.65;
-}
-
-@media (max-width: 900px) {
-  .hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
-  }
-
-  .hero2-h1 {
-    font-size: 32px;
-  }
-
-  .clockface {
-    max-width: 200px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero2-h1 {
-    font-size: 27px;
-  }
-}
-
-/* ===================================================================
-   Hero — the split layout with the live clock
-   =================================================================== */
-
-.hero2 {
-  background: var(--surface);
-  border-bottom: 1px solid var(--rule);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero2-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 56px;
-  align-items: center;
-  padding: 76px 24px 72px;
-}
-
-.hero2-h1 {
-  font-size: 46px;
-  line-height: 1.14;
-  letter-spacing: -0.028em;
-  margin-bottom: 20px;
-}
-
-.hero2-hl {
-  color: var(--text-2);
-  /* The accent underline marks the promise the headline makes — the
-     factory part, which is what differentiates this from a catalogue. */
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-size: 100% 4px;
-  background-repeat: no-repeat;
-  background-position: 0 92%;
-  padding-bottom: 4px;
-}
-
-.hero2 .lede {
-  font-size: 16.5px;
-  color: var(--text-2);
-  max-width: 540px;
-  margin-bottom: 28px;
-  line-height: 1.65;
-}
-
-@media (max-width: 900px) {
-  .hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
-  }
-
-  .hero2-h1 {
-    font-size: 32px;
-  }
-
-  .clockface {
-    max-width: 200px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero2-h1 {
-    font-size: 27px;
-  }
-}
-
-/* The trust bar on a product page sits in the right-hand column, which is
-   45% of the page. Four cards across that width are 130px each, and the
-   detail text under each number wraps to three lines. Two columns is the
-   point where the number still reads at a glance. */
-.pd2-info .tcards {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.pd2-info .tcard {
-  padding: 16px 15px;
-}
-
-.pd2-info .tcard-ico {
-  width: 30px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-
-.pd2-info .tcard-n {
-  font-size: 22px;
-}
-
-.pd2-info .tcard-t {
-  font-size: 12.5px;
-}
-
-.pd2-info .tcard-d {
-  font-size: 11.5px;
-}
-
-/* The trust bar on a product page sits in the right-hand column, which is
-   45% of the page. Four cards across that width are 130px each, and the
-   detail text under each number wraps to three lines. Two columns is the
-   point where the number still reads at a glance. */
-.pd2-info .tcards {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.pd2-info .tcard {
-  padding: 16px 15px;
-}
-
-.pd2-info .tcard-ico {
-  width: 30px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-
-.pd2-info .tcard-n {
-  font-size: 22px;
-}
-
-.pd2-info .tcard-t {
-  font-size: 12.5px;
-}
-
-.pd2-info .tcard-d {
-  font-size: 11.5px;
-}
-
-/* ===================================================================
-   The anechoic reading under the clock
-   -------------------------------------------------------------------
-   The one measurement on the page that is a claim about the room the
-   movements are tested in rather than about the clock. It sits under
-   the reading because it is context, not the headline.
-   =================================================================== */
-
-.clockbox-noise {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
-  font-size: 11px;
-}
-
-.clockbox-noise-l {
+.ck-export {
   font-family: var(--font-tech);
-  letter-spacing: 0.08em;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: right;
+}
+
+.ck-export:hover {
+  text-decoration: underline;
+}
+
+/* The two readings. */
+.clockbox-foot {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.ck-read {
+  min-width: 0;
+}
+
+.ck-read-l {
+  font-family: var(--font-tech);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-2);
 }
 
-.clockbox-noise-v {
-  font-size: 15px;
+.ck-read-v {
+  font-size: 21px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text);
+  line-height: 1.25;
+  margin-top: 3px;
 }
 
-.clockbox-noise-t {
-  color: var(--text-2);
-  font-style: italic;
+/* The peak reading, when the step movement ticks. It goes amber for
+   the fraction of a second the gear tooth is striking, which is the
+   whole comparison the panel exists to make. */
+.ck-read-v.peak {
+  color: #D97706;
 }
 
-/* ===================================================================
-   The anechoic reading under the clock
-   -------------------------------------------------------------------
-   The one measurement on the page that is a claim about the room the
-   movements are tested in rather than about the clock. It sits under
-   the reading because it is context, not the headline.
-   =================================================================== */
-
-.clockbox-noise {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
+.ck-read-z {
   font-size: 11px;
-}
-
-.clockbox-noise-l {
-  font-family: var(--font-tech);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-2);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.clockbox-noise-v {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 }
 
-.clockbox-noise-t {
-  color: var(--text-2);
-  font-style: italic;
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .clockbox-face {
+    order: 1;
+  }
+
+  .clockbox-panel {
+    order: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 
 /* ===================================================================
@@ -3438,3 +2635,326 @@
     text-align: left;
   }
 }
+
+/* ===================================================================
+   The exploded anatomy
+   -------------------------------------------------------------------
+   The drawing on the left and the engineering panel on the right.
+   The drawing is clickable, so it needs to look clickable: each layer
+   brightens and lifts a little when it is the selected one, and the
+   callout beside it turns to the accent colour.
+   =================================================================== */
+
+.anx-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.anx-head-k {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.anx-head-s {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.anx-title {
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.024em;
+  margin-bottom: 12px;
+}
+
+.anx-lede {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-2);
+  max-width: 780px;
+  margin-bottom: 34px;
+}
+
+.anx {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 48px;
+  align-items: start;
+}
+
+/* ---- the drawing ---- */
+
+.anx-diagram {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 26px 24px 20px;
+}
+
+.anx-svg {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* A clickable layer. The pointer and the hover state are what tell
+   the buyer the drawing does something. */
+.anx-l {
+  cursor: pointer;
+  transition: opacity .2s ease, transform .2s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.anx-l:hover {
+  opacity: 1;
+}
+
+/* The selected layer is the only one at full strength, so the eye
+   goes straight to it. */
+.anx-l:not(.on) {
+  opacity: 0.42;
+}
+
+.anx-l.on {
+  opacity: 1;
+  filter: url(#anx-glow);
+}
+
+.anx-callout {
+  pointer-events: none;
+  opacity: 0.4;
+  transition: opacity .2s ease;
+}
+
+.anx-callout text {
+  fill: var(--text-2);
+}
+
+.anx-callout.on {
+  opacity: 1;
+}
+
+.anx-callout.on text {
+  fill: var(--accent);
+  font-weight: 700;
+}
+
+.anx-hint {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+/* The part tabs. They are the same selection as the drawing, laid
+   out as a row of labelled stops. */
+.anx-tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.anx-tab {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  padding: 7px 11px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: #fff;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+
+.anx-tab:hover {
+  border-color: #C4C8CE;
+  color: var(--text);
+}
+
+.anx-tab.on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- the engineering panel ---- */
+
+.anx-panel {
+  min-width: 0;
+}
+
+.anx-kicker {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.anx-h {
+  font-size: 20px;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.anx-cn {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+
+.anx-sum {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 20px;
+}
+
+/* The three specification blocks. They are set as a list with
+   hairlines between them rather than as cards, because they are one
+   document in three parts rather than three separate things. */
+.anx-specs {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  padding: 4px 20px 16px;
+  margin-bottom: 22px;
+}
+
+.anx-spec {
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.anx-spec:last-child {
+  border-bottom: none;
+}
+
+.anx-spec-l {
+  font-family: var(--font-tech);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 7px;
+}
+
+.anx-spec p {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* The specialist architectures. */
+.anx-special-l {
+  font-family: var(--font-tech);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+
+.anx-special-i {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 11px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.anx-special-i:last-child {
+  margin-bottom: 0;
+}
+
+.anx-special-i strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.anx-check {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ---- the simplified structures below ---- */
+
+.anx-simplified {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.anx-simplified > p {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-2);
+  max-width: 720px;
+  margin-bottom: 18px;
+}
+
+.anx-simplified .card {
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.anx-simplified .card h3 {
+  font-size: 15.5px;
+  margin-bottom: 7px;
+}
+
+.anx-simplified .card p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .anx {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .anx-title {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .anx-diagram {
+    padding: 20px 14px 16px;
+  }
+
+  .anx-tab {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+}
+
+

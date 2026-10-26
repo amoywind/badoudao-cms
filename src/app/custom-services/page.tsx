@@ -4,7 +4,8 @@ import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
-import { ANATOMY, SIMPLIFIED, ROUTE_28 } from '@/lib/vocabulary';
+import { SIMPLIFIED, ROUTE_28 } from '@/lib/vocabulary';
+import { AnatomyExplorer } from '../AnatomyExplorer';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -70,43 +71,36 @@ export default async function CustomServicesPage() {
         {/* ---- The anatomy ---- */}
         <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
           <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Visual anatomy</div>
-              <h2>Six components, six decisions</h2>
-              <p className="sec-sub">
-                The exploded view of a wall clock. Every part is specified separately,
-                which is why a quote can be broken down by tooling, unit, packaging
-                and freight.
-              </p>
+            {/* The kicker and the title are two lines of the same
+                heading rather than two elements: the specification
+                writes them side by side, and a buyer reading the
+                section should see them as one thing. */}
+            <div className="anx-head">
+              <span className="anx-head-k">// Custom services &amp; anatomy</span>
+              <span className="anx-head-s">Modular component deconstruction</span>
             </div>
+            <h2 className="anx-title">6 Core Modular Components: Complete OEM Freedom</h2>
+            <p className="anx-lede">
+              Every wall clock produced in our Xiamen facility is engineered as a
+              modular system. Mix and match frames, dials, clock hands, movements,
+              and packaging with zero compromise on structural integrity.
+            </p>
 
-            <div className="anat">
-              <div className="anat-list">
-                {ANATOMY.map((a) => (
-                  <div className="anat-i" key={a.n}>
-                    <span className="anat-n">{a.n}</span>
-                    <div>
-                      <h4>{a.name}</h4>
-                      <p>{a.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <AnatomyExplorer />
 
-              <div>
-                <div className="spec-h">Simplified structures</div>
-                <p style={{ fontSize: 14.5, color: 'var(--text-2)', lineHeight: 1.7, marginBottom: 20 }}>
-                  Some designs are better off without parts. When a dial or a frame is
-                  not the point, removing it is a decision the factory can make — and
-                  a cheaper clock to build.
-                </p>
-                {SIMPLIFIED.map((s2) => (
-                  <div className="card" key={s2.name} style={{ padding: 20, marginBottom: 12 }}>
-                    <h3 style={{ fontSize: 15.5, marginBottom: 7 }}>{s2.name}</h3>
-                    <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{s2.detail}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="anx-simplified">
+              <div className="spec-h">Simplified structures</div>
+              <p>
+                Some designs are better off without parts. When a dial or a frame is
+                not the point, removing it is a decision the factory can make — and
+                a cheaper clock to build.
+              </p>
+              {SIMPLIFIED.map((s2) => (
+                <div className="card" key={s2.name}>
+                  <h3>{s2.name}</h3>
+                  <p>{s2.detail}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

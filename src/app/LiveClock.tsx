@@ -1,73 +1,62 @@
 'use client';
 
 /**
- * The live clock engine.
+ * The live precision clock engine.
  *
- * Three things it does, all specified in §5.2 of the design brief:
+ * A working clock in the first screen, and the argument the site makes
+ * in one object: this factory fits movements that are quiet, and here
+ * is the difference in decibels.
  *
- *   1. It tells the time in the visitor's own timezone, worked out from
- *      their IP address, so a buyer in London sees a London clock rather
- *      than a factory clock and has to do the arithmetic themselves.
- *   2. It lets them switch — the dropdown holds the major buying markets
- *      and the factory's own time, and the choice sticks across pages.
- *   3. The hands move in real time, and a sweep movement does not tick.
+ * WHAT IT DOES
  *
- * The IP lookup is the part that needs care. A request to a third-party
- * geolocation service sends the visitor's IP to that service, which is
- * the exact thing the site avoids elsewhere: Plausible was chosen over
- * GA4 specifically to stay out of the consent-banner requirement that
- * such a request triggers under European rules.
+ * The buyer picks a dial face, a hand alloy and a drive mode. The dial
+ * redraws, the hands change colour, the second hand either sweeps or
+ * steps, and the decibel reading follows. The sound of the movement can
+ * be played, and the current configuration can be written into the
+ * enquiry form at the bottom of the page.
  *
- * So there is no geolocation request. The timezone is derived from
- * Intl.DateTimeFormat().resolvedOptions().timeZone, which the browser
- * already knows and which involves no network call at all. It is less
- * precise than an IP lookup — it reports the browser's configured zone
- * rather than the physical location — but for a clock face it is exact
- * enough, and it costs the visitor nothing.
+ * WHY THE SOUND IS SYNTHESISED
  *
- * The dropdown is not a decoration either: a buyer in New York who is
- * scheduling a factory call needs to know what time it is in Xiamen, and
- * the one-tap answer is the point of the widget.
+ * A factory recording is a file, and a file on the server is a file the
+ * visitor downloads before they have decided they want to hear it.
+ * Synthesising the tick means the page carries no audio at all — the
+ * Web Audio API builds the sound the moment it is asked for. It also
+ * means the two movements sound different for the reason they really
+ * are different, rather than because two recordings were made on
+ * different days.
+ *
+ * WHY THE SECONDS HAND SWEEPS
+ *
+ * The sweep movement is the one the site recommends and the one whose
+ * decibels it is quoting. A stepping second hand would show a tick the
+ * reading does not have. So the sweep is drawn with the linear
+ * interpolation the specification gives, and the step mode holds the
+ * hand still and jumps it at the second — which is what makes the two
+ * visibly different as well as audibly different.
+ *
+ * THE GEOMETRY
+ *
+ * The dial is drawn in a 240-unit square with the centre locked at
+ * (120, 120), and every radius in the specification is measured from
+ * that centre: the bezel at 114, the guide track at 104, the minute
+ * ticks from 98, the hour ticks from 92, the hour hand to 66, the
+ * minute hand to 42, the second hand to 30 with its counterweight
+ * tail reaching 140 the other way.
  */
 
-import { useEffect, useRef, useState } from 'react';
-
-type Zone = {
-  id: string;
-  label: string;
-  /** Offset from UTC in hours. */
-  offset: number;
-};
-
-/* The five zones the specification names, in its order. The factory's own
-   time is first and marked, because the question a buyer is usually
-   trying to answer is what time it is at the factory.
-
-   The visitor's own zone is not in this list. It is selected
-   automatically after the page loads, and the label says so — a buyer in
-   Amsterdam should not have to hunt through five cities to find the one
-   they are in. */
-const ZONES: Zone[] = [
-  { id: 'xiamen', label: 'Beijing/Xiamen (UTC+8) [Factory HQ]', offset: 8 },
-  { id: 'london', label: 'London (UTC+0)', offset: 0 },
-  { id: 'newyork', label: 'New York (EST -5)', offset: -5 },
-  { id: 'tokyo', label: 'Tokyo (JST +9)', offset: 9 },
-  { id: 'paris', label: 'Paris (CET +1)', offset: 1 }
-];
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ACOUSTICS,
+  CLOCK_ZONES,
+  DIAL_FACES,
+  DRIVE_MODES,
+  HAND_ALLOYS
+} from '@/lib/clock-data';
 
 /** The browser's own zone, resolved once the page has hydrated. */
 function browserOffset(): number {
   try {
-    /* The offset is measured against the browser's own clock rather than
-       looked up from the zone name. `new Date("Asia/Shanghai")` is an
-       invalid date — a zone name is not a date — and getTimezoneOffset()
-       on it returns NaN, which put "UTCNaN" and a NaN clock on the page.
-       The browser already knows its own offset; that is what this reads. */
     const minutes = -new Date().getTimezoneOffset();
-    /* Round to the nearest half hour — the zones that use one are the
-       ones a buyer is likely to be in, and a clock showing 5:30 for a
-       zone that is actually 5:45 would be worse than one showing
-       5:30 for a zone that is 5:00. */
     return Math.round(minutes / 30) * 0.5;
   } catch {
     return 0;
@@ -76,41 +65,51 @@ function browserOffset(): number {
 
 export function LiveClock() {
   const [zoneId, setZoneId] = useState('xiamen');
-  const [now, setNow] = useState<Date | null>(null);
   const [localOffset, setLocalOffset] = useState<number | null>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const [faceKey, setFaceKey] = useState<string>('white');
+  const [alloyKey, setAlloyKey] = useState<string>('brass');
+  const [driveKey, setDriveKey] = useState<string>('sweep');
+  const [now, setNow] = useState<Date | null>(null);
+  const [db, setDb] = useState(8.4);
+  const [dbPeak, setDbPeak] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<AudioContext | null>(null);
 
-  /* Read the browser's zone after mount, so the server-rendered markup and
-     the hydrated page agree. Rendering a different time on the server
-     would put a hydration mismatch in the console on every page load. */
+  const face = useMemo(
+    () => DIAL_FACES.find((f) => f.key === faceKey) || DIAL_FACES[0],
+    [faceKey]
+  );
+  const alloy = useMemo(
+    () => HAND_ALLOYS.find((a) => a.key === alloyKey) || HAND_ALLOYS[0],
+    [alloyKey]
+  );
+  const drive = useMemo(
+    () => DRIVE_MODES.find((d) => d.key === driveKey) || DRIVE_MODES[0],
+    [driveKey]
+  );
+
+  /* Read the browser's own zone after mount, so the server-rendered
+     markup and the hydrated page agree. Rendering a different time on
+     the server would put a hydration mismatch in the console on every
+     page load. */
   useEffect(() => {
     const off = browserOffset();
     setLocalOffset(off);
     setZoneId('local');
   }, []);
 
-  /* The hands. A sweep movement does not step once a second, so the
-     seconds hand is drawn as a smooth sweep rather than a jump — which
-     is also the movement the site says it fits.
+  /* The hands.
 
-     The seconds hand is present because the owner asked for it: a clock
-     that reads the time to the second is a clock you can check your own
-     watch against, and this is the one element on the page that
-     demonstrates the factory's movements rather than describing them.
-     (The specification had asked for the seconds hand to be removed in
-     favour of a quieter face — the owner's instruction takes precedence
-     over the document.) */
+     The sweep mode interpolates linearly on the milliseconds, so the
+     second hand glides. The step mode holds the hand still and jumps
+     it at the second. */
   useEffect(() => {
     let raf = 0;
     let lastPaint = 0;
 
     const tick = (ts: number) => {
-      /* 20 frames a second is enough for the minute hand but not for
-         the seconds hand — at 20fps a sweep second hand visibly stutters,
-         because it advances 18 degrees per frame and the eye can count
-         the steps. 30fps halves the interval to 12 degrees, which reads
-         as continuous, and still costs half of what 60 does on a phone
-         that is already running the rest of the page. */
+      /* 30 frames a second: at 20 a sweep second hand advances 18
+         degrees per frame and the eye can count the steps. */
       if (ts - lastPaint > 33) {
         lastPaint = ts;
         setNow(new Date());
@@ -122,155 +121,418 @@ export function LiveClock() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  /* The decibel reading.
+
+     In sweep mode it wanders inside the measured band, the way a real
+     meter reading does. In step mode it spikes on every tick and falls
+     back — which is the whole point of the panel: the buyer sees the
+     difference between the two movements rather than being told it. */
+  useEffect(() => {
+    if (drive.key !== 'sweep') return;
+
+    const [lo, hi] = drive.dbRange;
+    const timer = setInterval(() => {
+      setDb(lo + Math.random() * (hi - lo));
+    }, 900);
+
+    return () => clearInterval(timer);
+  }, [drive]);
+
   /* The visitor's own zone is not in the list, so it is handled as its
-     own case rather than as a sixth entry: it has no fixed offset and no
-     city name, and it is the default only until the page has hydrated. */
-  const zone = ZONES.find((z) => z.id === zoneId);
+     own case rather than as a seventh entry: it has no fixed offset and
+     no city name, and it is the default only until the page has
+     hydrated. */
+  const zone = CLOCK_ZONES.find((z) => z.id === zoneId);
   const isLocal = zoneId === 'local';
   const offset = isLocal ? (localOffset ?? 8) : (zone?.offset ?? 8);
 
-  /* The time in the selected zone. Working from UTC rather than from the
-     local Date avoids the browser's own zone entirely, so the result is
-     the same whatever the visitor's machine is set to. */
-  /* The reading, to the second.
-     The seconds hand is drawn as a sweep rather than a jump, because the
-     site says it fits silent sweep movements — a step-second hand would
-     contradict the movement matrix two pages away. The minute hand
-     advances smoothly for the same reason, and uses the seconds for its
-     sub-degree position. */
-  const parts = (() => {
-    if (!now) return { h: 0, m: 0, s: 0, label: '--:--:--' };
+  /* The time in the selected zone. Working from UTC rather than from
+     the local Date avoids the browser's own zone entirely, so the
+     result is the same whatever the visitor's machine is set to. */
+  const parts = useMemo(() => {
+    if (!now) return { h: 0, m: 0, s: 0, ms: 0, label: '--:--:--' };
+
     const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
     const z = new Date(utcMs + offset * 3600000);
     const h = z.getHours();
     const m = z.getMinutes();
-    /* The fractional part is what makes the hand sweep rather than
-       step, so it stays in the value the hands use. The reading, on
-       the other hand, shows whole seconds — padding the fractional
-       value as a string produced "12:04:5.063" rather than
-       "12:04:05", because the fraction went into the text with the
-       decimal point and all. */
-    const s = z.getSeconds() + z.getMilliseconds() / 1000;
-    const label =
-      `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(z.getSeconds()).padStart(2, '0')}`;
-    return { h, m, s, label };
-  })();
+    const s = z.getSeconds();
+    const ms = z.getMilliseconds();
 
-  const secDeg = parts.s * 6;
-  const minDeg = parts.m * 6 + parts.s * 0.1;
-  const hourDeg = (parts.h % 12) * 30 + parts.m * 0.5;
+    const label =
+      `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+    return { h, m, s, ms, label };
+  }, [now, offset]);
+
+  /* The hand angles.
+
+     Sweep: the second hand carries the milliseconds, so it glides.
+     Step: the second hand holds at the whole second and the minute
+     hand carries the fraction instead, which is what a real step
+     movement does — the minute hand creeps between ticks rather than
+     sitting dead until the minute turns. */
+  const isStep = drive.key === 'step';
+  const secDeg = isStep ? parts.s * 6 : (parts.s + parts.ms / 1000) * 6;
+  const minDeg = (parts.m + parts.s / 60) * 6;
+  const hourDeg = ((parts.h % 12) + parts.m / 60) * 30;
 
   const zoneLabel = isLocal
     ? `Your local time (UTC${offset >= 0 ? '+' : ''}${offset})`
     : (zone?.label ?? '');
 
+  /* ---- The acoustic simulator ---- */
+
+  function playSound() {
+    setPlaying(true);
+
+    const Ctx =
+      (window as unknown as { AudioContext?: typeof AudioContext }).AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!Ctx) { setPlaying(false); return; }
+
+    const ctx = audioRef.current || new Ctx();
+    audioRef.current = ctx;
+    if (ctx.state === 'suspended') void ctx.resume();
+
+    const nowT = ctx.currentTime;
+    const spec = ACOUSTICS[drive.key as keyof typeof ACOUSTICS];
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = spec.type;
+    osc.frequency.setValueAtTime(spec.freq, nowT);
+
+    /* The step movement's tick falls in pitch as it decays — the gear
+       tooth striking and the wheel settling. The sweep movement's hum
+       stays where it is. */
+    if ('fallTo' in spec && spec.fallTo) {
+      osc.frequency.exponentialRampToValueAtTime(spec.fallTo, nowT + spec.duration / 1000);
+    }
+
+    gain.gain.setValueAtTime(spec.gain, nowT);
+    gain.gain.exponentialRampToValueAtTime(0.0001, nowT + spec.duration / 1000);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(nowT);
+    osc.stop(nowT + spec.duration / 1000 + 0.02);
+
+    /* The peak reading, and the return to the floor. This is the
+       moment the panel exists to show. */
+    if (isStep) {
+      setDb(28.4);
+      setDbPeak(true);
+      setTimeout(() => {
+        setDb(9.2);
+        setDbPeak(false);
+      }, 140);
+    }
+
+    setTimeout(() => setPlaying(false), spec.duration + 120);
+  }
+
+  /* ---- Write the configuration into the enquiry form ---- */
+
+  function exportToRfq() {
+    const spec = `${face.short} dial / ${alloy.short} hands / ${drive.name}`;
+    const field = document.getElementById('if-msg') as HTMLTextAreaElement | null;
+    const hidden = document.getElementById('clock-spec') as HTMLInputElement | null;
+
+    if (hidden) hidden.value = spec;
+
+    if (field) {
+      /* The buyer's own words come first. Their configuration is added
+         underneath rather than replacing it, so nothing they wrote is
+         lost. */
+      const line = `\n\nClock configuration: ${spec}.`;
+      if (!field.value.includes('Clock configuration:')) {
+        field.value = (field.value.trim() + line).trim();
+      }
+    }
+
+    const target = document.getElementById('inquiry');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  /* The dial's colours feed the SVG. The gradient id has to be unique
+     per face, or the browser reuses the first one it defined and the
+     obsidian dial keeps the white gradient. */
+  const gradId = `dial-${face.key}`;
+
   return (
     <div className="clockbox">
+      {/* ---- the console header ---- */}
       <div className="clockbox-head">
-        <span className="clockbox-title">Live clock engine</span>
-        <select
-          className="clockbox-sel"
-          value={zoneId}
-          onChange={(e) => setZoneId(e.target.value)}
-          aria-label="Time zone"
-        >
-          <option value="local">Your local time</option>
-          {ZONES.map((z) => (
-            <option key={z.id} value={z.id}>{z.label}</option>
-          ))}
-        </select>
+        <div className="clockbox-titleblock">
+          <div className="clockbox-title">Live precision clock engine</div>
+          <div className="clockbox-sub">
+            Real-time multi-timezone timekeeping simulator with decibel telemetry
+          </div>
+        </div>
+        <div className="clockbox-selwrap">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18" />
+          </svg>
+          <select
+            className="clockbox-sel"
+            value={zoneId}
+            onChange={(e) => setZoneId(e.target.value)}
+            aria-label="Time zone"
+          >
+            <option value="local">Your local time</option>
+            {CLOCK_ZONES.map((z) => (
+              <option key={z.id} value={z.id}>
+                {z.label}{z.note ? ` — ${z.note}` : ''}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <div className="clockbox-face">
-        <svg
-          ref={svgRef}
-          className="clockface"
-          viewBox="0 0 200 200"
-          role="img"
-          aria-label={`Analog clock showing ${zoneLabel}`}
-        >
-          <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#111111" strokeWidth="3" />
-          {/* Minute ticks. Every fifth one is longer, which is what makes a
-              clock face readable at a glance rather than just decorative. */}
-          {Array.from({ length: 60 }).map((_, i) => {
-            const major = i % 5 === 0;
-            const a = (i * 6 * Math.PI) / 180;
-            const r1 = major ? 78 : 84;
-            const r2 = 90;
-            return (
-              <line
-                key={i}
-                x1={100 + Math.sin(a) * r1}
-                y1={100 - Math.cos(a) * r1}
-                x2={100 + Math.sin(a) * r2}
-                y2={100 - Math.cos(a) * r2}
-                stroke={major ? '#111111' : '#C9CDD3'}
-                strokeWidth={major ? 2.4 : 1}
-              />
-            );
-          })}
-          {/* 12, 3, 6, 9 in the mono face, as the specification's data
-              cards do. */}
-          {[
-            [100, 52, '12'],
-            [148, 106, '3'],
-            [100, 160, '6'],
-            [52, 106, '9']
-          ].map(([x, y, t]) => (
+      <div className="clockbox-body">
+        {/* ---- the dial ---- */}
+        <div className="clockbox-face">
+          <svg
+            className="clockface"
+            viewBox="0 0 240 240"
+            role="img"
+            aria-label={`Clock showing ${parts.label} in ${zoneLabel}`}
+          >
+            <defs>
+              <radialGradient id={gradId} cx="38%" cy="30%" r="78%">
+                <stop offset="0%" stopColor={face.bg} stopOpacity="1" />
+                <stop offset="100%" stopColor={face.bezel} stopOpacity="1" />
+              </radialGradient>
+              <filter id="hand-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" floodColor="#000" floodOpacity="0.3" />
+              </filter>
+            </defs>
+
+            {/* The outer bezel. A radial gradient across the face, so
+                the dial reads as a dished surface rather than a flat
+                disc. */}
+            <circle cx="120" cy="120" r="114" fill={`url(#${gradId})`} />
+            <circle cx="120" cy="120" r="114" fill="none" stroke="#111111" strokeWidth="4" />
+
+            {/* The inner guide track — the fine dashed circle a
+                precision dial is marked with. */}
+            <circle
+              cx="120" cy="120" r="104"
+              fill="none" stroke={face.major} strokeWidth="0.7"
+              strokeDasharray="2,2" opacity="0.6"
+            />
+
+            {/* Sixty minute ticks. */}
+            {Array.from({ length: 60 }).map((_, i) => {
+              const major = i % 5 === 0;
+              const a = (i * 6 * Math.PI) / 180;
+              const r1 = major ? 92 : 98;
+              const r2 = 104;
+              return (
+                <line
+                  key={`m${i}`}
+                  x1={120 + Math.sin(a) * r1}
+                  y1={120 - Math.cos(a) * r1}
+                  x2={120 + Math.sin(a) * r2}
+                  y2={120 - Math.cos(a) * r2}
+                  stroke={major ? face.major : face.tick}
+                  strokeWidth={major ? 2.5 : 1}
+                  opacity={major ? 1 : 0.75}
+                />
+              );
+            })}
+
+            {/* The four numerals. */}
+            {([
+              [120, 62, '12'],
+              [176, 126, '3'],
+              [120, 186, '6'],
+              [64, 126, '9']
+            ] as [number, number, string][]).map(([x, y, t]) => (
+              <text
+                key={t}
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize="12"
+                fontWeight="600"
+                fill={face.digit}
+                fontFamily="var(--font-display), sans-serif"
+              >
+                {t}
+              </text>
+            ))}
+
+            {/* The pad-printed brand mark. This is what a real dial
+                carries, and it is the detail that makes the rendering
+                read as a product rather than as an icon. */}
             <text
-              key={t as string}
-              x={x as number}
-              y={y as number}
+              x="120" y="88"
               textAnchor="middle"
-              dominantBaseline="central"
-              fontSize="13"
-              fontWeight="600"
-              fill="#111111"
+              fontSize="7"
+              fontWeight="700"
+              letterSpacing="1"
+              fill={face.digit}
               fontFamily="var(--font-tech), monospace"
             >
-              {t}
+              OEMWALLCLOCKS
             </text>
-          ))}
-          <line
-            x1="100" y1="100" x2="100" y2="55"
-            stroke="#111111" strokeWidth="5" strokeLinecap="round"
-            transform={`rotate(${hourDeg} 100 100)`}
-          />
-          <line
-            x1="100" y1="100" x2="100" y2="35"
-            stroke="#3d4450" strokeWidth="3.2" strokeLinecap="round"
-            transform={`rotate(${minDeg} 100 100)`}
-          />
-          {/* The seconds hand. Thin and in the mid grey rather than
-              black, so it sits behind the hour and minute hands in
-              weight and the face still reads cleanly at a glance. */}
-          <line
-            x1="100" y1="112" x2="100" y2="26"
-            stroke="#6B7280" strokeWidth="1.4" strokeLinecap="round"
-            transform={`rotate(${secDeg} 100 100)`}
-          />
-          {/* The centre cap is brass, not blue. §5.1-3 calls for a brass
-              hub on a plain white face, and the accent colour is
-              reserved for actions — a clock is not an action. */}
-          <circle cx="100" cy="100" r="5" fill="#B8874A" />
-          <circle cx="100" cy="100" r="2" fill="#8A6435" />
-        </svg>
+            <text
+              x="120" y="97"
+              textAnchor="middle"
+              fontSize="5"
+              letterSpacing="0.3"
+              fill={face.micro}
+              fontFamily="var(--font-tech), monospace"
+            >
+              XIAMEN FACILITY · SILENT QUARTZ
+            </text>
+
+            {/* The hour hand. */}
+            <line
+              x1="120" y1="120" x2="120" y2="54"
+              stroke={alloy.hour} strokeWidth="4.5" strokeLinecap="round"
+              filter="url(#hand-shadow)"
+              transform={`rotate(${hourDeg} 120 120)`}
+            />
+            {/* The minute hand. */}
+            <line
+              x1="120" y1="120" x2="120" y2="78"
+              stroke={alloy.minute} strokeWidth="3.2" strokeLinecap="round"
+              transform={`rotate(${minDeg} 120 120)`}
+            />
+            {/* The second hand and its counterweight tail. The tail is
+                what makes it a mechanical second hand rather than a
+                line — a real one is balanced about its pivot. */}
+            <g transform={`rotate(${secDeg} 120 120)`}>
+              <line
+                x1="120" y1="120" x2="120" y2="90"
+                stroke={alloy.second} strokeWidth="1.4" strokeLinecap="round"
+              />
+              <line
+                x1="120" y1="120" x2="120" y2="260"
+                stroke={alloy.second} strokeWidth="1.1" strokeLinecap="round"
+              />
+              <circle cx="120" cy="260" r="3" fill={alloy.second} />
+            </g>
+
+            {/* The brass hub: a brass disc over a black lock nut. */}
+            <circle cx="120" cy="120" r="5" fill="#B8874A" />
+            <circle cx="120" cy="120" r="2" fill="#111111" />
+          </svg>
+        </div>
+
+        {/* ---- the configuration panel ---- */}
+        <div className="clockbox-panel">
+          {/* 1. the drive mode */}
+          <div className="ck-grp">
+            <div className="ck-lbl">
+              <span className="ck-n">1.</span> Movement drive mode
+            </div>
+            <div className="ck-opts ck-opts-2">
+              {DRIVE_MODES.map((d) => (
+                <button
+                  key={d.key}
+                  type="button"
+                  className={`ck-opt${drive.key === d.key ? ' on' : ''}`}
+                  onClick={() => setDriveKey(d.key)}
+                >
+                  <span className="ck-opt-t">{d.name}</span>
+                  <span className="ck-opt-s">
+                    {d.db} {d.chip}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 2. the dial face */}
+          <div className="ck-grp">
+            <div className="ck-lbl">
+              <span className="ck-n">2.</span> Dial face material
+            </div>
+            <div className="ck-opts ck-opts-2">
+              {DIAL_FACES.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  className={`ck-opt${face.key === f.key ? ' on' : ''}`}
+                  onClick={() => setFaceKey(f.key)}
+                  title={f.note}
+                >
+                  <span className="ck-swatch" style={{ background: f.bg, borderColor: f.bezel }} />
+                  <span className="ck-opt-t">{f.short}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. the hands */}
+          <div className="ck-grp">
+            <div className="ck-lbl">
+              <span className="ck-n">3.</span> Custom hands alloy
+            </div>
+            <div className="ck-opts ck-opts-2">
+              {HAND_ALLOYS.map((a) => (
+                <button
+                  key={a.key}
+                  type="button"
+                  className={`ck-opt${alloy.key === a.key ? ' on' : ''}`}
+                  onClick={() => setAlloyKey(a.key)}
+                  title={a.note}
+                >
+                  <span className="ck-swatch" style={{ background: a.hour, borderColor: a.hour }} />
+                  <span className="ck-opt-t">{a.short}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ---- the two actions ---- */}
+          <div className="ck-actions">
+            <button type="button" className="ck-test" onClick={playSound} disabled={playing}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+                <path d="M11 5L6 9H2v6h4l5 4z" />
+                <path d="M15.5 8.5a5 5 0 010 7" />
+              </svg>
+              {playing ? 'Playing…' : 'Test movement sound'}
+            </button>
+            <button type="button" className="ck-export" onClick={exportToRfq}>
+              Export specs to RFQ →
+            </button>
+          </div>
+        </div>
       </div>
 
+      {/* ---- the two readings ---- */}
       <div className="clockbox-foot">
-        <span className="clockbox-zone">{zoneLabel}</span>
-        <span className="clockbox-time tnum">{parts.label}</span>
+        <div className="ck-read">
+          <div className="ck-read-l">Digital time (local)</div>
+          <div className="ck-read-v tnum">{parts.label}</div>
+          <div className="ck-read-z">{zoneLabel}</div>
+        </div>
+        <div className="ck-read">
+          <div className="ck-read-l">Acoustic pressure</div>
+          <div className={`ck-read-v tnum${dbPeak ? ' peak' : ''}`}>
+            {db.toFixed(1)} dB
+          </div>
+          <div className="ck-read-z">
+            {isStep ? 'Standard Tick' : drive.quiet}
+          </div>
+        </div>
       </div>
 
-      {/* The anechoic chamber reading. §5.1-3 asks for it beside the
-          time, and it is the one measurement on the page that is a
-          claim about the factory rather than about the clock: the floor
-          noise of the room the movements are tested in. */}
-      <div className="clockbox-noise">
-        <span className="clockbox-noise-l">Anechoic Noise Floor</span>
-        <span className="clockbox-noise-v tnum">8.4 dB</span>
-        <span className="clockbox-noise-t">Whisper Quiet</span>
-      </div>
+      {/* The configuration, carried into the enquiry as a hidden field
+          so the factory receives it as a specification rather than as
+          a paragraph the buyer had to write. */}
+      <input type="hidden" id="clock-spec" name="clockSpec" value="" readOnly />
     </div>
   );
 }

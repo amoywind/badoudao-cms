@@ -261,45 +261,7 @@ export const DISPLAYS = [
   }
 ];
 
-/** The six structural components, §6.1. */
-export const ANATOMY = [
-  {
-    n: '1',
-    name: 'Frame',
-    detail:
-      'Plastic, wood, metal, acrylic or resin. Spray painting, electroplating, brushing and antique-brass finishes.'
-  },
-  {
-    n: '2',
-    name: 'Backplate',
-    detail:
-      'Moulded plastic or metal, with custom hanging holes and laser-printed brand logo and SKU on the reverse.'
-  },
-  {
-    n: '3',
-    name: 'Hands',
-    detail:
-      '1,000+ shapes in aluminium, brass, wood, acrylic and plastic, with glow-in-the-dark and Pantone matching.'
-  },
-  {
-    n: '4',
-    name: 'Movement',
-    detail:
-      'Seven quartz and mechanical movements, from silent sweep to chime, or one of the two electronic displays.'
-  },
-  {
-    n: '5',
-    name: 'Dial',
-    detail:
-      'Copper paper, plastic, metal, wood or glass. Full-colour UV printing, silk screen, photo dials, 3D relief.'
-  },
-  {
-    n: '6',
-    name: 'Lens cover',
-    detail:
-      'Glass or acrylic, flat or domed, with anti-reflective and shatter-resistant options.'
-  }
-];
+;
 
 /** The simplified structures, §6.2. */
 export const SIMPLIFIED = [
