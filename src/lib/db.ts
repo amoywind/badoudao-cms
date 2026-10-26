@@ -734,7 +734,19 @@ export const VIDEO_SLOTS = {
 } as const;
 
 export async function listSiteVideos(): Promise<SiteVideoSlot[]> {
-  const rows = await all(
+  /* Cached like the other reads. The table holds nine rows and changes
+     when the owner pastes a video — which is rare — and the home page
+     and the quality page both read it on every request.
+
+     The cache holds the rows as they come out of the database — snake
+     case — and the mapping happens after. The alternative is to claim
+     the rows are already camel case, which would make the type say
+     `youtubeId` on a row that has `youtube_id`, and the field would
+     read as undefined at runtime while the compiler said it was a
+     string. */
+  const rows = await cached<
+    { slot: string; youtube_id: string; title: string; sort_order: number }[]
+  >(
     'SELECT slot, youtube_id, title, sort_order FROM site_videos ORDER BY sort_order, slot'
   );
   return rows.map((r) => ({

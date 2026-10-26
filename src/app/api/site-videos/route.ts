@@ -18,7 +18,7 @@
  * along with it.
  */
 import { NextResponse } from 'next/server';
-import { all, one, run, log, youtubeId, VIDEO_SLOTS } from '@/lib/db';
+import { all, one, run, log, youtubeId, VIDEO_SLOTS, invalidateCache } from '@/lib/db';
 import { currentUser, can } from '@/lib/auth';
 
 export const runtime = 'edge';
@@ -102,6 +102,10 @@ export async function POST(request) {
   const raw = String(body?.youtubeId || body?.url || '').trim();
   if (!raw) {
     await run('DELETE FROM site_videos WHERE slot = ?', slot);
+    /* The read path is cached, so a write that does not invalidate it
+       leaves the old video on the page until the TTL runs out. The
+       owner pastes a link and expects to see it. */
+    invalidateCache();
     await log(user.id, 'delete', 'site_videos', slot, '');
     return NextResponse.json({ ok: true, cleared: true });
   }
@@ -140,6 +144,7 @@ export async function POST(request) {
     );
   }
 
+  invalidateCache();
   await log(user.id, 'update', 'site_videos', slot, vid);
 
   return NextResponse.json({ ok: true, youtubeId: vid });
