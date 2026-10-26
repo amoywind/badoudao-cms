@@ -520,7 +520,7 @@ export function LiveClock() {
               <div className="ck-lbl">
                 <span className="ck-n">2.</span> Dial face material
               </div>
-              <div className="ck-opts ck-opts-2">
+              <div className="ck-opts ck-opts-row">
                 {DIAL_FACES.map((f) => (
                   <button
                     key={f.key}
@@ -540,7 +540,7 @@ export function LiveClock() {
               <div className="ck-lbl">
                 <span className="ck-n">3.</span> Custom hands alloy
               </div>
-              <div className="ck-opts ck-opts-2">
+              <div className="ck-opts ck-opts-row">
                 {HAND_ALLOYS.map((a) => (
                   <button
                     key={a.key}
