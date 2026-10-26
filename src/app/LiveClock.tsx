@@ -144,9 +144,15 @@ export function LiveClock() {
     const z = new Date(utcMs + offset * 3600000);
     const h = z.getHours();
     const m = z.getMinutes();
+    /* The fractional part is what makes the hand sweep rather than
+       step, so it stays in the value the hands use. The reading, on
+       the other hand, shows whole seconds — padding the fractional
+       value as a string produced "12:04:5.063" rather than
+       "12:04:05", because the fraction went into the text with the
+       decimal point and all. */
     const s = z.getSeconds() + z.getMilliseconds() / 1000;
     const label =
-      `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(z.getSeconds()).padStart(2, '0')}`;
     return { h, m, s, label };
   })();
 
