@@ -811,6 +811,9 @@
   cursor: pointer;
   border-bottom: 1px dashed var(--text-2);
   align-self: flex-start;
+  /* The label stays on one line. It is a link, not a paragraph, and
+     a link broken into a column of single words is unreadable. */
+  white-space: nowrap;
 }
 
 .ck-test:hover:not(:disabled) {
@@ -833,6 +836,7 @@
   padding: 0;
   cursor: pointer;
   text-align: right;
+  white-space: nowrap;
 }
 
 .ck-export:hover {
