@@ -141,8 +141,8 @@ export default async function AboutUsPage() {
             <div className="grid-3">
               {[
                 ['Minimum order', `${moq} pcs`, 'Colours and specifications can be mixed within a single order.'],
-                ['Quote response', `${s.quoteHours || 12} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
-                ['Sample lead time', `${s.sampleDays || '7-10'} days`, 'Sample cost credited against the first bulk order.'],
+                ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
+                ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
                 ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
                 ['Daily capacity', `${s.capacityMin || 2000} pcs`, 'Across one shift, at the current headcount.'],
                 ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']

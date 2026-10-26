@@ -81,7 +81,7 @@ export default async function ArticlesPage() {
                 <h3>Guides are being written</h3>
                 <p>
                   A few are in progress. In the meantime, send us your
-                  requirements and we reply within {s.quoteHours || 12} hours.
+                  requirements and we reply within {s.quoteHours || 4} hours.
                 </p>
               </div>
             ) : (

@@ -85,7 +85,7 @@ export default async function ProductsIndex() {
                         <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
                         <div className="c-meta">
                           <span>MOQ <b>{p.moq}</b></span>
-                          <span className="exw">EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                          <span className="exw">Est. EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
                         </div>
                       </div>
                     </Link>
@@ -102,7 +102,7 @@ export default async function ProductsIndex() {
               <div>
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 30 }}>Tell us what you need</h2>
-                <p className="sec-sub">Quotation within {s.quoteHours || 12} hours.</p>
+                <p className="sec-sub">Quotation within {s.quoteHours || 4} hours.</p>
               </div>
               <InquiryCTA label="Send us your requirements" />
             </div>

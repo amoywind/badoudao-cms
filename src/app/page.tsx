@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { listCategories, listProducts, getSettings, buildMeta } from '@/lib/db';
+import {
+  listCategories, listProducts, getSettings, buildMeta, siteVideoMap
+} from '@/lib/db';
+import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
 import { InquiryForm } from './InquiryForm';
 import { TrustCards, Icons } from './TrustCards';
 import { LiveClock } from './LiveClock';
-import { MATERIALS, TRENDING } from '@/lib/vocabulary';
+import { MATERIALS, TRENDING, FACTORY_SHOTS } from '@/lib/vocabulary';
 import { CustomizerHub } from './CustomizerHub';
+import { VideoSlot, VideoSlotHydrator } from './VideoSlot';
 import { SiteSchema } from './SiteSchema';
 
 export const runtime = 'edge';
@@ -25,7 +29,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Quartz Clock Manufacturer China — OEM & ODM Wholesale | Badoudao',
     description:
-      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 300} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 12} hours.`,
+      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 300} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 4} hours.`,
     keywords:
       'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
     path: '/',
@@ -34,10 +38,14 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [cats, s, products] = await Promise.all([
+  /* The site videos are fetched with everything else rather than in a
+     second round trip. The table is nine rows, so the query is cheap and
+     the alternative is a waterfall on the slowest page on the site. */
+  const [cats, s, products, videos] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
-    listProducts({ status: 'published' }).catch(() => [])
+    listProducts({ status: 'published' }).catch(() => []),
+    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
   ]);
 
   const moq = Number(s.moq) || 300;
@@ -87,7 +95,7 @@ export default async function HomePage() {
               <p className="lede">
                 Built for interior decor brands, corporate gifting and marketplace sellers.
                 Low MOQ {moq} pcs, drop-tested packaging, and 1,000+ clock hand
-                customisations — quoted in {s.quoteHours || 12} hours.
+                customisations — quoted in {s.quoteHours || 4} hours.
               </p>
               <div className="hero-btns">
                 <a href="#inquiry" className="btn btn-primary">Build a custom inquiry</a>
@@ -125,7 +133,7 @@ export default async function HomePage() {
               <h2>Six material families, one factory</h2>
               <p className="sec-sub">
                 Every category is available with custom dials, logos, hands and packaging.
-                Prices shown are <strong>Ex Works (factory) prices</strong> at MOQ {moq} —
+                Prices shown are <strong>estimated Ex Works (factory) prices</strong> at MOQ {moq} —
                 freight and duties quoted separately.
               </p>
             </div>
@@ -211,7 +219,7 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <CustomizerHub />
+            <CustomizerHub replyHours={Number(s.quoteHours) || 4} />
           </div>
         </section>
 
@@ -274,8 +282,8 @@ export default async function HomePage() {
             <div className="proc">
               {[
                 ['Send your brief', 'A reference photo, a sample or a sketch is enough to start.'],
-                ['Quotation', `Within ${s.quoteHours || 12} hours with pricing broken down by tooling, unit, packaging and freight.`],
-                ['Sample', `${s.sampleDays || '7-10'} days. Sample cost is credited against your first bulk order.`],
+                ['Quotation', `Within ${s.quoteHours || 4} hours with pricing broken down by tooling, unit, packaging and freight.`],
+                ['Sample', `${s.sampleDays || '5-7'} business days. Sample cost is credited against your first bulk order.`],
                 ['Bulk production', '20–45 days depending on complexity, with photo and video updates.'],
                 ['Delivery', 'Ex Works by default. CIF or DDP available on request.']
               ].map(([h, p], i) => (
@@ -300,24 +308,19 @@ export default async function HomePage() {
               </p>
             </div>
 
+            {/* The four factory clips. Each one is a slot in the admin,
+                and a slot with no video yet falls back to the label that
+                says what it is waiting for — the placeholders name the
+                shot rather than showing a broken player. */}
             <div className="qc-grid">
-              {[
-                ['Raw material', 'Moisture content and scratch testing on timber, plastic and acrylic.'],
-                ['24-hour aging', 'Every movement runs under power for a day, checked for accuracy and measured for sound.'],
-                ['Pointer balance', 'Hand straightness and balance torque, so the sweep never catches.'],
-                ['Drop test', 'The packed carton dropped from 1.2 metres on all six sides.']
-              ].map(([t, d]) => (
+              {FACTORY_SHOTS.map(([t, d], i) => (
                 <div className="qc-item" key={t}>
-                  <div className="vslot">
-                    <div className="vslot-ico">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M23 7l-7 5 7 5V7z" />
-                        <rect x="1" y="5" width="15" height="14" rx="2" />
-                      </svg>
-                    </div>
-                    <span className="vslot-t">Video pending</span>
-                    <span className="vslot-d">{t} — 9:16 factory footage</span>
-                  </div>
+                  <VideoSlot
+                    youtubeId={videos[`home-factory-${i + 1}`]?.youtubeId || ''}
+                    ratio="9:16"
+                    title={t}
+                    caption={`${t} — 9:16 factory footage`}
+                  />
                   <h4>{t}</h4>
                   <p>{d}</p>
                 </div>
@@ -334,7 +337,7 @@ export default async function HomePage() {
               <h2>Tell us what you need built</h2>
               <p className="sec-sub">
                 Send a reference photo, a sample or just a rough idea. You will get a
-                quotation and a 3D rendering within {s.quoteHours || 12} hours — no obligation.
+                quotation and a 3D rendering within {s.quoteHours || 4} hours — no obligation.
               </p>
             </div>
             <div className="split" style={{ alignItems: 'start' }}>
@@ -349,12 +352,12 @@ export default async function HomePage() {
                 />
                 <div className="certs" style={{ marginTop: 28 }}>
                   <span className="cert">MOQ from {moq} pcs</span>
-                  <span className="cert">Samples in {s.sampleDays || '7-10'} days</span>
+                  <span className="cert">Samples in {s.sampleDays || '5-7'} business days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
               </div>
               <div>
-                <InquiryForm replyHours={Number(s.quoteHours) || 12} />
+                <InquiryForm replyHours={Number(s.quoteHours) || 4} />
               </div>
             </div>
           </div>
@@ -362,6 +365,12 @@ export default async function HomePage() {
       </main>
 
       <Footer />
+
+      {/* The play-button handler. It is a script rather than a client
+          component because the pages that hold videos are server
+          components, and making them client components to accommodate
+          a button would ship the whole page's data to the browser. */}
+      <VideoSlotHydrator />
     </div>
   );
 }

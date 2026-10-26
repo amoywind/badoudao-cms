@@ -117,7 +117,7 @@ export default async function NewsPage() {
                 <h2 style={{ fontSize: 30 }}>We welcome factory visits</h2>
                 <p className="sec-sub">
                   Existing customers and serious buyers are welcome to inspect the
-                  line. We reply within {s.quoteHours || 12} hours.
+                  line. We reply within {s.quoteHours || 4} hours.
                 </p>
               </div>
               <InquiryCTA label="Arrange a visit or ask a question" />

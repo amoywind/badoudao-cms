@@ -258,7 +258,7 @@ export function CollectionGrid({
                       </p>
                     )}
                     <div className="pcard-price">
-                      <span>EXW</span>
+                      <span>Est. EXW</span>
                       <b>${p.priceMin.toFixed(2)}</b>
                       <span>– ${p.priceMax.toFixed(2)}</span>
                       <span style={{ marginLeft: 'auto' }}>MOQ {p.moq}</span>

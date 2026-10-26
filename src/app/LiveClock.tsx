@@ -91,16 +91,27 @@ export function LiveClock() {
 
   /* The hands. A sweep movement does not step once a second, so the
      seconds hand is drawn as a smooth sweep rather than a jump — which
-     is also the movement the site says it fits. */
+     is also the movement the site says it fits.
+
+     The seconds hand is present because the owner asked for it: a clock
+     that reads the time to the second is a clock you can check your own
+     watch against, and this is the one element on the page that
+     demonstrates the factory's movements rather than describing them.
+     (The specification had asked for the seconds hand to be removed in
+     favour of a quieter face — the owner's instruction takes precedence
+     over the document.) */
   useEffect(() => {
     let raf = 0;
     let lastPaint = 0;
 
     const tick = (ts: number) => {
-      /* 20 frames a second is enough for a smooth sweep and costs a
-         fraction of what 60 does on a phone that is already running the
-         rest of the page. */
-      if (ts - lastPaint > 50) {
+      /* 20 frames a second is enough for the minute hand but not for
+         the seconds hand — at 20fps a sweep second hand visibly stutters,
+         because it advances 18 degrees per frame and the eye can count
+         the steps. 30fps halves the interval to 12 degrees, which reads
+         as continuous, and still costs half of what 60 does on a phone
+         that is already running the rest of the page. */
+      if (ts - lastPaint > 33) {
         lastPaint = ts;
         setNow(new Date());
       }
@@ -121,27 +132,25 @@ export function LiveClock() {
   /* The time in the selected zone. Working from UTC rather than from the
      local Date avoids the browser's own zone entirely, so the result is
      the same whatever the visitor's machine is set to. */
-  /* No seconds.
-     §3.3 of the specification asks for the seconds hand to be removed
-     entirely: a ticking hand is visual noise, and the reading is HH:mm.
-     This is not only a matter of hiding the hand — the minute hand has
-     to move too, and a minute hand that only jumps once a minute reads
-     as broken. So the minute hand advances smoothly, which is what a
-     sweep movement does anyway, and the seconds are simply not drawn.
-
-     The seconds are still read from the clock, because the minute hand
-     uses them for its sub-degree position. */
+  /* The reading, to the second.
+     The seconds hand is drawn as a sweep rather than a jump, because the
+     site says it fits silent sweep movements — a step-second hand would
+     contradict the movement matrix two pages away. The minute hand
+     advances smoothly for the same reason, and uses the seconds for its
+     sub-degree position. */
   const parts = (() => {
-    if (!now) return { h: 0, m: 0, s: 0, label: '--:--' };
+    if (!now) return { h: 0, m: 0, s: 0, label: '--:--:--' };
     const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
     const z = new Date(utcMs + offset * 3600000);
     const h = z.getHours();
     const m = z.getMinutes();
     const s = z.getSeconds() + z.getMilliseconds() / 1000;
-    const label = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    const label =
+      `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     return { h, m, s, label };
   })();
 
+  const secDeg = parts.s * 6;
   const minDeg = parts.m * 6 + parts.s * 0.1;
   const hourDeg = (parts.h % 12) * 30 + parts.m * 0.5;
 
@@ -225,6 +234,14 @@ export function LiveClock() {
             x1="100" y1="100" x2="100" y2="35"
             stroke="#3d4450" strokeWidth="3.2" strokeLinecap="round"
             transform={`rotate(${minDeg} 100 100)`}
+          />
+          {/* The seconds hand. Thin and in the mid grey rather than
+              black, so it sits behind the hour and minute hands in
+              weight and the face still reads cleanly at a glance. */}
+          <line
+            x1="100" y1="112" x2="100" y2="26"
+            stroke="#6B7280" strokeWidth="1.4" strokeLinecap="round"
+            transform={`rotate(${secDeg} 100 100)`}
           />
           {/* The centre cap is brass, not blue. §5.1-3 calls for a brass
               hub on a plain white face, and the accent colour is

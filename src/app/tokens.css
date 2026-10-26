@@ -2818,3 +2818,631 @@
     padding: 9px 13px;
   }
 }
+
+/* ===================================================================
+   The specification panel, collapsed
+   -------------------------------------------------------------------
+   Five dropdowns are five decisions, and asking for them above the
+   fold asks for them before the buyer has decided anything. The panel
+   stays closed until it is opened.
+   =================================================================== */
+
+.spec-toggle {
+  margin-bottom: 20px;
+}
+
+.spec-toggle summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  cursor: pointer;
+  list-style: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.spec-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.spec-toggle summary:hover {
+  border-color: #C4C8CE;
+}
+
+.spec-toggle summary::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-right: 1.5px solid var(--text-2);
+  border-bottom: 1.5px solid var(--text-2);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .18s ease;
+}
+
+.spec-toggle[open] summary::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.spec-toggle[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.spec-sum-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.spec-toggle-body {
+  padding: 16px 15px 4px;
+  border: 1px solid var(--rule);
+  border-top: none;
+  border-radius: 0 0 var(--radius-btn) var(--radius-btn);
+  background: var(--surface-card);
+}
+
+/* ===================================================================
+   The submit button
+   -------------------------------------------------------------------
+   Klein blue, uppercase, bold. It is the only conversion on the page,
+   so it is the only thing allowed to shout.
+   =================================================================== */
+
+.rfq-submit {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px -10px rgba(0, 82, 204, .55);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.rfq-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -12px rgba(0, 82, 204, .6);
+}
+
+.rfq-submit:disabled {
+  opacity: .6;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ===================================================================
+   The specification panel, collapsed
+   -------------------------------------------------------------------
+   Five dropdowns are five decisions, and asking for them above the
+   fold asks for them before the buyer has decided anything. The panel
+   stays closed until it is opened.
+   =================================================================== */
+
+.spec-toggle {
+  margin-bottom: 20px;
+}
+
+.spec-toggle summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  cursor: pointer;
+  list-style: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.spec-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.spec-toggle summary:hover {
+  border-color: #C4C8CE;
+}
+
+.spec-toggle summary::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-right: 1.5px solid var(--text-2);
+  border-bottom: 1.5px solid var(--text-2);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .18s ease;
+}
+
+.spec-toggle[open] summary::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.spec-toggle[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.spec-sum-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.spec-toggle-body {
+  padding: 16px 15px 4px;
+  border: 1px solid var(--rule);
+  border-top: none;
+  border-radius: 0 0 var(--radius-btn) var(--radius-btn);
+  background: var(--surface-card);
+}
+
+/* ===================================================================
+   The submit button
+   -------------------------------------------------------------------
+   Klein blue, uppercase, bold. It is the only conversion on the page,
+   so it is the only thing allowed to shout.
+   =================================================================== */
+
+.rfq-submit {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px -10px rgba(0, 82, 204, .55);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.rfq-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -12px rgba(0, 82, 204, .6);
+}
+
+.rfq-submit:disabled {
+  opacity: .6;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ===================================================================
+   The video slot with a video in it
+   -------------------------------------------------------------------
+   The placeholder above is a dark block that says what it is waiting
+   for. This is what the slot becomes once a YouTube link is in place:
+   a poster frame with a play button, and the player itself only after
+   the button is pressed.
+   =================================================================== */
+
+.vslot-play {
+  aspect-ratio: 16 / 9;
+  background: #16181C;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.vslot-play.vslot-16 {
+  aspect-ratio: 9 / 16;
+}
+
+.vslot-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #16181C;
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* The play button. It is a real button rather than a div so it is
+   reachable by keyboard and announced by a screen reader. */
+.vslot-btn {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .7);
+  transition: transform .18s ease, background .18s ease;
+}
+
+.vslot-btn:hover {
+  transform: scale(1.06);
+  background: #0A63E0;
+}
+
+.vslot-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.vslot-play-ico {
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  color: #fff;
+}
+
+/* The caption sits under the frame rather than over it, so the poster
+   image is never obscured and the text stays legible against the page
+   rather than against whatever frame the video happens to open on. */
+.vslot-play .vslot-d {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, 0));
+  color: #E4E7EB;
+  font-size: 12px;
+  max-width: none;
+  text-align: left;
+}
+
+/* Once the player is in, the button is gone and the frame holds the
+   iframe at its own aspect ratio. */
+.vslot-playing {
+  background-image: none !important;
+}
+
+/* ===================================================================
+   The product page video section
+   =================================================================== */
+
+.pd-video {
+  margin-top: 34px;
+}
+
+.pd-video h2 {
+  font-size: 19px;
+  margin-bottom: 14px;
+}
+
+.pd-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .pd-video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   The video slot with a video in it
+   -------------------------------------------------------------------
+   The placeholder above is a dark block that says what it is waiting
+   for. This is what the slot becomes once a YouTube link is in place:
+   a poster frame with a play button, and the player itself only after
+   the button is pressed.
+   =================================================================== */
+
+.vslot-play {
+  aspect-ratio: 16 / 9;
+  background: #16181C;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.vslot-play.vslot-16 {
+  aspect-ratio: 9 / 16;
+}
+
+.vslot-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #16181C;
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* The play button. It is a real button rather than a div so it is
+   reachable by keyboard and announced by a screen reader. */
+.vslot-btn {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .7);
+  transition: transform .18s ease, background .18s ease;
+}
+
+.vslot-btn:hover {
+  transform: scale(1.06);
+  background: #0A63E0;
+}
+
+.vslot-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.vslot-play-ico {
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  color: #fff;
+}
+
+/* The caption sits under the frame rather than over it, so the poster
+   image is never obscured and the text stays legible against the page
+   rather than against whatever frame the video happens to open on. */
+.vslot-play .vslot-d {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, 0));
+  color: #E4E7EB;
+  font-size: 12px;
+  max-width: none;
+  text-align: left;
+}
+
+/* Once the player is in, the button is gone and the frame holds the
+   iframe at its own aspect ratio. */
+.vslot-playing {
+  background-image: none !important;
+}
+
+/* ===================================================================
+   The product page video section
+   =================================================================== */
+
+.pd-video {
+  margin-top: 34px;
+}
+
+.pd-video h2 {
+  font-size: 19px;
+  margin-bottom: 14px;
+}
+
+.pd-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .pd-video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   The sample and prototyping policy
+   -------------------------------------------------------------------
+   It sits under the price on the product page, so it has to look like
+   part of the buying information rather than like a separate notice.
+   The three facts are in a column with the value on the right, which
+   is the shape of the price block above it.
+   =================================================================== */
+
+.sp-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.sp-head {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 13px;
+}
+
+.sp-tag {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.sp-rows {
+  display: grid;
+  gap: 2px;
+}
+
+.sp-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+}
+
+.sp-k {
+  font-size: 12.5px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.sp-v {
+  font-family: var(--font-tech);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: right;
+}
+
+/* The refund is the fact that makes a sample worth ordering, so it is
+   the one value in the accent colour. */
+.sp-v-good {
+  color: var(--accent);
+}
+
+.sp-note {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  padding-bottom: 9px;
+  margin-top: -2px;
+}
+
+/* The short form, under the customizer hub's summary. */
+.sp-compact {
+  padding: 13px 15px;
+  margin: 16px 0 14px;
+  background: var(--surface-card);
+}
+
+.sp-compact .sp-note {
+  padding-bottom: 0;
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .sp-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sp-v {
+    text-align: left;
+  }
+}
+
+/* ===================================================================
+   The sample and prototyping policy
+   -------------------------------------------------------------------
+   It sits under the price on the product page, so it has to look like
+   part of the buying information rather than like a separate notice.
+   The three facts are in a column with the value on the right, which
+   is the shape of the price block above it.
+   =================================================================== */
+
+.sp-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.sp-head {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 13px;
+}
+
+.sp-tag {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.sp-rows {
+  display: grid;
+  gap: 2px;
+}
+
+.sp-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+}
+
+.sp-k {
+  font-size: 12.5px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.sp-v {
+  font-family: var(--font-tech);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: right;
+}
+
+/* The refund is the fact that makes a sample worth ordering, so it is
+   the one value in the accent colour. */
+.sp-v-good {
+  color: var(--accent);
+}
+
+.sp-note {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  padding-bottom: 9px;
+  margin-top: -2px;
+}
+
+/* The short form, under the customizer hub's summary. */
+.sp-compact {
+  padding: 13px 15px;
+  margin: 16px 0 14px;
+  background: var(--surface-card);
+}
+
+.sp-compact .sp-note {
+  padding-bottom: 0;
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .sp-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sp-v {
+    text-align: left;
+  }
+}

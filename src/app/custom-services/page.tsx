@@ -24,7 +24,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Custom Services & Clock Anatomy — OEM/ODM | Badoudao',
     description:
-      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '7-10'} days.`,
+      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5-7'} days.`,
     keywords:
       'custom clock manufacturer, OEM clock parts, private label wall clock, clock dial printing, bespoke clock supplier',
     path: '/custom-services'
@@ -148,7 +148,7 @@ export default async function CustomServicesPage() {
             <div className="grid-3">
               {[
                 ['New tooling', '15–25 days for a new mould, made in-house so there is no subcontractor margin in the price.'],
-                ['Sample', `${s.sampleDays || '7-10'} days. A sealed sample is approved before the bulk run starts.`],
+                ['Sample', `${s.sampleDays || '5-7'} business days. A sealed sample is approved before the bulk run starts.`],
                 ['Mass production', '20–45 days depending on complexity. Lead time for a repeat design is shorter.'],
                 ['Vector files', 'AI, CAD, PDF or EPS. A dial artwork template comes with the first quote.'],
                 ['Custom moulds', '3D scanning and prototyping for shapes that do not exist yet, from a photo or a sketch.'],
@@ -169,7 +169,7 @@ export default async function CustomServicesPage() {
             <h2 style={{ marginBottom: 12 }}>Send us the part you want to change</h2>
             <p className="sec-sub" style={{ marginBottom: 26 }}>
               A dial, a hand set, a frame profile, a packaging tier — tell us which one
-              and the quote comes back within {s.quoteHours || 12} hours.
+              and the quote comes back within {s.quoteHours || 4} hours.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/contact" className="btn btn-primary">Request a quote</Link>

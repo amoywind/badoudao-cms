@@ -47,7 +47,22 @@ export default function InquiryDetail() {
       setOwner(data.inquiry.owner || '');
       setQuote((q) => ({
         ...q,
-        qty: data.inquiry.quantity?.replace(/[^0-9]/g, '') || '',
+        /* The quantity is a label, not a number: "300 - 500 pcs
+           (Standard MOQ Trial)". Stripping the non-digits used to give
+           "300500" for that label, which went into the quote form as a
+           quantity of three hundred thousand.
+
+           What the sales person wants in the box is the lower bound of
+           the range — that is what they would quote and what the buyer
+           would order at minimum. For the bulk option there is no range,
+           so the first number stands. */
+        qty: (() => {
+          const label = String(data.inquiry.quantity || '');
+          const range = label.match(/([\d,]+)\s*[-–—]\s*([\d,]+)/);
+          if (range) return range[1].replace(/,/g, '');
+          const first = label.match(/([\d,]+)/);
+          return first ? first[1].replace(/,/g, '') : '';
+        })(),
         unitPrice: data.product?.price_min || '',
         leadTime: data.product?.lead_time || ''
       }));

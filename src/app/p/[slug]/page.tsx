@@ -126,7 +126,7 @@ export default async function StaticPage({ params }) {
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 30 }}>Ready to talk numbers?</h2>
                 <p className="sec-sub">
-                  Send your requirement. We reply within {s.quoteHours || 12} hours
+                  Send your requirement. We reply within {s.quoteHours || 4} hours
                   with a breakdown of tooling, unit price, packaging and freight.
                 </p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 24 }}>
@@ -273,7 +273,7 @@ function PageRail({
         </h2>
         <ul className="rail-ticks">
           <li><b>100%</b> powered testing of every finished clock</li>
-          <li><b>7–10 days</b> for a custom sample</li>
+          <li><b>5–7 business days</b> for a custom sample</li>
           <li><b>CE &amp; RoHS</b> on all movements</li>
           <li><b>GB/T 6046</b> manufacturing standard</li>
           <li>Sealed sample retained per batch</li>
@@ -287,7 +287,7 @@ function PageRail({
         <h2>Ready to start?</h2>
         <p>
           Send a reference, a sample or a sketch. You get a quotation within{' '}
-          {quoteHours || 12} hours, Ex Works, with no obligation.
+          {quoteHours || 4} hours, Ex Works, with no obligation.
         </p>
         <Link href="/#inquiry" className="rail-quote">
           Get Instant Factory Quote

@@ -5,20 +5,53 @@ import { useRef, useState } from 'react';
 /**
  * Enquiry form.
  *
- * Five required fields and one optional attachment. Company, country and
- * the model picker were removed at the owner's request — the buyer
- * already knows what they want, and every extra field costs completions.
- * The model is captured server-side from the page the form sits on, so a
- * product enquiry is still attributed to the right product without asking.
+ * Three core fields, in the order a buyer reads them:
+ *
+ *   1. Business email — required, and the one field that identifies who
+ *      is asking. The domain is the company: a buyer writing
+ *      mark@smithdecor.com has told us the company without filling in a
+ *      company field, so that field was removed rather than made optional.
+ *      A separate name field stays, because a quote goes to a person and
+ *      not to a domain.
+ *   2. Estimated quantity — required, because the price of a clock is a
+ *      function of the run, and the four options are the four runs the
+ *      factory quotes differently.
+ *   3. Customisation notes — optional. The sample policy, the movement
+ *      matrix and the customizer hub already answer most of what a buyer
+ *      would write here, so this field is for what only they know.
  *
  * The WhatsApp field accepts the formatting people actually type: spaces,
  * dashes, parentheses and a leading + all pass through and are stripped on
  * submit. An earlier version used an HTML `pattern` of [0-9]{6,15}, which
  * the browser enforced silently — a buyer typing "+1 555 123 4567" was
  * blocked with no visible reason and no way forward.
+ *
+ * The specification dropdowns are still here, collapsed behind a toggle.
+ * They are the answer to a question the buyer may not have reached, and
+ * a form that shows five selects above the fold asks for five decisions
+ * before it has asked for the one that matters.
  */
 
-const QUANTITIES = ['300 - 499', '500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'];
+/* The four runs the factory quotes differently.
+ *
+ * The sample order is here because a sample is a real order with a real
+ * fee, and the first question a new buyer has is what one costs. The
+ * default is the standard trial order rather than the empty state: the
+ * most common enquiry is the 300-piece one, and making the buyer pick it
+ * from a list they will pick anyway is a decision they did not need to
+ * make.
+ *
+ * This list and the API's whitelist must stay identical. A value the
+ * form offers but the API rejects is a 400 the buyer cannot act on. */
+const QUANTITIES = [
+  'Sample Order (1-5 pcs for quality testing)',
+  '300 - 500 pcs (Standard MOQ Trial)',
+  '500 - 1,000 pcs',
+  '1,000+ pcs (Bulk OEM Order)'
+];
+
+/* The default the select opens on. */
+const DEFAULT_QUANTITY = '300 - 500 pcs (Standard MOQ Trial)';
 
 /* The specification dropdowns.
  *
@@ -85,7 +118,7 @@ const EXT_ALLOW = [
 ];
 
 const DEFAULT_MESSAGE =
-  'Please describe your wall clock requirements — size, shape, movement, dial design, quantity and target price.';
+  'e.g. Need custom logo engraving, specific dial size, or target delivery date...';
 
 /** Keep digits only, so "+1 (555) 123-4567" becomes "15551234567". */
 function digitsOnly(s: string) {
@@ -95,7 +128,7 @@ function digitsOnly(s: string) {
 export function InquiryForm({
   preset = '',
   compact = false,
-  replyHours = 12
+  replyHours = 4
 }: {
   preset?: string;
   compact?: boolean;
@@ -229,7 +262,7 @@ export function InquiryForm({
   return (
     <div className={`form-card ${compact ? 'form-compact' : ''}`}>
       <div className={`form-msg ${status ? 'show ' : ''}${status === 'ok' || status.startsWith('Received') ? 'ok' : 'err'}`}>
-        {status === 'ok' ? 'Received — we reply within 12 hours.' : status}
+        {status === 'ok' ? `Received — we reply within ${replyHours} hours.` : status}
       </div>
 
       {preset && (
@@ -245,10 +278,16 @@ export function InquiryForm({
             autoComplete="name" />
         </div>
 
+        {/* The business email is the first field a buyer reads, because
+            it is the one that identifies them. The domain does the work
+            a company field used to do — a buyer writing
+            mark@smithdecor.com has named the company — so the company
+            input was removed rather than left as an optional extra. The
+            address is still parsed for the domain on the server. */}
         <div className="fg">
           <label className="fl" htmlFor="if-email">Business email<span className="req">*</span></label>
           <input className="inp" id="if-email" name="email" type="email" required
-            placeholder="you@company.com"
+            placeholder="name@company.com"
             autoComplete="email"
             /* A business buyer fills this in on a phone and a laptop in
                the same sitting. "email" is a contact field to Chrome, so
@@ -257,14 +296,6 @@ export function InquiryForm({
             autoCapitalize="off"
             autoCorrect="off"
             spellCheck={false} />
-        </div>
-
-        <div className="fg">
-          <label className="fl" htmlFor="if-co">Company / brand name
-            <span className="hint">optional</span>
-          </label>
-          <input className="inp" id="if-co" name="company" placeholder="Smith Home Decor LLC"
-            autoComplete="organization" />
         </div>
 
         <div className="fg">
@@ -293,65 +324,89 @@ export function InquiryForm({
 
         <div className="fg">
           <label className="fl" htmlFor="if-qty">Estimated quantity<span className="req">*</span></label>
-          <select className="inp" id="if-qty" name="quantity" required defaultValue="">
-            <option value="">Select a range…</option>
-            {QUANTITIES.map((q) => <option key={q}>{q}</option>)}
+          <select className="inp" id="if-qty" name="quantity" required defaultValue={DEFAULT_QUANTITY}>
+            {QUANTITIES.map((q) => <option key={q} value={q}>{q}</option>)}
           </select>
         </div>
 
-        {/* The specification dropdowns. Optional, and on a product page
-            the inquiry builder has already filled the equivalent fields
-            in — these let a buyer starting from scratch say the same
-            thing in one click each. */}
+        {/* The specification dropdowns, collapsed.
+            They are worth having — a buyer who names a movement and a
+            packaging tier gets a quote that already matches — but they
+            are five decisions in front of the one that matters, and a
+            form that opens with five selects is a form a buyer closes.
+
+            A native <details> element is used rather than a React state
+            toggle so the panel still works without JavaScript, and so
+            the open state survives a page reload on a phone where the
+            buyer may have gone back to check something. */}
+        <details className="fg spec-toggle">
+          <summary className="spec-sum-h">
+            <span>Product specification</span>
+            <span className="hint">optional · 5 details</span>
+          </summary>
+
+          <div className="spec-toggle-body">
+            <div className="fg2" style={{ marginBottom: 14 }}>
+              <div>
+                <label className="fl" htmlFor="if-mat" style={{ fontSize: 12 }}>Main material</label>
+                <select className="inp" id="if-mat" name="material" defaultValue="">
+                  <option value="">Select…</option>
+                  {MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="fl" htmlFor="if-mov" style={{ fontSize: 12 }}>Preferred movement</label>
+                <select className="inp" id="if-mov" name="movement" defaultValue="">
+                  <option value="">Select…</option>
+                  {MOVEMENTS.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="fg2" style={{ marginBottom: 14 }}>
+              <div>
+                <label className="fl" htmlFor="if-hnd" style={{ fontSize: 12 }}>Hands material</label>
+                <select className="inp" id="if-hnd" name="hands" defaultValue="">
+                  <option value="">Select…</option>
+                  {HAND_MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="fl" htmlFor="if-pkg" style={{ fontSize: 12 }}>Packaging</label>
+                <select className="inp" id="if-pkg" name="packaging" defaultValue="">
+                  <option value="">Select…</option>
+                  {PACKAGING.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="fl" htmlFor="if-tml" style={{ fontSize: 12 }}>Target delivery time</label>
+              <select className="inp" id="if-tml" name="timeline" defaultValue="">
+                <option value="">Select…</option>
+                {TIMELINES.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
+            </div>
+          </div>
+        </details>
+
+        {/* The notes are optional. Everything a buyer would normally
+            write here — the size, the movement, the packaging, the
+            quantity — is either on the page already or is one click away
+            in the specification panel above. What belongs in this box is
+            what only the buyer knows: their logo, their target date,
+            the market they sell into.
+
+            The placeholder names three examples rather than writing a
+            requirements paragraph, because a paragraph in the
+            placeholder position reads as something to edit rather than
+            something to answer. */}
         <div className="fg">
-          <div className="spec-h" style={{ marginBottom: 12 }}>Product specification · optional</div>
-
-          <div className="fg2" style={{ marginBottom: 14 }}>
-            <div>
-              <label className="fl" htmlFor="if-mat" style={{ fontSize: 12 }}>Main material</label>
-              <select className="inp" id="if-mat" name="material" defaultValue="">
-                <option value="">Select…</option>
-                {MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="fl" htmlFor="if-mov" style={{ fontSize: 12 }}>Preferred movement</label>
-              <select className="inp" id="if-mov" name="movement" defaultValue="">
-                <option value="">Select…</option>
-                {MOVEMENTS.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div className="fg2" style={{ marginBottom: 14 }}>
-            <div>
-              <label className="fl" htmlFor="if-hnd" style={{ fontSize: 12 }}>Hands material</label>
-              <select className="inp" id="if-hnd" name="hands" defaultValue="">
-                <option value="">Select…</option>
-                {HAND_MATERIALS.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="fl" htmlFor="if-pkg" style={{ fontSize: 12 }}>Packaging</label>
-              <select className="inp" id="if-pkg" name="packaging" defaultValue="">
-                <option value="">Select…</option>
-                {PACKAGING.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="fl" htmlFor="if-tml" style={{ fontSize: 12 }}>Target delivery time</label>
-            <select className="inp" id="if-tml" name="timeline" defaultValue="">
-              <option value="">Select…</option>
-              {TIMELINES.map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </div>
-        </div>
-
-        <div className="fg">
-          <label className="fl" htmlFor="if-msg">Your requirements<span className="req">*</span></label>
-          <textarea className="inp" id="if-msg" name="message" required rows={5}
+          <label className="fl" htmlFor="if-msg">
+            Customization notes
+            <span className="hint">optional</span>
+          </label>
+          <textarea className="inp" id="if-msg" name="message" rows={4}
             placeholder={DEFAULT_MESSAGE}
             /* Deliberately not autofilled. The placeholder is a
                pre-written requirements paragraph, and letting a browser
@@ -416,9 +471,11 @@ export function InquiryForm({
         <input type="text" name="website" tabIndex={-1} autoComplete="off"
           className="hp" aria-hidden="true" />
 
-        <button className="btn btn-primary" type="submit" disabled={busy}
-          style={{ width: '100%' }}>
-          {busy ? 'Sending…' : 'Send enquiry'}
+        {/* The submit button is the only conversion on the page, so it
+            says what the buyer gets rather than what they do — a quote,
+            and when. The arrow points at the door it leads to. */}
+        <button className="btn btn-primary rfq-submit" type="submit" disabled={busy}>
+          {busy ? 'Sending…' : `GET OFFICIAL QUOTE IN ${replyHours} HOURS →`}
         </button>
 
         {failed && (

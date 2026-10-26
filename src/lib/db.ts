@@ -676,18 +676,86 @@ export function youtubeId(input: string): string {
   const s = String(input || '').trim();
   if (/^[\w-]{11}$/.test(s)) return s;
 
+  /* An embed code. YouTube's share dialog offers both a link and an
+     <iframe> snippet, and an admin who copies from the "Embed" tab
+     pastes the snippet rather than the link. The snippet is searched
+     for its src attribute, which is where the id lives — so the same
+     patterns below apply to it.
+
+     The iframe is not rendered as given. Only the id is kept, and the
+     player is built from it, so a pasted snippet cannot smuggle in
+     another origin, a script, or a tracking parameter. */
   const patterns = [
     /youtube\.com\/watch\?(?:.*&)?v=([\w-]{11})/,
     /youtu\.be\/([\w-]{11})/,
     /youtube\.com\/embed\/([\w-]{11})/,
     /youtube\.com\/shorts\/([\w-]{11})/,
-    /youtube\.com\/live\/([\w-]{11})/
+    /youtube\.com\/live\/([\w-]{11})/,
+    /youtube-nocookie\.com\/embed\/([\w-]{11})/
   ];
   for (const p of patterns) {
     const m = s.match(p);
     if (m) return m[1];
   }
   return '';
+}
+
+/**
+ * The site-level video slots.
+ *
+ * The product videos table holds a video per product. These hold the
+ * videos that belong to the site rather than to a product: the factory
+ * footage on the home page, the four process clips on the quality page,
+ * the drop test on a product page.
+ *
+ * The slot is a fixed key rather than a row id, because the page has to
+ * know which slot it is filling. A row per slot means an id that cannot
+ * be deleted without leaving a hole in the layout, and a title that
+ * cannot change.
+ */
+export type SiteVideoSlot = {
+  slot: string;
+  youtubeId: string;
+  title: string;
+  sortOrder: number;
+};
+
+/** The slots the front end looks for. */
+export const VIDEO_SLOTS = {
+  'home-factory-1': 'Home — factory floor, CNC cutting',
+  'home-factory-2': 'Home — assembly bench',
+  'home-factory-3': 'Home — packing line',
+  'home-factory-4': 'Home — loading into the container',
+  'qc-step-1': 'QC Step 1 — raw material check',
+  'qc-step-2': 'QC Step 2 — 24-hour movement aging',
+  'qc-step-3': 'QC Step 3 — hand balancing',
+  'qc-step-4': 'QC Step 4 — drop test',
+  'pdp-drop-test': 'Product page — the drop test'
+} as const;
+
+export async function listSiteVideos(): Promise<SiteVideoSlot[]> {
+  const rows = await all(
+    'SELECT slot, youtube_id, title, sort_order FROM site_videos ORDER BY sort_order, slot'
+  );
+  return rows.map((r) => ({
+    slot: String(r.slot),
+    youtubeId: String(r.youtube_id || ''),
+    title: String(r.title || ''),
+    sortOrder: Number(r.sort_order ?? 0)
+  }));
+}
+
+/**
+ * The site videos, keyed by slot.
+ *
+ * A map rather than a list, because the caller asks for one slot at a
+ * time and a missing slot has to return nothing rather than throw.
+ */
+export async function siteVideoMap(): Promise<Record<string, SiteVideoSlot>> {
+  const rows = await listSiteVideos();
+  const out: Record<string, SiteVideoSlot> = {};
+  for (const r of rows) out[r.slot] = r;
+  return out;
 }
 
 export async function listProductVideos(productId: string): Promise<ProductVideo[]> {

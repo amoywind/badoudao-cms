@@ -181,7 +181,7 @@ export default async function CategoryPage({ params }) {
               <div>
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 32 }}>Tell us what you need</h2>
-                <p className="sec-sub">Send a reference photo or a sample. Quotation within {s.quoteHours || 12} hours.</p>
+                <p className="sec-sub">Send a reference photo or a sample. Quotation within {s.quoteHours || 4} hours.</p>
                 {/* Each model page carries its own form, where a buyer has
                     already picked a product — no need for a second one here. */}
                 <ul className="tick-list" style={{ marginTop: 22 }}>

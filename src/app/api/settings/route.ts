@@ -15,7 +15,7 @@ const DEFAULTS = {
   capacityMin: '2000',
   capacityMax: '2000',
   moq: '300',
-  quoteHours: '12',
+  quoteHours: '4',
   sampleDays: '7-10',
   logoLight: '/logo-light.svg',
   logoDark: '/logo-dark.svg',

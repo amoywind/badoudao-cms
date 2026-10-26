@@ -17,6 +17,12 @@ export default function EditProductPage() {
   const [categories, setCategories] = useState([]);
   const [media, setMedia] = useState([]);
   const [tab, setTab] = useState('basic');
+  /* The product's YouTube videos. They live in their own table rather
+     than in the product row, because a product can carry several and
+     the JSON-LD on the detail page reads the first one. */
+  const [videos, setVideos] = useState([]);
+  const [videoDraft, setVideoDraft] = useState({ url: '', title: '' });
+  const [videoBusy, setVideoBusy] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -36,6 +42,12 @@ export default function EditProductPage() {
         if (!isNew && d.product) setProduct(d.product);
         if (d.categories) setCategories(d.categories);
       });
+    if (!isNew) {
+      fetch(`/api/product-videos?productId=${encodeURIComponent(String(id))}`)
+        .then((r) => r.json())
+        .then((d) => setVideos(d.videos || []))
+        .catch(() => setVideos([]));
+    }
     fetch('/api/media')
       .then((r) => r.json())
       .then((d) => setMedia(d.media || []));
@@ -69,6 +81,43 @@ export default function EditProductPage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  /* Add a video. The API takes the link or the embed snippet and
+     reduces it to the eleven-character id, so what is typed here can
+     be either without the admin having to know which. */
+  async function addVideo() {
+    if (!videoDraft.url.trim()) return;
+    setVideoBusy(true);
+    try {
+      const res = await fetch('/api/product-videos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: String(id),
+          youtubeId: videoDraft.url,
+          title: videoDraft.title
+        })
+      });
+      const d = await res.json();
+      if (!res.ok) { show(d.error || '添加失败', 'err'); return; }
+      show('已添加视频');
+      setVideoDraft({ url: '', title: '' });
+      const r = await fetch(`/api/product-videos?productId=${encodeURIComponent(String(id))}`);
+      const j = await r.json();
+      setVideos(j.videos || []);
+    } catch {
+      show('添加失败', 'err');
+    } finally {
+      setVideoBusy(false);
+    }
+  }
+
+  async function removeVideo(vid) {
+    const res = await fetch(`/api/product-videos?id=${encodeURIComponent(vid)}`, { method: 'DELETE' });
+    if (!res.ok) { show('删除失败', 'err'); return; }
+    show('已删除');
+    setVideos((list) => list.filter((v) => v.id !== vid));
   }
 
   async function remove() {
@@ -114,6 +163,10 @@ export default function EditProductPage() {
           <button className={`tab ${tab === 'images' ? 'on' : ''}`} onClick={() => setTab('images')}>
             图片
             {!product.images.length && <span className="n">缺</span>}
+          </button>
+          <button className={`tab ${tab === 'videos' ? 'on' : ''}`} onClick={() => setTab('videos')}>
+            视频
+            {!videos.length && <span className="n">缺</span>}
           </button>
           <button className={`tab ${tab === 'content' ? 'on' : ''}`} onClick={() => setTab('content')}>详情文案</button>
         </div>
@@ -563,7 +616,86 @@ export default function EditProductPage() {
             </div>
           )}
 
-          {tab === 'content' && (
+          {tab === 'videos' && (
+          <div className="card">
+            <div className="card-h">
+              <h3>产品视频</h3>
+              <span className="sub">{videos.length} 个</span>
+            </div>
+            <div className="card-b">
+              <div className="note note-i" style={{ marginTop: 0, marginBottom: 16 }}>
+                <b>只支持 YouTube</b>：粘贴视频链接或「嵌入」代码都可以，系统会自动取出视频 ID。
+                视频在访客点击播放按钮时才加载，不会拖慢产品页。
+              </div>
+
+              {videos.length === 0 && (
+                <div className="note note-w" style={{ marginBottom: 16 }}>
+                  这个产品还没有视频。有 30 秒的走针视频的型号，在搜索结果里的点击率明显高于纯图片。
+                </div>
+              )}
+
+              {videos.length > 0 && (
+                <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
+                  {videos.map((v) => (
+                    <div
+                      key={v.id}
+                      style={{
+                        display: 'flex', gap: 12, alignItems: 'center',
+                        border: '1px solid var(--line2)', borderRadius: 8, padding: 10
+                      }}
+                    >
+                      <img
+                        src={`https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`}
+                        alt=""
+                        style={{ width: 120, borderRadius: 6, display: 'block' }}
+                      />
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600 }}>
+                          {v.title || '（无标题）'}
+                        </div>
+                        <code style={{ fontSize: 11, color: '#8a9199' }}>{v.youtube_id}</code>
+                      </div>
+                      <button className="btn btn-sm btn-d" onClick={() => removeVideo(v.id)}>
+                        移除
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <h4 style={{ fontSize: 13, fontWeight: 600, margin: '0 0 10px' }}>添加视频</h4>
+              <div className="fg2" style={{ marginBottom: 12 }}>
+                <div className="fg">
+                  <label className="fl">YouTube 链接或嵌入代码</label>
+                  <input
+                    className="inp"
+                    value={videoDraft.url}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    onChange={(e) => setVideoDraft((d) => ({ ...d, url: e.target.value }))}
+                  />
+                </div>
+                <div className="fg">
+                  <label className="fl">标题（选填）</label>
+                  <input
+                    className="inp"
+                    value={videoDraft.title}
+                    placeholder="走针视频 · 静音扫秒"
+                    onChange={(e) => setVideoDraft((d) => ({ ...d, title: e.target.value }))}
+                  />
+                </div>
+              </div>
+              <button
+                className="btn btn-p btn-sm"
+                onClick={addVideo}
+                disabled={videoBusy || !videoDraft.url.trim()}
+              >
+                {videoBusy ? '添加中…' : '添加视频'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {tab === 'content' && (
             <div className="card">
               <div className="card-h">
                 <h3>详情文案</h3>

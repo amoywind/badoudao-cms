@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import type { SiteSettings } from '@/lib/db';
 import { notFound } from 'next/navigation';
-import { getProduct, listProducts, getSettings, listProductVideos, buildMeta } from '@/lib/db';
+import {
+  getProduct, listProducts, getSettings, listProductVideos, buildMeta, siteVideoMap
+} from '@/lib/db';
+import type { SiteSettings, SiteVideoSlot } from '@/lib/db';
 import { listSeoTags, packagingImages } from '@/lib/seo-tags';
 import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
 import { ProductGallery, CustomisationList } from '../../_pd-client';
@@ -10,6 +12,8 @@ import { InquiryBuilder } from '../../../InquiryBuilder';
 import { DetailTabs } from '../../../DetailTabs';
 import { TrustCards, Icons } from '../../../TrustCards';
 import { SiteSchema } from '../../../SiteSchema';
+import { VideoSlot, VideoSlotHydrator } from '../../../VideoSlot';
+import { SamplePolicy } from '../../../SamplePolicy';
 import { FreightEstimator } from '../../../FreightEstimator';
 import { MOVEMENTS } from '@/lib/vocabulary';
 import { InquiryForm } from '../../../InquiryForm';
@@ -41,7 +45,7 @@ export async function generateMetadata({ params }) {
 
     const moq = product.moq || 300;
     const price = product.priceMin
-      ? ` EXW $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
+      ? ` Estimated EXW price $${product.priceMin.toFixed(2)}–$${product.priceMax.toFixed(2)}.`
       : '';
 
     return buildMeta({
@@ -86,12 +90,13 @@ export default async function ProductPage({ params }) {
      to an empty list, which makes seoTagsFor derive tags from the specs
      instead — a product page with no tags is a worse outcome than one with
      derived ones. */
-  const [related, s, videos, managedTags, packShots] = await Promise.all([
+  const [related, s, videos, managedTags, packShots, siteVideos] = await Promise.all([
     listProducts({ category, status: 'published' }).catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
     listProductVideos(product.id).catch(() => []),
     listSeoTags().catch(() => []),
-    packagingImages(PACKAGING_OPTIONS.map((o) => o.image).filter(Boolean) as string[]).catch(() => ({}))
+    packagingImages(PACKAGING_OPTIONS.map((o) => o.image).filter(Boolean) as string[]).catch(() => ({})),
+    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
   ]);
   const others = related.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -217,6 +222,43 @@ export default async function ProductPage({ params }) {
                     putting it a screen below means they scroll past the
                     price and the MOQ to get to the part that says what this
                     model actually is. */}
+                {/* The product's own videos, and the drop test.
+                    Both come from YouTube. The product videos are per
+                    model — a buyer watching a 30-second clip of the
+                    hands moving is watching that clock, not a
+                    category. The drop test is a site slot, because it
+                    is the same footage on every product page and it
+                    answers the question a buyer asks about any of
+                    them.
+
+                    The section only appears when there is something to
+                    play. An empty video area on a page is a promise
+                    the site cannot keep. */}
+                {(videos.length > 0 || siteVideos['pdp-drop-test']) && (
+                  <section className="pd-video">
+                    <h2>Watch it</h2>
+                    <div className="pd-video-grid">
+                      {videos.map((v) => (
+                        <VideoSlot
+                          key={v.id}
+                          youtubeId={v.youtubeId}
+                          ratio="16:9"
+                          title={v.title || product.name}
+                          caption={v.title}
+                        />
+                      ))}
+                      {siteVideos['pdp-drop-test'] && (
+                        <VideoSlot
+                          youtubeId={siteVideos['pdp-drop-test'].youtubeId}
+                          ratio="16:9"
+                          title="ISTA-1A drop test"
+                          caption="1.2m six-side drop test on the packed carton"
+                        />
+                      )}
+                    </div>
+                  </section>
+                )}
+
                 {product.content && (
                   <section className="pd-desc">
                     <h2>Product description</h2>
@@ -234,10 +276,21 @@ export default async function ProductPage({ params }) {
                 <h1>{product.name}</h1>
                 <p className="pd-lede">{product.summary}</p>
 
+                {/* The price, and the policy that makes it low-risk.
+                    Both the label and the card below it are about the
+                    same thing: this is a factory price, and the way to
+                    find out whether it is right is to order one. */}
                 <div className="pd-price">
                   <span className="amt">${product.priceMin.toFixed(2)}–${product.priceMax.toFixed(2)}</span>
-                  <span className="lbl">Ex Works (factory price)<br />per piece, before freight</span>
+                  <span className="lbl">
+                    Estimated EXW price (factory price)<br />per piece, before freight
+                  </span>
                 </div>
+
+                {/* The sample policy sits directly under the price. A
+                    buyer reading the number and the MOQ is doing
+                    arithmetic, and this is the answer to it. */}
+                <SamplePolicy />
 
                 {/* The MOQ as a standalone card. A buyer deciding whether
                     this factory is viable needs it before anything else, and
@@ -289,7 +342,7 @@ export default async function ProductPage({ params }) {
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>
                   <div className="pd-fact"><dt>Lead time</dt><dd>{product.leadTime}</dd></div>
-                  <div className="pd-fact"><dt>Sample time</dt><dd>{s.sampleDays || '7-10'} days</dd></div>
+                  <div className="pd-fact"><dt>Sample time</dt><dd>{s.sampleDays || '5-7'} business days</dd></div>
                   {product.moveLevel && <div className="pd-fact"><dt>Movement</dt><dd>{product.moveLevel}</dd></div>}
                 </dl>
 
@@ -328,7 +381,7 @@ export default async function ProductPage({ params }) {
                   </a>
                 </div>
                 <p className="pd-cta-note">
-                  Reply within {s.quoteHours || 12} hours · No obligation · Ex Works
+                  Reply within {s.quoteHours || 4} hours · No obligation · Ex Works
                 </p>
 
                 {/* The product-page trust bar. It sits directly under the
@@ -558,7 +611,7 @@ export default async function ProductPage({ params }) {
                     </div>
                     <div className="c-body">
                       <h3 style={{ fontSize: 16 }}>{p.name}</h3>
-                      <div className="c-meta"><span>MOQ <b>{p.moq}</b></span><span className="exw">EXW ${p.priceMin.toFixed(2)}</span></div>
+                      <div className="c-meta"><span>MOQ <b>{p.moq}</b></span><span className="exw">Est. EXW ${p.priceMin.toFixed(2)}</span></div>
                     </div>
                   </Link>
                 ))}
@@ -595,6 +648,7 @@ export default async function ProductPage({ params }) {
       </main>
 
       <Footer />
+      <VideoSlotHydrator />
     </div>
   );
 }

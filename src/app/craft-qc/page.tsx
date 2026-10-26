@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { getSettings, buildMeta } from '@/lib/db';
+import { getSettings, buildMeta, siteVideoMap } from '@/lib/db';
+import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
+import { VideoSlot, VideoSlotHydrator } from '../VideoSlot';
 import { MATERIALS, QC_STEPS, FACTORY_FIGURES, CERTIFICATIONS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
@@ -35,7 +37,10 @@ export async function generateMetadata() {
 }
 
 export default async function CraftQcPage() {
-  const s = await getSettings().catch(() => ({} as SiteSettings));
+  const [s, videos] = await Promise.all([
+    getSettings().catch(() => ({} as SiteSettings)),
+    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
+  ]);
   const moq = Number(s.moq) || 300;
 
   return (
@@ -112,23 +117,21 @@ export default async function CraftQcPage() {
               </p>
             </div>
 
+            {/* The four process clips. The step number runs from one to
+                four and the slot key does too, so the admin's list of
+                outstanding videos lines up with the order on the page. */}
             <div className="qc-grid">
-              {QC_STEPS.map((q) => (
+              {QC_STEPS.map((q, i) => (
                 <div className="qc-item" key={q.n}>
-                  <div className="vslot vslot-16">
-                    <div className="vslot-ico">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                        <path d="M23 7l-7 5 7 5V7z" />
-                        <rect x="1" y="5" width="15" height="14" rx="2" />
-                      </svg>
-                    </div>
-                    <span className="vslot-t">Video pending</span>
-                    <span className="vslot-d">{q.title} — 9:16 factory footage</span>
-                  </div>
+                  <VideoSlot
+                    youtubeId={videos[`qc-step-${i + 1}`]?.youtubeId || ''}
+                    ratio="9:16"
+                    title={q.title}
+                    caption={`${q.title} — 9:16 factory footage`}
+                  />
                   <span className="qc-n">{q.n}</span>
                   <h4>{q.title}</h4>
                   <p>{q.detail}</p>
-                  <div className="qc-metric tnum">{q.metric}</div>
                   <div className="qc-metric tnum">{q.metric}</div>
                 </div>
               ))}
@@ -215,6 +218,7 @@ export default async function CraftQcPage() {
       </main>
 
       <Footer />
+      <VideoSlotHydrator />
     </div>
   );
 }

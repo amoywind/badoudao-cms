@@ -13,10 +13,77 @@ const MAX_MS = 86_400_000;
 /* The quantity ranges the form offers. The list is a whitelist rather
    than a free-text field so the two can be counted and compared — and it
    has to match the form's own list exactly, because a value the form
-   offers but the API rejects is a 400 the buyer cannot act on. */
+   offers but the API rejects is a 400 the buyer cannot act on.
+
+   The four runs are the ones the factory quotes differently: a sample
+   order, the standard trial, a mid-volume order and a bulk OEM run. */
 const QUANTITIES = [
-  '300 - 499', '500 - 999', '1,000 - 2,999', '3,000 - 9,999', '10,000+', 'Not sure yet'
+  'Sample Order (1-5 pcs for quality testing)',
+  '300 - 500 pcs (Standard MOQ Trial)',
+  '500 - 1,000 pcs',
+  '1,000+ pcs (Bulk OEM Order)'
 ];
+
+/* The public mailbox providers. An address at one of these tells us
+   nothing about which company the buyer works for, so no company name
+   is derived from them — the field stays empty rather than being filled
+   with "gmail" or "outlook", which would be worse than nothing in an
+   enquiry the sales team reads by hand. */
+const PUBLIC_MAIL_DOMAINS = new Set([
+  'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com',
+  'msn.com', 'yahoo.com', 'ymail.com', 'icloud.com', 'me.com', 'mac.com',
+  'aol.com', 'gmx.com', 'gmx.de', 'mail.com', 'mail.ru', 'yandex.ru',
+  'yandex.com', 'qq.com', 'foxmail.com', '163.com', '126.com', 'sina.com',
+  'sina.cn', 'sohu.com', 'aliyun.com', '139.com', '189.cn', 'wo.cn',
+  'zoho.com', 'protonmail.com', 'proton.me', 'fastmail.com', 'hey.com',
+  'web.de', 'freenet.de', 't-online.de', 'orange.fr', 'wanadoo.fr',
+  'libero.it', 'tiscali.it', 'orange.es', 'rediffmail.com', 'terra.com.br'
+]);
+
+/**
+ * The company behind a business email.
+ *
+ * The form no longer asks for a company name. The buyer's email domain
+ * carries it: mark@smithdecor.com has told us the company, and asking
+ * them to type what they just typed costs a completion for nothing.
+ *
+ * The domain is returned as the name — "smithdecor" rather than
+ * "smithdecor.com" — because this string appears in the work order's
+ * subject line and in the admin's enquiry list, where the suffix is
+ * noise. The full address stays in the email column, so the domain is
+ * still one click away when the sales team wants it.
+ *
+ * A public mailbox provider returns an empty string: nothing is known,
+ * and a name invented from "gmail" would be worse than a blank.
+ */
+function companyFromEmail(address: string): string {
+  const at = address.lastIndexOf('@');
+  if (at < 0) return '';
+  const domain = address.slice(at + 1).toLowerCase();
+  if (!domain || PUBLIC_MAIL_DOMAINS.has(domain)) return '';
+
+  /* The registrable name is the part before the public suffix. A
+     two-part suffix such as ".co.uk" is handled by taking the label
+     before the last two, and everything before that is the name. */
+  const labels = domain.split('.').filter(Boolean);
+  if (labels.length < 2) return '';
+
+  const twoPartSuffixes = new Set([
+    'co.uk', 'org.uk', 'ac.uk', 'gov.uk', 'me.uk', 'net.uk', 'com.cn',
+    'net.cn', 'org.cn', 'gov.cn', 'com.au', 'net.au', 'com.br', 'com.mx',
+    'co.jp', 'co.kr', 'co.nz', 'co.za', 'com.tr', 'com.sg', 'com.hk'
+  ]);
+
+  const lastTwo = labels.slice(-2).join('.');
+  const name = twoPartSuffixes.has(lastTwo) ? labels.slice(-3, -2)[0] : labels.slice(-2, -1)[0];
+
+  if (!name || name.length < 2) return '';
+
+  /* A domain of digits or a single letter is a shortener, not a company. */
+  if (!/[a-z]/i.test(name)) return '';
+
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
 const DRAWING_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
 
 const clean = (v, max = 500) =>
@@ -93,7 +160,11 @@ export async function POST(request) {
 
   const email = clean(body.email, 254);
   const message = clean(body.message, 3000);
-  const quantity = clean(body.quantity, 40);
+  /* 64 characters: the longest option is
+     "Sample Order (1-5 pcs for quality testing)" at 42, and the old
+     40-character limit would have truncated it into a value the
+     whitelist below then rejected. */
+  const quantity = clean(body.quantity, 64);
   /* The configuration code from the inquiry builder, e.g. MDF-01-SWEEP-BRS-GIFT.
      Empty for an enquiry that did not start on a product page. */
   const spec = clean(body.spec, 120);
@@ -118,8 +189,18 @@ export async function POST(request) {
   if (!QUANTITIES.includes(quantity)) {
     return NextResponse.json({ error: 'Please select a quantity range' }, { status: 400 });
   }
-  if (message.length < 10) {
-    return NextResponse.json({ error: 'Please describe what you need' }, { status: 400 });
+  /* The notes are optional now. The form asks for an email, a quantity
+     and — where the buyer used one — a specification code, and that is
+     enough to open a quote.
+
+     One of the two has to be present, though: an enquiry with neither a
+     note nor a specification is a form submission with no request in
+     it, and the factory would have nothing to quote against. */
+  if (message.length < 1 && !spec) {
+    return NextResponse.json(
+      { error: 'Please add a note about what you need' },
+      { status: 400 }
+    );
   }
 
   const products = (Array.isArray(body.products) ? body.products : [])
@@ -178,7 +259,11 @@ export async function POST(request) {
     id,
     email,
     clean(body.name, 120),
-    clean(body.company, 200),
+    /* The company comes from the email domain rather than from a form
+       field. The form still sends a company value for backwards
+       compatibility with any older cached page, so it is used only when
+       the domain yielded nothing. */
+    clean(body.company, 200) || companyFromEmail(email),
     clean(body.country, 120),
     whatsapp,
     JSON.stringify(products),
@@ -224,7 +309,7 @@ export async function POST(request) {
 
   notify({
     id, workOrder, email, message, products, quantity,
-    company: clean(body.company, 200),
+    company: clean(body.company, 200) || companyFromEmail(email),
     whatsapp,
     spec,
     material,
@@ -441,12 +526,12 @@ async function notify(d) {
 
     <div style="margin-top:24px;padding:14px 16px;background:#111111;color:#fff;border-radius:6px;font-size:13px">
       <strong>ACTION REQUIRED</strong><br>
-      Assign to a CAD engineer; deliver the 3D render and the FOB quote within 12 hours.
+      Assign to a CAD engineer; deliver the 3D render and the FOB quote within 4 hours.
     </div>
 
     <a href="${(env.SITE_URL || 'https://oemwallclocks.com').replace(/\/$/, '')}/admin/inquiries/${esc(d.id)}"
        style="display:inline-block;margin-top:18px;background:#0052CC;color:#fff;padding:11px 22px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px">Open in dashboard</a>
-    <p style="margin:18px 0 0;font-size:12px;color:#9aa1ac">Reply within 12 hours to keep the order.</p>
+    <p style="margin:18px 0 0;font-size:12px;color:#9aa1ac">Reply within 4 hours to keep the order.</p>
   </div>
 </div>`
       })

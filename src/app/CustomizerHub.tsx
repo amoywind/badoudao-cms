@@ -1,5 +1,7 @@
 'use client';
 
+import { SamplePolicy } from './SamplePolicy';
+
 /**
  * The customizer hub — §5.1-6 of the specification.
  *
@@ -106,7 +108,7 @@ function buildCode(picks: Record<string, string>) {
 /** The name of the hidden field the code travels in. */
 export const HUB_FIELD = 'spec';
 
-export function CustomizerHub() {
+export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
   const [tab, setTab] = useState(TABS[0].key);
   const [picks, setPicks] = useState<Record<string, string>>({
     housing: 'WD08',
@@ -212,7 +214,7 @@ export function CustomizerHub() {
             price will appear, and so nothing else has to move when the
             quotation system starts returning figures. */}
         <div className="hub-price">
-          <span className="hub-price-k">Estimated FOB</span>
+          <span className="hub-price-k">Estimated EXW price</span>
           <span className="hub-price-v">Quoted on request</span>
         </div>
 
@@ -220,9 +222,15 @@ export function CustomizerHub() {
           Apply Spec to RFQ Form ↓
         </button>
 
+        {/* The sample policy, in its short form. A buyer who has just
+            built a specification and is deciding whether to see it made
+            before ordering three hundred of them wants to know what one
+            costs and whether it comes back. */}
+        <SamplePolicy compact />
+
         <p className="hub-note">
-          300 pcs MOQ, mixed colours and specifications in one order. FOB
-          quotation and a photorealistic 3D rendering within 12 hours.
+          300 pcs MOQ, mixed colours and specifications in one order. EXW
+          quotation and a photorealistic 3D rendering within {replyHours} hours.
         </p>
 
         <input type="hidden" id={HUB_FIELD} name={HUB_FIELD} value={code} readOnly />

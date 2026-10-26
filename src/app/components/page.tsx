@@ -222,14 +222,14 @@ export default async function ComponentsPage() {
             <p className="sec-sub" style={{ marginBottom: 26 }}>
               Movement, hands, dial and packaging — send the combination and the
               quantity, and the quote comes back with the sample timeline inside{' '}
-              {s.quoteHours || 12} hours.
+              {s.quoteHours || 4} hours.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/contact" className="btn btn-primary">Request a quote</Link>
               <Link href="/custom-services" className="btn btn-ghost">See what we can customise</Link>
             </div>
             <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 20 }}>
-              MOQ from {moq} pcs · Ex Works pricing · sample in {s.sampleDays || '7-10'} days
+              MOQ from {moq} pcs · Ex Works pricing · sample in {s.sampleDays || '5-7'} business days
             </p>
           </div>
         </section>

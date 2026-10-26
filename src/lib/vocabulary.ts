@@ -391,6 +391,24 @@ export const FACTORY_FIGURES: { key: string; label: string; unit: string }[] = [
 ];
 
 /**
+ * The four factory clips on the home page.
+ *
+ * Each one is a slot the admin fills with a YouTube link. The slot key
+ * runs in the same order as this list, so the first entry is
+ * "home-factory-1" and the admin's list of outstanding videos lines up
+ * with what the page shows.
+ *
+ * The clips are vertical, because that is the format the process reads
+ * in — a phone held upright beside the bench.
+ */
+export const FACTORY_SHOTS: [string, string][] = [
+  ['Raw material', 'Moisture content and scratch testing on timber, plastic and acrylic.'],
+  ['24-hour aging', 'Every movement runs under power for a day, checked for accuracy and measured for sound.'],
+  ['Pointer balance', 'Hand straightness and balance torque, so the sweep never catches.'],
+  ['Drop test', 'The packed carton dropped from 1.2 metres on all six sides.']
+];
+
+/**
  * The certifications — §5.5-2, with the full designations.
  *
  * The earlier version of this list named the certificates without their

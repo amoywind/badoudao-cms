@@ -19,7 +19,7 @@ export async function generateMetadata() {
   try { s = await getSettings(); } catch {}
 
   const title = `Contact Badoudao | Get a Quotation for Wholesale Clocks`;
-  const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 300} pieces, Ex Works pricing, reply within ${s.quoteHours || 12} hours.`;
+  const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 300} pieces, Ex Works pricing, reply within ${s.quoteHours || 4} hours.`;
 
   /* buildMeta() rather than a hand-rolled object, so this route gets the
      absolute canonical and the siteUrl from settings like every other one.
@@ -97,7 +97,7 @@ export default async function ContactPage({
                   <div>
                     <div className="help">Response time</div>
                     <div style={{ fontSize: 15 }}>
-                      Within {s.quoteHours || 12} hours on business days
+                      Within {s.quoteHours || 4} hours on business days
                     </div>
                   </div>
                 </div>
