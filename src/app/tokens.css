@@ -2962,26 +2962,22 @@
   }
 }
 
-
 /* ===================================================================
    Restored rules
    -------------------------------------------------------------------
    A cleanup pass removed a range between two selectors, and one of
    the two selectors also appears inside a media query, so the range it
-   removed was larger than the one it was meant to remove. These ninety
-   rules went with it: the hero, the product cards, the material and
-   trend grids, the customizer panel, the product detail layout, the
-   detail tabs, the freight estimator, the movement matrix and the
-   quality grid.
+   removed was larger than the one it was meant to remove. A hundred
+   and thirty rules went with it: the hero, the product cards, the
+   material and trend grids, the customizer panel, the product detail
+   layout, the detail tabs, the freight estimator, the movement matrix,
+   the quality grid — and twenty-five of them inside media queries,
+   which are the ones that decide what a phone and a tablet see.
 
-   They are put back at the end of the file, grouped by the media
-   query each one belongs in, because a rule that was responsive
-   before it was lost is still responsive.
+   They are put back from the last commit whose stylesheet was
+   complete, grouped by the media query each one belongs in.
    =================================================================== */
 
-/* ===================================================================
-   Material matrix — the 1:1 category grid
-   =================================================================== */
 .mat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3044,9 +3040,6 @@
   font-weight: 600;
 }
 
-/* ===================================================================
-   Trending platforms — the four highlighted shells
-   =================================================================== */
 .trend-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3067,9 +3060,6 @@
   box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
 }
 
-/* The quick-inquire button slides up from the bottom edge on hover. On a
-   touch screen there is no hover, so the button stays visible there —
-   the media query at the end of this file does that. */
 .trend-cta {
   position: absolute;
   left: 0;
@@ -3121,9 +3111,6 @@
   color: var(--text-2);
 }
 
-/* ===================================================================
-   Components studio preview
-   =================================================================== */
 .studio {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3175,9 +3162,6 @@
   color: var(--accent);
 }
 
-/* ===================================================================
-   QC steps — the four-column video strip
-   =================================================================== */
 .qc-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3205,9 +3189,6 @@
   display: block;
 }
 
-/* ===================================================================
-   Movement matrix — the spec table on the components page
-   =================================================================== */
 .mtx {
   width: 100%;
   border-collapse: collapse;
@@ -3242,9 +3223,6 @@
   border-bottom: none;
 }
 
-/* ===================================================================
-   Collection layout — filter rail + grid
-   =================================================================== */
 .coll {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -3273,9 +3251,15 @@
   margin-bottom: 14px;
 }
 
-/* Four columns on a desktop, two on a phone — §5.3-1. The three
-   columns this used to have left a wide gap on a 1440px screen and made
-   the catalogue feel longer than ten products warrant. */
+.rail-foot {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
 .pgrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3330,9 +3314,6 @@
   color: var(--accent);
 }
 
-/* ===================================================================
-   Product detail — the two-column layout the specification describes
-   =================================================================== */
 .pd2 {
   display: grid;
   grid-template-columns: 55% 45%;
@@ -3398,8 +3379,6 @@
   color: var(--text-2);
 }
 
-/* The spec builder. Each row is a label and a set of options; picking
-   one updates the summary at the bottom and the quote that gets sent. */
 .spec {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
@@ -3468,8 +3447,6 @@
   font-weight: 600;
 }
 
-/* The generated spec string the specification asks for — SKU-style, so
-   the buyer and the factory are talking about the same thing. */
 .spec-sum {
   font-family: var(--font-tech);
   font-size: 12.5px;
@@ -3481,7 +3458,6 @@
   word-break: break-all;
 }
 
-/* Carton freight estimate. */
 .freight {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
@@ -3519,7 +3495,6 @@
   color: var(--text);
 }
 
-/* The detail tabs. */
 .dtabs {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
@@ -3573,9 +3548,6 @@
   margin-bottom: 7px;
 }
 
-/* ===================================================================
-   Hero — the split layout with the live clock
-   =================================================================== */
 .hero2 {
   background: var(--surface);
   border-bottom: 1px solid var(--rule);
@@ -3617,9 +3589,6 @@
   line-height: 1.65;
 }
 
-/* ===================================================================
-   Hero — the split layout with the live clock
-   =================================================================== */
 .hero2 {
   background: var(--surface);
   border-bottom: 1px solid var(--rule);
@@ -3661,10 +3630,6 @@
   line-height: 1.65;
 }
 
-/* The trust bar on a product page sits in the right-hand column, which is
-   45% of the page. Four cards across that width are 130px each, and the
-   detail text under each number wraps to three lines. Two columns is the
-   point where the number still reads at a glance. */
 .pd2-info .tcards {
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
@@ -3692,10 +3657,6 @@
   font-size: 11.5px;
 }
 
-/* The trust bar on a product page sits in the right-hand column, which is
-   45% of the page. Four cards across that width are 130px each, and the
-   detail text under each number wraps to three lines. Two columns is the
-   point where the number still reads at a glance. */
 .pd2-info .tcards {
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
@@ -3723,67 +3684,40 @@
   font-size: 11.5px;
 }
 
-@media ('(max-width: 1024px)',) {
-/* ===================================================================
-   Responsive
-   =================================================================== */
+@media (max-width: 1024px) {
 .coll {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .rail {
     position: static;
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .pgrid {
     grid-template-columns: repeat(3, 1fr);
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .pd2 {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .mat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .trend-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .qc-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .studio {
     grid-template-columns: 1fr;
   }
-/* ===================================================================
-   Responsive
-   =================================================================== */
 .studio-side {
     border-right: none;
     border-bottom: 1px solid var(--rule);
   }
 }
 
-@media ('(max-width: 480px)',) {
+@media (max-width: 480px) {
 .hero2-h1 {
     font-size: 27px;
   }
@@ -3792,14 +3726,12 @@
   }
 }
 
-@media ('(max-width: 767px)',) {
+@media (max-width: 767px) {
 .mat-grid,
   .qc-grid,
   .trend-grid {
     grid-template-columns: 1fr;
   }
-/* Two columns on a phone, per §5.3-1. A single column of 1:1 cards
-     makes the buyer scroll a very long way to compare ten clocks. */
 .pgrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -3817,8 +3749,6 @@
 .spec-lbl {
     padding-top: 0;
   }
-/* No hover on a touch screen, so the quick-inquire button would never
-     appear. It stays visible instead. */
 .trend-cta {
     transform: none;
     position: static;
@@ -3829,7 +3759,7 @@
   }
 }
 
-@media ('(max-width: 900px)',) {
+@media (max-width: 900px) {
 .hero2-grid {
     grid-template-columns: 1fr;
     gap: 34px;
@@ -3851,5 +3781,278 @@
   }
 .clockface {
     max-width: 200px;
+  }
+}
+
+/* ===================================================================
+   Restored rules
+   -------------------------------------------------------------------
+   A cleanup pass removed a range between two selectors, and one of
+   the two selectors also appears inside a media query, so the range it
+   removed was larger than the one it was meant to remove. A hundred
+   and thirty rules went with it: the hero, the product cards, the
+   material and trend grids, the customizer panel, the product detail
+   layout, the detail tabs, the freight estimator, the movement matrix,
+   the quality grid — and twenty-five of them inside media queries,
+   which are the ones that decide what a phone and a tablet see.
+
+   They are put back from the last commit whose stylesheet was
+   complete, grouped by the media query each one belongs in.
+   =================================================================== */
+
+@media (max-width: 1024px) {
+.coll {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+.rail {
+    position: static;
+  }
+.pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+.pd2 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+.mat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.trend-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.qc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.studio {
+    grid-template-columns: 1fr;
+  }
+.studio-side {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 480px) {
+.hero2-h1 {
+    font-size: 27px;
+  }
+.hero2-h1 {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 767px) {
+.mat-grid,
+  .qc-grid,
+  .trend-grid {
+    grid-template-columns: 1fr;
+  }
+.pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+.pcard-body {
+    padding: 12px 13px 14px;
+  }
+.pcard-body h3 {
+    font-size: 13.5px;
+  }
+.spec-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+.spec-lbl {
+    padding-top: 0;
+  }
+.trend-cta {
+    transform: none;
+    position: static;
+    border-radius: 0;
+  }
+.freight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+.hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+.hero2-h1 {
+    font-size: 32px;
+  }
+.clockface {
+    max-width: 200px;
+  }
+.hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+.hero2-h1 {
+    font-size: 32px;
+  }
+.clockface {
+    max-width: 200px;
+  }
+}
+
+/* ===================================================================
+   Restored rules
+   -------------------------------------------------------------------
+   A cleanup pass removed a range between two selectors, and one of
+   the two selectors also appears inside a media query, so the range it
+   removed was larger than the one it was meant to remove. A hundred
+   and thirty rules went with it: the hero, the product cards, the
+   material and trend grids, the customizer panel, the product detail
+   layout, the detail tabs, the freight estimator, the movement matrix,
+   the quality grid — and twenty-five of them inside media queries,
+   which are the ones that decide what a phone and a tablet see.
+
+   They are put back from the last commit whose stylesheet was
+   complete, grouped by the media query each one belongs in.
+   =================================================================== */
+
+.anat-i:first-child {
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
+.anat-i:last-child {
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+}
+
+.anat-i + .anat-i {
+  margin-top: -1px;
+}
+
+.anat-i:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  position: relative;
+  z-index: 1;
+}
+
+.anat-i h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.anat-i p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.rail-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rail-links li + li {
+  margin-top: 1px;
+}
+
+.rail-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 11px;
+  margin: 0 -11px;
+  border-left: 2px solid transparent;
+  font-size: 13.5px;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.rail-link:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.rail-link.on {
+  color: var(--accent);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.clockbox-noise-l {
+  font-family: var(--font-tech);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.clockbox-noise-v {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.clockbox-noise-t {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+.clockbox-noise-l {
+  font-family: var(--font-tech);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.clockbox-noise-v {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.clockbox-noise-t {
+  color: var(--text-2);
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+.rail-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+.rail-links li {
+    flex: 1 1 auto;
+  }
+.rail-link {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    margin: 0;
+    padding: 8px 10px;
+  }
+.rail-link.on {
+    border-bottom-color: var(--accent);
+  }
+}
+
+@media (max-width: 767px) {
+.rail-links {
+    display: block;
+  }
+.rail-links li {
+    display: block;
+  }
+.rail-link {
+    border-left: 2px solid transparent;
+    border-bottom: none;
+    margin: 0 -11px;
+    padding: 10px 11px;
+  }
+.rail-link.on {
+    border-left-color: var(--accent);
+    border-bottom-color: transparent;
   }
 }
