@@ -936,11 +936,13 @@
   }
 }
 
-/* Between the tablet and the desktop the three option groups are too
-   narrow to hold a two-column grid of their own — the material names
-   would be cut off — so the panel stacks them and the dial keeps
-   the space beside it. */
-@media (max-width: 1440px) and (min-width: 1181px) {
+/* On a tablet the card goes to one column, and the dial sits above
+   the panel rather than beside it — the dial is the thing the buyer
+   is looking at, and above is where the eye goes first. The panel
+   keeps its three columns: the card is now the full width of the
+   page, which gives the options more room than they had on the
+   desktop rather than less. */
+@media (max-width: 900px) {
   .clockbox-panel {
     grid-template-columns: 1fr;
     gap: 14px;
