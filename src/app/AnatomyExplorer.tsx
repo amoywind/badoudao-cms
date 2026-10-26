@@ -175,20 +175,20 @@ export function AnatomyExplorer() {
                 the clearance tolerance. The hour and minute hands
                 are brass, the second hand is Klein blue, and the
                 little blue ball is the counterweight. */}
-            <line x1="150" y1="150" x2="212" y2="150" stroke="#C59B27" strokeWidth="4"
+            <line x1="86" y1="60" x2="148" y2="60" stroke="#C59B27" strokeWidth="4"
               strokeLinecap="round" />
-            <line x1="150" y1="136" x2="266" y2="136" stroke="#C59B27" strokeWidth="3"
+            <line x1="86" y1="46" x2="202" y2="46" stroke="#C59B27" strokeWidth="3"
               strokeLinecap="round" />
-            <line x1="150" y1="122" x2="290" y2="122" stroke="#0052CC" strokeWidth="1.6"
+            <line x1="86" y1="32" x2="226" y2="32" stroke="#0052CC" strokeWidth="1.6"
               strokeLinecap="round" />
-            <circle cx="292" cy="122" r="3.5" fill="#0052CC" />
-            <circle cx="148" cy="136" r="4" fill="#B8874A" />
+            <circle cx="228" cy="32" r="3.5" fill="#0052CC" />
+            <circle cx="84" cy="46" r="4" fill="#B8874A" />
             {/* The clearance dimension, which is the number the panel
                 quotes. Showing it on the drawing is what makes the
                 number mean something. */}
-            <line x1="150" y1="136" x2="150" y2="150" stroke="#D97706" strokeWidth="1"
+            <line x1="86" y1="46" x2="86" y2="60" stroke="#D97706" strokeWidth="1"
               strokeDasharray="2,2" />
-            <text x="144" y="146" textAnchor="end" fontSize="7" fill="#D97706"
+            <text x="80" y="56" textAnchor="end" fontSize="7" fill="#D97706"
               fontFamily="var(--font-tech), monospace">≥1.5</text>
           </g>
 
@@ -231,7 +231,7 @@ export function AnatomyExplorer() {
             { i: 1, x: 388, y: 118, anchor: 'end' },
             { i: 2, x: 210, y: 82, anchor: 'middle' },
             { i: 3, x: 34, y: 214, anchor: 'start' },
-            { i: 4, x: 388, y: 250, anchor: 'end' },
+            { i: 4, x: 34, y: 300, anchor: 'start' },
             { i: 5, x: 210, y: 400, anchor: 'middle' }
           ].map((c) => {
             const on = active === c.i;
