@@ -3746,28 +3746,48 @@
   }
 }
 
-@media (max-width: 900px) {
-.hero2-grid {
+/* Below 1280 the hero goes to one column.
+
+   The clock engine card needs about 600 pixels for its dial and its
+   option groups side by side, and the headline needs about 500. A
+   1280-pixel screen cannot give both, and the card is the part that
+   suffers: at 1200 the two of them shared the width and the option
+   buttons were 35 pixels wide.
+
+   One column puts the card full width below the headline, which is
+   also what a buyer on a laptop wants — the dial and the options are
+   read before the headline is finished. */
+@media (max-width: 1280px) {
+  .hero2-grid {
     grid-template-columns: 1fr;
     gap: 34px;
     padding: 52px 24px 48px;
   }
-.hero2-h1 {
+
+  .hero2-h1 {
     font-size: 32px;
   }
-.clockface {
-    max-width: 200px;
+
+  /* The card is the width of the page now, which would leave a dial
+     in the middle of a very wide panel. It is held to a width a
+     reader can take in and centred, and the dial grows to match the
+     space it has. */
+  .clockbox {
+    max-width: 880px;
+    margin: 0 auto;
   }
-.hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
+
+  .clockbox-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 30px;
   }
-.hero2-h1 {
-    font-size: 32px;
+
+  .clockbox-face {
+    width: 250px;
   }
-.clockface {
-    max-width: 200px;
+
+  .clockface {
+    max-width: 250px;
   }
 }
 
@@ -3862,28 +3882,48 @@
   }
 }
 
-@media (max-width: 900px) {
-.hero2-grid {
+/* Below 1280 the hero goes to one column.
+
+   The clock engine card needs about 600 pixels for its dial and its
+   option groups side by side, and the headline needs about 500. A
+   1280-pixel screen cannot give both, and the card is the part that
+   suffers: at 1200 the two of them shared the width and the option
+   buttons were 35 pixels wide.
+
+   One column puts the card full width below the headline, which is
+   also what a buyer on a laptop wants — the dial and the options are
+   read before the headline is finished. */
+@media (max-width: 1280px) {
+  .hero2-grid {
     grid-template-columns: 1fr;
     gap: 34px;
     padding: 52px 24px 48px;
   }
-.hero2-h1 {
+
+  .hero2-h1 {
     font-size: 32px;
   }
-.clockface {
-    max-width: 200px;
+
+  /* The card is the width of the page now, which would leave a dial
+     in the middle of a very wide panel. It is held to a width a
+     reader can take in and centred, and the dial grows to match the
+     space it has. */
+  .clockbox {
+    max-width: 880px;
+    margin: 0 auto;
   }
-.hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
+
+  .clockbox-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 30px;
   }
-.hero2-h1 {
-    font-size: 32px;
+
+  .clockbox-face {
+    width: 250px;
   }
-.clockface {
-    max-width: 200px;
+
+  .clockface {
+    max-width: 250px;
   }
 }
 
