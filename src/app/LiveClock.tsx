@@ -314,7 +314,25 @@ export function LiveClock() {
                 <stop offset="0%" stopColor={face.bg} stopOpacity="1" />
                 <stop offset="100%" stopColor={face.bezel} stopOpacity="1" />
               </radialGradient>
-              <filter id="hand-shadow" x="-50%" y="-50%" width="200%" height="200%">
+              {/* The drop shadow on the hour hand.
+
+                  The filter region is given in user space rather than
+                  as a percentage of the object. A percentage is
+                  relative to the object's bounding box, and the
+                  bounding box of a vertical line is zero wide — so
+                  the region was computed as zero wide, and the
+                  filter clipped the hand out of the picture entirely.
+                  The element was in the document, it had the right
+                  length, and it drew nothing.
+
+                  The region here covers the whole dial in the 240-unit
+                  square with room for the shadow to fall outside it,
+                  so it is the same whatever the hand is doing. */}
+              <filter
+                id="hand-shadow"
+                filterUnits="userSpaceOnUse"
+                x="-20" y="-20" width="280" height="280"
+              >
                 <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" floodColor="#000" floodOpacity="0.3" />
               </filter>
             </defs>
@@ -453,7 +471,20 @@ export function LiveClock() {
           </svg>
         </div>
 
-        {/* ---- the configuration panel ---- */}
+        {/* ---- the configuration panel ----
+
+            The three groups sit side by side rather than one above
+            the other. The specification draws the panel as a row —
+            drive mode, dial material, hands alloy, each in its own
+            column — and a row is what a panel of settings wants to
+            be: a buyer compares the three choices rather than
+            working down them.
+
+            It also fixes the height. Stacked, the three groups ran to
+            452 pixels against a 270-pixel dial, so the card was 698
+            pixels tall — most of a 1080-pixel screen, with the
+            headline pushed down to the middle of it and the trust
+            strip below the fold. */}
         <div className="clockbox-panel">
           {/* 1. the drive mode */}
           <div className="ck-grp">

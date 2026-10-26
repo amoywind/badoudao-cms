@@ -617,7 +617,7 @@
 /* The dial and the panel beside it. */
 .clockbox-body {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
   gap: 26px;
   align-items: start;
 }
@@ -632,22 +632,36 @@
   /* The canvas is 240 square and the dial is 228 across. The width is
      set from the dial's own measurement rather than from the canvas,
      so the bezel fills the frame without the face being scaled down
-     by the margin the viewBox leaves around it. */
-  max-width: 250px;
+     by the margin the viewBox leaves around it.
+
+     It is a little smaller than it would otherwise be, because the
+     panel beside it has three columns of options in it and the dial
+     was taking a third of the card to leave them nowhere to go. */
+  max-width: 218px;
   height: auto;
 }
 
-/* The configuration panel. */
+/* The configuration panel.
+
+   The three groups sit in a row rather than a column, which is what
+   the specification draws and what a panel of settings wants to be:
+   a buyer compares the three choices instead of working down them.
+
+   Each group takes a share of the width, with the material and alloy
+   groups wider than the drive-mode group because they carry four
+   options each and the drive mode carries two. */
 .clockbox-panel {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 0.8fr 1.1fr 1.1fr;
   gap: 18px;
+  align-content: start;
 }
 
 .ck-grp {
   display: flex;
   flex-direction: column;
   gap: 9px;
+  min-width: 0;
 }
 
 .ck-lbl {
@@ -670,6 +684,12 @@
 }
 
 .ck-opts-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* The drive mode has two options and they read better side by side
+   across the full width of their group. */
+.ck-opts-wide {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -913,6 +933,17 @@
 
   .clockbox-panel {
     order: 2;
+  }
+}
+
+/* Between the tablet and the desktop the three option groups are too
+   narrow to hold a two-column grid of their own — the material names
+   would be cut off — so the panel stacks them and the dial keeps
+   the space beside it. */
+@media (max-width: 1440px) and (min-width: 1181px) {
+  .clockbox-panel {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 }
 
@@ -3484,53 +3515,23 @@
   overflow: hidden;
 }
 
+/* The hero grid.
+
+   The two columns are aligned at the top rather than in the middle.
+   Centred, the 431-pixel headline block sat in the middle of a
+   700-pixel card with 150 pixels of nothing above and below it, and
+   the whole section ran past the bottom of the screen — the trust
+   strip below it never appeared.
+
+   Aligned at the top, the headline starts where the card starts,
+   and the empty space falls below the headline where a buyer reads
+   it as breathing room rather than as a gap in the layout. */
 .hero2-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 56px;
-  align-items: center;
-  padding: 76px 24px 72px;
-}
-
-.hero2-h1 {
-  font-size: 46px;
-  line-height: 1.14;
-  letter-spacing: -0.028em;
-  margin-bottom: 20px;
-}
-
-.hero2-hl {
-  color: var(--text-2);
-  /* The accent underline marks the promise the headline makes — the
-     factory part, which is what differentiates this from a catalogue. */
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-size: 100% 4px;
-  background-repeat: no-repeat;
-  background-position: 0 92%;
-  padding-bottom: 4px;
-}
-
-.hero2 .lede {
-  font-size: 16.5px;
-  color: var(--text-2);
-  max-width: 540px;
-  margin-bottom: 28px;
-  line-height: 1.65;
-}
-
-.hero2 {
-  background: var(--surface);
-  border-bottom: 1px solid var(--rule);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero2-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 56px;
-  align-items: center;
-  padding: 76px 24px 72px;
+  align-items: start;
+  padding: 60px 24px 56px;
 }
 
 .hero2-h1 {
