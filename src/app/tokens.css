@@ -3171,22 +3171,26 @@
 
    One tag, shown whole. Two tags shared a hundred and seventy pixels
    between them and each was cut to six characters, which told the
-   buyer nothing. The space for two lines is reserved so that a tag
-   that wraps does not push the card's foot down and leave the row of
-   six ragged. */
+   buyer nothing; a tag cut to "Custo..." is worse than no tag.
+
+   The tag wraps onto a second line when it is a long one rather than
+   being cut — "Tempered shatterproof glass" does not fit in one line
+   at this width and does fit in two. The space for two lines is
+   reserved, so a tag that wraps does not push the card's foot down and
+   leave the row of six ragged. */
 .mat-tags {
   margin: 9px 0 2px;
-  min-height: 1.7em;
+  min-height: 3.2em;
   flex-wrap: nowrap;
 }
 
 .mat-tags .ctag {
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 0;
-  padding: 5px 9px;
-  font-size: 11px;
+  padding: 4px 8px;
+  font-size: 10.5px;
+  line-height: 1.35;
   max-width: 100%;
 }
 
