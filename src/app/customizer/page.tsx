@@ -3,7 +3,8 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { InquiryForm } from '../InquiryForm';
-import { CustomizerHub, TABS } from '../CustomizerHub';
+import { CustomizerHub } from '../CustomizerHub';
+import { TABS } from '@/lib/hub-data';
 import { SiteSchema } from '../SiteSchema';
 
 export const runtime = 'edge';

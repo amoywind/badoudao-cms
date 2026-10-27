@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { TABS, buildCode, DEFAULT_PICKS } from './CustomizerHub';
+import { TABS, buildCode, DEFAULT_PICKS } from '@/lib/hub-data';
 
 /**
  * The home page's customizer entry.
