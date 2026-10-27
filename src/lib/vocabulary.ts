@@ -68,34 +68,6 @@ export const MATERIALS: CraftTag[] = [
   }
 ];
 
-/** The four highlighted shells, §5.1. */
-export const TRENDING = [
-  {
-    slug: 'wood-wall-clocks',
-    title: 'Dual-sided corner clock',
-    note: 'Two dials, one body. The shape that fills a corner of a room and nothing else does.',
-    tags: ['Double-sided', 'Mortise & tenon', 'MOQ 300']
-  },
-  {
-    slug: 'metal-wall-clocks',
-    title: 'Exposed gear wall clock',
-    note: 'Moving gear mechanism driven by the same quartz movement, visible through the frame.',
-    tags: ['Moving gear', 'Powder coated', 'MOQ 300']
-  },
-  {
-    slug: 'acrylic-wall-clocks',
-    title: 'Acrylic swinging-tail clock',
-    note: 'Cut acrylic with a swinging tail, the novelty format that sells hardest online.',
-    tags: ['Acrylic cut', 'Backside UV print', 'MOQ 300']
-  },
-  {
-    slug: 'resin-wall-clocks',
-    title: 'Epoxy resin river clock',
-    note: 'Cast resin with a resin river base, hand-painted and filled in a single pour.',
-    tags: ['Epoxy river', 'Hand painted', 'MOQ 300']
-  }
-];
-
 /**
  * The seven movements — §5.4-2 of the specification.
  *

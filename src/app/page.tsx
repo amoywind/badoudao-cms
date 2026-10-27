@@ -1,15 +1,14 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import {
-  listCategories, listProducts, getSettings, buildMeta, siteVideoMap
+  listCategories, getSettings, buildMeta, siteVideoMap
 } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
 import { InquiryForm } from './InquiryForm';
 import { TrustCards, Icons } from './TrustCards';
 import { LiveClock } from './LiveClock';
-import { MATERIALS, TRENDING, FACTORY_SHOTS } from '@/lib/vocabulary';
-import { HubEntry } from './HubEntry';
+import { MATERIALS, FACTORY_SHOTS } from '@/lib/vocabulary';
 import { VideoSlot, VideoSlotHydrator } from './VideoSlot';
 import { SiteSchema } from './SiteSchema';
 
@@ -41,10 +40,14 @@ export default async function HomePage() {
   /* The site videos are fetched with everything else rather than in a
      second round trip. The table is nine rows, so the query is cheap and
      the alternative is a waterfall on the slowest page on the site. */
-  const [cats, s, products, videos] = await Promise.all([
+  /* The trending platforms are gone — their four products were all
+     inside the six material families below, so the page was showing
+     the same thing twice. That also means the home page no longer
+     needs the product list: the material cards are linked by
+     category, and the count comes from the category row. */
+  const [cats, s, videos] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
-    listProducts({ status: 'published' }).catch(() => []),
     siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
   ]);
 
@@ -57,18 +60,6 @@ export default async function HomePage() {
   const mats = MATERIALS.map((m) => {
     const c = cats.find((x) => x.id === m.slug);
     return { ...m, image: c?.imageThumbUrl || c?.imageUrl || '', count: c?.productCount ?? 0 };
-  });
-
-  /* The trending platforms point at real products where one exists, so
-     the card leads somewhere. A trending card whose link goes nowhere is
-     worse than no card. */
-  const trending = TRENDING.map((t) => {
-    const p = products.find((x) => x.category === t.slug);
-    return {
-      ...t,
-      href: p ? `/products/${p.category}/${p.slug}` : `/products/${t.slug}`,
-      image: p?.images?.[0]?.thumbUrl || p?.images?.[0]?.url || ''
-    };
   });
 
   return (
@@ -149,15 +140,20 @@ export default async function HomePage() {
                         loading="lazy"
                         decoding="async"
                         width={600}
-                        height={600}
+                        height={450}
                       />
                     )}
                   </div>
                   <div className="mat-body">
                     <h3>{m.name}</h3>
                     <p>{m.blurb}</p>
-                    <div className="ctags" style={{ marginTop: 12, marginBottom: 4 }}>
-                      {m.tags.slice(0, 3).map((t) => (
+                    {/* Two tags, not three. The card is a sixth of the
+                        page wide now, and three of them wrap into a
+                        block of their own. The product count and the
+                        minimum order below say the things a buyer
+                        filters on. */}
+                    <div className="ctags mat-tags">
+                      {m.tags.slice(0, 2).map((t) => (
                         <span className="ctag" key={t}>{t}</span>
                       ))}
                     </div>
@@ -169,62 +165,6 @@ export default async function HomePage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* ---- Trending platforms ---- */}
-        <section id="trending" className="alt">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Trending base shells</div>
-              <h2>Four shells that are moving right now</h2>
-              <p className="sec-sub">
-                Shown as platforms rather than finished SKUs — each one is a body your
-                buyers can put their own dial, hands and branding on.
-              </p>
-            </div>
-
-            <div className="trend-grid">
-              {trending.map((t) => (
-                <Link key={t.slug} href={t.href} className="trend-card">
-                  <div className="sq">
-                    {t.image && (
-                      <img src={t.image} alt={t.title} loading="lazy" decoding="async" width={600} height={600} />
-                    )}
-                  </div>
-                  <div className="trend-body">
-                    <h3>{t.title}</h3>
-                    <p>{t.note}</p>
-                    <div className="trend-tags">
-                      {t.tags.map((x) => <span className="trend-tag" key={x}>{x}</span>)}
-                    </div>
-                  </div>
-                  <span className="trend-cta">Quick inquire →</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- The customizer entry ----
-            The tool itself is on its own page. What stays here is the
-            promise and a way in: a buyer who has a preference sets it
-            here and arrives on the customizer page with that choice
-            already made, and one who has not presses the button and
-            starts there. */}
-        <section id="studio">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Customizer hub</div>
-              <h2>Four decisions, one specification</h2>
-              <p className="sec-sub">
-                The housing, the movement, the hands and the packaging. Choose them
-                and the specification assembles itself into a code the factory
-                quotes against — no email describing options in prose.
-              </p>
-            </div>
-
-            <HubEntry />
           </div>
         </section>
 

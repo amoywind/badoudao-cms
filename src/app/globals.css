@@ -89,8 +89,16 @@ h1 em { font-style: normal; color: var(--brand); }
 .trust-num small { font-size: 16px; color: var(--brass); }
 .trust-lab { font-size: 12.5px; color: #9aa1ac; letter-spacing: .03em; text-transform: uppercase; }
 
-section { padding: 88px 0; }
-.sec-head { max-width: 700px; margin-bottom: 52px; }
+/* The space between two sections is this padding twice, because each
+   section carries its own. At eighty-eight pixels that was a hundred
+   and seventy-six pixels of nothing between every pair of blocks, and
+   the home page read as a list of separate pages rather than one
+   argument.
+
+   Sixty is the same figure the tablet breakpoint uses, so the rhythm
+   narrows in one step rather than jumping. */
+section { padding: 60px 0; }
+.sec-head { max-width: 700px; margin-bottom: 40px; }
 .sec-tag { font-size: 12.5px; font-weight: 600; color: var(--brand); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
 
 h2 { font-family: var(--serif); font-size: 38px; line-height: 1.18; letter-spacing: -.022em; font-weight: 600; margin-bottom: 16px; }
