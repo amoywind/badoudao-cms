@@ -161,7 +161,7 @@ export default function PostsPage() {
                   onClick={() => setCoverPick((v) => !v)}
                 >
                   {edit.cover
-                    ? <img src={edit.cover} alt="" />
+                    ? <img src={edit.cover} alt="" width={1200} />
                     : <span>选择封面图</span>}
                 </button>
 

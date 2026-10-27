@@ -35,3 +35,10 @@ scripts/.tok
 # not part of it, and a quarter of a megabyte each
 scripts/.*.png
 scripts/.*.jpg
+
+# backups and snapshots the working scripts write
+scripts/.*.bak*.css
+scripts/.*.new.css
+scripts/.*.bak.css
+scripts/.style-*.txt
+scripts/.dev.log

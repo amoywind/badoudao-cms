@@ -122,6 +122,8 @@ export function CollectionGrid({
                     <img
                       src={p.image}
                       alt={p.name}
+                      width={600}
+                      height={600}
                       decoding="async"
                       {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
                     />

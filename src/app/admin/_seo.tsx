@@ -128,7 +128,7 @@ export function SeoBox({
         {previewImage && (
           <div className="serp">
             <div className="help" style={{ marginBottom: 6 }}>分享卡片</div>
-            <img className="serp-img" src={previewImage} alt="" />
+            <img className="serp-img" src={previewImage} alt="" width={1200} />
           </div>
         )}
       </div>

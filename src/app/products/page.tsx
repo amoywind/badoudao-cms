@@ -75,6 +75,8 @@ export default async function ProductsIndex() {
                           <img
                             src={p.images[0].thumbUrl || p.images[0].url}
                             alt={p.name}
+                            width={600}
+                            height={600}
                             decoding="async"
                             {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
                           />

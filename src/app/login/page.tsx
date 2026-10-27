@@ -22,7 +22,12 @@ export default async function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 24 }}>
+    /* The wrapper carries the admin's own class so the admin stylesheet
+       applies here as well. Without it the screen loses the admin's
+       background colour and the white card in the middle of it stops
+       being a card — the background turns white too, and the border
+       around it is the only thing left of it. */
+    <div className="admin-root" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 24 }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-.02em' }}>
@@ -57,7 +62,6 @@ async function bootstrap() {
     const password = env?.ADMIN_PASSWORD || 'badoudao-change-me';
 
     await ensureAdminExists(email, password);
-    console.log('Created initial admin:', email);
   } catch (err) {
     console.error('bootstrap failed:', err.message);
   }

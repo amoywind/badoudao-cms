@@ -1,3 +1,4 @@
+import '../admin.css';
 import type { Metadata } from 'next';
 
 /**

@@ -30,6 +30,56 @@
    with a sentence spliced into it is worse than a missed one.
    =================================================================== */
 
+
+
+
+
+
+
+
+
+
+
+/* ---- Last line of defence ----
+   Applied everywhere, not in a breakpoint: a long product name, a
+   reference code or a pasted word in a spec cell should wrap, never
+   create a horizontal scrollbar for the whole page. Placed at the end of
+   the file so it wins over the layout rules above it, and kept to
+   in-flow content so it cannot affect the header or the sticky sidebar.
+
+   overflow-x: clip rather than hidden, because hidden turns the
+   element into a scroll container, which breaks position:sticky
+   descendants — the quality page's licence panel. */
+.site :where(p, h1, h2, h3, h4, li, td, th, span, a, div) {
+  overflow-wrap: break-word;
+}
+/* The content containers are kept from being pushed wider than the
+   page. The page's own grid — .wrap — is deliberately not in this
+   list: it has a maximum width of its own, and a rule here with the
+   same specificity but a later stylesheet cancelled it. Between 1200
+   and 1600 pixels the whole site lost its measure and the content ran
+   to the edge of the screen, which is what pushed the clock engine's
+   option panel down to 82 pixels a column on the home page.
+
+   A grid is not content. It is the thing the content is measured
+   against, and a grid that has been told it may be as wide as the
+   viewport cannot measure anything. */
+.site :where(section, .card, .c-body, .pd, .split, .grid-3, .grid-2,
+       .related-grid, .f-grid, .fg2, .cap-list, .proc, .trust-grid):not(.wrap) {
+  max-width: 100%;
+}
+.site :where(img, svg, video, iframe, table) {
+  max-width: 100%;
+}
+.site table { display: block; overflow-x: auto; }
+
+/* ===================================================================
+   Media queries
+   -------------------------------------------------------------------
+   They are gathered here so that a change of breakpoint is one edit
+   rather than a hunt through the file.
+   =================================================================== */
+
 /* ---- 1024px: tablet landscape and small laptops ---- */
 @media (max-width: 1024px) {
   :root { --pad: 20px; }
@@ -367,39 +417,6 @@
   .wrap { padding-left: 13px; padding-right: 13px; }
   .btn { padding: 12px 16px; font-size: 14px; }
 }
-
-/* ---- Last line of defence ----
-   Applied everywhere, not in a breakpoint: a long product name, a
-   reference code or a pasted word in a spec cell should wrap, never
-   create a horizontal scrollbar for the whole page. Placed at the end of
-   the file so it wins over the layout rules above it, and kept to
-   in-flow content so it cannot affect the header or the sticky sidebar.
-
-   overflow-x: clip rather than hidden, because hidden turns the
-   element into a scroll container, which breaks position:sticky
-   descendants — the quality page's licence panel. */
-.site :where(p, h1, h2, h3, h4, li, td, th, span, a, div) {
-  overflow-wrap: break-word;
-}
-/* The content containers are kept from being pushed wider than the
-   page. The page's own grid — .wrap — is deliberately not in this
-   list: it has a maximum width of its own, and a rule here with the
-   same specificity but a later stylesheet cancelled it. Between 1200
-   and 1600 pixels the whole site lost its measure and the content ran
-   to the edge of the screen, which is what pushed the clock engine's
-   option panel down to 82 pixels a column on the home page.
-
-   A grid is not content. It is the thing the content is measured
-   against, and a grid that has been told it may be as wide as the
-   viewport cannot measure anything. */
-.site :where(section, .card, .c-body, .pd, .split, .grid-3, .grid-2,
-       .related-grid, .f-grid, .fg2, .cap-list, .proc, .trust-grid):not(.wrap) {
-  max-width: 100%;
-}
-.site :where(img, svg, video, iframe, table) {
-  max-width: 100%;
-}
-.site table { display: block; overflow-x: auto; }
 
 /* ---- Landscape phone ----
    A phone turned sideways is 844px wide and 390px tall. The 860px rules

@@ -1,4 +1,17 @@
-:root {
+/* The admin's own variables, on the admin's own wrapper rather than on
+   :root.
+
+   The stylesheet used to be imported by the root layout, which meant
+   every public page downloaded it and inherited its rules. The root
+   layout's comment explains the trouble that caused: <body> is shared
+   between the two trees, so the public variables had to be redeclared
+   on .site to survive.
+
+   Now that this file is imported by the admin's own layout, the
+   variables belong to the admin's wrapper and the public tree cannot
+   see them at all. :root would work too, but .admin-root says what it
+   is for. */
+.admin-root {
   --ink: #111417;
   --ink2: #3d4450;
   --ink3: #767f8c;
@@ -20,9 +33,12 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.admin-root .admin-root * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
+/* The body rule becomes the wrapper's own rule. It cannot stay on
+   <body>: the wrapper is inside the body, and a rule reading
+   ".admin-root body" would match nothing at all. */
+.admin-root {
   font-family: var(--sans);
   background: var(--bg);
   color: var(--ink);
@@ -31,9 +47,12 @@ body {
   overflow-x: hidden;
 }
 
-a { color: inherit; text-decoration: none; }
-button, input, select, textarea { font-family: inherit; }
-img { display: block; max-width: 100%; }
+.admin-root .admin-root a { color: inherit; text-decoration: none; }
+.admin-root button,
+.admin-root input,
+.admin-root select,
+.admin-root textarea { font-family: inherit; }
+.admin-root .admin-root img { display: block; max-width: 100%; }
 
 .app { display: flex; min-height: 100vh; }
 
@@ -116,7 +135,7 @@ img { display: block; max-width: 100%; }
 .ok-c { color: #15803d; font-weight: 600; }
 
 /* ---------- table ---------- */
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-root .admin-root table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
 /* Opt in per table, not globally.
 
@@ -131,20 +150,20 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; }
    across the eight list pages. Setting it globally would make all of them
    equal-width, which is a different distortion rather than a fix. Each
    page opts in once its columns have widths. */
-table[data-fixed] { table-layout: fixed; }
+.admin-root .admin-root table[data-fixed] { table-layout: fixed; }
 
 /* A cell that runs out of room wraps rather than widening its column or
    being cut. overflow-wrap matters here because product names are often
    unbroken ASCII strings with no spaces to break at. */
-th, td { overflow-wrap: break-word; }
-th {
+.admin-root th, .admin-root td { overflow-wrap: break-word; }
+.admin-root th {
   text-align: left; padding: 10px 13px; font-size: 11px; font-weight: 600;
   color: var(--ink3); letter-spacing: .04em; text-transform: uppercase;
   background: #fafbfc; border-bottom: 1px solid var(--line); white-space: nowrap;
 }
-td { padding: 10px 13px; border-bottom: 1px solid var(--line2); vertical-align: middle; }
-tbody tr:hover { background: #fafbfc; }
-tbody tr:last-child td { border-bottom: none; }
+.admin-root .admin-root td { padding: 10px 13px; border-bottom: 1px solid var(--line2); vertical-align: middle; }
+.admin-root .admin-root tbody tr:hover { background: #fafbfc; }
+.admin-root .admin-root tbody tr:last-child td { border-bottom: none; }
 
 .thumb { width: 36px; height: 36px; border-radius: 4px; object-fit: cover; background: #f0f2f4; border: 1px solid var(--line); flex-shrink: 0; }
 .thumb-ph {
@@ -191,8 +210,8 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 13px; background: #fff; color: var(--ink); width: 100%;
 }
 .app .inp:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(15,92,74,.08); }
-textarea.inp { resize: vertical; min-height: 70px; line-height: 1.6; }
-select.inp { cursor: pointer; }
+.admin-root .admin-root textarea.inp { resize: vertical; min-height: 70px; line-height: 1.6; }
+.admin-root .admin-root select.inp { cursor: pointer; }
 .fld { width: auto; }
 
 /* ---------- form ---------- */
@@ -220,12 +239,7 @@ select.inp { cursor: pointer; }
    where equal columns are correct. */
 .grid2-wide { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; }
 
-/* Below 1100px the fixed column is not worth its own space: 340px plus
-   whatever is left would squeeze the table into an unreadable sliver. One
-   column, and the todo card lands under the list it is about. */
-@media (max-width: 1100px) {
-  .grid2-wide { grid-template-columns: minmax(0, 1fr); }
-}
+
 .help { font-size: 11.5px; color: var(--ink3); margin-top: 4px; line-height: 1.5; }
 .help.warn { color: var(--warn); }
 
@@ -281,18 +295,8 @@ select.inp { cursor: pointer; }
 @keyframes sp { to { transform: rotate(360deg); } }
 .badge-cost { background: var(--warnSoft); color: var(--warn); font-size: 10.5px; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
 
-@media (max-width: 1100px) {
-  .stats { grid-template-columns: repeat(3, 1fr); }
-  .side { width: 62px; }
-  .side-h .lg, .side-h .who, .nav-g, .nav-i span, .side-f { display: none; }
-  .nav-i { justify-content: center; padding: 11px 0; }
-  .fg3 { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 760px) {
-  .stats { grid-template-columns: repeat(2, 1fr); }
-  .grid2, .fg2, .fg3 { grid-template-columns: 1fr; }
-  .content { padding: 16px; }
-}
+
+
 /* ---- enquiry attachments ---- */
 
 .att-list { display: grid; gap: 10px; margin-top: 6px; }
@@ -356,10 +360,7 @@ select.inp { cursor: pointer; }
   display: block; margin-top: 6px;
 }
 
-@media (max-width: 900px) {
-  .seo-box { grid-template-columns: 1fr; }
-  .seo-side { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; padding-top: 18px; }
-}
+
 
 /* ---- article vs news picker ---- */
 
@@ -381,9 +382,7 @@ select.inp { cursor: pointer; }
   border-radius: 6px; border: 1px solid var(--line); display: block;
 }
 
-@media (max-width: 700px) {
-  .type-row { grid-template-columns: 1fr; }
-}
+
 
 /* ---- markdown editor ---- */
 
@@ -517,14 +516,7 @@ select.inp { cursor: pointer; }
   margin-top: 20px;
 }
 
-/* On a phone the filter and the upload button stop sharing a row: the
-   button's label is four characters in Chinese and the field needs the
-   width more than the button needs the row. */
-@media (max-width: 560px) {
-  .ipk-bar { flex-direction: column; }
-  .ipk-row { flex-direction: column-reverse; }
-  .ipk-row .btn { width: 100%; justify-content: center; }
-}
+
 
 /* A note about an upload that succeeded — "not square", "3 of 5 failed"
    is red, "this one is 2000x300, the main slot prefers 1:1" is not. Same
@@ -595,4 +587,50 @@ select.inp { cursor: pointer; }
 .app .btn-danger-ghost:hover {
   background: #fef3f3;
   border-color: #e39a9e;
+}
+
+/* ===================================================================
+   Media queries
+   -------------------------------------------------------------------
+   They are gathered here so that a change of breakpoint is one edit
+   rather than a hunt through the file.
+   =================================================================== */
+
+/* Below 1100px the fixed column is not worth its own space: 340px plus
+   whatever is left would squeeze the table into an unreadable sliver. One
+   column, and the todo card lands under the list it is about. */
+@media (max-width: 1100px) {
+  .grid2-wide { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 1100px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .side { width: 62px; }
+  .side-h .lg, .side-h .who, .nav-g, .nav-i span, .side-f { display: none; }
+  .nav-i { justify-content: center; padding: 11px 0; }
+  .fg3 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .grid2, .fg2, .fg3 { grid-template-columns: 1fr; }
+  .content { padding: 16px; }
+}
+
+@media (max-width: 900px) {
+  .seo-box { grid-template-columns: 1fr; }
+  .seo-side { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; padding-top: 18px; }
+}
+
+@media (max-width: 700px) {
+  .type-row { grid-template-columns: 1fr; }
+}
+
+/* On a phone the filter and the upload button stop sharing a row: the
+   button's label is four characters in Chinese and the field needs the
+   width more than the button needs the row. */
+@media (max-width: 560px) {
+  .ipk-bar { flex-direction: column; }
+  .ipk-row { flex-direction: column-reverse; }
+  .ipk-row .btn { width: 100%; justify-content: center; }
 }

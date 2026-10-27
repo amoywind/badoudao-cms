@@ -1,7 +1,6 @@
 import './globals.css';
 import './tokens.css';
 import './responsive.css';
-import './admin.css';
 import { getSettings } from '@/lib/db';
 import { inter, spaceGrotesk, jetbrainsMono } from './fonts';
 

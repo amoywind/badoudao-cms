@@ -93,6 +93,8 @@ export default async function ArticlesPage() {
                         <img
                           src={p.cover}
                           alt={p.title}
+                          width={600}
+                          height={600}
                           decoding="async"
                           {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
                         />

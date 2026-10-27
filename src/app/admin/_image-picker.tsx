@@ -171,7 +171,7 @@ export function ImagePicker({
 
         {picked ? (
           <div className="ipk-b">
-            <img src={picked.url} alt="" className="ipk-preview" />
+            <img src={picked.url} alt="" className="ipk-preview" width={1200} />
 
             <label className="fld" style={{ marginTop: 14 }}>
               <span>替代文字（alt）</span>

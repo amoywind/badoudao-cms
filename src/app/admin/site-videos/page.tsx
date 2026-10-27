@@ -142,6 +142,8 @@ export default function SiteVideosPage() {
                           <img
                             src={`https://i.ytimg.com/vi/${s.youtubeId}/hqdefault.jpg`}
                             alt=""
+                            width={480}
+                            height={360}
                             style={{
                               width: '100%',
                               height: '100%',

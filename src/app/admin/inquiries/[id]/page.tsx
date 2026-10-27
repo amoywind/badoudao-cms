@@ -209,7 +209,7 @@ export default function InquiryDetail() {
                       return (
                         <a key={a.id} className="att-item" href={a.url} target="_blank" rel="noopener noreferrer">
                           {isImg
-                            ? <img src={a.url} alt={a.filename} loading="lazy" />
+                            ? <img src={a.url} alt={a.filename} width={1200} loading="lazy" />
                             : <span className="att-ico" aria-hidden="true">PDF</span>}
                           <span className="att-meta">
                             <span className="att-name">{a.filename}</span>

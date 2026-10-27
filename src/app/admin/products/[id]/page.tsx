@@ -663,6 +663,8 @@ export default function EditProductPage() {
                         <img
                           src={`https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`}
                           alt=""
+                          width={480}
+                          height={360}
                           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                         />
                       </div>

@@ -194,31 +194,7 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
   .f-grid:not(:has(> :nth-child(4)))           { grid-template-columns: 1.6fr repeat(2, 1fr); }
 }
 
-/* Five columns, not four, on a tablet.
 
-   Four link columns plus the brand block need five tracks. Declaring
-   four — brand, then three links — left Resources without a track: it
-   wrapped to a second row and picked up the 1.6fr, rendering at 291px
-   while the other three sat at 182px. The count has to match what is
-   actually rendered.
-
-   The gap comes down instead, which is what buys the link columns their
-   width: 182px fits "Glass & Crystal Wall Clock" on two lines where
-   142px at a 44px gap made three. Below 900px responsive.css takes over. */
-@media (max-width: 1100px) and (min-width: 901px) {
-  .f-grid:has(> :nth-child(5)) {
-    grid-template-columns: 1.6fr repeat(4, 1fr);
-    gap: 28px;
-  }
-  .f-grid:not(:has(> :nth-child(5))):has(> :nth-child(4)) {
-    grid-template-columns: 1.6fr repeat(3, 1fr);
-    gap: 28px;
-  }
-  .f-grid:not(:has(> :nth-child(4))) {
-    grid-template-columns: 1.6fr repeat(2, 1fr);
-    gap: 28px;
-  }
-}
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
 .f-brand p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
 .f-h { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 17px; }
@@ -790,16 +766,8 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   pointer-events: none; opacity: 0; transition: opacity .2s;
 }
 
-/* The hint is how a buyer learns the photo opens full size, and there is no
-   hover on a touchscreen — there :hover latches on after the first tap and
-   stays, so the hint either never appears or never goes away. Devices that
-   genuinely hover get it on hover; ones that cannot get it always. */
-@media (hover: hover) {
-  .pd-main:hover .pd-zoom-hint { opacity: 1; }
-}
-@media (hover: none) {
-  .pd-zoom-hint { opacity: 1; }
-}
+
+
 
 /* Where a photo is missing, say what to shoot. An empty square is a broken
    image; a list of angles is a work list the owner can act on today. */
@@ -1047,4 +1015,47 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 /* Specs table full-width now that the description column is gone */
 .pd-spec { margin-top: 18px; max-width: 620px; }
 
+/* ===================================================================
+   Media queries
+   -------------------------------------------------------------------
+   They are gathered here so that a change of breakpoint is one edit
+   rather than a hunt through the file.
+   =================================================================== */
 
+/* Five columns, not four, on a tablet.
+
+   Four link columns plus the brand block need five tracks. Declaring
+   four — brand, then three links — left Resources without a track: it
+   wrapped to a second row and picked up the 1.6fr, rendering at 291px
+   while the other three sat at 182px. The count has to match what is
+   actually rendered.
+
+   The gap comes down instead, which is what buys the link columns their
+   width: 182px fits "Glass & Crystal Wall Clock" on two lines where
+   142px at a 44px gap made three. Below 900px responsive.css takes over. */
+@media (max-width: 1100px) and (min-width: 901px) {
+  .f-grid:has(> :nth-child(5)) {
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap: 28px;
+  }
+  .f-grid:not(:has(> :nth-child(5))):has(> :nth-child(4)) {
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 28px;
+  }
+  .f-grid:not(:has(> :nth-child(4))) {
+    grid-template-columns: 1.6fr repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+/* The hint is how a buyer learns the photo opens full size, and there is no
+   hover on a touchscreen — there :hover latches on after the first tap and
+   stays, so the hint either never appears or never goes away. Devices that
+   genuinely hover get it on hover; ones that cannot get it always. */
+@media (hover: hover) {
+  .pd-main:hover .pd-zoom-hint { opacity: 1; }
+}
+
+@media (hover: none) {
+  .pd-zoom-hint { opacity: 1; }
+}

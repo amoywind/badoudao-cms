@@ -614,6 +614,8 @@ export default async function ProductPage({ params }) {
                       <img
                         src={p.images[0].thumbUrl || p.images[0].url}
                         alt={p.name}
+                        width={600}
+                        height={600}
                         loading="lazy"
                         decoding="async"
                       />

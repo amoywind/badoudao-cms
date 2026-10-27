@@ -500,41 +500,9 @@
   background: var(--accent-hover);
 }
 
-@media (max-width: 767px) {
-  .mbar {
-    display: flex;
-  }
 
-  /* The bar is fixed, so the page needs room under it or the last row of
-     a long form sits behind it and cannot be scrolled to. */
-  .site {
-    padding-bottom: 52px;
-  }
 
-  .tcards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
 
-  .tcards-strip .tcard {
-    border-right: none;
-    padding: 0 14px;
-  }
-
-  .tcard {
-    padding: 20px 18px;
-  }
-
-  .tcard-n {
-    font-size: 25px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .tcards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
 /* ===================================================================
    Live clock engine
@@ -938,129 +906,20 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 1180px) {
-  .clockbox-body {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-
-@media (max-width: 600px) {
-  .clockbox {
-    padding: 18px;
-  }
-
-  .clockbox-head {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .clockbox-sel {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .clockbox-selwrap {
-    width: 100%;
-  }
-
-  .clockbox-foot {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
 
 
-@media (max-width: 1180px) {
-  .clockbox-body {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
 
-@media (max-width: 600px) {
-  .clockbox {
-    padding: 18px;
-  }
 
-  .clockbox-head {
-    flex-direction: column;
-    gap: 10px;
-  }
 
-  .clockbox-sel {
-    max-width: 100%;
-    width: 100%;
-  }
 
-  .clockbox-selwrap {
-    width: 100%;
-  }
 
-  .clockbox-foot {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
 
-@media (max-width: 1180px) {
-  .clockbox-body {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
 
-  .clockbox-face {
-    order: 1;
-  }
 
-  .clockbox-panel {
-    order: 2;
-  }
-}
 
-/* On a tablet the card goes to one column, and the dial sits above
-   the panel rather than beside it — the dial is the thing the buyer
-   is looking at, and above is where the eye goes first. The panel
-   keeps its three columns: the card is now the full width of the
-   page, which gives the options more room than they had on the
-   desktop rather than less. */
-@media (max-width: 900px) {
-  .clockbox-panel {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
 
-  /* Four across is too many on a narrow screen; two is enough and
-     the names stay on one line. */
-  .ck-opts-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 
-@media (max-width: 600px) {
-  .clockbox {
-    padding: 18px;
-  }
 
-  .clockbox-head {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .clockbox-sel {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .clockbox-selwrap {
-    width: 100%;
-  }
-
-  .clockbox-foot {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
 
 /* ===================================================================
    Header contract — §5.1-1 and §5.1-2
@@ -1131,21 +990,7 @@
   font-size: 12px;
 }
 
-@media (max-width: 900px) {
-  /* The bar's four claims do not fit a phone, and a truncated line of
-     half-claims is worse than one claim. The rest are on the trust
-     cards a scroll away. */
-  .topbar-claim {
-    gap: 10px;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-  }
 
-  .topbar-claim i:nth-of-type(n + 2),
-  .topbar-claim i:nth-of-type(n + 2) ~ * {
-    display: none;
-  }
-}
 
 /* ===================================================================
    The customizer hub — §5.1-6
@@ -1166,20 +1011,7 @@
   overflow: hidden;
 }
 
-/* Below 1100 the summary panel goes under the options rather than
-   beside them. A 340-pixel column beside the options leaves the
-   options themselves about 700 pixels, and below 1100 there are not
-   1100 pixels to give. */
-@media (max-width: 1100px) {
-  .hub {
-    grid-template-columns: 1fr;
-  }
 
-  .hub-sum {
-    border-left: none;
-    border-top: 1px solid var(--rule);
-  }
-}
 
 .hub-main {
   border-right: 1px solid var(--rule);
@@ -1398,31 +1230,9 @@
   margin-top: 14px;
 }
 
-@media (max-width: 1024px) {
-  .hub {
-    grid-template-columns: 1fr;
-  }
 
-  .hub-main {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
-  }
 
-  .hub-opts {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 600px) {
-  .hub-opts {
-    grid-template-columns: 1fr;
-  }
-
-  .hub-tab {
-    padding: 13px 10px;
-    font-size: 11px;
-  }
-}
 
 /* ===================================================================
    The carton and freight estimator — §5.3-2
@@ -1588,11 +1398,7 @@
   padding: 12px 20px;
 }
 
-@media (max-width: 480px) {
-  .frt-in {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 /* ===================================================================
    The carton and freight estimator — §5.3-2
@@ -1758,11 +1564,7 @@
   padding: 12px 20px;
 }
 
-@media (max-width: 480px) {
-  .frt-in {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 
 /* The count beside each category, and the count above the grid. */
@@ -1882,16 +1684,7 @@
   color: var(--text-2);
 }
 
-@media (max-width: 600px) {
-  .cert-row {
-    flex-direction: column;
-    gap: 3px;
-  }
 
-  .cert-code {
-    min-width: 0;
-  }
-}
 
 /* ===================================================================
    QC metrics, certifications, factory figures, the 28-day route
@@ -1980,16 +1773,7 @@
   color: var(--text-2);
 }
 
-@media (max-width: 600px) {
-  .cert-row {
-    flex-direction: column;
-    gap: 3px;
-  }
 
-  .cert-code {
-    min-width: 0;
-  }
-}
 
 /* The enquiry form's submit button. §6.1 asks for a 52px full-width
    accent button: it is the only conversion on the page, and a buyer on
@@ -2019,75 +1803,13 @@
   text-transform: uppercase;
 }
 
-/* The header at tablet width.
-   Six navigation links, a two-word brand and a two-word button do not
-   fit on one line at 820px — the button was pushed 15px past the edge.
-   The links narrow first, because they carry the most information, and
-   the button keeps its full wording because it is the one action. */
-@media (max-width: 1024px) and (min-width: 768px) {
-  .site .nav {
-    gap: 18px;
-  }
 
-  .site .menu {
-    gap: 16px;
-    font-size: 13.5px;
-  }
 
-  .site .logo {
-    font-size: 15px;
-  }
 
-  .site .nav-cta .btn {
-    padding: 9px 12px;
-    font-size: 11px;
-    letter-spacing: 0.01em;
-  }
-}
 
-/* Below the tablet the links collapse into the menu, so the brand and
-   the button have the whole width to themselves and can be larger. */
-@media (max-width: 767px) {
-  .site .nav-cta .btn {
-    font-size: 11px;
-    padding: 9px 13px;
-  }
-}
 
-/* The header at tablet width.
-   Six navigation links, a two-word brand and a two-word button do not
-   fit on one line at 820px — the button was pushed 15px past the edge.
-   The links narrow first, because they carry the most information, and
-   the button keeps its full wording because it is the one action. */
-@media (max-width: 1024px) and (min-width: 768px) {
-  .site .nav {
-    gap: 18px;
-  }
 
-  .site .menu {
-    gap: 16px;
-    font-size: 13.5px;
-  }
 
-  .site .logo {
-    font-size: 15px;
-  }
-
-  .site .nav-cta .btn {
-    padding: 9px 12px;
-    font-size: 11px;
-    letter-spacing: 0.01em;
-  }
-}
-
-/* Below the tablet the links collapse into the menu, so the brand and
-   the button have the whole width to themselves and can be larger. */
-@media (max-width: 767px) {
-  .site .nav-cta .btn {
-    font-size: 11px;
-    padding: 9px 13px;
-  }
-}
 
 /* ===================================================================
    The specification panel, collapsed
@@ -2417,11 +2139,7 @@
   max-width: 100%;
 }
 
-@media (max-width: 767px) {
-  .pd-video-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+
 
 /* ===================================================================
    The video slot with a video in it
@@ -2541,11 +2259,7 @@
   max-width: 100%;
 }
 
-@media (max-width: 767px) {
-  .pd-video-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+
 
 /* ===================================================================
    The sample and prototyping policy
@@ -2632,16 +2346,7 @@
   margin-top: 6px;
 }
 
-@media (max-width: 480px) {
-  .sp-row {
-    flex-direction: column;
-    gap: 2px;
-  }
 
-  .sp-v {
-    text-align: left;
-  }
-}
 
 /* ===================================================================
    The sample and prototyping policy
@@ -2728,16 +2433,7 @@
   margin-top: 6px;
 }
 
-@media (max-width: 480px) {
-  .sp-row {
-    flex-direction: column;
-    gap: 2px;
-  }
 
-  .sp-v {
-    text-align: left;
-  }
-}
 
 /* ===================================================================
    The exploded anatomy
@@ -3047,27 +2743,9 @@
   line-height: 1.6;
 }
 
-@media (max-width: 1024px) {
-  .anx {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
 
-  .anx-title {
-    font-size: 25px;
-  }
-}
 
-@media (max-width: 600px) {
-  .anx-diagram {
-    padding: 20px 14px 16px;
-  }
 
-  .anx-tab {
-    padding: 6px 9px;
-    font-size: 10px;
-  }
-}
 
 /* ===================================================================
    Restored rules
@@ -3787,269 +3465,21 @@
   font-size: 11.5px;
 }
 
-@media (max-width: 1024px) {
-.coll {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-.rail {
-    position: static;
-  }
-.pgrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-.pd2 {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-.mat-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-.qc-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-.studio {
-    grid-template-columns: 1fr;
-  }
-.studio-side {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
-  }
-}
 
-@media (max-width: 480px) {
-.hero2-h1 {
-    font-size: 27px;
-  }
-.hero2-h1 {
-    font-size: 27px;
-  }
-}
 
-@media (max-width: 767px) {
-.mat-grid,
-  .qc-grid {
-    grid-template-columns: 1fr;
-  }
-.pgrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-.pcard-body {
-    padding: 12px 13px 14px;
-  }
-.pcard-body h3 {
-    font-size: 13.5px;
-  }
-.spec-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-.spec-lbl {
-    padding-top: 0;
-  }
-.trend-cta {
-    transform: none;
-    position: static;
-    border-radius: 0;
-  }
-.freight-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
-/* Below 1280 the hero goes to one column.
 
-   The clock engine card needs about 600 pixels for its dial and its
-   option groups side by side, and the headline needs about 500. A
-   1280-pixel screen cannot give both, and the card is the part that
-   suffers: at 1200 the two of them shared the width and the option
-   buttons were 35 pixels wide.
 
-   One column puts the card full width below the headline, which is
-   also what a buyer on a laptop wants — the dial and the options are
-   read before the headline is finished. */
-@media (max-width: 1280px) {
-  /* Six cards across a twelve-hundred-pixel page means each picture is
-     under two hundred pixels wide, which is too small to recognise a
-     material from. Three across is the point where the photograph is
-     still a cue. */
-  .mat-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 
-  .hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
-  }
 
-  .hero2-h1 {
-    font-size: 32px;
-  }
 
-  /* The card is the width of the page now, which would leave a dial
-     in the middle of a very wide panel. It is held to a width a
-     reader can take in and centred, and the dial grows to match the
-     space it has. */
-  .clockbox {
-    max-width: 880px;
-    margin: 0 auto;
-  }
 
-  .clockbox-body {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 30px;
-  }
 
-  .clockbox-face {
-    width: 250px;
-  }
 
-  .clockface {
-    max-width: 250px;
-  }
-}
 
-/* ===================================================================
-   Restored rules
-   -------------------------------------------------------------------
-   A cleanup pass removed a range between two selectors, and one of
-   the two selectors also appears inside a media query, so the range it
-   removed was larger than the one it was meant to remove. A hundred
-   and thirty rules went with it: the hero, the product cards, the
-   material and trend grids, the customizer panel, the product detail
-   layout, the detail tabs, the freight estimator, the movement matrix,
-   the quality grid — and twenty-five of them inside media queries,
-   which are the ones that decide what a phone and a tablet see.
 
-   They are put back from the last commit whose stylesheet was
-   complete, grouped by the media query each one belongs in.
-   =================================================================== */
 
-@media (max-width: 1024px) {
-.coll {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-.rail {
-    position: static;
-  }
-.pgrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-.pd2 {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-.mat-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-.qc-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-.studio {
-    grid-template-columns: 1fr;
-  }
-.studio-side {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
-  }
-}
 
-@media (max-width: 480px) {
-.hero2-h1 {
-    font-size: 27px;
-  }
-.hero2-h1 {
-    font-size: 27px;
-  }
-}
-
-@media (max-width: 767px) {
-.mat-grid,
-  .qc-grid {
-    grid-template-columns: 1fr;
-  }
-.pgrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-.pcard-body {
-    padding: 12px 13px 14px;
-  }
-.pcard-body h3 {
-    font-size: 13.5px;
-  }
-.spec-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-.spec-lbl {
-    padding-top: 0;
-  }
-.trend-cta {
-    transform: none;
-    position: static;
-    border-radius: 0;
-  }
-.freight-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Below 1280 the hero goes to one column.
-
-   The clock engine card needs about 600 pixels for its dial and its
-   option groups side by side, and the headline needs about 500. A
-   1280-pixel screen cannot give both, and the card is the part that
-   suffers: at 1200 the two of them shared the width and the option
-   buttons were 35 pixels wide.
-
-   One column puts the card full width below the headline, which is
-   also what a buyer on a laptop wants — the dial and the options are
-   read before the headline is finished. */
-@media (max-width: 1280px) {
-  /* Six cards across a twelve-hundred-pixel page means each picture is
-     under two hundred pixels wide, which is too small to recognise a
-     material from. Three across is the point where the photograph is
-     still a cue. */
-  .mat-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
-  }
-
-  .hero2-h1 {
-    font-size: 32px;
-  }
-
-  /* The card is the width of the page now, which would leave a dial
-     in the middle of a very wide panel. It is held to a width a
-     reader can take in and centred, and the dial grows to match the
-     space it has. */
-  .clockbox {
-    max-width: 880px;
-    margin: 0 auto;
-  }
-
-  .clockbox-body {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 30px;
-  }
-
-  .clockbox-face {
-    width: 250px;
-  }
-
-  .clockface {
-    max-width: 250px;
-  }
-}
 
 /* ===================================================================
    Restored rules
@@ -4169,44 +3599,9 @@
   font-style: italic;
 }
 
-@media (max-width: 1024px) {
-.rail-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-.rail-links li {
-    flex: 1 1 auto;
-  }
-.rail-link {
-    border-left: none;
-    border-bottom: 2px solid transparent;
-    margin: 0;
-    padding: 8px 10px;
-  }
-.rail-link.on {
-    border-bottom-color: var(--accent);
-  }
-}
 
-@media (max-width: 767px) {
-.rail-links {
-    display: block;
-  }
-.rail-links li {
-    display: block;
-  }
-.rail-link {
-    border-left: 2px solid transparent;
-    border-bottom: none;
-    margin: 0 -11px;
-    padding: 10px 11px;
-  }
-.rail-link.on {
-    border-left-color: var(--accent);
-    border-bottom-color: transparent;
-  }
-}
+
+
 
 /* ===================================================================
    The 28-day route
@@ -4288,6 +3683,692 @@
   font-size: 12.5px;
   color: var(--text-2);
   line-height: 1.6;
+}
+
+/* ===================================================================
+   Media queries
+   -------------------------------------------------------------------
+   They are gathered here so that a change of breakpoint is one edit
+   rather than a hunt through the file.
+   =================================================================== */
+
+@media (max-width: 767px) {
+  .mbar {
+    display: flex;
+  }
+
+  /* The bar is fixed, so the page needs room under it or the last row of
+     a long form sits behind it and cannot be scrolled to. */
+  .site {
+    padding-bottom: 52px;
+  }
+
+  .tcards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .tcards-strip .tcard {
+    border-right: none;
+    padding: 0 14px;
+  }
+
+  .tcard {
+    padding: 20px 18px;
+  }
+
+  .tcard-n {
+    font-size: 25px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tcards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .clockbox-body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .clockbox-face {
+    order: 1;
+  }
+
+  .clockbox-panel {
+    order: 2;
+  }
+}
+
+/* On a tablet the card goes to one column, and the dial sits above
+   the panel rather than beside it — the dial is the thing the buyer
+   is looking at, and above is where the eye goes first. The panel
+   keeps its three columns: the card is now the full width of the
+   page, which gives the options more room than they had on the
+   desktop rather than less. */
+@media (max-width: 900px) {
+  .clockbox-panel {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Four across is too many on a narrow screen; two is enough and
+     the names stay on one line. */
+  .ck-opts-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .clockbox {
+    padding: 18px;
+  }
+
+  .clockbox-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clockbox-sel {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .clockbox-selwrap {
+    width: 100%;
+  }
+
+  .clockbox-foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  /* The bar's four claims do not fit a phone, and a truncated line of
+     half-claims is worse than one claim. The rest are on the trust
+     cards a scroll away. */
+  .topbar-claim {
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .topbar-claim i:nth-of-type(n + 2),
+  .topbar-claim i:nth-of-type(n + 2) ~ * {
+    display: none;
+  }
+}
+
+/* Below 1100 the summary panel goes under the options rather than
+   beside them. A 340-pixel column beside the options leaves the
+   options themselves about 700 pixels, and below 1100 there are not
+   1100 pixels to give. */
+@media (max-width: 1100px) {
+  .hub {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-sum {
+    border-left: none;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hub {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-main {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hub-opts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hub-opts {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-tab {
+    padding: 13px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .frt-in {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .frt-in {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .cert-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cert-code {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .cert-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cert-code {
+    min-width: 0;
+  }
+}
+
+/* The header at tablet width.
+   Six navigation links, a two-word brand and a two-word button do not
+   fit on one line at 820px — the button was pushed 15px past the edge.
+   The links narrow first, because they carry the most information, and
+   the button keeps its full wording because it is the one action. */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .site .nav {
+    gap: 18px;
+  }
+
+  .site .menu {
+    gap: 16px;
+    font-size: 13.5px;
+  }
+
+  .site .logo {
+    font-size: 15px;
+  }
+
+  .site .nav-cta .btn {
+    padding: 9px 12px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Below the tablet the links collapse into the menu, so the brand and
+   the button have the whole width to themselves and can be larger. */
+@media (max-width: 767px) {
+  .site .nav-cta .btn {
+    font-size: 11px;
+    padding: 9px 13px;
+  }
+}
+
+/* The header at tablet width.
+   Six navigation links, a two-word brand and a two-word button do not
+   fit on one line at 820px — the button was pushed 15px past the edge.
+   The links narrow first, because they carry the most information, and
+   the button keeps its full wording because it is the one action. */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .site .nav {
+    gap: 18px;
+  }
+
+  .site .menu {
+    gap: 16px;
+    font-size: 13.5px;
+  }
+
+  .site .logo {
+    font-size: 15px;
+  }
+
+  .site .nav-cta .btn {
+    padding: 9px 12px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Below the tablet the links collapse into the menu, so the brand and
+   the button have the whole width to themselves and can be larger. */
+@media (max-width: 767px) {
+  .site .nav-cta .btn {
+    font-size: 11px;
+    padding: 9px 13px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pd-video-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .pd-video-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sp-v {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sp-v {
+    text-align: left;
+  }
+}
+
+@media (max-width: 1024px) {
+  .anx {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .anx-title {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .anx-diagram {
+    padding: 20px 14px 16px;
+  }
+
+  .anx-tab {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+.coll {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+.rail {
+    position: static;
+  }
+.pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+.pd2 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+.mat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.qc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.studio {
+    grid-template-columns: 1fr;
+  }
+.studio-side {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 480px) {
+.hero2-h1 {
+    font-size: 27px;
+  }
+.hero2-h1 {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 767px) {
+.mat-grid,
+  .qc-grid {
+    grid-template-columns: 1fr;
+  }
+.pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+.pcard-body {
+    padding: 12px 13px 14px;
+  }
+.pcard-body h3 {
+    font-size: 13.5px;
+  }
+.spec-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+.spec-lbl {
+    padding-top: 0;
+  }
+.trend-cta {
+    transform: none;
+    position: static;
+    border-radius: 0;
+  }
+.freight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Below 1280 the hero goes to one column.
+
+   The clock engine card needs about 600 pixels for its dial and its
+   option groups side by side, and the headline needs about 500. A
+   1280-pixel screen cannot give both, and the card is the part that
+   suffers: at 1200 the two of them shared the width and the option
+   buttons were 35 pixels wide.
+
+   One column puts the card full width below the headline, which is
+   also what a buyer on a laptop wants — the dial and the options are
+   read before the headline is finished. */
+@media (max-width: 1280px) {
+  /* Six cards across a twelve-hundred-pixel page means each picture is
+     under two hundred pixels wide, which is too small to recognise a
+     material from. Three across is the point where the photograph is
+     still a cue. */
+  .mat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+
+  .hero2-h1 {
+    font-size: 32px;
+  }
+
+  /* The card is the width of the page now, which would leave a dial
+     in the middle of a very wide panel. It is held to a width a
+     reader can take in and centred, and the dial grows to match the
+     space it has. */
+  .clockbox {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  .clockbox-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .clockbox-face {
+    width: 250px;
+  }
+
+  .clockface {
+    max-width: 250px;
+  }
+}
+
+/* ===================================================================
+   Restored rules
+   -------------------------------------------------------------------
+   A cleanup pass removed a range between two selectors, and one of
+   the two selectors also appears inside a media query, so the range it
+   removed was larger than the one it was meant to remove. A hundred
+   and thirty rules went with it: the hero, the product cards, the
+   material and trend grids, the customizer panel, the product detail
+   layout, the detail tabs, the freight estimator, the movement matrix,
+   the quality grid — and twenty-five of them inside media queries,
+   which are the ones that decide what a phone and a tablet see.
+
+   They are put back from the last commit whose stylesheet was
+   complete, grouped by the media query each one belongs in.
+   =================================================================== */
+
+@media (max-width: 1024px) {
+.coll {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+.rail {
+    position: static;
+  }
+.pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+.pd2 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+.mat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.qc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+.studio {
+    grid-template-columns: 1fr;
+  }
+.studio-side {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 480px) {
+.hero2-h1 {
+    font-size: 27px;
+  }
+.hero2-h1 {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 767px) {
+.mat-grid,
+  .qc-grid {
+    grid-template-columns: 1fr;
+  }
+.pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+.pcard-body {
+    padding: 12px 13px 14px;
+  }
+.pcard-body h3 {
+    font-size: 13.5px;
+  }
+.spec-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+.spec-lbl {
+    padding-top: 0;
+  }
+.trend-cta {
+    transform: none;
+    position: static;
+    border-radius: 0;
+  }
+.freight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Below 1280 the hero goes to one column.
+
+   The clock engine card needs about 600 pixels for its dial and its
+   option groups side by side, and the headline needs about 500. A
+   1280-pixel screen cannot give both, and the card is the part that
+   suffers: at 1200 the two of them shared the width and the option
+   buttons were 35 pixels wide.
+
+   One column puts the card full width below the headline, which is
+   also what a buyer on a laptop wants — the dial and the options are
+   read before the headline is finished. */
+@media (max-width: 1280px) {
+  /* Six cards across a twelve-hundred-pixel page means each picture is
+     under two hundred pixels wide, which is too small to recognise a
+     material from. Three across is the point where the photograph is
+     still a cue. */
+  .mat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero2-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 24px 48px;
+  }
+
+  .hero2-h1 {
+    font-size: 32px;
+  }
+
+  /* The card is the width of the page now, which would leave a dial
+     in the middle of a very wide panel. It is held to a width a
+     reader can take in and centred, and the dial grows to match the
+     space it has. */
+  .clockbox {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  .clockbox-body {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .clockbox-face {
+    width: 250px;
+  }
+
+  .clockface {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 1024px) {
+.rail-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+.rail-links li {
+    flex: 1 1 auto;
+  }
+.rail-link {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    margin: 0;
+    padding: 8px 10px;
+  }
+.rail-link.on {
+    border-bottom-color: var(--accent);
+  }
+}
+
+@media (max-width: 767px) {
+.rail-links {
+    display: block;
+  }
+.rail-links li {
+    display: block;
+  }
+.rail-link {
+    border-left: 2px solid transparent;
+    border-bottom: none;
+    margin: 0 -11px;
+    padding: 10px 11px;
+  }
+.rail-link.on {
+    border-left-color: var(--accent);
+    border-bottom-color: transparent;
+  }
 }
 
 /* Below the tablet the strip wraps to two rows of three. The rule
