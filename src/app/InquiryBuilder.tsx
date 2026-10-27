@@ -45,7 +45,7 @@ export const BUILDER_GROUPS: BuilderGroup[] = [
   {
     key: 'movement',
     label: 'Movement',
-    fallback: 'STD',
+    fallback: 'SWEEP',
     options: [
       { code: 'SWEEP', label: 'Silent sweep quartz' },
       { code: 'STEP', label: 'Step-second quartz' },
@@ -59,7 +59,7 @@ export const BUILDER_GROUPS: BuilderGroup[] = [
   {
     key: 'hands',
     label: 'Hands',
-    fallback: 'STD',
+    fallback: 'ALU',
     options: [
       { code: 'ALU', label: 'Aluminium' },
       { code: 'BRS', label: 'Brass' },
@@ -88,10 +88,17 @@ export const SPEC_FIELD = 'spec';
  * Build the specification string.
  *
  * The product id comes first so the string is unique per product, then
- * the three chosen codes. Example: `MDF-01-SWEEP-BRS-GIFT`.
+ * the chosen codes, one per group. Example: `MDF-01-SWEEP-BRS-GIFT`.
+ *
+ * The groups are the ones passed in, so the string carries what this
+ * model can actually be configured as rather than a fixed three.
  */
-export function buildSpec(productId: string, picks: Record<string, string>) {
-  const codes = BUILDER_GROUPS.map((g) => picks[g.key] || g.fallback);
+export function buildSpec(
+  productId: string,
+  picks: Record<string, string>,
+  groups: BuilderGroup[] = BUILDER_GROUPS
+) {
+  const codes = groups.map((g) => picks[g.key] || g.fallback);
   return [productId, ...codes].join('-');
 }
 
@@ -99,9 +106,10 @@ export function buildSpec(productId: string, picks: Record<string, string>) {
 export function buildMessage(
   productId: string,
   productName: string,
-  picks: Record<string, string>
+  picks: Record<string, string>,
+  groups: BuilderGroup[] = BUILDER_GROUPS
 ) {
-  const lines = BUILDER_GROUPS.map((g) => {
+  const lines = groups.map((g) => {
     const opt = g.options.find((o) => o.code === picks[g.key]);
     return `${g.label}: ${opt ? opt.label : g.fallback}`;
   });
@@ -119,20 +127,34 @@ export function buildMessage(
 export function InquiryBuilder({
   productId,
   productName,
+  /* The groups this model can be configured as. The page builds them
+     from what the owner recorded for the model, so the builder shows
+     the options that exist for this clock rather than a fixed list,
+     and the one already chosen is the one the model is built with.
+
+     Without them the builder falls back to the factory's general set,
+     which is what a base platform needs. */
+  groups,
   /** The id of the form's message field, so the builder can fill it. */
   messageFieldId = 'if-msg'
 }: {
   productId: string;
   productName: string;
+  groups?: BuilderGroup[];
   messageFieldId?: string;
 }) {
-  const [picks, setPicks] = useState<Record<string, string>>({
-    movement: 'SWEEP',
-    hands: 'ALU',
-    packaging: 'KRAFT'
+  const list = groups && groups.length ? groups : BUILDER_GROUPS;
+
+  /* The model as it is built. Each group opens on what the factory
+     already fits, so the buyer is shown the clock they are looking at
+     and can change one thing about it. */
+  const [picks, setPicks] = useState<Record<string, string>>(() => {
+    const start: Record<string, string> = {};
+    for (const g of list) start[g.key] = g.fallback;
+    return start;
   });
 
-  const spec = buildSpec(productId, picks);
+  const spec = buildSpec(productId, picks, list);
 
   /* The hidden field carries the specification; the message field carries
      the readable version. Both are updated on every change so the buyer
@@ -141,17 +163,17 @@ export function InquiryBuilder({
     setPicks(next);
 
     const specEl = document.getElementById(SPEC_FIELD) as HTMLInputElement | null;
-    if (specEl) specEl.value = buildSpec(productId, next);
+    if (specEl) specEl.value = buildSpec(productId, next, list);
 
     const msgEl = document.getElementById(messageFieldId) as HTMLTextAreaElement | null;
-    if (msgEl) msgEl.value = buildMessage(productId, productName, next);
+    if (msgEl) msgEl.value = buildMessage(productId, productName, next, list);
   }
 
   return (
     <div className="spec">
       <div className="spec-h">Inquiry builder</div>
 
-      {BUILDER_GROUPS.map((g) => (
+      {list.map((g) => (
         <div className="spec-row" key={g.key}>
           <div className="spec-lbl">{g.label}</div>
           <div className="spec-opts">

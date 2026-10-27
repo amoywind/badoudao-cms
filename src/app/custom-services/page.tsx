@@ -40,7 +40,6 @@ export default async function CustomServicesPage() {
   return (
     <div className="site">
       <SiteSchema s={s} />
-      <SiteSchema s={s} />
       <TopBar />
       <Header />
 

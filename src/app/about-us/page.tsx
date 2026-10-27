@@ -36,7 +36,6 @@ export default async function AboutUsPage() {
   return (
     <div className="site">
       <SiteSchema s={s} />
-      <SiteSchema s={s} />
       <TopBar />
       <Header />
 

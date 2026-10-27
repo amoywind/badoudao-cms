@@ -37,7 +37,6 @@ export default async function ComponentsPage() {
   return (
     <div className="site">
       <SiteSchema s={s} />
-      <SiteSchema s={s} />
       <TopBar />
       <Header />
 

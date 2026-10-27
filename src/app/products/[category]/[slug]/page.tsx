@@ -5,8 +5,8 @@ import {
 } from '@/lib/db';
 import type { SiteSettings, SiteVideoSlot } from '@/lib/db';
 import { listSeoTags, packagingImages } from '@/lib/seo-tags';
-import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor } from '@/lib/product-detail';
-import { ProductGallery, CustomisationList } from '../../_pd-client';
+import { OPTION_GROUPS, QC_CLAIMS, PACKAGING_OPTIONS, PROCESS_STEPS, seoTagsFor, codeFor } from '@/lib/product-detail';
+import { ProductGallery } from '../../_pd-client';
 import { TopBar, Header, Footer } from '../../../SiteChrome';
 import { InquiryBuilder } from '../../../InquiryBuilder';
 import { DetailTabs } from '../../../DetailTabs';
@@ -178,13 +178,50 @@ export default async function ProductPage({ params }) {
     }))
     .filter((g) => g.values.length > 0);
 
+  /* The groups the inquiry builder offers.
+
+     The builder used to be given a fixed list of three — movement,
+     hands, packaging — and the model it was on had five groups of its
+     own printed a few lines above it: frame, hands, printing, movement,
+     packaging. The same clock was being described twice on one screen,
+     once as a list to read and once as buttons to press, and the two
+     did not agree: the builder opened on aluminium hands while the
+     model beside it was built with wooden ones.
+
+     One list now. Each group offers what the factory can do for it,
+     and opens on what this model is actually made of. The groups that
+     this model has are the groups it gets; a model the owner has not
+     configured falls back to the factory's general set. */
+  const builderGroups = customGroups.length
+    ? customGroups.map((g) => {
+        const catalogue = OPTION_GROUPS.find((o) => o.key === g.key);
+        const options = (catalogue?.values || g.values).map((v) => ({
+          code: codeFor(g.key, v),
+          label: v
+        }));
+        /* The model may name a value the catalogue does not list. It is
+           kept, at the front, so the builder still opens on the clock
+           the buyer is looking at. */
+        const known = new Set(options.map((o) => o.label));
+        const extras = g.values
+          .filter((v) => !known.has(v))
+          .map((v) => ({ code: codeFor(g.key, v), label: v }));
+        const all = [...extras, ...options];
+        return {
+          key: g.key,
+          label: g.label,
+          options: all,
+          fallback: all[0]?.code || 'STD'
+        };
+      })
+    : undefined;
+
   /* Wrapped in .site so the responsive layer's bare-element selectors —
      h1, section, table — apply here and not in the admin, which shares the
      root layout and therefore this stylesheet. The admin's own layout
      carries .admin-root instead; see app/layout.tsx. */
   return (
     <div className="site">
-      <SiteSchema s={s} />
       <SiteSchema s={s} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {videoSchema && (
@@ -206,40 +243,66 @@ export default async function ProductPage({ params }) {
         <section>
           <div className="wrap">
             <div className="pd">
-              {/* Gallery left, decision column right.
+              {/* Three areas, two columns on a desktop.
 
-                  The right column is the argument: what it is, who can make
-                  it, what it costs, how to start. The MOQ gets its own card
-                  rather than a row in the facts table, because "500 pieces
-                  minimum" is the number that decides whether a buyer keeps
-                  reading or closes the tab — it is not one fact among six. */}
-              <div className="pd-left">
+                  The picture is on the left, the argument on the right,
+                  and the description under the picture. They are three
+                  separate grid areas rather than one left column holding
+                  two things, because the order they appear in on a
+                  phone is not the order they appear in in the markup.
+
+                  On a phone the gallery comes first, then the argument,
+                  then the description. The price, the minimum order and
+                  the button are the reason a buyer is on the page, and
+                  they used to sit under the picture and a long
+                  description — two thirds of a screen of scrolling
+                  before the number that decides whether to keep going.
+
+                  On a desktop the description stays under the picture,
+                  where a buyer reads it after looking at the clock, and
+                  the argument column is the one that runs down the
+                  right. */}
+              <div className="pd-gallery-area">
                 <ProductGallery name={product.name} images={shots} />
+              </div>
 
+              <div className="pd-desc-area">
                 {/* The description sits under the photograph rather than in
                     the specification section further down. It is what the
                     buyer reads after seeing what the clock looks like, and
                     putting it a screen below means they scroll past the
                     price and the MOQ to get to the part that says what this
                     model actually is. */}
-                {/* The product's own videos, and the drop test.
-                    Both come from YouTube. The product videos are per
-                    model — a buyer watching a 30-second clip of the
-                    hands moving is watching that clock, not a
-                    category. The drop test is a site slot, because it
-                    is the same footage on every product page and it
-                    answers the question a buyer asks about any of
-                    them.
-
-                    The section only appears when there is something to
-                    play. An empty video area on a page is a promise
-                    the site cannot keep. */}
                 {product.content && (
                   <section className="pd-desc">
                     <h2>Product description</h2>
                     <div className="content-block" dangerouslySetInnerHTML={{ __html: product.content }} />
                   </section>
                 )}
+                {/* The carton and freight estimator. It sits with the
+                    description rather than in the argument column,
+                    because it is a calculation rather than an argument:
+                    how much space this takes and how heavy it is. The
+                    numbers it starts from are the factory's where they
+                    are recorded and a labelled assumption where they are
+                    not, and every one of them is editable.
+
+                    In the right-hand column it stood between the price
+                    and the parameters, which put a calculator in the
+                    middle of the answer to "what does this cost" — and
+                    on a phone it pushed the enquiry button further
+                    down a screen that was already long. */}
+                <FreightEstimator
+                  productName={product.name}
+                  spec={{
+                    qty: product.cartonQty ?? null,
+                    l: product.cartonL ?? null,
+                    w: product.cartonW ?? null,
+                    h: product.cartonH ?? null,
+                    gw: product.cartonGw ?? null
+                  }}
+                />
+
               </div>
 
               <div className="pd-info">
@@ -323,37 +386,40 @@ export default async function ProductPage({ params }) {
                   </div>
                 )}
 
-                <CustomisationList groups={customGroups} />
-
                 {/* The inquiry builder. The specification it generates is
                     carried in a hidden field and travels with the enquiry,
                     so the factory receives the configuration as a code
-                    rather than as a paragraph the buyer had to write. */}
-                <InquiryBuilder productId={product.id} productName={product.name} />
+                    rather than as a paragraph the buyer had to write.
 
-                {/* The carton and freight estimator. It sits above the
-                    facts table because it is the thing a buyer scrolls
-                    to after the price: how much space this takes and how
-                    heavy it is. The numbers it starts from are the
-                    factory's where they are recorded and a labelled
-                    assumption where they are not, and every one of them
-                    is editable. */}
-                <FreightEstimator
+                    It carries the model's own configuration as well as
+                    the options: the builder opens on the frame, the
+                    hands, the printing, the movement and the packaging
+                    this clock is actually made with, so the buyer sees
+                    the clock they are looking at and can change one
+                    thing about it. A separate list of the same
+                    information used to sit above this one. */}
+                <InquiryBuilder
+                  productId={product.id}
                   productName={product.name}
-                  spec={{
-                    qty: product.cartonQty ?? null,
-                    l: product.cartonL ?? null,
-                    w: product.cartonW ?? null,
-                    h: product.cartonH ?? null,
-                    gw: product.cartonGw ?? null
-                  }}
+                  groups={builderGroups}
                 />
 
+                {/* The parameters that are not stated anywhere else on
+                    the page.
+
+                    Two that used to be here are not: the sample time,
+                    which the sample policy card above gives along with
+                    what a sample costs and when the money comes back,
+                    and the movement, which the inquiry builder gives as
+                    the option it opens on. Saying the same thing twice
+                    on one screen does not make it clearer — it makes
+                    the reader wonder which of the two is the real one,
+                    and the two were not even the same statement: this
+                    said "China quartz" where the builder said "Silent
+                    sweep". */}
                 <dl className="pd-facts">
                   <div className="pd-fact"><dt>Model / SKU</dt><dd>{product.id}</dd></div>
                   <div className="pd-fact"><dt>Lead time</dt><dd>{product.leadTime}</dd></div>
-                  <div className="pd-fact"><dt>Sample time</dt><dd>{s.sampleDays || '5-7'} business days</dd></div>
-                  {product.moveLevel && <div className="pd-fact"><dt>Movement</dt><dd>{product.moveLevel}</dd></div>}
                 </dl>
 
                 {/* QC claims as links: each one is a claim a buyer can check

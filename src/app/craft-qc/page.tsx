@@ -46,7 +46,6 @@ export default async function CraftQcPage() {
   return (
     <div className="site">
       <SiteSchema s={s} />
-      <SiteSchema s={s} />
       <TopBar />
       <Header />
 

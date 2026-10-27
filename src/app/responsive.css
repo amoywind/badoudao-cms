@@ -102,7 +102,7 @@
   .navdrop { left: auto; right: -120px; min-width: 480px; }
 
   .hero .wrap { grid-template-columns: 1fr 1fr; gap: 36px; padding: 54px var(--pad) 48px; }
-  .pd { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .pd { grid-template-columns: 1fr 1fr; gap: 24px 36px; }
   .split { gap: 36px; }
   .cap-list { grid-template-columns: 1fr 1fr; }
   .section, section { padding: 52px 0; }
@@ -146,8 +146,24 @@
   .hero-img { max-width: 520px; }
 
   /* Product detail: the gallery above the buy box. The gallery can be
-     narrower than half and still be large enough to judge a clock. */
-  .pd { grid-template-columns: 1fr; gap: 32px; }
+     narrower than half and still be large enough to judge a clock.
+
+     The order is picture, then the argument, then the description. The
+     argument is the price, the minimum order and the button — the
+     reason the page was opened — and in the markup it comes last,
+     because on a desktop it belongs in the right-hand column. On a
+     phone there is only one column, so the order has to be said
+     here: the picture first, because the buyer judges the clock by
+     looking at it, the numbers next, and the description last,
+     because it is the part that is not needed to decide. */
+  .pd {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "gallery"
+      "info"
+      "desc";
+    gap: 32px;
+  }
   .split { grid-template-columns: 1fr; gap: 32px; }
 
   /* The products dropdown is a hover panel: 560px wide, anchored near the

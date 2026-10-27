@@ -65,6 +65,82 @@ export const OPTION_GROUPS: OptionGroup[] = [
   }
 ];
 
+/* Short codes for the specification string the factory reads.
+
+   The options above are written for a buyer, in the words a buyer uses.
+   The specification is a shorthand both sides can read back, so each
+   value needs a code of its own — and the code has to be found from the
+   word rather than written twice, or the two drift apart and a buyer
+   asking for "Silent sweep" is sent a clock with a chime.
+
+   A value that is not in the table falls back to a shortened form of
+   its own, so a value the owner adds later still produces a code. */
+const OPTION_CODES: Record<string, Record<string, string>> = {
+  frame: {
+    Plastic: 'PLAS',
+    Metal: 'MTL',
+    'MDF Wood': 'MDF',
+    'Solid Wood': 'WOOD',
+    Acrylic: 'ACR'
+  },
+  hands: {
+    Metal: 'MTL',
+    Wood: 'WOOD',
+    Luminous: 'LUM',
+    'Custom shape': 'CSTM'
+  },
+  dial: {
+    Paper: 'PAPER',
+    PVC: 'PVC',
+    MDF: 'MDF',
+    Glass: 'GLASS',
+    Acrylic: 'ACR',
+    Metal: 'MTL'
+  },
+  print: {
+    'Silk screen': 'SILK',
+    'UV printing': 'UV',
+    'Laser engraving': 'LASER'
+  },
+  movement: {
+    'Standard tick': 'TICK',
+    'Silent sweep': 'SWEEP',
+    'Radio controlled': 'RADIO',
+    Luminous: 'LUM',
+    Musical: 'MUSIC'
+  },
+  package: {
+    'Closed box': 'CLOSED',
+    'Mail-order box': 'MAIL',
+    'Open display box': 'OPEN',
+    'Custom colour box': 'COLOUR'
+  }
+};
+
+/* The code for a group, used as the segment that names it. */
+export const GROUP_CODES: Record<string, string> = {
+  frame: 'FRM',
+  hands: 'HND',
+  dial: 'DIAL',
+  print: 'PRT',
+  movement: 'MOV',
+  package: 'PKG'
+};
+
+/** The short code for one value of one group. */
+export function codeFor(groupKey: string, value: string): string {
+  const known = OPTION_CODES[groupKey]?.[value];
+  if (known) return known;
+  /* An unknown value still gets a code: the letters of the word, upper
+     case, without the punctuation, cut to eight characters. */
+  return (
+    value
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 8) || 'STD'
+  );
+}
+
 /* The four packaging options, kept as data because the packaging section
    explains the catalogue rather than one product's choices.
 
