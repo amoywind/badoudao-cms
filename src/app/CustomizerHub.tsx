@@ -191,6 +191,27 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
             ))}
           </div>
         </div>
+
+        {/* The sample policy and the note.
+
+            They sit under the options rather than in the summary
+            column because that is where the space is. The summary
+            column carries the specification, the price and the button,
+            and it is the taller of the two — leaving the options
+            column with four hundred pixels of nothing under it.
+
+            The placement is also the better one. A buyer who has just
+            chosen a housing and is wondering whether to see one made
+            before ordering three hundred of them is reading the
+            options side of the card, not the receipt side. */}
+        <div className="hub-foot">
+          <SamplePolicy compact />
+
+          <p className="hub-note">
+            300 pcs MOQ, mixed colours and specifications in one order. EXW
+            quotation and a photorealistic 3D rendering within {replyHours} hours.
+          </p>
+        </div>
       </div>
 
       <aside className="hub-sum">
@@ -221,17 +242,6 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
         <button type="button" className="btn btn-primary hub-apply" onClick={apply}>
           Apply Spec to RFQ Form ↓
         </button>
-
-        {/* The sample policy, in its short form. A buyer who has just
-            built a specification and is deciding whether to see it made
-            before ordering three hundred of them wants to know what one
-            costs and whether it comes back. */}
-        <SamplePolicy compact />
-
-        <p className="hub-note">
-          300 pcs MOQ, mixed colours and specifications in one order. EXW
-          quotation and a photorealistic 3D rendering within {replyHours} hours.
-        </p>
 
         <input type="hidden" id={HUB_FIELD} name={HUB_FIELD} value={code} readOnly />
       </aside>

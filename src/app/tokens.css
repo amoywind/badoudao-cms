@@ -1169,24 +1169,7 @@
 /* Below 1100 the summary panel goes under the options rather than
    beside them. A 340-pixel column beside the options leaves the
    options themselves about 700 pixels, and below 1100 there are not
-   1100 pixels to give. The anatomy travels with the hub, so it
-   follows the same change: it goes under both. */
-@media (max-width: 1100px) {
-  .hub {
-    grid-template-columns: 1fr;
-  }
-
-  .hub-sum {
-    border-left: none;
-    border-top: 1px solid var(--rule);
-  }
-}
-
-/* Below 1100 the summary panel goes under the options rather than
-   beside them. A 340-pixel column beside the options leaves the
-   options themselves about 700 pixels, and below 1100 there are not
-   1100 pixels to give. The anatomy travels with the hub, so it
-   follows the same change: it goes under both. */
+   1100 pixels to give. */
 @media (max-width: 1100px) {
   .hub {
     grid-template-columns: 1fr;
@@ -1200,6 +1183,8 @@
 
 .hub-main {
   border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
 }
 
 .hub-tabs {
@@ -1245,6 +1230,24 @@
 
 .hub-panel {
   padding: 22px;
+}
+
+/* The sample policy and the note, under the options.
+
+   The summary column is the taller of the two — the specification, the
+   price and the button stack up to more than the options do — so
+   without this the options column carries four hundred pixels of
+   nothing under the last row. The policy belongs on this side anyway:
+   a buyer reading the options is the one deciding whether to see the
+   clock made before ordering three hundred of them. */
+.hub-foot {
+  margin-top: auto;
+  padding: 22px;
+  border-top: 1px solid var(--rule);
+}
+
+.hub-foot .hub-note {
+  margin-top: 14px;
 }
 
 .hub-opts {
