@@ -5,7 +5,8 @@ import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
 import { SIMPLIFIED } from '@/lib/vocabulary';
-import { AnatomyModule } from '../AnatomyModule';
+import { AnatomyHeading, RouteSection } from '../AnatomyModule';
+import { AnatomyExplorer } from '../AnatomyExplorer';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -71,7 +72,9 @@ export default async function CustomServicesPage() {
         {/* ---- The anatomy ---- */}
         <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
           <div className="wrap">
-            <AnatomyModule />
+            <AnatomyHeading />
+
+            <AnatomyExplorer />
 
             <div className="anx-simplified">
               <div className="spec-h">Simplified structures</div>
@@ -87,6 +90,13 @@ export default async function CustomServicesPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ---- The 28-day route ---- */}
+        <section style={{ padding: '64px 0' }}>
+          <div className="wrap">
+            <RouteSection />
           </div>
         </section>
 

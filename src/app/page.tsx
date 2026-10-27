@@ -11,7 +11,6 @@ import { LiveClock } from './LiveClock';
 import { MATERIALS, TRENDING, FACTORY_SHOTS } from '@/lib/vocabulary';
 import { CustomizerHub } from './CustomizerHub';
 import { VideoSlot, VideoSlotHydrator } from './VideoSlot';
-import { AnatomyModule } from './AnatomyModule';
 import { SiteSchema } from './SiteSchema';
 
 export const runtime = 'edge';
@@ -297,16 +296,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ---- Anatomy and the delivery route ----
-            The specification puts this on the home page. It is the
-            argument for customisation — six parts, mixed freely — and
-            the calendar that says a small order will not drag. */}
-        <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
-          <div className="wrap">
-            <AnatomyModule />
-          </div>
-        </section>
-
         {/* ---- Factory live shorts ---- */}
         <section className="alt" id="factory-live">
           <div className="wrap">
@@ -328,7 +317,6 @@ export default async function HomePage() {
                 <div className="qc-item" key={t}>
                   <VideoSlot
                     youtubeId={videos[`home-factory-${i + 1}`]?.youtubeId || ''}
-                    ratio="9:16"
                     title={t}
                     caption={`${t} — 9:16 factory footage`}
                   />

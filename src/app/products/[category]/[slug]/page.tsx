@@ -234,31 +234,6 @@ export default async function ProductPage({ params }) {
                     The section only appears when there is something to
                     play. An empty video area on a page is a promise
                     the site cannot keep. */}
-                {(videos.length > 0 || siteVideos['pdp-drop-test']) && (
-                  <section className="pd-video">
-                    <h2>Watch it</h2>
-                    <div className="pd-video-grid">
-                      {videos.map((v) => (
-                        <VideoSlot
-                          key={v.id}
-                          youtubeId={v.youtubeId}
-                          ratio="16:9"
-                          title={v.title || product.name}
-                          caption={v.title}
-                        />
-                      ))}
-                      {siteVideos['pdp-drop-test'] && (
-                        <VideoSlot
-                          youtubeId={siteVideos['pdp-drop-test'].youtubeId}
-                          ratio="16:9"
-                          title="ISTA-1A drop test"
-                          caption="1.2m six-side drop test on the packed carton"
-                        />
-                      )}
-                    </div>
-                  </section>
-                )}
-
                 {product.content && (
                   <section className="pd-desc">
                     <h2>Product description</h2>
@@ -268,6 +243,41 @@ export default async function ProductPage({ params }) {
               </div>
 
               <div className="pd-info">
+                {/* The product's own videos, and the drop test.
+
+                    They sit at the top of the information column
+                    rather than below the description, because they are
+                    vertical: a phone held upright beside the bench, the
+                    way the factory films. A vertical frame in a wide
+                    row of images looks like a mistake, so the videos
+                    have their own column and the images keep theirs.
+
+                    The section only appears when there is something to
+                    play. An empty video area on a page is a promise
+                    the site cannot keep. */}
+                {(videos.length > 0 || siteVideos['pdp-drop-test']) && (
+                  <section className="pd-video">
+                    <h2>Watch it</h2>
+                    <div className="pd-video-grid">
+                      {videos.map((v) => (
+                        <VideoSlot
+                          key={v.id}
+                          youtubeId={v.youtubeId}
+                          title={v.title || product.name}
+                          caption={v.title}
+                        />
+                      ))}
+                      {siteVideos['pdp-drop-test'] && (
+                        <VideoSlot
+                          youtubeId={siteVideos['pdp-drop-test'].youtubeId}
+                          title="ISTA-1A drop test"
+                          caption="1.2m six-side drop test on the packed carton"
+                        />
+                      )}
+                    </div>
+                  </section>
+                )}
+
                 <div className="pd-badges">
                   <span className="pd-badge pd-badge-brand">OEM / ODM Available</span>
                   <span className="pd-badge">Factory Direct</span>

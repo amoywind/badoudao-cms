@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * The 28-day route.
  *

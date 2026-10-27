@@ -395,6 +395,14 @@
 
 .vslot {
   aspect-ratio: 9 / 16;
+  /* A vertical frame in a wide column is taller than it is wide by
+     five to three, so it is held to a width a reader can take in.
+     Without this a slot in a four-column grid would be 280 pixels
+     wide and 500 pixels tall, which is a poster rather than a
+     thumbnail. */
+  max-width: 200px;
+  width: 100%;
+  margin: 0 auto;
   background: #16181C;
   border-radius: var(--radius-card);
   display: flex;
@@ -409,8 +417,15 @@
   overflow: hidden;
 }
 
+/* The vertical slots.
+
+   The ratio was 16/9 — the same as the wide ones — so every frame
+   that was supposed to be a phone held upright was rendered as a
+   landscape rectangle and the video inside it was squashed. Every
+   video on the site is filmed vertically, so this is the shape all of
+   them take. */
 .vslot-16 {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
 }
 
 .vslot-ico {
@@ -434,7 +449,7 @@
 .vslot-d {
   font-size: 12px;
   line-height: 1.5;
-  max-width: 220px;
+  max-width: 100%;
 }
 
 /* Once a real file exists, .vslot is replaced by the video element and
@@ -1149,6 +1164,38 @@
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
   overflow: hidden;
+}
+
+/* Below 1100 the summary panel goes under the options rather than
+   beside them. A 340-pixel column beside the options leaves the
+   options themselves about 700 pixels, and below 1100 there are not
+   1100 pixels to give. The anatomy travels with the hub, so it
+   follows the same change: it goes under both. */
+@media (max-width: 1100px) {
+  .hub {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-sum {
+    border-left: none;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+/* Below 1100 the summary panel goes under the options rather than
+   beside them. A 340-pixel column beside the options leaves the
+   options themselves about 700 pixels, and below 1100 there are not
+   1100 pixels to give. The anatomy travels with the hub, so it
+   follows the same change: it goes under both. */
+@media (max-width: 1100px) {
+  .hub {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-sum {
+    border-left: none;
+    border-top: 1px solid var(--rule);
+  }
 }
 
 .hub-main {
@@ -2258,16 +2305,14 @@
    the button is pressed.
    =================================================================== */
 
+/* Every slot on the site is vertical, so the poster frame is too.
+   There is no wide shape to fall back to. */
 .vslot-play {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   background: #16181C;
   padding: 0;
   gap: 0;
   display: block;
-}
-
-.vslot-play.vslot-16 {
-  aspect-ratio: 9 / 16;
 }
 
 .vslot-frame {
@@ -2341,24 +2386,31 @@
    The product page video section
    =================================================================== */
 
+/* The product's videos.
+
+   They are vertical — a phone held upright beside the bench — so they
+   sit in the information column at the top of it, two to a row. A
+   vertical frame in the wide row of product images reads as a
+   mistake; in a column of its own it reads as a video. */
 .pd-video {
-  margin-top: 34px;
+  margin-bottom: 22px;
 }
 
 .pd-video h2 {
   font-size: 19px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .pd-video-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
 }
 
 @media (max-width: 767px) {
   .pd-video-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -2371,16 +2423,14 @@
    the button is pressed.
    =================================================================== */
 
+/* Every slot on the site is vertical, so the poster frame is too.
+   There is no wide shape to fall back to. */
 .vslot-play {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   background: #16181C;
   padding: 0;
   gap: 0;
   display: block;
-}
-
-.vslot-play.vslot-16 {
-  aspect-ratio: 9 / 16;
 }
 
 .vslot-frame {
@@ -2454,24 +2504,31 @@
    The product page video section
    =================================================================== */
 
+/* The product's videos.
+
+   They are vertical — a phone held upright beside the bench — so they
+   sit in the information column at the top of it, two to a row. A
+   vertical frame in the wide row of product images reads as a
+   mistake; in a column of its own it reads as a video. */
 .pd-video {
-  margin-top: 34px;
+  margin-bottom: 22px;
 }
 
 .pd-video h2 {
   font-size: 19px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .pd-video-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
 }
 
 @media (max-width: 767px) {
   .pd-video-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -4146,6 +4203,17 @@
    drawn rather than inserted, which keeps the rule continuous
    through them.
    =================================================================== */
+
+/* The anatomy inside the customizer hub.
+
+   The hub is a two-column panel and the anatomy is a wide one, so it
+   runs the full width of the hub underneath rather than beside it. */
+.hub-anatomy {
+  grid-column: 1 / -1;
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
 
 .anx-route {
   margin-top: 56px;

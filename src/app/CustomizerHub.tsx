@@ -1,6 +1,7 @@
 'use client';
 
 import { SamplePolicy } from './SamplePolicy';
+import { AnatomyModule } from './AnatomyModule';
 
 /**
  * The customizer hub — §5.1-6 of the specification.
@@ -235,6 +236,21 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
 
         <input type="hidden" id={HUB_FIELD} name={HUB_FIELD} value={code} readOnly />
       </aside>
+
+      {/* The anatomy and the delivery calendar.
+
+          They sit under the customizer rather than in a section of
+          their own. The customizer says "choose these four things" and
+          the anatomy answers "here is what each of them is, and here
+          is what else you could change" — a buyer who has just made
+          a choice is asking exactly that question, and the answer
+          belongs next to the choice rather than two screens down.
+
+          The calendar is here for the same reason: what the buyer has
+          just configured is what the 28 days are counting towards. */}
+      <div className="hub-anatomy">
+        <AnatomyModule />
+      </div>
     </div>
   );
 }

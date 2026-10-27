@@ -84,6 +84,8 @@ export default function SiteVideosPage() {
           <div className="note note-i" style={{ marginTop: 0, marginBottom: 18 }}>
             <b>只支持 YouTube</b>：粘贴视频链接或「嵌入」代码都可以，系统会自动取出视频 ID。
             视频在访客点击播放按钮时才会加载，不会拖慢页面。留空即表示该位置还没有素材。
+            <br />
+            全站视频统一按 <b>9:16 竖版</b> 展示 —— 请上传竖屏视频，横版视频会在页面里被裁掉两侧。
           </div>
 
           {!slots ? (
@@ -119,18 +121,35 @@ export default function SiteVideosPage() {
                       <code style={{ fontSize: 11, color: '#8a9199', marginLeft: 'auto' }}>{s.slot}</code>
                     </div>
 
+                    {/* The preview is the shape the video will be
+                        shown in on the page. Every video on the site
+                        is vertical, so a 16:9 thumbnail here would
+                        show the owner a frame the visitor never sees.
+                        YouTube has no vertical thumbnail of its own,
+                        so the wide one is cropped to the middle. */}
                     {has && (
                       <div style={{ marginBottom: 12 }}>
-                        <img
-                          src={`https://i.ytimg.com/vi/${s.youtubeId}/hqdefault.jpg`}
-                          alt=""
+                        <div
                           style={{
-                            width: 160,
+                            width: 108,
+                            aspectRatio: '9 / 16',
                             borderRadius: 6,
-                            display: 'block',
+                            overflow: 'hidden',
+                            background: '#16181C',
                             border: '1px solid var(--line2)'
                           }}
-                        />
+                        >
+                          <img
+                            src={`https://i.ytimg.com/vi/${s.youtubeId}/hqdefault.jpg`}
+                            alt=""
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              display: 'block'
+                            }}
+                          />
+                        </div>
                       </div>
                     )}
 

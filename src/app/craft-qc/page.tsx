@@ -125,7 +125,6 @@ export default async function CraftQcPage() {
                 <div className="qc-item" key={q.n}>
                   <VideoSlot
                     youtubeId={videos[`qc-step-${i + 1}`]?.youtubeId || ''}
-                    ratio="9:16"
                     title={q.title}
                     caption={`${q.title} — 9:16 factory footage`}
                   />

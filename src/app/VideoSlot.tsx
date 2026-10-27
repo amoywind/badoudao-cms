@@ -3,7 +3,12 @@
  * place that renders the placeholder when there is not one yet.
  *
  * Every video position on the site goes through this component, so the
- * fallback text is written once and the aspect ratio is decided once.
+ * fallback text is written once and the shape is decided once.
+ *
+ * The shape is 9:16 throughout. The factory films vertically — a phone
+ * held upright beside the bench — and a product is introduced the same
+ * way, so every slot on the site is a vertical frame and the layout
+ * never has to hold two shapes at once.
  *
  * The player is youtube-nocookie rather than youtube.com. The site runs
  * Plausible rather than GA4 specifically to stay out of the European
@@ -25,8 +30,6 @@ export type VideoSlotProps = {
   placeholder?: string;
   /** The caption under the frame. */
   caption?: string;
-  /** 16:9 for the wide slots, 9:16 for the vertical factory footage. */
-  ratio?: '16:9' | '9:16';
   /** The title of the video, for the accessible name of the button. */
   title?: string;
   className?: string;
@@ -36,7 +39,6 @@ export function VideoSlot({
   youtubeId = '',
   placeholder = 'Video pending',
   caption = '',
-  ratio = '16:9',
   title = '',
   className = ''
 }: VideoSlotProps) {
@@ -50,7 +52,7 @@ export function VideoSlot({
 
   if (!youtubeId) {
     return (
-      <div className={`vslot ${ratio === '9:16' ? 'vslot-16' : ''} ${className}`}>
+      <div className={`vslot vslot-16 ${className}`}>
         <div className="vslot-ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M23 7l-7 5 7 5V7z" />
@@ -64,7 +66,7 @@ export function VideoSlot({
   }
 
   return (
-    <div className={`vslot vslot-play ${ratio === '9:16' ? 'vslot-16' : ''} ${className}`}>
+    <div className={`vslot vslot-play vslot-16 ${className}`}>
       <div
         className="vslot-frame"
         style={{

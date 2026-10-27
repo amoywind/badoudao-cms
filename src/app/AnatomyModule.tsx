@@ -1,22 +1,31 @@
+'use client';
+
 /**
  * The anatomy module and the delivery route.
  *
- * The specification places both on the home page: the exploded
- * anatomy is the argument for customisation, and the 28-day calendar
- * is the argument that a small order will not drag. They belong
- * together — the first says what can be built, the second says how
- * long it takes.
+ * Three pieces, so that a page can use the parts it needs:
  *
- * They are in one component because they travel together. The
- * custom-services page renders the same block, so a buyer who lands
- * there and a buyer who lands on the home page read the same
- * engineering claims in the same words.
+ *   AnatomyHeading  — the kicker, the title and the paragraph
+ *   AnatomyExplorer — the exploded drawing and the engineering panel
+ *   AnatomyModule   — the heading, the explorer and the calendar
+ *
+ * The customizer hub on the home page takes the whole module: a buyer
+ * who has just chosen a housing wants to know what else they could
+ * have chosen, and the 28-day calendar answers what happens next.
+ *
+ * The custom-services page takes the heading and the explorer as
+ * separate sections, because there the anatomy is the subject of the
+ * page rather than an aside to a configurator.
+ *
+ * All three read from the same components, so a buyer who lands on
+ * either page reads the same engineering claims in the same words.
  */
 
 import { AnatomyExplorer } from './AnatomyExplorer';
 import { RouteTimeline } from './RouteTimeline';
 
-export function AnatomyModule() {
+/** The kicker, the title and the paragraph. */
+export function AnatomyHeading() {
   return (
     <>
       {/* The kicker and the title are two lines of the same heading
@@ -33,6 +42,38 @@ export function AnatomyModule() {
         modular system. Mix and match frames, dials, clock hands, movements,
         and packaging with zero compromise on structural integrity.
       </p>
+    </>
+  );
+}
+
+/** The exploded drawing and the engineering panel beside it. */
+export function AnatomyExplorerBlock() {
+  return <AnatomyExplorer />;
+}
+
+/** The 28-day calendar. */
+export function RouteSection() {
+  return (
+    <div className="anx-route">
+      <div className="sec-head">
+        <div className="sec-tag">// Agile manufacturing timeline</div>
+        <h2>Twenty-eight days from drawing to container</h2>
+        <p className="sec-sub">
+          A fixed calendar, not an estimate. A buyer planning a launch needs to
+          know when the goods leave the port, so every stage has a date on it.
+        </p>
+      </div>
+
+      <RouteTimeline />
+    </div>
+  );
+}
+
+/** The whole module: the heading, the drawing and the calendar. */
+export function AnatomyModule() {
+  return (
+    <>
+      <AnatomyHeading />
 
       <AnatomyExplorer />
 
@@ -40,18 +81,7 @@ export function AnatomyModule() {
           make one argument: the parts can be mixed because the
           factory knows how to build each of them, and the calendar
           says how long that takes. */}
-      <div className="anx-route">
-        <div className="sec-head">
-          <div className="sec-tag">// Agile manufacturing timeline</div>
-          <h2>Twenty-eight days from drawing to container</h2>
-          <p className="sec-sub">
-            A fixed calendar, not an estimate. A buyer planning a launch needs to
-            know when the goods leave the port, so every stage has a date on it.
-          </p>
-        </div>
-
-        <RouteTimeline />
-      </div>
+      <RouteSection />
     </>
   );
 }

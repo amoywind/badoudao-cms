@@ -626,6 +626,8 @@ export default function EditProductPage() {
               <div className="note note-i" style={{ marginTop: 0, marginBottom: 16 }}>
                 <b>只支持 YouTube</b>：粘贴视频链接或「嵌入」代码都可以，系统会自动取出视频 ID。
                 视频在访客点击播放按钮时才加载，不会拖慢产品页。
+                <br />
+                全站视频统一按 <b>9:16 竖版</b> 展示 —— 请上传竖屏视频，横版视频会在页面里被裁掉两侧。
               </div>
 
               {videos.length === 0 && (
@@ -644,11 +646,26 @@ export default function EditProductPage() {
                         border: '1px solid var(--line2)', borderRadius: 8, padding: 10
                       }}
                     >
-                      <img
-                        src={`https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`}
-                        alt=""
-                        style={{ width: 120, borderRadius: 6, display: 'block' }}
-                      />
+                      {/* The preview is the shape the video will be
+                          shown in on the page. Every video on the
+                          site is vertical, so a 16:9 thumbnail here
+                          would show the admin a frame the buyer
+                          never sees. YouTube has no vertical
+                          thumbnail of its own, so the wide one is
+                          cropped to the middle — which is what the
+                          visitor sees too. */}
+                      <div
+                        style={{
+                          width: 74, flexShrink: 0, aspectRatio: '9 / 16',
+                          borderRadius: 6, overflow: 'hidden', background: '#16181C'
+                        }}
+                      >
+                        <img
+                          src={`https://i.ytimg.com/vi/${v.youtube_id}/hqdefault.jpg`}
+                          alt=""
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                      </div>
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div style={{ fontSize: 13, fontWeight: 600 }}>
                           {v.title || '（无标题）'}
