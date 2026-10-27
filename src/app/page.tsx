@@ -9,7 +9,7 @@ import { InquiryForm } from './InquiryForm';
 import { TrustCards, Icons } from './TrustCards';
 import { LiveClock } from './LiveClock';
 import { MATERIALS, TRENDING, FACTORY_SHOTS } from '@/lib/vocabulary';
-import { CustomizerHub } from './CustomizerHub';
+import { HubEntry } from './HubEntry';
 import { VideoSlot, VideoSlotHydrator } from './VideoSlot';
 import { SiteSchema } from './SiteSchema';
 
@@ -206,7 +206,12 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ---- The customizer hub ---- */}
+        {/* ---- The customizer entry ----
+            The tool itself is on its own page. What stays here is the
+            promise and a way in: a buyer who has a preference sets it
+            here and arrives on the customizer page with that choice
+            already made, and one who has not presses the button and
+            starts there. */}
         <section id="studio">
           <div className="wrap">
             <div className="sec-head">
@@ -214,12 +219,12 @@ export default async function HomePage() {
               <h2>Four decisions, one specification</h2>
               <p className="sec-sub">
                 The housing, the movement, the hands and the packaging. Choose them
-                here and the summary assembles itself into a code the factory quotes
-                against — no email describing options in prose.
+                and the specification assembles itself into a code the factory
+                quotes against — no email describing options in prose.
               </p>
             </div>
 
-            <CustomizerHub replyHours={Number(s.quoteHours) || 4} />
+            <HubEntry />
           </div>
         </section>
 

@@ -118,7 +118,12 @@ export async function GET() {
     ['/custom-services', '0.7'],
     ['/components', '0.7'],
     ['/craft-qc', '0.7'],
-    ['/about-us', '0.7']
+    ['/about-us', '0.7'],
+    /* The customizer is its own page and its own landing page. A buyer
+       who searches for a configurator or for a clock specification tool
+       needs a URL that says what it is, not the home page with an
+       anchor on it. */
+    ['/customizer', '0.8']
   ].forEach(([path, priority]) => {
     entries.push(url(`${SITE}${path}`, { priority, changefreq: 'monthly', lastmod: today }));
   });

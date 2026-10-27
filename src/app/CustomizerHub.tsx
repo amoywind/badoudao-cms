@@ -32,7 +32,7 @@ import { SamplePolicy } from './SamplePolicy';
  * everywhere else.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Choice = {
   /** Short code used in the generated specification string. */
@@ -48,7 +48,7 @@ type Tab = {
   choices: Choice[];
 };
 
-const TABS: Tab[] = [
+export const TABS: Tab[] = [
   {
     key: 'housing',
     label: 'Housing',
@@ -97,7 +97,7 @@ const TABS: Tab[] = [
 ];
 
 /** The code the specification shows: OEM-WD08-SEIKO-H08-PKG1. */
-function buildCode(picks: Record<string, string>) {
+export function buildCode(picks: Record<string, string>) {
   const housing = picks.housing || 'WD08';
   const movement = picks.movement || 'SILENT';
   const hands = picks.hands || 'H08';
@@ -108,13 +108,26 @@ function buildCode(picks: Record<string, string>) {
 /** The name of the hidden field the code travels in. */
 export const HUB_FIELD = 'spec';
 
-export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
+/** The four decisions, in the order the tabs show them. */
+export const DEFAULT_PICKS: Record<string, string> = {
+  housing: 'WD08',
+  movement: 'SILENT',
+  hands: 'H08',
+  packaging: 'PKG1'
+};
+
+export function CustomizerHub({
+  replyHours = 4,
+  initial
+}: {
+  replyHours?: number;
+  /** The choices carried in from the home page's quick picker. */
+  initial?: Record<string, string>;
+}) {
   const [tab, setTab] = useState(TABS[0].key);
   const [picks, setPicks] = useState<Record<string, string>>({
-    housing: 'WD08',
-    movement: 'SILENT',
-    hands: 'H08',
-    packaging: 'PKG1'
+    ...DEFAULT_PICKS,
+    ...(initial || {})
   });
 
   const code = buildCode(picks);
@@ -124,24 +137,44 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
     return { tab: t, choice: c };
   });
 
+  /* The specification travels into the enquiry form through a hidden
+     field, and the field is written by id — the hub and the form are
+     two components that do not know about each other.
+
+     So the field is written on every change rather than only when the
+     buyer clicks an option. A buyer who accepts the defaults and
+     submits straight away must still send a specification; before this,
+     their code was empty unless they had touched something.
+
+     The effect runs after the paint, so the field is written once the
+     form is on the page. */
+  useEffect(() => {
+    const el = document.getElementById(HUB_FIELD) as HTMLInputElement | null;
+    if (el) el.value = code;
+  }, [code]);
+
   function choose(key: string, code: string) {
     const next = { ...picks, [key]: code };
     setPicks(next);
 
-    const el = document.getElementById(HUB_FIELD) as HTMLInputElement | null;
-    if (el) el.value = buildCode(next);
-
     /* The message field on the enquiry form gets the same summary, so
        the buyer is not asked to describe what they just chose. It stays
-       editable — the options cannot say everything. */
+       editable — the options cannot say everything.
+
+       The summary is built from `next` rather than from the choices of
+       the current render. The current render's choices still hold the
+       old value for the option being changed, so a summary built from
+       them listed the previous movement after the buyer picked a new
+       one. */
     const msg = document.getElementById('if-msg') as HTMLTextAreaElement | null;
     if (msg) {
+      const lines = TABS.map((t) => {
+        const c = t.choices.find((x) => x.code === next[t.key]) || t.choices[0];
+        return `- ${t.label}: ${c.label}${c.note ? ` (${c.note})` : ''}`;
+      });
       msg.value = [
         'Configuration:',
-        ...chosen.map(
-          ({ tab: t, choice: c }) =>
-            `- ${t.label}: ${c.label}${c.note ? ` (${c.note})` : ''}`
-        ),
+        ...lines,
         '',
         'Quantity: ____ pcs',
         'Target price: ____ USD',
@@ -151,8 +184,23 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
   }
 
   function apply() {
+    /* The enquiry form may be on this page or on another one. The
+       customizer hub and the form belong together, but the hub is
+       also used on a page that only links to the form, so the two
+       cases are handled rather than assumed.
+
+       A hidden field carries the specification across the navigation,
+       because the form on the other page reads it by id. */
     const form = document.getElementById('inquiry');
-    if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (form) {
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    const field = document.getElementById(HUB_FIELD) as HTMLInputElement | null;
+    if (field) field.value = code;
+
+    window.location.href = '/contact/?spec=' + encodeURIComponent(code);
   }
 
   const active = TABS.find((t) => t.key === tab) || TABS[0];
@@ -242,8 +290,6 @@ export function CustomizerHub({ replyHours = 4 }: { replyHours?: number }) {
         <button type="button" className="btn btn-primary hub-apply" onClick={apply}>
           Apply Spec to RFQ Form ↓
         </button>
-
-        <input type="hidden" id={HUB_FIELD} name={HUB_FIELD} value={code} readOnly />
       </aside>
     </div>
   );

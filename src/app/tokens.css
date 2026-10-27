@@ -1329,6 +1329,136 @@
   margin-bottom: 16px;
 }
 
+/* ===================================================================
+   The home page's customizer entry
+   -------------------------------------------------------------------
+   The customizer itself is on its own page. What is on the home page
+   is a way in: four selects, the code they produce, and a button that
+   carries the choice to the tool.
+
+   The card is a card rather than the full hub because the hub takes
+   eight hundred pixels of the home page, and the home page on a phone
+   is twenty-one screens long. A buyer who reaches the tenth screen
+   has already spent their attention; the card has to earn a stop.
+   =================================================================== */
+
+.hub-entry {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.hub-entry-main {
+  padding: 22px;
+  border-right: 1px solid var(--rule);
+}
+
+.hub-entry-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hub-entry-h {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.hub-entry-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--text);
+  padding: 7px 12px;
+  border-radius: var(--radius-btn);
+  word-break: break-all;
+}
+
+.hub-entry-picks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hub-entry-pick {
+  display: block;
+}
+
+.hub-entry-k {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+.hub-entry-side {
+  padding: 22px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-entry-note {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+  margin-bottom: 16px;
+}
+
+.hub-entry-btn {
+  width: 100%;
+  text-align: center;
+}
+
+.hub-entry-fine {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 12px;
+  text-align: center;
+}
+
+.hub-entry-link {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+  .hub-entry {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-entry-main {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hub-entry-picks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .hub-entry-picks {
+    grid-template-columns: 1fr;
+  }
+}
+
 .hub-list {
   margin: 0 0 16px;
 }

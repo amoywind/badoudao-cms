@@ -128,12 +128,15 @@ function digitsOnly(s: string) {
 export function InquiryForm({
   preset = '',
   compact = false,
-  replyHours = 4
+  replyHours = 4,
+  spec = ''
 }: {
   preset?: string;
   compact?: boolean;
   /** The response time promised on the form. */
   replyHours?: number;
+  /** A specification assembled elsewhere on the site, carried in the URL. */
+  spec?: string;
 }) {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -489,6 +492,16 @@ export function InquiryForm({
             form cannot send — the export button would appear to work
             and the configuration would never reach the factory. */}
         <input type="hidden" id="clock-spec" name="clockSpec" value="" readOnly />
+
+        {/* The specification the customizer assembled.
+
+            The customizer writes this field by id, the same way it
+            writes the message box. It has to live inside the form
+            because that is where FormData reads from — the customizer
+            used to render its own copy beside the form, where the
+            form could not see it, and the specification never reached
+            the factory. */}
+        <input type="hidden" id="spec" name="spec" value={spec} readOnly />
 
         {/* The submit button is the only conversion on the page, so it
             says what the buyer gets rather than what they do — a quote,
