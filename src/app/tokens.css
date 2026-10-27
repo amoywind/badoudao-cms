@@ -400,7 +400,7 @@
      Without this a slot in a four-column grid would be 280 pixels
      wide and 500 pixels tall, which is a poster rather than a
      thumbnail. */
-  max-width: 200px;
+  max-width: 168px;
   width: 100%;
   margin: 0 auto;
   background: #16181C;
@@ -2408,6 +2408,12 @@
   align-items: start;
 }
 
+/* The product page's slots are in a column of their own, so they can
+   be larger than the ones in a row of four. */
+.pd-video-grid .vslot {
+  max-width: 100%;
+}
+
 @media (max-width: 767px) {
   .pd-video-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2524,6 +2530,12 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   align-items: start;
+}
+
+/* The product page's slots are in a column of their own, so they can
+   be larger than the ones in a row of four. */
+.pd-video-grid .vslot {
+  max-width: 100%;
 }
 
 @media (max-width: 767px) {
