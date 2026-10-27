@@ -53,7 +53,7 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
-        <section style={{ padding: '56px 0' }}>
+        <section>
           <div className="wrap">
             <TrustCards
               items={[
@@ -67,7 +67,7 @@ export default async function AboutUsPage() {
         </section>
 
         {/* ---- The company ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap split" style={{ alignItems: 'start' }}>
             <div>
               <div className="sec-tag">// The company</div>
@@ -127,7 +127,7 @@ export default async function AboutUsPage() {
         </section>
 
         {/* ---- Numbers ---- */}
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// The numbers</div>
@@ -158,7 +158,7 @@ export default async function AboutUsPage() {
         </section>
 
         {/* ---- Where to go next ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Next step</div>

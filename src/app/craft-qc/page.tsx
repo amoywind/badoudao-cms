@@ -62,7 +62,7 @@ export default async function CraftQcPage() {
           </div>
         </section>
 
-        <section style={{ padding: '56px 0' }}>
+        <section>
           <div className="wrap">
             <TrustCards
               items={[
@@ -76,7 +76,7 @@ export default async function CraftQcPage() {
         </section>
 
         {/* ---- Material matrix ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// 6 core materials</div>
@@ -106,7 +106,7 @@ export default async function CraftQcPage() {
         </section>
 
         {/* ---- QC steps ---- */}
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Factory QC protocol</div>
@@ -139,7 +139,7 @@ export default async function CraftQcPage() {
         </section>
 
         {/* ---- Certifications ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Certification</div>
@@ -203,7 +203,7 @@ export default async function CraftQcPage() {
           </div>
         </section>
 
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>
             <div className="sec-tag">// Next step</div>
             <h2 style={{ marginBottom: 12 }}>Ask for the QC report on your order</h2>

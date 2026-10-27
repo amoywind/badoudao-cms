@@ -3117,7 +3117,11 @@
 
 .mat-card .sq {
   border-bottom: 1px solid var(--rule);
-  aspect-ratio: 4 / 3;
+  /* Square, like every other product frame on the site. The
+     photographs are shot square, and a square picture in a
+     four-by-three frame leaves grey bars above and below that read as
+     a loading failure. */
+  aspect-ratio: var(--square);
 }
 
 .mat-body {

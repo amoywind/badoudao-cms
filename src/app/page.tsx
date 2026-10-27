@@ -140,7 +140,7 @@ export default async function HomePage() {
                         loading="lazy"
                         decoding="async"
                         width={600}
-                        height={450}
+                        height={600}
                       />
                     )}
                   </div>

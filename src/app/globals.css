@@ -350,7 +350,13 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .news-item:first-child { padding-top: 0; }
 .news-item:hover h3 { color: var(--brand); }
 .news-thumb { border-radius: 5px; overflow: hidden; border: 1px solid var(--line); background: var(--bg2); }
-.news-thumb img { width: 100%; height: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+/* Square, and contained rather than covered.
+
+   The covers are shot square. A sixteen-by-ten frame with
+   object-fit cover cropped the sides off every one of them, which
+   cut the clock in half — and a news thumbnail whose clock is half
+   missing is worse than a thumbnail with a little space around it. */
+.news-thumb img { width: 100%; height: auto; aspect-ratio: 1/1; object-fit: contain; display: block; }
 .news-date { font-size: 12px; color: var(--ink3); margin-bottom: 7px; font-variant-numeric: tabular-nums; }
 .news-text h3 { font-size: 18px; margin: 0 0 8px; transition: color .15s; }
 .news-text p { font-size: 14px; color: var(--ink2); line-height: 1.7; margin: 0; }

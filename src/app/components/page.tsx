@@ -53,7 +53,7 @@ export default async function ComponentsPage() {
           </div>
         </section>
 
-        <section style={{ padding: '56px 0' }}>
+        <section>
           <div className="wrap">
             <TrustCards
               items={[
@@ -67,7 +67,7 @@ export default async function ComponentsPage() {
         </section>
 
         {/* ---- Movement matrix ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Movement matrix</div>
@@ -109,7 +109,7 @@ export default async function ComponentsPage() {
         </section>
 
         {/* ---- Displays ---- */}
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Electronic displays</div>
@@ -132,7 +132,7 @@ export default async function ComponentsPage() {
         </section>
 
         {/* ---- Hands ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Clock hands · 1,000+ moulded styles</div>
@@ -191,7 +191,7 @@ export default async function ComponentsPage() {
         </section>
 
         {/* ---- Packaging ---- */}
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Packaging</div>
@@ -215,7 +215,7 @@ export default async function ComponentsPage() {
         </section>
 
         {/* ---- CTA ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>
             <div className="sec-tag">// Next step</div>
             <h2 style={{ marginBottom: 12 }}>Tell us the combination you need</h2>

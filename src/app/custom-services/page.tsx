@@ -56,7 +56,7 @@ export default async function CustomServicesPage() {
           </div>
         </section>
 
-        <section style={{ padding: '56px 0' }}>
+        <section>
           <div className="wrap">
             <TrustCards
               items={[
@@ -70,7 +70,7 @@ export default async function CustomServicesPage() {
         </section>
 
         {/* ---- The anatomy ---- */}
-        <section className="alt" id="anatomy" style={{ padding: '64px 0' }}>
+        <section className="alt" id="anatomy">
           <div className="wrap">
             <AnatomyHeading />
 
@@ -94,14 +94,14 @@ export default async function CustomServicesPage() {
         </section>
 
         {/* ---- The 28-day route ---- */}
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap">
             <RouteSection />
           </div>
         </section>
 
         {/* ---- Tooling and timeline ---- */}
-        <section className="alt" style={{ padding: '64px 0' }}>
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Tooling and lead time</div>
@@ -126,7 +126,7 @@ export default async function CustomServicesPage() {
           </div>
         </section>
 
-        <section style={{ padding: '64px 0' }}>
+        <section>
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>
             <div className="sec-tag">// Next step</div>
             <h2 style={{ marginBottom: 12 }}>Send us the part you want to change</h2>

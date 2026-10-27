@@ -55,7 +55,7 @@
   .pd { grid-template-columns: 1fr 1fr; gap: 36px; }
   .split { gap: 36px; }
   .cap-list { grid-template-columns: 1fr 1fr; }
-  .section, section { padding: 60px 0; }
+  .section, section { padding: 52px 0; }
 }
 
 /* ---- 860px: tablet portrait ---- */

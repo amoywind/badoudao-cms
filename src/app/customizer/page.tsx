@@ -93,14 +93,14 @@ export default async function CustomizerPage({
         </section>
 
         {/* ---- The customizer ---- */}
-        <section id="studio" style={{ padding: '48px 0' }}>
+        <section id="studio">
           <div className="wrap">
             <CustomizerHub replyHours={replyHours} initial={initial} />
           </div>
         </section>
 
         {/* ---- The enquiry ---- */}
-        <section id="inquiry" className="alt" style={{ padding: '64px 0' }}>
+        <section id="inquiry" className="alt">
           <div className="wrap">
             <div className="sec-head" style={{ maxWidth: 620 }}>
               <div className="sec-tag">// Direct factory RFQ</div>
