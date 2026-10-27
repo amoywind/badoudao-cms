@@ -26,7 +26,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Custom Services & Clock Anatomy — OEM/ODM | Badoudao',
     description:
-      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5-7'} days.`,
+      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. The 28-day production calendar from drawing to container. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5-7'} days.`,
     keywords:
       'custom clock manufacturer, OEM clock parts, private label wall clock, clock dial printing, bespoke clock supplier',
     path: '/custom-services'

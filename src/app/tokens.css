@@ -4215,17 +4215,6 @@
    through them.
    =================================================================== */
 
-/* The anatomy inside the customizer hub.
-
-   The hub is a two-column panel and the anatomy is a wide one, so it
-   runs the full width of the hub underneath rather than beside it. */
-.hub-anatomy {
-  grid-column: 1 / -1;
-  margin-top: 48px;
-  padding-top: 40px;
-  border-top: 1px solid var(--rule);
-}
-
 .anx-route {
   margin-top: 56px;
   padding-top: 40px;
