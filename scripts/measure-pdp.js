@@ -51,26 +51,34 @@ const URL_ = process.argv[2] || 'https://www.oemwallclocks.com/products/wood-wal
     await send('Emulation.setDeviceMetricsOverride', {
       width: w, height: 900, deviceScaleFactor: 1, mobile: w < 500
     });
-    await send('Page.navigate', { url: URL_ });
-    await new Promise(r => setTimeout(r, 6000));
+    await send('Page.navigate', { url: URL_ + '?t=' + Date.now() });
+    await new Promise(r => setTimeout(r, 4000));
+    /* Wait for the layout to exist, not for a fixed number of seconds.
+       A product page is heavy — the gallery, the estimator, the builder
+       — and reading it before it has been laid out finds nothing. */
+    for (let i = 0; i < 30; i++) {
+      const has = await ev(`!!document.querySelector('.pd')`);
+      if (has) break;
+      await new Promise(r => setTimeout(r, 700));
+    }
     await ev(`(function(){
       var s = performance.getEntriesByType('resource').filter(function(r){return r.name.indexOf('.css')>=0;});
       return s.length>0 && s.every(function(r){return r.responseEnd;});
     })()`);
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 1800));
 
     const out = await ev(`(function(){
       var pd = document.querySelector('.pd');
-      var left = document.querySelector('.pd-left');
+      var gallery = document.querySelector('.pd-gallery-area');
+      var desc = document.querySelector('.pd-desc-area');
       var info = document.querySelector('.pd-info');
-      if(!pd||!left||!info) return JSON.stringify({error:'no .pd'});
+      if(!pd||!gallery||!desc||!info) return JSON.stringify({error:'the three areas are not all there'});
       var pcs = getComputedStyle(pd);
-      var lcs = getComputedStyle(left);
-      var ics = getComputedStyle(info);
-      var lr = left.getBoundingClientRect();
+      var gr = gallery.getBoundingClientRect();
+      var dr = desc.getBoundingClientRect();
       var ir = info.getBoundingClientRect();
 
-      /* What is in each column, in order, with how tall it is. */
+      /* What is in each area, in order, with how tall it is. */
       function blocks(root){
         var out=[];
         var kids = root.children;
@@ -89,12 +97,24 @@ const URL_ = process.argv[2] || 'https://www.oemwallclocks.com/products/wood-wal
         return out;
       }
 
+      /* Where each area actually begins on the page. The order they
+         appear in is the order a reader meets them in. */
+      var order = [
+        { name: 'gallery', top: Math.round(gr.top + window.scrollY), h: Math.round(gr.height) },
+        { name: 'info',    top: Math.round(ir.top + window.scrollY), h: Math.round(ir.height) },
+        { name: 'desc',    top: Math.round(dr.top + window.scrollY), h: Math.round(dr.height) }
+      ].sort(function(a,b){ return a.top - b.top; });
+
       return JSON.stringify({
         gridTemplate: pcs.gridTemplateColumns,
+        gridAreas: pcs.gridTemplateAreas,
         gap: pcs.gap,
-        leftW: Math.round(lr.width), leftH: Math.round(lr.height),
+        galleryW: Math.round(gr.width), galleryH: Math.round(gr.height),
+        descW: Math.round(dr.width), descH: Math.round(dr.height),
         infoW: Math.round(ir.width), infoH: Math.round(ir.height),
-        leftBlocks: blocks(left),
+        order: order.map(function(o){ return o.name + '@' + o.top; }).join(' → '),
+        galleryBlocks: blocks(gallery),
+        descBlocks: blocks(desc),
         infoBlocks: blocks(info)
       });
     })()`);
@@ -103,13 +123,18 @@ const URL_ = process.argv[2] || 'https://www.oemwallclocks.com/products/wood-wal
     console.log('\n=== ' + w + 'px ===');
     if (d.error) { console.log(' ', d.error); continue; }
     console.log('  栅格      ' + d.gridTemplate + '   gap ' + d.gap);
-    console.log('  左栏      ' + d.leftW + ' x ' + d.leftH);
-    console.log('  右栏      ' + d.infoW + ' x ' + d.infoH);
-    console.log('  高度差    ' + (d.infoH - d.leftH) + 'px');
+    console.log('  出现顺序  ' + d.order);
+    console.log('  画廊      ' + d.galleryW + ' x ' + d.galleryH);
+    console.log('  描述      ' + d.descW + ' x ' + d.descH);
+    console.log('  决策栏    ' + d.infoW + ' x ' + d.infoH);
+    console.log('  左总高    ' + (d.galleryH + d.descH + 26) + '   决策栏 ' + d.infoH +
+                '   差 ' + (d.infoH - (d.galleryH + d.descH + 26)) + 'px');
 
-    console.log('\n  左栏内容');
-    d.leftBlocks.forEach(b => console.log('    ' + String(b.h).padStart(5) + 'px  ' + b.cls.padEnd(34) + ' ' + b.first));
-    console.log('\n  右栏内容');
+    console.log('\n  画廊区');
+    d.galleryBlocks.forEach(b => console.log('    ' + String(b.h).padStart(5) + 'px  ' + b.cls.padEnd(34) + ' ' + b.first));
+    console.log('\n  描述区');
+    d.descBlocks.forEach(b => console.log('    ' + String(b.h).padStart(5) + 'px  ' + b.cls.padEnd(34) + ' ' + b.first));
+    console.log('\n  决策栏');
     d.infoBlocks.forEach(b => console.log('    ' + String(b.h).padStart(5) + 'px  ' + b.cls.padEnd(34) + ' ' + b.first));
   }
 

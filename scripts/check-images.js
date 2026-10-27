@@ -35,7 +35,7 @@ const PAGES = [
   '/', '/products', '/products/wall-clocks', '/products/metal-wall-clocks',
   '/products/resin-wall-clocks', '/articles', '/news', '/contact',
   '/p/factory', '/p/quality', '/p/certification', '/p/oem-odm',
-  '/products/wall-clocks/12-inch-round-plastic-quartz-wall-clock'
+  '/products/wood-wall-clocks/math-formula-blackboard-wooden-wall-clock'
 ];
 
 const PROBE = `(() => {

@@ -21,7 +21,7 @@ const PAGES = [
   '/',
   '/products',
   '/products/wall-clocks',
-  '/products/wall-clocks/12-inch-round-plastic-quartz-wall-clock',
+  '/products/wood-wall-clocks/math-formula-blackboard-wooden-wall-clock',
   '/p/factory',
   '/p/quality',
   '/contact'
@@ -126,8 +126,13 @@ function measure(page, width) {
       issues.push({ page: p, kind: 'viewport-imperative', detail: vp[1] });
     }
 
-    /* Fixed pixel widths in inline styles survive every media query. */
-    const fixed = [...html.matchAll(/style="[^"]*width:\s*(\d{3,})px/g)].map(m => parseInt(m[1]));
+    /* Fixed pixel widths in inline styles survive every media query.
+
+       A maximum width does not: it is a limit, and the element still
+       shrinks inside it on a narrow screen. So the word before "width"
+       is what decides which one this is — otherwise every
+       max-width reads as a fixed width and the finding is noise. */
+    const fixed = [...html.matchAll(/style="[^"]*?(?<![-a-z])width:\s*(\d{3,})px/g)].map(m => parseInt(m[1]));
     const big = fixed.filter(w => w > 400);
     if (big.length) {
       issues.push({ page: p, kind: 'inline-fixed-width', detail: [...new Set(big)].join(', ') });

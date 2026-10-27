@@ -20,7 +20,7 @@ const path = require('path');
 
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const PORT = 9401;
-const URL_ = process.argv[2] || 'https://www.oemwallclocks.com/products/wall-clocks/12-inch-round-plastic-quartz-wall-clock';
+const URL_ = process.argv[2] || 'https://www.oemwallclocks.com/products/wood-wall-clocks/math-formula-blackboard-wooden-wall-clock';
 
 const profile = path.join(os.tmpdir(), `pdp-live-${process.pid}`);
 fs.mkdirSync(profile, { recursive: true });

@@ -102,7 +102,7 @@ export default async function CustomizerPage({
         {/* ---- The enquiry ---- */}
         <section id="inquiry" className="alt">
           <div className="wrap">
-            <div className="sec-head" style={{ maxWidth: 620 }}>
+            <div className="sec-head sec-head-narrow">
               <div className="sec-tag">// Direct factory RFQ</div>
               <h2>Send it to the factory</h2>
               <p className="sec-sub">

@@ -99,6 +99,10 @@ h1 em { font-style: normal; color: var(--brand); }
    narrows in one step rather than jumping. */
 section { padding: 60px 0; }
 .sec-head { max-width: 700px; margin-bottom: 40px; }
+/* The narrower heading on the two enquiry sections. It was an inline
+   style on the page, which is a style that cannot be changed without
+   finding the page, and the standard asks for none of them. */
+.sec-head-narrow { max-width: 620px; }
 .sec-tag { font-size: 12.5px; font-weight: 600; color: var(--brand); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
 
 h2 { font-family: var(--serif); font-size: 38px; line-height: 1.18; letter-spacing: -.022em; font-weight: 600; margin-bottom: 16px; }

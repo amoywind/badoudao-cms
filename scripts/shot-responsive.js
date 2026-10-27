@@ -11,7 +11,7 @@ const PAGES = [
   ['home', '/'],
   ['products', '/products'],
   ['category', '/products/wall-clocks'],
-  ['detail', '/products/wall-clocks/12-inch-round-plastic-quartz-wall-clock'],
+  ['detail', '/products/wood-wall-clocks/math-formula-blackboard-wooden-wall-clock'],
   ['factory', '/p/factory'],
   ['quality', '/p/quality'],
   ['contact', '/contact']

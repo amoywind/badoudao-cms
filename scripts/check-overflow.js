@@ -38,7 +38,7 @@ const PORT = 9444;
 const DEFAULT_PATHS = [
   '/', '/products', '/products/wall-clocks', '/articles', '/news',
   '/contact', '/p/certification', '/p/factory',
-  '/products/wall-clocks/12-inch-round-plastic-quartz-wall-clock'
+  '/products/wood-wall-clocks/math-formula-blackboard-wooden-wall-clock'
 ];
 
 const WIDTH = Number(process.env.W || 390);
