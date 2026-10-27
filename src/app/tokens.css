@@ -3127,9 +3127,19 @@
   flex: 1;
 }
 
+/* The name of the family.
+
+   Two of the six names are two words long and one of them wraps, which
+   pushed its card taller than the rest and left the row of six with a
+   ragged bottom. The space for two lines is reserved whether the name
+   uses one or two, so the six cards are the same height and the row
+   reads as one row. */
 .mat-body h3 {
   font-size: 15px;
   margin-bottom: 5px;
+  min-height: 2.6em;
+  display: flex;
+  align-items: flex-start;
 }
 
 .mat-body p {
@@ -3153,9 +3163,13 @@
 
 /* The process tags under a material name. They sit close to the name
    because the card is narrow now and the tags are a second line of
-   detail rather than a list in their own right. */
+   detail rather than a list in their own right.
+
+   Two tags, and the space for two lines of them is reserved whether
+   they wrap or not, so every card in the row ends at the same place. */
 .mat-tags {
   margin: 9px 0 2px;
+  min-height: 3.4em;
 }
 
 .mat-foot b {
