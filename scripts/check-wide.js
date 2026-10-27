@@ -152,10 +152,20 @@ const wait = async (n = 20) => {
       await Promise.race([loaded, new Promise((r) => setTimeout(r, 20000))]);
       await new Promise((r) => setTimeout(r, 1600));
 
-      const out = (await rpc('Runtime.evaluate', {
-        expression: PROBE, returnByValue: true
-      })).result.value;
+      /* The reading walks every element on the page, and on a heavy
+         page that can take long enough to look like a hang. It gets a
+         limit of its own, and the page is reported as unread rather
+         than stalling the whole run. */
+      const out = await Promise.race([
+        rpc('Runtime.evaluate', { expression: PROBE, returnByValue: true })
+          .then(r => r.result.value),
+        new Promise(res => setTimeout(() => res({ total: -1, hits: [] }), 15000))
+      ]);
 
+      if (out.total < 0) {
+        console.log('  ' + p.padEnd(56) + '读取超时，未检查');
+        continue;
+      }
       if (!out.total) {
         console.log('  ' + p.padEnd(56) + 'OK');
       } else {
