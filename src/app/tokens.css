@@ -3657,15 +3657,14 @@
   border-bottom: 1px solid var(--rule);
   position: relative;
   overflow: hidden;
-  /* The hero fills the screen and the content sits in the middle of
-     it. Without this the section is as tall as its content and the
-     headline starts 150 pixels below the navigation, which reads as
-     a page that has lost its top rather than as a page that has
-     room to breathe. Centred, the space above and below is the same
-     and the first thing on the screen is the promise. */
-  min-height: calc(100vh - 106px);
-  display: flex;
-  align-items: center;
+  /* The hero carries no section padding of its own.
+
+     Every section on the site gets 88 pixels top and bottom from
+     the base rule, and the hero's own grid adds 60 more — 148
+     pixels between the navigation and the headline, and as much
+     again below the clock. The hero follows the navigation
+     immediately, so the space belongs to the grid alone. */
+  padding: 0;
 }
 
 /* The hero grid.
@@ -3706,7 +3705,7 @@
   width: 100%;
   max-width: 1700px;
   margin: 0 auto;
-  padding: 60px 24px 56px;
+  padding: 52px 24px 48px;
 }
 
 .hero2-h1 {
