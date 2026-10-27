@@ -3165,17 +3165,18 @@
   color: var(--text-2);
 }
 
-/* The process tags under a material name. They sit close to the name
-   because the card is narrow now and the tags are a second line of
-   detail rather than a list in their own right.
+/* The process tag under a material name. It sits close to the name
+   because the card is narrow now and the tag is a cue rather than a
+   list in its own right.
 
-   One line each, cut short with an ellipsis. A card is a sixth of the
-   page wide, so "Custom mold creation" wraps onto two lines and the
-   tag block ends at a different height on each of the six cards. The
-   tags are a cue — the full text is on the category page — so a
-   shortened one is worth the row of six being even. */
+   One tag, shown whole. Two tags shared a hundred and seventy pixels
+   between them and each was cut to six characters, which told the
+   buyer nothing. The space for two lines is reserved so that a tag
+   that wraps does not push the card's foot down and leave the row of
+   six ragged. */
 .mat-tags {
   margin: 9px 0 2px;
+  min-height: 1.7em;
   flex-wrap: nowrap;
 }
 
@@ -3186,7 +3187,7 @@
   min-width: 0;
   padding: 5px 9px;
   font-size: 11px;
-  flex: 1 1 0;
+  max-width: 100%;
 }
 
 .mat-foot b {

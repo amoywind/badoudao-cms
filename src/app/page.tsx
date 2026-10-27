@@ -147,13 +147,17 @@ export default async function HomePage() {
                   <div className="mat-body">
                     <h3>{m.name}</h3>
                     <p>{m.blurb}</p>
-                    {/* Two tags, not three. The card is a sixth of the
-                        page wide now, and three of them wrap into a
-                        block of their own. The product count and the
-                        minimum order below say the things a buyer
-                        filters on. */}
+                    {/* One tag, not two.
+
+                        A card is a sixth of the page wide, so two tags
+                        share a hundred and seventy pixels between
+                        them and each is cut to six characters. One tag
+                        fits whole, and the space for it is reserved
+                        whether it wraps or not so that the six cards
+                        end at the same place. The full list is on the
+                        category page. */}
                     <div className="ctags mat-tags">
-                      {m.tags.slice(0, 2).map((t) => (
+                      {m.tags.slice(0, 1).map((t) => (
                         <span className="ctag" key={t}>{t}</span>
                       ))}
                     </div>
