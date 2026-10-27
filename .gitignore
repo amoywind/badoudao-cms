@@ -30,3 +30,8 @@ tmp-*.txt
 
 # session token for shoot-admin.js
 scripts/.tok
+
+# screenshots the measurement scripts write — pictures of the site,
+# not part of it, and a quarter of a megabyte each
+scripts/.*.png
+scripts/.*.jpg
