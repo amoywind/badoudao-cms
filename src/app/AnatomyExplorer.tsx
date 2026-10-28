@@ -175,6 +175,37 @@ export function AnatomyExplorer() {
                 the clearance tolerance. The hour and minute hands
                 are brass, the second hand is Klein blue, and the
                 little blue ball is the counterweight. */}
+            {/* The hit area.
+
+                An SVG line is only as clickable as the line is thick,
+                and the second hand is a stroke of one and a half
+                units — a hair on a drawing that is four hundred and
+                twenty units wide. A finger asked to hit that misses,
+                and a buyer who misses a part concludes that the part
+                is not there.
+
+                The three hands are fourteen units apart and all three
+                open the same part, so one transparent rectangle over
+                them gives the whole pointer a target of about a
+                hundred and fifty by sixty units. It is drawn first,
+                so the hands themselves stay on top of it and the
+                drawing is unchanged; it carries no paint, so nothing
+                shows. The callouts around it are already excluded
+                from pointer events, and the rectangle sits above the
+                dial rather than over it, so it takes nothing away
+                from the other parts.
+
+                Sixty units is the height of it, and the drawing is
+                drawn at four hundred and forty pixels on a desktop
+                and at three hundred and twenty-eight on a phone, so
+                the target is sixty-three pixels on the first and
+                forty-seven on the second — the size a finger can be
+                asked to hit. */}
+            <rect
+              x="80" y="18" width="154" height="60"
+              fill="transparent"
+              pointerEvents="all"
+            />
             <line x1="86" y1="60" x2="148" y2="60" stroke="#C59B27" strokeWidth="4"
               strokeLinecap="round" />
             <line x1="86" y1="46" x2="202" y2="46" stroke="#C59B27" strokeWidth="3"
@@ -220,6 +251,22 @@ export function AnatomyExplorer() {
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActive(0); }}
           >
+            {/* The hit area for the ring.
+
+                A ring is only as clickable as the ring is thick, and
+                nine units on a drawing four hundred and twenty wide
+                is a line a finger will miss — and the middle of the
+                ring is empty, so aiming at the part that is drawn
+                means hitting the part that is not.
+
+                Twenty-four units gives it a band worth aiming at. It
+                stops short of the lens above it, whose fill reaches
+                a radius of a hundred and four: the ring's own band
+                runs from a hundred to a hundred and twenty-four, and
+                the two meet exactly at the edge without overlapping,
+                so nothing is taken from the lens. */}
+            <circle cx="210" cy="196" r="112" fill="none" stroke="transparent"
+              strokeWidth="24" pointerEvents="stroke" />
             <circle cx="210" cy="196" r="112" fill="none" stroke="url(#anx-metal)" strokeWidth="9" />
             <circle cx="210" cy="196" r="112" fill="none" stroke="#111111" strokeWidth="1" opacity="0.25" />
           </g>

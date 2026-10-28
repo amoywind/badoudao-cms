@@ -68,7 +68,21 @@
        .related-grid, .f-grid, .fg2, .cap-list, .proc, .trust-grid):not(.wrap) {
   max-width: 100%;
 }
-.site :where(img, svg, video, iframe, table) {
+/* The media elements are kept from being pushed wider than the page.
+
+   This rule is a floor, not a ceiling, and it has to lose to any rule
+   that gives an element a width of its own. It did not: :where() drops
+   the specificity of what it holds but not the .site in front of it, so
+   the rule sat at (0,1,0) — the same as a single class — and being in
+   the later stylesheet it won. The exploded view's drawing says it is
+   at most 440 pixels wide and was being drawn at 594, and the second
+   hand — a stroke of one and a half units — was a third of a pixel
+   thinner than the drawing was drawn to be.
+
+   Putting the .site inside the :where() as well takes the whole rule
+   to (0,0,0). It then applies only where nothing else has an opinion,
+   which is the case it was written for. */
+:where(.site) :where(img, svg, video, iframe, table) {
   max-width: 100%;
 }
 .site table { display: block; overflow-x: auto; }
