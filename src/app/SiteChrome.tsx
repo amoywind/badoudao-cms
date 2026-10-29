@@ -36,7 +36,7 @@ export async function TopBar() {
     <div className="topbar">
       <div className="wrap topbar-in">
         <span className="topbar-claim">
-          XIAMEN CHENGMAOMAO FACTORY DIRECT
+          XIAMEN ORANGE CAT FACTORY DIRECT
           <i />
           FLEXIBLE MOQ {moq} PCS
           <i />

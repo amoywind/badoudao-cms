@@ -128,6 +128,16 @@ export function CollectionGrid({
                       {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
                     />
                   )}
+                  {/* The factory's own number for the model.
+
+                      It is the number on the tooling and the number in
+                      the factory's price list, and it is the number a
+                      buyer writes in an enquiry. It is put on the
+                      picture rather than in the text because it is
+                      read first and quoted first, and because a row
+                      of letters above the title would make the title
+                      the second thing the eye lands on. */}
+                  <span className="pcard-sku">SKU {p.id}</span>
                 </div>
                 <div className="pcard-body">
                   <h3>{p.name}</h3>

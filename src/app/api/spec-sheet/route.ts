@@ -96,7 +96,7 @@ export async function GET(request) {
   lines.push(
     '',
     rule,
-    'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.',
+    'Xiamen Orange Cat Creative Home Decor Co., Ltd.',
     'MOQ 300 pcs · 24h 3D CAD rendering · 1.2m ISTA-1A drop-tested packaging',
     'www.oemwallclocks.com'
   );

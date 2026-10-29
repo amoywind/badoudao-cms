@@ -859,6 +859,50 @@
   border-top: 1px solid var(--rule);
 }
 
+/* The engineering figures under the two readings.
+
+   They are set on one line that wraps, in the technical face, and the
+   label is in the ordinary face so that the eye knows which part of
+   the line is the name of the thing and which part is its figure. */
+.ck-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 20px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+.ck-specs b {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 5px;
+}
+
+/* The engineering figures under the two readings.
+
+   They are set on one line that wraps, in the technical face, and the
+   label is in the ordinary face so that the eye knows which part of
+   the line is the name of the thing and which part is its figure. */
+.ck-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 20px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+.ck-specs b {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 5px;
+}
+
 .ck-read {
   min-width: 0;
 }
@@ -2962,6 +3006,52 @@
 .pcard-price {
   flex-wrap: wrap;
 }
+/* The factory's model number, on the picture.
+
+   It sits in the corner of the photograph rather than in the text
+   below it, because it is read before the title and quoted before
+   anything else on the card. The card's own bottom edge is taken by
+   the strip that slides up on hover, so the corner is the one place
+   on the picture that is free. */
+.pcard-sku {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: .05em;
+  line-height: 1.35;
+}
+
+/* The factory's model number, on the picture.
+
+   It sits in the corner of the photograph rather than in the text
+   below it, because it is read before the title and quoted before
+   anything else on the card. The card's own bottom edge is taken by
+   the strip that slides up on hover, so the corner is the one place
+   on the picture that is free. */
+.pcard-sku {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--rule);
+  color: var(--text-2);
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: .05em;
+  line-height: 1.35;
+}
+
 .pcard-moq {
   margin-left: auto;
 }

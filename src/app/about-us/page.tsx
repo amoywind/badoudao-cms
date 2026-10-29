@@ -22,7 +22,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'About the Factory — Wall Clock Manufacturer in Xiamen | Badoudao',
     description:
-      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. Established 2023, 1,000 m² workshop, 60,000 pcs monthly capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, shipping to 30+ countries, Ex Works pricing.`,
+      `Xiamen Orange Cat Creative Home Decor Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. Established 2023, 1,000 m² workshop, 60,000 pcs monthly capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, shipping to 30+ countries, Ex Works pricing.`,
     keywords:
       'china wall clock manufacturer, xiamen clock factory, quartz clock OEM supplier, low MOQ wall clock supplier, small batch wall clock factory, custom wall clock manufacturer china',
     path: '/about-us'
@@ -53,7 +53,7 @@ export default async function AboutUsPage() {
             <div className="sec-tag">// About us</div>
             <h1>Precision engineering, flexible quantities</h1>
             <p>
-              Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. manufactures
+              Xiamen Orange Cat Creative Home Decor Co., Ltd. manufactures
               engineered custom wall clocks in Xiamen, China — design, tooling,
               production and export under one roof. We build for e-commerce brands,
               Amazon and Shopify sellers, and interior designers, with the tolerances
@@ -171,14 +171,14 @@ export default async function AboutUsPage() {
               >
                 <img
                   src="/media/factory/business-license.jpg"
-                  alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
+                  alt="Business licence of Xiamen Orange Cat Creative Home Decor Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
                   width={1000} height={750} loading="lazy"
                 />
               </a>
 
               <p className="factory-cap">
-                <b>Business licence</b> — Xiamen Chengmaomao Creative Home
-                Furnishings Co., Ltd., established in Xiamen, China on
+                <b>Business licence</b> — Xiamen Orange Cat Creative Home
+                Decor Co., Ltd., established in Xiamen, China on
                 28 December 2023. Click the licence to open it at full size.
               </p>
 
@@ -192,12 +192,13 @@ export default async function AboutUsPage() {
                 <h3 style={{ fontSize: 16, marginBottom: 14 }}>Factory factsheet</h3>
                 <div className="fact-grid">
                   {[
-                    ['Legal entity', 'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.'],
+                    ['Legal entity', 'Xiamen Orange Cat Creative Home Decor Co., Ltd.'],
                     ['Established', 'Xiamen, China — December 2023'],
                     ['Workshop area', '1,000 m² — injection, woodwork, metal CNC and dust-free assembly'],
+                    ['Assembly team', '10+ skilled clock assemblers'],
                     ['Monthly capacity', '60,000 pcs'],
                     ['Machines', 'CNC 5-axis machining centres × 5, UV flatbed printers × 2'],
-                    ['Shipping port', 'Port of Xiamen (XMN) — shipped to 30+ countries'],
+                    ['Shipping port', 'Port of Xiamen (XMN) — 50 km from the workshop, shipped to 30+ countries'],
                     ['Enquiries', 'amoywind@gmail.com']
                   ].map(([k, v]) => (
                     <div className="fact-row" key={k}>

@@ -330,11 +330,11 @@ function LicencePanel() {
       </div>
       <a href="/media/factory/business-license.jpg" target="_blank" rel="noopener noreferrer">
         <img src="/media/factory/business-license.jpg"
-          alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
+          alt="Business licence of Xiamen Orange Cat Creative Home Decor Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
           width={1000} height={750} loading="lazy" />
       </a>
       <p>
-        Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. Click the
+        Xiamen Orange Cat Creative Home Decor Co., Ltd. Click the
         image for the full-size licence.
       </p>
     </aside>

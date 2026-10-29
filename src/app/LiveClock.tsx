@@ -591,6 +591,22 @@ export function LiveClock() {
         </div>
       </div>
 
+      {/* The figures the reader cannot measure.
+
+          The two readings above are measured on this page, in front of
+          the reader: the time, and the sound. These three are not
+          measured here at all — they are what the movement in the
+          photograph is, and they are the figures a buyer writes on a
+          specification sheet. The crystal the movement counts on, the
+          current it draws, and the certification it carries. A factory
+          that quotes only the first two looks like a factory nobody
+          has asked the third question of. */}
+      <div className="ck-specs">
+        <span><b>Movement core</b> CE (EMC) &amp; RoHS 2.0 certified</span>
+        <span><b>Crystal</b> 32.768 kHz</span>
+        <span><b>Current draw</b> &lt;130 μA</span>
+      </div>
+
       {/* The configuration, carried into the enquiry as a hidden field
           so the factory receives it as a specification rather than as
           a paragraph the buyer had to write.

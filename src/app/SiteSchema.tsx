@@ -47,7 +47,7 @@ export function SiteSchema({ s }: { s: SiteSettings }) {
     {
       '@type': 'Organization',
       '@id': `${site}/#organization`,
-      name: 'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.',
+      name: 'Xiamen Orange Cat Creative Home Decor Co., Ltd.',
       alternateName: 'OEMWALLCLOCKS',
       url: site,
       /* The logo is the one file that actually exists. The specification

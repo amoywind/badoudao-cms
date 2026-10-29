@@ -151,7 +151,7 @@ export const COMPONENTS: ComponentLayer[] = [
     summary:
       'The motor and the electronics behind it. This is what makes the difference between a clock that ticks and one that does not.',
     materials:
-      'Seiko silent sweep under 10dB, standard step-second, radio-controlled RCC covering WWVB / DCF77 / JJY / BPC, Westminster chime, FSTN LCD perpetual-calendar module, see-through-wood LED dot matrix.',
+      'Silent sweep under 10dB, standard step-second, radio-controlled RCC covering WWVB / DCF77 / JJY / BPC, Westminster chime, FSTN LCD perpetual-calendar module, see-through-wood LED dot matrix.',
     tolerances:
       'Brass centre arbor, high-torque nylon gear train, 100% of movements aged on power for 24 hours, running current below 130µA.',
     craft:
