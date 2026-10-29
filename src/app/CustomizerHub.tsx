@@ -72,33 +72,41 @@ export function CustomizerHub({
     if (el) el.value = code;
   }, [code]);
 
+  /* The configuration, written out in full.
+
+     It is built from `next` rather than from the choices of the
+     current render. The current render's choices still hold the old
+     value for the option being changed, so a summary built from them
+     listed the previous movement after the buyer picked a new one.
+
+     The same text goes in two places: in the message box of the form
+     when the form is on this page, and in the link to the form when it
+     is not. */
+  function summaryText(next: Record<string, string>): string {
+    const lines = TABS.map((t) => {
+      const c = t.choices.find((x) => x.code === next[t.key]) || t.choices[0];
+      return `- ${t.label}: ${c.label}${c.note ? ` (${c.note})` : ''}`;
+    });
+    return [
+      'Configuration:',
+      ...lines,
+      '',
+      'Quantity: ____ pcs',
+      'Target price: ____ USD',
+      'Other requirements:'
+    ].join('\n');
+  }
+
   function choose(key: string, code: string) {
     const next = { ...picks, [key]: code };
     setPicks(next);
 
     /* The message field on the enquiry form gets the same summary, so
        the buyer is not asked to describe what they just chose. It stays
-       editable — the options cannot say everything.
-
-       The summary is built from `next` rather than from the choices of
-       the current render. The current render's choices still hold the
-       old value for the option being changed, so a summary built from
-       them listed the previous movement after the buyer picked a new
-       one. */
+       editable — the options cannot say everything. */
     const msg = document.getElementById('if-msg') as HTMLTextAreaElement | null;
     if (msg) {
-      const lines = TABS.map((t) => {
-        const c = t.choices.find((x) => x.code === next[t.key]) || t.choices[0];
-        return `- ${t.label}: ${c.label}${c.note ? ` (${c.note})` : ''}`;
-      });
-      msg.value = [
-        'Configuration:',
-        ...lines,
-        '',
-        'Quantity: ____ pcs',
-        'Target price: ____ USD',
-        'Other requirements:'
-      ].join('\n');
+      msg.value = summaryText(next);
     }
   }
 
@@ -108,18 +116,31 @@ export function CustomizerHub({
        also used on a page that only links to the form, so the two
        cases are handled rather than assumed.
 
-       A hidden field carries the specification across the navigation,
-       because the form on the other page reads it by id. */
-    const form = document.getElementById('inquiry');
-    if (form) {
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+       The test is the message box rather than the enquiry section: the
+       section is on the page whether or not a form is in it, and a
+       scroll to a section with no form in it takes the buyer nowhere.
+       The form is what carries the configuration. */
+    const msg = document.getElementById('if-msg') as HTMLTextAreaElement | null;
+    if (msg) {
+      msg.value = summaryText(picks);
+      const form = document.getElementById('inquiry');
+      if (form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       return;
     }
 
+    /* No form here, so the configuration travels in the link. The code
+       goes in the hidden specification field, which is what the factory
+       reads, and the full summary goes in the message box, which is
+       what the buyer can see and add to. */
     const field = document.getElementById(HUB_FIELD) as HTMLInputElement | null;
     if (field) field.value = code;
 
-    window.location.href = '/contact/?spec=' + encodeURIComponent(code);
+    const q = new URLSearchParams();
+    q.set('spec', code);
+    q.set('msg', summaryText(picks));
+    window.location.href = '/contact/?' + q.toString();
   }
 
   const active = TABS.find((t) => t.key === tab) || TABS[0];

@@ -76,12 +76,12 @@ export const HAND_ALLOYS = [
   },
   {
     key: 'black',
-    name: 'Anodized Black #22',
-    short: 'Anodized Black',
+    name: 'Anodised Black #22',
+    short: 'Anodised Black',
     hour: '#111111',
     minute: '#111111',
     second: '#0052CC',
-    note: 'Anodized aluminium in black. Crisp and light on a light dial.'
+    note: 'Anodised aluminium in black. Crisp and light on a light dial.'
   },
   {
     key: 'walnut',

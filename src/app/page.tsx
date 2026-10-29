@@ -5,7 +5,7 @@ import {
 } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
-import { InquiryForm } from './InquiryForm';
+import { InquiryCTA } from './InquiryForm';
 import { TrustCards, Icons } from './TrustCards';
 import { LiveClock } from './LiveClock';
 import { MATERIALS, FACTORY_SHOTS } from '@/lib/vocabulary';
@@ -126,7 +126,7 @@ export default async function HomePage() {
               <div className="sec-tag">// 8 core materials</div>
               <h2>Eight material families, one factory</h2>
               <p className="sec-sub">
-                Every category is available with custom dials, logos, hands and packaging.
+                Every family can be made with custom dials, logos, hands and packaging.
                 Prices shown are <strong>estimated Ex Works (factory) prices</strong> at MOQ {moq} —
                 freight and duties quoted separately.
               </p>
@@ -218,8 +218,8 @@ export default async function HomePage() {
               <div className="sec-tag">// Before you choose</div>
               <h2>Three things worth understanding first</h2>
               <p className="sec-sub">
-                Most enquiries arrive before a buyer knows which clock they
-                want. These three pages answer the questions that come
+                Most enquiries come from buyers who do not yet know which clock
+                they want. These three pages answer the questions that come
                 first, whichever product they end up choosing.
               </p>
             </div>
@@ -393,9 +393,29 @@ export default async function HomePage() {
                   <span className="cert">Samples in {s.sampleDays || '5-7'} business days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
+                <p className="sec-sub" style={{ marginTop: 18 }}>
+                  One form, on one page, and everything you have built on
+                  this site travels with it — the clock you configured, the
+                  specification you chose. There is a box to write in and
+                  a place to attach a drawing, and a person reads it.
+                </p>
               </div>
               <div>
-                <InquiryForm replyHours={Number(s.quoteHours) || 4} />
+                {/* The form is on the contact page, not here.
+
+                    A form on the home page asks the buyer to stop and
+                    fill in four fields before they have seen the
+                    factory, and most of them have not: they arrived
+                    from a search result, they have a photograph of a
+                    clock they want made, and what they want is a price.
+                    One link, and the page they land on has nothing on it
+                    but the form.
+
+                    What the buyer has built on this page travels with
+                    them. The clock they configured on the home page is
+                    carried in the link, so it is in the box when they
+                    arrive rather than lost at the door. */}
+                <InquiryCTA label="Send it to the factory" />
               </div>
             </div>
           </div>

@@ -228,7 +228,7 @@ export async function Footer() {
               <img src="/logo-inverse.png" alt="" width={44} height={42} aria-hidden="true" />
               <span className="logo-word">BADOU<span>DAO</span></span>
             </div>
-            <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 300} pieces.</p>
+            <p>{s.siteName} manufactures quartz wall clocks, alarm clocks, table clocks and clock movements for OEM and ODM buyers. Small-batch production, MOQ from {s.moq || 300} pieces.</p>
             {/* The domain. It was in the header until the mark took
                 that place, and it is the one thing in the footer that
                 tells a buyer which site is answering them. */}

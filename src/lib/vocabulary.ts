@@ -59,7 +59,7 @@ export const MATERIALS: CraftTag[] = [
     slug: 'acrylic-wall-clocks',
     name: 'Acrylic Wall Clocks',
     blurb:
-      '3–10mm PMMA with backside UV printing and diamond-polished edges, built to survive parcel networks.',
+      '3–10 mm PMMA with the print on the reverse and diamond-polished edges, built to survive parcel networks.',
     tags: ['3-10mm thick acrylic', 'Backside UV printing', 'Diamond edge polishing'],
     tolerance: 'PMMA, printed in reverse for a depth effect'
   },
@@ -75,7 +75,7 @@ export const MATERIALS: CraftTag[] = [
     slug: 'resin-wall-clocks',
     name: 'Resin Wall Clocks',
     blurb:
-      'Polyresin and epoxy river clocks, hand-painted and cast from 3D-scanned originals.',
+      'Polyresin and epoxy, hand-painted and cast from 3D-scanned originals.',
     tags: ['Epoxy resin river', 'Hand-painted detailing', '3D concrete/sandstone texture'],
     tolerance: 'Vacuum-degassed, cast against the live edge'
   },
@@ -349,7 +349,7 @@ export const QC_STEPS = [
   },
   {
     n: 'Step 02',
-    title: '24-hour movement aging QC',
+    title: '24-hour movement ageing QC',
     detail:
       'Every movement runs on power for 24 hours on the shelf, then accuracy is ' +
       'verified and the tick is measured in an anechoic chamber whose own ' +
@@ -442,9 +442,9 @@ export const CERTIFICATIONS = [
  */
 export const ROUTE_28 = [
   { day: 'Day 01', title: '3D CAD and vector drawings', detail: 'Renderings and production drawings issued for approval.' },
-  { day: 'Day 03', title: 'CNC and laser cutting', detail: 'Precision cutting and the hand balancing tooling samples.' },
+  { day: 'Day 03', title: 'CNC and laser cutting', detail: 'Precision cutting, and tooling samples with the hands balanced.' },
   { day: 'Day 07', title: 'Sample assembled and shipped', detail: 'The first physical unit is built and sent by express courier.' },
   { day: 'Day 10', title: 'Sample and packaging confirmed', detail: 'The buyer approves the sample and the packaging artwork.' },
-  { day: 'Day 25', title: 'Production complete', detail: 'The full run is finished and every movement enters the aging room.' },
+  { day: 'Day 25', title: 'Production complete', detail: 'The full run is finished and every movement enters the ageing room.' },
   { day: 'Day 28', title: 'Tested and shipped', detail: '100% aged, calibrated and drop-tested; the container leaves Xiamen.' }
 ];

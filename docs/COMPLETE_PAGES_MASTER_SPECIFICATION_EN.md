@@ -14,7 +14,7 @@
 * **Internal Quality Rigor**:
   - **100% 24-Hour Continuous Aging Rack Test** — Every quartz movement is tested under live load for 24 hours before assembly.
   - **<10dB Anechoic Soundproof Lab Testing** — Acoustic noise verification to ensure silent sweep operation.
-  - **1.2m ISTA-1A Certified Parcel Drop-Test Packaging** — 1 corner, 3 edges, 6 faces drop tested on solid concrete.
+  - **1.2m ISTA-1A Certified Parcel Drop-Test Packageing** — 1 corner, 3 edges, 6 faces drop tested on solid concrete.
   - **24-Hour 3D CAD Mockup Turnaround** — Free photorealistic renderings from buyer vector artwork.
   - **Flexible Low MOQ Tier (300 Pcs)** — Allows color/spec split for modern DTC brands and retail testing.
 
@@ -32,7 +32,7 @@
 ### 1.2 Typographic Hierarchy
 * **Display / Brand / H1-H3**: `Space Grotesk` (Geometric, industrial sans-serif with mechanical authority).
 * **Body / Documentation**: `Inter` (High-legibility humanist sans-serif, strict 1.6~1.7 line height).
-* **Technical Parameters & Codes**: `JetBrains Mono` (Fixed-width mono for SKUs, dB readings, tolerances, and work orders).
+* **Technical Parametres & Codes**: `JetBrains Mono` (Fixed-width mono for SKUs, dB readings, tolerances, and work orders).
 
 ### 1.3 Design Discipline
 * **Zero-Pill Rule**: All buttons, tags, badges, and cards use subtle micro-radii (`rounded-sm`, 2px~4px). No oval pill buttons.
@@ -49,7 +49,7 @@
 
 * **Route**: `#/` or `#/home`
 * **SEO Title**: `OEMWALLCLOCKS | Precision B2B Wall Clock OEM/ODM Manufacturing Studio`
-* **Meta Description**: `Direct factory wall clock OEM/ODM manufacturing for modern global brands. Flexible low MOQ 300 Pcs, 24h 3D CAD rendering, CE/RoHS certified silent sweep movements, and 1.2m drop-tested packaging.`
+* **Meta Description**: `Direct factory wall clock OEM/ODM manufacturing for modern global brands. Flexible low MOQ 300 Pcs, 24h 3D CAD rendering, CE/RoHS certified silent sweep movements, and 1.2m drop-tested packageing.`
 * **Core Keywords**: `custom wall clock manufacturer, OEM wall clock factory China, low MOQ wall clock supplier, CE RoHS quartz clock movement, silent sweep clock manufacturing`
 
 #### Section 1.1: Top Factory Announcement Bar
@@ -61,7 +61,7 @@
   - **Kicker Badge**: `PRECISION OEM/ODM WALL CLOCK MANUFACTURING`
   - **H1 Headline**: **Agile Wall Clock Manufacturing for Modern Global Brands**
   - **Body Paragraph**:
-    > "Direct factory supply from Xiamen, China. We deconstruct traditional wall clock production into interchangeable modules: frames, dials, hands, movements, and ISTA-1A tested packaging. Engineered with low MOQ (300 pcs), 24h 3D CAD turnaround, and CE/RoHS 2.0 certified silent quartz engines."
+    > "Direct factory supply from Xiamen, China. We deconstruct traditional wall clock production into interchangeable modules: frames, dials, hands, movements, and ISTA-1A tested packageing. Engineered with low MOQ (300 pcs), 24h 3D CAD turnaround, and CE/RoHS 2.0 certified silent quartz engines."
   - **Dual CTAs**:
     - Primary CTA: `[ Build Custom Inquiry (RFQ) ]` (Klein Blue `#0052CC`, routes to `#/rfq`)
     - Secondary CTA: `[ Explore 6 Modular Platforms ]` (Border button, routes to `#/custom-services`)
@@ -73,24 +73,24 @@
     - `Movement Core: CE (EMC) & RoHS 2.0 Certified`
     - `Crystal Frequency: 32.768 kHz · Current Draw: <130μA`
   - **Real-Time Material Switcher**:
-    - `Raw Anodized Aluminum` (`#E5E7EB`)
+    - `Raw Anodized Aluminium` (`#E5E7EB`)
     - `Natural Black Walnut` (`#4A3728`)
     - `Architectural Matte Black` (`#1F2937`)
     - `Minimal Warm White` (`#F9FAFB`)
 
 #### Section 1.3: 4 Core Factory Trust Metrics
-* **300 Pcs — Flexible Low MOQ**: Mix colors & specs within one production run; ideal for agile DTC Shopify & Amazon brand testing.
+* **300 Pcs — Flexible Low MOQ**: Mix colours & specs within one production run; ideal for agile DTC Shopify & Amazon brand testing.
 * **24 Hours — Fast 3D CAD Render**: Complimentary photorealistic 3D drawings with lighting simulation within 24 hours of RFQ.
 * **7 Days — Express Physical Sample**: Rapid prototyping turnaround utilizing precision CNC milling and 8-color UV proofing.
-* **1.2m Drop — ISTA-1A Certified**: Zero transit breakage packaging engineered and verified for drop survival with parcel carriers.
+* **1.2m Drop — ISTA-1A Certified**: Zero transit breakage packageing engineered and verified for drop survival with parcel carriers.
 
 #### Section 1.4: Featured OEM Showcase
-Curated showcase of 4 bestsellers (Dual-Faced 90° Corner Clock, Live-Edge Solid Walnut Epoxy, Spun 6061 Aluminum Minimalist, Optically Clear Acrylic Floating Clock) with live 15-second sweep previews and instant customization links.
+Curated showcase of 4 bestsellers (Dual-Faced 90° Corner Clock, Live-Edge Solid Walnut Epoxy, Spun 6061 Aluminium Minimalist, Optically Clear Acrylic Floating Clock) with live 15-second sweep previews and instant customization links.
 
 #### Section 1.5: 3 Strategic Capability Gateways
 1. **Modular Custom Services**: Explore the 6 deconstructed component layers and 4 specialized custom structural architectures.
-2. **Components Studio**: Browse 1,000+ stamped pointer molds, 7 quartz/RCC movement mechanisms, and 3 packaging grades.
-3. **4-Step QC & Compliance**: Inspect laser moisture testing, 24-hour continuous aging racks, and CE/RoHS test standards.
+2. **Components Studio**: Browse 1,000+ stamped pointer molds, 7 quartz/RCC movement mechanisms, and 3 packageing grades.
+3. **4-Step QC & Compliance**: Inspect laser moisture testing, 24-hour continuous ageing racks, and CE/RoHS test standards.
 
 ---
 
@@ -98,33 +98,38 @@ Curated showcase of 4 bestsellers (Dual-Faced 90° Corner Clock, Live-Edge Solid
 
 * **Route**: `#/custom-services`
 * **SEO Title**: `Modular Wall Clock Custom Services | OEM Anatomy & Engineering`
-* **Meta Description**: `Deconstruct wall clock OEM manufacturing: 6 modular components (frames, dials, pointers, movements, lenses, packaging) and 4 special custom architectures.`
+* **Meta Description**: `Deconstruct wall clock OEM manufacturing: 6 modular components (frames, dials, pointers, movements, lenses, packageing) and 4 special custom architectures.`
 * **Core Keywords**: `wall clock components OEM, custom clock frame manufacturing, clock movement assembly, modular wall clock anatomy`
 
 #### Section 2.1: The 6 Core Modular Anatomy Layers
 Interactive SVG deconstruction with clickable inspection hotspots:
 1. **Outer Frame & Bezel**:
-   - *Materials*: Spun 6061-T6 seamless aluminum, FAS-grade North American black walnut / white oak, forged solid brass, cold-rolled steel, high-impact injection ABS.
+   - *Materials*: Spun 6061-T6 seamless aluminium, FAS-grade North American black walnut / white oak, forged solid brass, cold-rolled steel, high-impact injection ABS.
    - *Tolerances*: CNC turning tolerance `±0.15mm`; anodized coating thickness `≥12μm`.
 2. **Dial Face & Indices**:
    - *Technologies*: 8-color industrial UV flatbed printing, laser 3D debossed indices, natural timber veneer lamination, micro-sliced natural marble.
    - *Accuracy*: Pantone spot color matching precision `ΔE < 1.0`.
 3. **Clock Hands & Bushings**:
-   - *Materials*: 5052-H32 aerospace-grade lightweight aluminum alloy, micro-carved solid walnut, H62 tight-tolerance brass collet bushing.
+   - *Materials*: 5052-H32 aerospace-grade lightweight aluminium alloy, micro-carved solid walnut, H62 tight-tolerance brass collet bushing.
    - *Dynamic Balance*: Hands `>120mm` feature calibrated counterweight tails; mass variance `<0.05g`.
 4. **Precision Movement Core**:
    - *Mechanisms*: silent sweep, step-second quartz, atomic radio-controlled (WWVB/DCF77/JJY), Westminster chime, spring-driven mechanical, music chime, magnetic pendulum.
-   - *Compliance*: **CE Directive 2014/30/EU, RoHS 2.0 (EU) 2015/863, 100% 24h aging run-in tested**.
+   - *Compliance*: **CE Directive 2014/30/EU, RoHS 2.0 (EU) 2015/863, 100% 24h ageing run-in tested**.
 5. **Front Protective Lens**:
    - *Substrates*: 2.0mm~3.0mm mineral float glass (light transmission `>92%`), optical-cast PMMA acrylic, optional AR anti-reflective multi-coating.
-6. **Engineered Packaging**:
-   - *System*: 5-ply reinforced K=A corrugated master carton, 35mm custom-molded high-density EPE foam, pointer-locking PET blister shield.
+6. **Engineered Packageing**:
+   - *System*: 5-ply reinforced K=A corrugated master carton, 35mm custom-moulded high-density EPE foam, pointer-locking PET blister shield.
 
-#### Section 2.2: 4 Specialized Architectural Systems
-1. **90° Corner Dual-Faced Clocks**: Solid wood mortise & tenon corner bracket, independent dual sweep quartz engines, eliminates corridor visual blind spots.
-2. **Frameless Open-Face Minimal Clocks**: Zero lens reflection, recessed rear movement pocket, balanced counterweighted hands.
-3. **Optically Clear Acrylic Floating Clocks**: 8mm cast acrylic with diamond-milled beveled edges and reverse under-surface UV printing.
-4. **Hybrid Quartz + Digital LCD Clocks**: Classic analog hour/minute hands integrated with lower LCD display showing calendar, day of week, and room temperature.
+#### Section 2.2: The Simplified Forms
+The site names these three forms, and the site is what the buyer reads:
+
+1. **Open-face — no dial, no cover**: Engraved solid-wood panels and laser-cut metal shapes, where the mechanism is the design.
+2. **No frame, no cover**: Printed transparent acrylic and cast resin art pieces, where the material carries the image.
+3. **Electronics instead of a movement**: LCD perpetual calendars and LED digital displays, where the display replaces the dial entirely.
+
+These three are set out with animated pictures rather than stills, because the point of an open-face clock is that something is still moving.
+
+**The 90° corner dual-faced clock is a catalogue form rather than a simplified form.** It is held as standard bodies in wood, acrylic and metal, and it appears in the catalogue rather than in this section. The corner bracket is mortise-and-tenon in solid wood, with independent sweep movements on each face, so a clock at a corridor junction can be read from either direction.
 
 #### Section 2.3: The 28-Day Production Calendar
 The order in which a new model is made, and what each stage costs in
@@ -149,7 +154,7 @@ set-up of a larger one.
 
 * **Route**: `#/products`
 * **SEO Title**: `Wholesale Wall Clock Catalog | Direct Factory OEM/ODM Models`
-* **Meta Description**: `Browse 12+ factory wall clock platforms: Solid walnut, seamless aluminum, 90° corner dual-faced, acrylic floating, and brass clocks. Low MOQ 300 Pcs.`
+* **Meta Description**: `Browse 12+ factory wall clock platforms: Solid walnut, seamless aluminium, 90° corner dual-faced, acrylic floating, and brass clocks. Low MOQ 300 Pcs.`
 * **Core Keywords**: `wholesale wall clocks, wooden wall clock factory, modern minimalist clock manufacturer, commercial wall clocks supplier`
 
 #### Section 3.1: Dual-Axis Category & Movement Filtering
@@ -173,7 +178,7 @@ Every product card features:
 
 * **Route**: `#/product/:sku`
 * **SEO Title**: `[Product Name] - [SKU] | Factory OEM Wall Clock Specification`
-* **Meta Description**: `Full OEM specification for [Product Name]. 12-inch diameter, CE/RoHS silent quartz movement, customizable Pantone dial, and ISTA-1A drop packaging.`
+* **Meta Description**: `Full OEM specification for [Product Name]. 12-inch diameter, CE/RoHS silent quartz movement, customisable Pantone dial, and ISTA-1A drop packageing.`
 
 #### Section 4.1: 5-Angle Engineering Viewport
 1. **Front View**: Clear inspection of dial typography, indices, and hand concentricity.
@@ -187,8 +192,8 @@ Instant visual toggle between available factory colorways: `Natural American Wal
 
 #### Section 4.3: PDP Custom Inquiry Builder
 * **Movement Selection**: `Silent Sweep Quartz (<10dB)` | `Standard Precision Step` | `Radio-Controlled (RCC)` | `LCD Dual Display`.
-* **Hands Material & Style**: `Architectural Brass Baton (#084)` | `Solid Walnut Tapered (#142)` | `Anodized Matte Aluminum Pilot (#228)`.
-* **Packaging Requirement**: `1.2m Drop-Tested Mail-Order Kraft Box` | `Rigid Premium Color Gift Box` | `PMMA Clear Display Box`.
+* **Hands Material & Style**: `Architectural Brass Baton (#084)` | `Solid Walnut Tapered (#142)` | `Anodized Matte Aluminium Pilot (#228)`.
+* **Packageing Requirement**: `1.2m Drop-Tested Mail-Order Kraft Box` | `Rigid Premium Color Gift Box` | `PMMA Clear Display Box`.
 * **Logistics & Dimension Estimator**: Real-time calculated master carton count, gross weight, carton dimensions, and container estimation.
 * **Direct Actions**:
   - `[ Request Custom Quote for this SKU ]` (Injects all selections directly into `#/rfq`).
@@ -200,7 +205,7 @@ Instant visual toggle between available factory colorways: `Natural American Wal
 
 * **Route**: `#/components`
 * **SEO Title**: `Clock Movements, Hands & Parts Studio | OEM Wall Clock Components`
-* **Meta Description**: `Explore 1,000+ clock hands, CE/RoHS certified silent sweep quartz movements, RCC radio-controlled motors, and ISTA-1A packaging options.`
+* **Meta Description**: `Explore 1,000+ clock hands, CE/RoHS certified silent sweep quartz movements, RCC radio-controlled motors, and ISTA-1A packageing options.`
 * **Core Keywords**: `quartz clock movements wholesale, silent clock sweep movement CE RoHS, clock hands manufacturer, OEM clock accessories China`
 
 #### Section 5.1: 7-Movement Comparison Matrix
@@ -260,7 +265,7 @@ these rather than for a movement.
 * Categories: `Baton Minimal` | `Spade & Leaf Vintage` | `Architectural Wood` | `Luminous Tactical`.
 * Tolerances: Hour arbor `Ø5.05mm`, Minute Euroshaft `2.8×3.5mm` with brass knurled lock nut.
 
-#### Section 5.3: 3-Tier Packaging Standards
+#### Section 5.3: 3-Tier Packageing Standards
 * **Tier A**: 1.2m Drop-Tested Kraft Mail-Order Box (5-Ply K=A Corrugated + 35mm EPE Foam).
 * **Tier B**: Rigid Premium Color Gift Box (1200g Greyboard + Matte Lamination).
 * **Tier C**: Crystal Clear PMMA Acrylic Display Showcase.
@@ -274,8 +279,8 @@ Real-time parts tally with `[ Export into Custom RFQ Work Order ]` to auto-fill 
 
 * **Route**: `#/craft-qc`
 * **SEO Title**: `4-Step Quality Control & Certifications | CE & RoHS 2.0 Movement Clock Factory`
-* **Meta Description**: `Rigorous 4-step QC protocol: Moisture laser test, 100% 24h aging in <10dB anechoic chamber, 0.1mm pointer balance, and 1.2m ISTA-1A drop test. CE & RoHS 2.0 movement certified.`
-* **Core Keywords**: `ISTA-1A drop test wall clock, CE RoHS certified clock movement, anechoic chamber quiet clock testing, 24h aging test clock factory, clock quality control protocol`
+* **Meta Description**: `Rigorous 4-step QC protocol: Moisture laser test, 100% 24h ageing in <10dB anechoic chamber, 0.1mm pointer balance, and 1.2m ISTA-1A drop test. CE & RoHS 2.0 movement certified.`
+* **Core Keywords**: `ISTA-1A drop test wall clock, CE RoHS certified clock movement, anechoic chamber quiet clock testing, 24h ageing test clock factory, clock quality control protocol`
 
 #### Section 6.1: Interactive 4-Step QC Protocol Console
 * **Step 01: Raw Material Laser Moisture & Flatness Scan**
@@ -284,13 +289,13 @@ Real-time parts tally with `[ Export into Custom RFQ Work Order ]` to auto-fill 
   - *Pass Threshold*: `99.8% Tolerance: ±0.15mm`
 * **Step 02: 100% Full-Batch 24h Movement Aging & Anechoic Test**
   - *Standard*: `100% Full-Batch Run in <10dB Anechoic Chamber`
-  - *Inspection*: **100% of movements are mounted on powered aging racks and run continuously for 24 hours** prior to final casing. Daily rate deviation verified to `±0.5s/day`. Sample batches tested in a `<10dB` background noise anechoic chamber to guarantee silent sweep performance.
+  - *Inspection*: **100% of movements are mounted on powered ageing racks and run continuously for 24 hours** prior to final casing. Daily rate deviation verified to `±0.5s/day`. Sample batches tested in a `<10dB` background noise anechoic chamber to guarantee silent sweep performance.
   - *Pass Threshold*: `99.98% Current Draw: <130μA`
 * **Step 03: Pointer Dynamic Balance & 0.1mm Alignment**
   - *Standard*: `Micro-torque Gram Gauge Calibration`
   - *Inspection*: Pneumatic jigs press brass bushings with dual-laser alignment ensuring minimum `1.5mm` clearance between hour and minute hands. Minute hand counterweight tail ensures dynamic balance offset `<0.05g`.
   - *Pass Threshold*: `99.9% Angular Tolerance: <0.5°`
-* **Step 04: 1.2m ISTA-1A Drop-Test Packaging Inspection**
+* **Step 04: 1.2m ISTA-1A Drop-Test Packageing Inspection**
   - *Standard*: `ISTA-1A Certified Parcel Drop Protocol`
   - *Inspection*: Fully packaged master cartons dropped from 120cm height onto concrete across 1 corner, 3 edges, and 6 flat surfaces (10 consecutive drops). Zero glass breakage and full movement functional integrity required.
   - *Pass Threshold*: `100% Zero-Damage Standard`
@@ -299,7 +304,7 @@ Real-time parts tally with `[ Export into Custom RFQ Work Order ]` to auto-fill 
 1. **CE Directive 2014/30/EU (EMC)**: Electromagnetic compatibility testing certified by SGS / TÜV (EN 55032 / EN 55035).
 2. **RoHS 2.0 Directive (EU) 2015/863**: 10-Hazardous substances testing certified by Intertek.
 3. **REACH Regulation (EC 1907/2006)**: Non-toxic chemical and SVHC screening.
-4. **ISTA-1A Drop Packaging Certified**: 120cm drop integrity on concrete floors.
+4. **ISTA-1A Drop Packageing Certified**: 120cm drop integrity on concrete floors.
 5. **AQL 1.0 / 2.5 Sampling Standard**: Mil-STD-105E inspection criteria for batch delivery.
 
 #### Section 6.3: What Is Certified, And What Is Not
@@ -355,7 +360,7 @@ Card allowing overseas procurement officers to request full PDF test reports for
 #### Section 7.4: Direct Procurement FAQ
 * **Q: What is the typical lead time from RFQ to container shipment?**  
   *A: 24h for 3D digital CAD, 7 days for physical prototypes, and 25~30 days for mass container production (5,000~20,000 pcs).*
-* **Q: Can we customize Pantone colors and dial graphics?**  
+* **Q: Can we customize Pantone colours and dial graphics?**  
   *A: Yes. Dials are custom-printed using industrial 8-color UV printing to match Pantone coated/uncoated swatches with ΔE < 1.0.*
 * **Q: Do you sign Non-Disclosure Agreements (NDA)?**  
   *A: Absolutely. All client proprietary artwork, CAD models, and trademarks are 100% confidential and protected by bilateral NDAs.*
@@ -381,7 +386,7 @@ Card allowing overseas procurement officers to request full PDF test reports for
    - Dial finishes: `8-Color UV Flatbed Print`, `Laser 3D Engraving`, `Brushed Metal Inlay`.
 4. **Order Volume & Target Pricing**:
    - Volume tiers: `300 Pcs (Low MOQ Pilot)`, `500 Pcs`, `1,000 Pcs`, `3,000 Pcs`, `5,000+ Pcs (Container Tier)`.
-   - Packaging tier: `Tier A: 1.2m Drop-Tested Kraft Mail-Order Box` | `Tier B: Rigid Color Gift Box`.
+   - Packageing tier: `Tier A: 1.2m Drop-Tested Kraft Mail-Order Box` | `Tier B: Rigid Color Gift Box`.
 5. **Technical Artwork & CAD Upload**:
    - Drag-and-drop support for `.ai`, `.pdf`, `.dxf`, `.svg`, `.png` (Up to 25MB).
 6. **Procurement Liaison Details**:
@@ -392,7 +397,7 @@ Upon clicking `[ Submit RFQ & Generate Work Order ]`, the page generates:
 * **Work Order ID**: Unique tracking identifier (e.g., `WO-2026-XMN-7892`).
 * **SLA Commitments**: 12-Hour engineering turnaround, 100% NDA protection.
 * **Compliance Certification**: `Movement CE (EMC 2014/30/EU) & RoHS 2.0 Certified / 100% 24h Aging Tested`.
-* **Instant Action**: `[ Download Quotation Slip (.TXT) ]` exports the complete parameters into an engineering document.
+* **Instant Action**: `[ Download Quotation Slip (.TXT) ]` exports the complete parametres into an engineering document.
 
 ---
 
@@ -412,7 +417,7 @@ Upon clicking `[ Submit RFQ & Generate Work Order ]`, the page generates:
   - `• RoHS 2.0 (EU) 2015/863 Hazardous Substance Tested`
   - `• REACH SVHC Non-Toxic Eco Material Compliance`
   - `• 100% 24-Hour Continuous Aging Rack Testing`
-  - `• 1.2m ISTA-1A Drop-Tested Packaging Standard`
+  - `• 1.2m ISTA-1A Drop-Tested Packageing Standard`
 * **Bottom Bar**: `© 2026 www.oemwallclocks.com · All Rights Reserved` and smooth `Back to top` button.
 
 ### 3.3 Mobile 52px Sticky Action Bar
@@ -436,8 +441,8 @@ Upon clicking `[ Submit RFQ & Generate Work Order ]`, the page generates:
 | **Anechoic Noise Rating** | 消音室本底噪声读数 | Decibel acoustic measurement in a specialized sound-damped room with `<10dB` background noise to guarantee silent sweep. |
 | **Baton Hands** | 巴顿平直针 | Clean, rectangular Bauhaus hands with square tips and uniform width. |
 | **Counterweight Balanced Hands** | 动平衡配重表针 | Calibrated counterweight extension tail on minute hands `>120mm` to neutralize gravity torque on the gear train. |
-| **Brass Bushing Collar** | 黄铜套管/轴眼 | H62 precision brass bushing pressed into aluminum pointer hubs for durable, friction-free shaft retention. |
-| **Spun Aluminum Housing** | 旋压无缝铝外壳 | Cold lathe-spun 6061 aluminum disc formed into seamless circular frames with satin anodized or powder-coated finish. |
+| **Brass Bushing Collar** | 黄铜套管/轴眼 | H62 precision brass bushing pressed into aluminium pointer hubs for durable, friction-free shaft retention. |
+| **Spun Aluminium Housing** | 旋压无缝铝外壳 | Cold lathe-spun 6061 aluminium disc formed into seamless circular frames with satin anodized or powder-coated finish. |
 | **Mineral Float Glass Lens** | 矿物质浮法玻璃镜面 | 2.0mm~3.0mm thickness with `>92%` light transmission and optional anti-reflective (AR) coating. |
 | **ISTA-1A Certified Drop Test** | 国际安全运输 1.2 米跌落标准 | Mail-order drop test protocol: Master carton dropped from 120cm onto solid concrete across 1 corner, 3 edges, 6 flat faces. |
 | **5-Ply Reinforced K=A Corrugated** | 5 层加厚加强型瓦楞外箱 | High-bursting strength virgin kraft outer liner (`≥14 kgf/cm²`) with fluted heavy-duty core for ocean container stacking. |
@@ -456,12 +461,12 @@ Upon clicking `[ Submit RFQ & Generate Work Order ]`, the page generates:
 | `#/custom-services` | Custom Services & Modular Anatomy | `src/pages/CustomServicesPage.tsx`<br>`src/components/VisualAnatomy.tsx` | 100% Complete. Fixed duplicate header stacking, detailed 6 components. |
 | `#/products` | Products Collection | `src/pages/ProductsPage.tsx`<br>`src/components/ProductsCollection.tsx` | 100% Complete. 1:1 square white-background cards with 15s sweep preview. |
 | `#/product/:sku` | Product Engineering Detail Page | `src/pages/ProductDetailPage.tsx`<br>`src/components/ClockVisualizer.tsx` | 100% Complete. 5-angle viewer, 1.2m drop simulator, authentic CE/RoHS spec download. |
-| `#/components` | Components & Movement Studio | `src/pages/ComponentsPage.tsx`<br>`src/components/ComponentsStudio.tsx` | 100% Complete. 7 movements with CE/RoHS, 1,000+ hands, 3 packaging grades. |
-| `#/craft-qc` | 4-Step QC Protocol & Certifications | `src/pages/CraftQcPage.tsx`<br>`src/components/QcProtocolSection.tsx` | 100% Complete. 4-step simulator, 100% 24h aging racks, ISTA-1A drop, CE/RoHS. |
+| `#/components` | Components & Movement Studio | `src/pages/ComponentsPage.tsx`<br>`src/components/ComponentsStudio.tsx` | 100% Complete. 7 movements with CE/RoHS, 1,000+ hands, 3 packageing grades. |
+| `#/craft-qc` | 4-Step QC Protocol & Certifications | `src/pages/CraftQcPage.tsx`<br>`src/components/QcProtocolSection.tsx` | 100% Complete. 4-step simulator, 100% 24h ageing racks, ISTA-1A drop, CE/RoHS. |
 | `#/about-us` | Factory Profile & About Us | `src/pages/AboutPage.tsx`<br>`src/components/AboutSection.tsx` | 100% Complete. Legal entity, 1,000m², 10+ assemblers, 50 km to Port of Xiamen, FAQ. |
 | `#/rfq` | Technical RFQ Builder | `src/pages/RfqPage.tsx`<br>`src/components/RfqForm.tsx` | 100% Complete. Instant work order `WO-2026-XMN-XXXX`, parameter auto-fill, .TXT download. |
 | Global Top Bar | Factory Announcement & Header | `src/components/Header.tsx` | 100% Complete. Removed .zip links. Top bar: CE & RoHS 2.0 Certified Movements. |
-| Global Footer | Quiet Engineering Footer | `src/components/Footer.tsx` | 100% Complete. Updated to CE/RoHS movement credentials & 100% 24h aging test. |
+| Global Footer | Quiet Engineering Footer | `src/components/Footer.tsx` | 100% Complete. Updated to CE/RoHS movement credentials & 100% 24h ageing test. |
 | Global Data | Clock Specifications | `src/data/clockData.ts` | 100% Complete. CERTIFICATIONS array updated to authentic CE, RoHS, and ISTA-1A. |
 
 ---

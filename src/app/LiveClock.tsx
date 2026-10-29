@@ -248,6 +248,12 @@ export function LiveClock() {
 
     if (hidden) hidden.value = spec;
 
+    /* Is there a form on this page?
+
+       The test is the message box rather than the enquiry section,
+       because the section is on the page whether or not a form is in
+       it, and a scroll to a section with no form in it takes the buyer
+       nowhere. The form is what carries the configuration. */
     if (field) {
       /* The buyer's own words come first. Their configuration is added
          underneath rather than replacing it, so nothing they wrote is
@@ -256,12 +262,22 @@ export function LiveClock() {
       if (!field.value.includes('Clock configuration:')) {
         field.value = (field.value.trim() + line).trim();
       }
+      const target = document.getElementById('inquiry');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
     }
 
-    const target = document.getElementById('inquiry');
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    /* There is no form here, so the configuration travels in the link
+       instead. It is put in the message box on the other side rather
+       than in the hidden specification field, because the buyer has to
+       be able to see what they chose — a specification they cannot see
+       is one they cannot check. */
+    const q = new URLSearchParams();
+    q.set('spec', spec);
+    q.set('msg', `Clock configuration: ${spec}.`);
+    window.location.href = '/contact/?' + q.toString();
   }
 
   /* The dial's colours feed the SVG. The gradient id has to be unique

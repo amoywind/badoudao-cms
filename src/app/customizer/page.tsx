@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { InquiryForm } from '../InquiryForm';
+import { InquiryCTA } from '../InquiryForm';
 import { CustomizerHub } from '../CustomizerHub';
 import { TABS } from '@/lib/hub-data';
 import { SiteSchema } from '../SiteSchema';
@@ -119,7 +119,7 @@ export default async function CustomizerPage({
                     ['Your specification goes with the enquiry', 'The four choices, as a code, in the first line of the message the factory reads.'],
                     ['A quotation inside four hours', 'A price broken down by tooling, unit, packaging and freight.'],
                     ['A 3D rendering before tooling', 'Photorealistic, so the shape is agreed before a mould is cut.'],
-                    ['Samples in 5-7 business days', 'The sample fee is credited against the first bulk order.']
+                    ['Samples in 5–7 business days', 'The sample fee is credited against the first bulk order.']
                   ].map(([h, p], i) => (
                     <div className="cap" key={h}>
                       <div className="cap-n">0{i + 1}</div>
@@ -141,7 +141,13 @@ export default async function CustomizerPage({
                 </p>
               </div>
               <div>
-                <InquiryForm replyHours={replyHours} />
+                {/* The form is on the contact page, not here.
+
+                    The configuration the buyer has just built travels
+                    with them: the code goes in the hidden field the
+                    factory reads, and the full summary goes in the
+                    message box they can see and add to. */}
+                <InquiryCTA label="Send the specification to the factory" />
               </div>
             </div>
           </div>

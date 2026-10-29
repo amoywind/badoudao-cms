@@ -130,7 +130,8 @@ export function InquiryForm({
   preset = '',
   compact = false,
   replyHours = 4,
-  spec = ''
+  spec = '',
+  msg = ''
 }: {
   preset?: string;
   compact?: boolean;
@@ -138,6 +139,14 @@ export function InquiryForm({
   replyHours?: number;
   /** A specification assembled elsewhere on the site, carried in the URL. */
   spec?: string;
+  /** A message the buyer assembled elsewhere, carried in the URL.
+
+      The clock on the home page and the customiser on its own page both
+      write a configuration into this box. When the form is on the same
+      page they write it directly; when it is not, they carry it here in
+      the link, so that what the buyer built arrives with them rather
+      than being lost at the door. */
+  msg?: string;
 }) {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -420,12 +429,17 @@ export function InquiryForm({
             Customization notes
             <span className="hint">optional</span>
           </label>
+          {/* Deliberately not autofilled. The placeholder is a
+              pre-written requirements paragraph, and letting a browser
+              replace it would make the buyer edit someone else's words
+              before they had decided what they needed.
+
+              A message that arrives in the link is a different thing:
+              it is what the buyer has just built themselves, and it is
+              in the box so that they can see it and add to it. */}
           <textarea className="inp" id="if-msg" name="message" rows={4}
             placeholder={DEFAULT_MESSAGE}
-            /* Deliberately not autofilled. The placeholder is a
-               pre-written requirements paragraph, and letting a browser
-               replace it would make the buyer edit someone else's words
-               before they had decided what they needed. */ />
+            defaultValue={msg || undefined} />
         </div>
 
         <div className="fg">

@@ -35,7 +35,7 @@ export async function generateMetadata() {
 export default async function ContactPage({
   searchParams
 }: {
-  searchParams: Promise<{ model?: string; spec?: string }>;
+  searchParams: Promise<{ model?: string; spec?: string; msg?: string }>;
 }) {
   const [s] = await Promise.all([
     getSettings().catch(() => ({} as SiteSettings))
@@ -44,9 +44,13 @@ export default async function ContactPage({
   /* The product page CTA links here with ?model=… so the enquiry is
      attributed to the product the buyer was looking at, without a picker
      they have to operate. */
-  const params = await searchParams.catch(() => ({}) as { model?: string; spec?: string });
+  const params = await searchParams.catch(() => ({}) as { model?: string; spec?: string; msg?: string });
   const preset = params.model ? String(params.model).slice(0, 160) : '';
   const spec = params.spec ? String(params.spec).slice(0, 120) : '';
+  /* A configuration the buyer built on another page, brought here in
+     the link. It goes in the box they can see, so that what they
+     chose is in front of them and they can write around it. */
+  const msg = params.msg ? String(params.msg).slice(0, 2000) : '';
 
   const phone = s.phone || '';
   const email = s.email || 'sales@badoudao.com';
@@ -188,7 +192,7 @@ export default async function ContactPage({
               </div>
 
               <div id="inquiry">
-                <InquiryForm preset={preset} spec={spec} />
+                <InquiryForm preset={preset} spec={spec} msg={msg} />
               </div>
             </div>
           </div>

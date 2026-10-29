@@ -113,7 +113,7 @@ export default async function AboutUsPage() {
                   },
                   {
                     icon: Icons.clock,
-                    title: '24-hour drawing, sample in days',
+                    title: 'A drawing in 24 hours, a sample in days',
                     body:
                       'A photorealistic 3D rendering and the dial artwork come back inside 24 hours, so a buyer can see the product before paying for tooling. Physical samples of existing moulds ship within the week; a new shape takes two weeks of tooling first.'
                   }

@@ -37,8 +37,9 @@ export function AnatomyHeading() {
       <h2 className="anx-title">6 Core Modular Components: Complete OEM Freedom</h2>
       <p className="anx-lede">
         Every wall clock produced in our Xiamen facility is engineered as a
-        modular system. Mix and match frames, dials, clock hands, movements,
-        and packaging with zero compromise on structural integrity.
+        modular system. Frames, dials, hands, movements and packaging are
+        chosen separately, and the case is tooled to hold whichever
+        combination of them is asked for.
       </p>
     </>
   );
