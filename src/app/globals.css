@@ -356,17 +356,23 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
   margin-top: 6px;
   line-height: 1.55;
 }
-.ch-alt {
-  display: inline-block;
-  margin-top: 9px;
-  font-size: 13px;
+/* The telephone link. It sits under the cards rather than inside the
+   WhatsApp one: a link inside a link is not a link, and a buyer who
+   wants the number to dial it should be able to copy it or open it in
+   a new tab. */
+.ch-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: var(--brand);
+  color: var(--ink2);
   text-decoration: none;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 1px;
 }
-.ch-alt:hover { color: var(--ink); }
+.ch-call:hover { color: var(--brand); }
+.ch-call-ic { display: inline-flex; color: var(--ink3); }
+.ch-call:hover .ch-call-ic { color: var(--brand); }
 
 /* The reply promise. It is not a channel — it is what the buyer gets
    after using one — so it sits below them, on its own line, and is

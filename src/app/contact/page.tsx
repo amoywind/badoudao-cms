@@ -129,13 +129,29 @@ export default async function ContactPage({
                         <span className="ch-note">
                           The quickest way to send a photo or a question.
                         </span>
-                        <span className="ch-alt" onClick={(e) => { e.stopPropagation(); window.location.href = `tel:${telHref}`; }}>
-                          Or call the number
-                        </span>
                       </span>
                     </a>
                   )}
                 </div>
+
+                {/* The number can be dialled as well as messaged.
+
+                    It is a link of its own rather than a second action
+                    inside the WhatsApp card: a link inside a link is
+                    not a link, and a buyer who wants the number to dial
+                    it should be able to copy it. */}
+                {phone && (
+                  <a className="ch-call" href={`tel:${telHref}`}>
+                    <span className="ch-call-ic" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" />
+                      </svg>
+                    </span>
+                    Or call {phone}
+                  </a>
+                )}
 
                 {/* The reply promise. It is not a channel — it is what
                     the buyer gets after using one — so it sits below
