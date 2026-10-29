@@ -97,10 +97,10 @@ img { display: block; max-width: 100%; height: auto; }
   margin-top: 10px;
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--ink2);
+  color: #9aa1ac;
   text-decoration: none;
 }
-.f-domain:hover { color: var(--brand); }
+.f-domain:hover { color: #fff; }
 .menu { display: flex; gap: 26px; font-size: 14.5px; font-weight: 500; }
 .menu a { color: var(--ink2); position: relative; padding: 4px 0; }
 .menu a::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1.5px; background: var(--brand); transition: width .25s; }
@@ -239,6 +239,12 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 
 
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
+/* The word carries its own colour from the header rule, and that rule
+   is the black one — on the dark ground of the footer the name has to
+   be white. This is stated again here rather than left to inherit,
+   because a rule that sets a colour directly beats one that is
+   inherited, however later it is written. */
+.f-brand .logo-mark .logo-word { color: #fff; }
 .f-brand p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
 .f-h { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 17px; }
 .f-list { display: flex; flex-direction: column; gap: 10px; }

@@ -206,8 +206,11 @@ export async function Footer() {
       <div className="wrap">
         <div className="f-grid">
           <div className="f-brand">
+            {/* The mark is reversed for the footer. The footer is a dark
+                ground, and a black drawing on a dark ground is not a
+                drawing — it is a hole. */}
             <div className="logo logo-mark logo-mark-lg">
-              <img src="/logo.png" alt="" width={44} height={42} aria-hidden="true" />
+              <img src="/logo-inverse.png" alt="" width={44} height={42} aria-hidden="true" />
               <span className="logo-word">BADOU<span>DAO</span></span>
             </div>
             <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 300} pieces.</p>
