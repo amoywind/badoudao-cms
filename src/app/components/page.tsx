@@ -214,7 +214,7 @@ export default async function ComponentsPage() {
               <Link href="/custom-services" className="btn btn-ghost">See what we can customise</Link>
             </div>
             <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 20 }}>
-              MOQ from {moq} pcs · Ex Works pricing · sample in {s.sampleDays || '5-7'} business days
+              MOQ from {moq} pcs · Ex Works pricing · sample in {s.sampleDays || '5–7'} business days
             </p>
           </div>
         </section>

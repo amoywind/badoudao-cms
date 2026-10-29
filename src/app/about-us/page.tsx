@@ -296,7 +296,7 @@ export default async function AboutUsPage() {
                 {
                   n: 'Q2',
                   q: 'How long does a sample take?',
-                  a: `An existing mould ships within ${s.sampleDays || '5-7'} business days. A brand-new shape needs tooling first, which takes two to three weeks. The sample cost is credited against the first bulk order, so the sample is not a cost — it is the first payment.`
+                  a: `An existing mould ships within ${s.sampleDays || '5–7'} business days. A brand-new shape needs tooling first, which takes two to three weeks. The sample cost is credited against the first bulk order, so the sample is not a cost — it is the first payment.`
                 },
                 {
                   n: 'Q3',
@@ -345,7 +345,7 @@ export default async function AboutUsPage() {
               {[
                 ['Minimum order', `${moq} pcs`, 'Colours and specifications can be mixed within a single order.'],
                 ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
-                ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
+                ['Sample lead time', `${s.sampleDays || '5–7'} business days`, 'Sample cost credited against the first bulk order.'],
                 ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
                 ['Monthly capacity', '60,000 pcs', 'Across four production lines under one roof.'],
                 ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']
@@ -402,7 +402,7 @@ export default async function AboutUsPage() {
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/contact" className="btn btn-primary">
-                Request a custom sample ({s.sampleDays || '5-7'} days)
+                Request a custom sample ({s.sampleDays || '5–7'} days)
               </Link>
               <Link href="/contact" className="btn btn-ghost">
                 Get an official quote (MOQ {moq}+)

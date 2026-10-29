@@ -324,7 +324,7 @@ export default async function HomePage() {
               {[
                 ['Send your brief', 'A reference photo, a sample or a sketch is enough to start.'],
                 ['Quotation', `Within ${s.quoteHours || 4} hours with pricing broken down by tooling, unit, packaging and freight.`],
-                ['Sample', `${s.sampleDays || '5-7'} business days. Sample cost is credited against your first bulk order.`],
+                ['Sample', `${s.sampleDays || '5–7'} business days. Sample cost is credited against your first bulk order.`],
                 ['Bulk production', '20–45 days depending on complexity, with photo and video updates.'],
                 ['Delivery', 'Ex Works by default. CIF or DDP available on request.']
               ].map(([h, p], i) => (
@@ -390,7 +390,7 @@ export default async function HomePage() {
                     page look like it has four things to say. */}
                 <div className="certs">
                   <span className="cert">MOQ from {moq} pcs</span>
-                  <span className="cert">Samples in {s.sampleDays || '5-7'} business days</span>
+                  <span className="cert">Samples in {s.sampleDays || '5–7'} business days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
                 <p className="sec-sub" style={{ marginTop: 18 }}>

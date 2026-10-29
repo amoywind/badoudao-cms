@@ -25,7 +25,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Custom Services & Clock Anatomy — OEM/ODM | Badoudao',
     description:
-      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. The 28-day production calendar from drawing to container. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5-7'} days.`,
+      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. The 28-day production calendar from drawing to container. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5–7'} days.`,
     keywords:
       'custom clock manufacturer, OEM clock parts, private label wall clock, clock dial printing, bespoke clock supplier',
     path: '/custom-services'
@@ -112,7 +112,7 @@ export default async function CustomServicesPage() {
             <div className="grid-3">
               {[
                 ['New tooling', '15–25 days for a new mould, made in-house so there is no subcontractor margin in the price.'],
-                ['Sample', `${s.sampleDays || '5-7'} business days. A sealed sample is approved before the bulk run starts.`],
+                ['Sample', `${s.sampleDays || '5–7'} business days. A sealed sample is approved before the bulk run starts.`],
                 ['Mass production', '20–45 days depending on complexity. Lead time for a repeat design is shorter.'],
                 ['Vector files', 'AI, CAD, PDF or EPS. A dial artwork template comes with the first quote.'],
                 ['Custom moulds', '3D scanning and prototyping for shapes that do not exist yet, from a photo or a sketch.'],

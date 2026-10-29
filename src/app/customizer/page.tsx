@@ -129,7 +129,7 @@ export default async function CustomizerPage({
                 </div>
                 <div className="certs" style={{ marginTop: 28 }}>
                   <span className="cert">MOQ from {moq} pcs</span>
-                  <span className="cert">Samples in {s.sampleDays || '5-7'} business days</span>
+                  <span className="cert">Samples in {s.sampleDays || '5–7'} business days</span>
                   <span className="cert">Ex Works pricing</span>
                 </div>
                 <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.6 }}>
