@@ -23,7 +23,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'About the Factory — Wall Clock Manufacturer in Xiamen | Badoudao',
     description:
-      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. 10+ years in the trade, ${s.capacityMin || 2000} pcs daily capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, 1.2m drop-tested packaging and Ex Works pricing.`,
+      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. 10+ years in the trade, ${(Number(s.capacityMin) || 2000).toLocaleString('en-US')} pcs daily capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, Ex Works pricing.`,
     keywords:
       'china wall clock manufacturer, xiamen clock factory, quartz clock OEM supplier, low MOQ wall clock supplier, small batch wall clock factory, custom wall clock manufacturer china',
     path: '/about-us'
@@ -33,6 +33,14 @@ export async function generateMetadata() {
 export default async function AboutUsPage() {
   const s = await getSettings().catch(() => ({} as SiteSettings));
   const moq = Number(s.moq) || 300;
+
+  /* The daily capacity is stored as a bare number — "2000" — and the
+     page writes it in two places. Written raw it reads "2000" next to
+     the "2,000" printed on the trust card above, and two spellings of
+     the same number on one page is the kind of thing a buyer notices.
+     The separator goes on here rather than in the copy, so the number
+     stays one number when the factory changes it. */
+  const capacity = (Number(s.capacityMin) || 2000).toLocaleString('en-US');
 
   return (
     <div className="site">
@@ -62,7 +70,7 @@ export default async function AboutUsPage() {
                 { value: '10+', title: 'Years in the trade', detail: 'Wall clock manufacturing and export', icon: Icons.clock },
                 { value: String(moq), unit: ' pcs', title: 'Flexible minimum order', detail: 'Mixed colours and specs in one order', icon: Icons.box },
                 { value: '1,000+', title: 'Hand styles in stock', detail: 'Ready to use, no tooling needed', icon: Icons.ruler },
-                { value: '2,000', unit: ' pcs', title: 'Daily capacity', detail: 'Across one shift', icon: Icons.gear }
+                { value: capacity, unit: ' pcs', title: 'Daily capacity', detail: 'Across one shift', icon: Icons.gear }
               ]}
             />
           </div>
@@ -317,7 +325,7 @@ export default async function AboutUsPage() {
                 ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
                 ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
                 ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
-                ['Daily capacity', `${s.capacityMin || 2000} pcs`, 'Across one shift, at the current headcount.'],
+                ['Daily capacity', `${capacity} pcs`, 'Across one shift, at the current headcount.'],
                 ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']
               ].map(([k, v, d]) => (
                 <div className="card" key={k} style={{ padding: 24 }}>
