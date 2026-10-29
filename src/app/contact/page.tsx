@@ -51,6 +51,18 @@ export default async function ContactPage({
   const phone = s.phone || '';
   const email = s.email || 'sales@badoudao.com';
 
+  /* The number, in the two forms it is dialled in.
+
+     A telephone link takes the number as it is written, with the plus
+     and the spaces. A WhatsApp link takes the country code and the
+     number with nothing else in it, because the address is a path and
+     a path cannot carry a space. The 86 is China's code and the
+     number already carries it, so it is only kept if it is not
+     already there. */
+  const telHref = phone.replace(/[^\d+]/g, '');
+  const waDigits = phone.replace(/\D/g, '');
+  const waUrl = `https://wa.me/${waDigits.startsWith('86') ? waDigits : '86' + waDigits}`;
+
   return (
     <div className="site">
 
@@ -77,30 +89,72 @@ export default async function ContactPage({
                 <div className="sec-tag">Direct channels</div>
                 <h2 style={{ fontSize: 28 }}>Reach us another way</h2>
 
-                <div style={{ marginTop: 22, display: 'grid', gap: 18 }}>
-                  <div>
-                    <div className="help">Email</div>
-                    <a href={`mailto:${email}`} style={{ fontSize: 16, fontWeight: 500 }}>
-                      {email}
-                    </a>
-                  </div>
+                {/* The two ways to reach a person.
+
+                    They used to be one label reading "Phone /
+                    WhatsApp" with the number under it, so a buyer who
+                    wanted to send a message could not tell whether a
+                    message was possible and had to guess. They are two
+                    cards now, each carrying the mark that names it, and
+                    the number can be dialled as well as messaged. */}
+                <div className="ch-grid">
+                  <a className="ch-card" href={`mailto:${email}`}>
+                    <span className="ch-ic" aria-hidden="true">
+                      <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="1.9"
+                        strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+                        <path d="M3 7l9 6 9-6" />
+                      </svg>
+                    </span>
+                    <span className="ch-body">
+                      <span className="ch-lbl">Email</span>
+                      <span className="ch-val">{email}</span>
+                      <span className="ch-note">
+                        Attach drawings or photos and they come with the reply.
+                      </span>
+                    </span>
+                  </a>
 
                   {phone && (
-                    <div>
-                      <div className="help">Phone / WhatsApp</div>
-                      <a href={`tel:${phone.replace(/[^\d+]/g, '')}`}
-                         style={{ fontSize: 16, fontWeight: 500 }}>
-                        {phone}
-                      </a>
-                    </div>
+                    <a className="ch-card" href={waUrl} target="_blank" rel="noopener noreferrer">
+                      <span className="ch-ic ch-ic-wa" aria-hidden="true">
+                        <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.91-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.14.2 2.1 3.2 5.08 4.49.7.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.8a9.8 9.8 0 0 1-5.03-1.38l-.36-.22-3.74.99 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.43-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.43 9.89-9.89 9.89m8.41-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.15 1.59 5.95L0 24l6.34-1.65a11.87 11.87 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.42" />
+                        </svg>
+                      </span>
+                      <span className="ch-body">
+                        <span className="ch-lbl">WhatsApp</span>
+                        <span className="ch-val">{phone}</span>
+                        <span className="ch-note">
+                          The quickest way to send a photo or a question.
+                        </span>
+                        <span className="ch-alt" onClick={(e) => { e.stopPropagation(); window.location.href = `tel:${telHref}`; }}>
+                          Or call the number
+                        </span>
+                      </span>
+                    </a>
                   )}
+                </div>
 
-                  <div>
-                    <div className="help">Response time</div>
-                    <div style={{ fontSize: 15 }}>
+                {/* The reply promise. It is not a channel — it is what
+                    the buyer gets after using one — so it sits below
+                    them rather than among them. */}
+                <div className="ch-promise">
+                  <span className="ch-ic ch-ic-plain" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="1.9"
+                      strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.2 2" />
+                    </svg>
+                  </span>
+                  <span className="ch-body">
+                    <span className="ch-lbl">Response time</span>
+                    <span className="ch-val">
                       Within {s.quoteHours || 4} hours on business days
-                    </div>
-                  </div>
+                    </span>
+                  </span>
                 </div>
 
                 <div className="note note-i" style={{ marginTop: 28 }}>

@@ -58,13 +58,23 @@ export const metadata = {
   description: 'Quartz clock manufacturer.',
   /* Declared here rather than left to the browser's default probe.
 
-     public/ holds favicon.svg and no favicon.ico, and with no <link rel=icon>
-     the browser requests /favicon.ico by default — which 404s, on every page,
-     and shows up in the console as a failed resource. Pointing at the SVG
-     that does exist removes the request entirely. */
+     With no <link rel=icon> the browser requests /favicon.ico by
+     default — which 404s, on every page, and shows up in the console
+     as a failed resource. These are the factory's own mark.
+
+     The mark is a drawing of thin lines — two coconut trees, an
+     island, three waves — and thin lines are what a sixteen-pixel
+     square cannot hold, so the small sizes are the brand blue with
+     the mark reversed out of it. The shape is the same at every size;
+     the contrast is what carries it down to the smallest one. */
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/favicon.svg' }]
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-64.png', sizes: '64x64', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }]
   }
 };
 

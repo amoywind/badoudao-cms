@@ -95,15 +95,23 @@ export async function Header() {
       </label>
 
       <div className="wrap nav">
-          {/* Zone 1 of the header contract: a single line of text.
-              §5.1-2 asks for the domain itself and rules out a
-              sub-line or an icon — the brand mark is the name of the
-              site, and nothing competes with it.
+          {/* The brand mark.
 
-              The Badoudao name is still the trademark, so it stays in
-              the footer where the company is described. What the header
-              shows is what the buyer is typing. */}
-          <Link className="logo" href="/">OEMWALLCLOCKS<span>.COM</span></Link>
+              §5.1-2 asked for the domain in the header and ruled out an
+              icon, on the grounds that the brand mark is the name of
+              the site. The factory now has a mark of its own — an
+              island, two coconut trees and the water — and it is put
+              here beside the brand name.
+
+              The domain was in the header before, and it is the only
+              place a buyer sees it, so it moves to the footer rather
+              than being dropped: a buyer reading the footer needs to
+              know which site is emailing them, and the domain belongs
+              to the company as much as the name does. */}
+          <Link className="logo logo-mark" href="/">
+            <img src="/logo.png" alt="" width={36} height={34} aria-hidden="true" />
+            <span className="logo-word">BADOU<span>DAO</span></span>
+          </Link>
 
           {/* Products opens a dropdown of the categories.
               CSS-only, using :hover and :focus-within: no JavaScript means no
@@ -198,8 +206,17 @@ export async function Footer() {
       <div className="wrap">
         <div className="f-grid">
           <div className="f-brand">
-            <div className="logo">OEMWALLCLOCKS<span>.COM</span></div>
+            <div className="logo logo-mark logo-mark-lg">
+              <img src="/logo.png" alt="" width={44} height={42} aria-hidden="true" />
+              <span className="logo-word">BADOU<span>DAO</span></span>
+            </div>
             <p>{s.siteName} is a quartz clock manufacturer offering OEM and ODM wall clocks, alarm clocks, table clocks and clock movements. Small-batch production with MOQ from {s.moq || 300} pieces.</p>
+            {/* The domain. It was in the header until the mark took
+                that place, and it is the one thing in the footer that
+                tells a buyer which site is answering them. */}
+            <a className="f-domain" href="https://www.oemwallclocks.com">
+              www.oemwallclocks.com
+            </a>
             {/* The certification belongs to the movement, not to the clock —
                 that distinction is the whole compliance note, and printing
                 "(movement)" on a badge was a note to myself that shipped.

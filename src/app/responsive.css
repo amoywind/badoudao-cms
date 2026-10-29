@@ -236,6 +236,18 @@
   .site h2 { font-size: 23px; }
   .page-head h1 { font-size: 27px; }
 
+  /* The contact channels are two cards side by side on a desktop. On a
+     phone they are one above the other, because two columns of a
+     telephone number and an email address is two columns of nothing
+     but a hyphen. */
+  .ch-grid { grid-template-columns: 1fr; }
+
+  /* The brand mark beside the name. The picture is smaller on a phone
+     so the name still has the width it needs. */
+  .logo-mark { gap: 8px; }
+  .logo-mark img { height: 28px; width: auto; }
+  .logo-mark-lg img { height: 34px; }
+
   /* Grid and flex children default to min-width:auto, which means they
      refuse to shrink below their content. A single unbreakable string —
      "Movements are CE and RoHS compliant · Certification arranged on
