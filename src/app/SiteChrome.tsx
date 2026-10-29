@@ -119,7 +119,22 @@ export async function Header() {
               rendered on the server. */}
           <nav className="menu">
           {nav.map((n) =>
-            n.id === 'nav-products' ? (
+            /* The entry that opens the catalogue is the one pointing at
+               /products — not the one whose id happens to be
+               "nav-products".
+
+               The id was the wrong thing to match on. The entry in the
+               top bar is "Base Platforms", and the one called
+               "nav-products" sits in the content placement, so the
+               condition never matched and the category panel was never
+               rendered: the styles for it, the grid inside it and the
+               rule that shows it in the open mobile menu were all
+               written and none of them had anything to apply to.
+
+               A destination is the stable thing here. The owner can
+               rename the entry and give it a new id from the admin, and
+               it should still open the catalogue. */
+            n.href === '/products' ? (
               <div className="navdrop-wrap" key={n.id}>
                 <Link href={n.href} className="navdrop-trigger">
                   {n.label}

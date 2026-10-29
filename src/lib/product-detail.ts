@@ -288,7 +288,11 @@ export function seoTagsFor(
     plastic: { label: 'Plastic', href: '/products/plastic-wall-clocks' },
     acrylic: { label: 'Acrylic', href: '/products/acrylic-wall-clocks' },
     glass: { label: 'Glass', href: '/products/glass-crystal-wall-clocks' },
-    resin: { label: 'Resin', href: '/products/resin-wall-clocks' }
+    resin: { label: 'Resin', href: '/products/resin-wall-clocks' },
+    marble: { label: 'Marble', href: '/products/marble-wall-clocks' },
+    '3d printed': { label: '3D Printed', href: '/products/3d-printed-wall-clocks' },
+    '3d print': { label: '3D Printed', href: '/products/3d-printed-wall-clocks' },
+    'sla': { label: '3D Printed', href: '/products/3d-printed-wall-clocks' }
   };
 
   for (const s of p.specs) {
