@@ -235,19 +235,36 @@ export const DISPLAYS = [
 
 ;
 
-/** The simplified structures, §6.2. */
+/* The simplified structures, §6.2.
+
+   Each one carries a picture of what it looks like, because the three
+   sentences below describe a clock by what has been taken away from it,
+   and a reader who has not seen one has nothing to picture. The
+   pictures are animated — a hand moving, a display changing — and they
+   are kept as animated files rather than being reduced to a still the
+   way a thumbnail would: the point of an open-face clock is that
+   something is still moving. */
 export const SIMPLIFIED = [
   {
     name: 'Open-face — no dial, no cover',
-    detail: 'Engraved solid-wood panels and laser-cut metal shapes, where the mechanism is the design.'
+    detail: 'Engraved solid-wood panels and laser-cut metal shapes, where the mechanism is the design.',
+    image: '/simplified/open-wood.gif',
+    imageWidth: 100,
+    imageHeight: 100
   },
   {
     name: 'No frame, no cover',
-    detail: 'Printed transparent acrylic and cast resin art pieces, where the material carries the image.'
+    detail: 'Printed transparent acrylic and cast resin art pieces, where the material carries the image.',
+    image: '/simplified/open-acrylic.gif',
+    imageWidth: 100,
+    imageHeight: 100
   },
   {
     name: 'Electronics instead of a movement',
-    detail: 'LCD perpetual calendars and LED digital displays, where the display replaces the dial entirely.'
+    detail: 'LCD perpetual calendars and LED digital displays, where the display replaces the dial entirely.',
+    image: '/simplified/open-digital.gif',
+    imageWidth: 297,
+    imageHeight: 312
   }
 ];
 

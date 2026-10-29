@@ -2732,6 +2732,35 @@
   margin-bottom: 12px;
 }
 
+/* The picture stands to the left of the words.
+
+   It is a mark rather than a photograph: small enough that the sentence
+   is still the thing being read, large enough that the shape of the
+   clock is recognisable. The first two are square and the third is
+   very nearly so, and they are contained rather than cropped so that
+   none of them loses an edge.
+
+   The card was a column and is now a row, so the words sit in a block
+   of their own rather than being laid out beside the picture. */
+.anx-simplified .card.sim-card {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.sim-ic {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.anx-simplified .sim-txt {
+  min-width: 0;
+}
+
 .anx-simplified .card h3 {
   font-size: 15.5px;
   margin-bottom: 7px;

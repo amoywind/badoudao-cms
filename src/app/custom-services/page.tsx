@@ -82,10 +82,26 @@ export default async function CustomServicesPage() {
                 not the point, removing it is a decision the factory can make — and
                 a cheaper clock to build.
               </p>
+              {/* The picture sits to the left of the words, small
+                  enough to be a mark rather than a photograph. The
+                  three cards describe a clock by what has been taken
+                  away from it, and a reader who has not seen one has
+                  nothing to picture. */}
               {SIMPLIFIED.map((s2) => (
-                <div className="card" key={s2.name}>
-                  <h3>{s2.name}</h3>
-                  <p>{s2.detail}</p>
+                <div className="card sim-card" key={s2.name}>
+                  <img
+                    className="sim-ic"
+                    src={s2.image}
+                    alt=""
+                    width={s2.imageWidth}
+                    height={s2.imageHeight}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="sim-txt">
+                    <h3>{s2.name}</h3>
+                    <p>{s2.detail}</p>
+                  </div>
                 </div>
               ))}
             </div>
