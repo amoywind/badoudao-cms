@@ -2339,11 +2339,42 @@
 
 .mat-card .sq {
   border-bottom: 1px solid var(--rule);
-  /* Square, like every other product frame on the site. The
-     photographs are shot square, and a square picture in a
-     four-by-three frame leaves grey bars above and below that read as
-     a loading failure. */
-  aspect-ratio: var(--square);
+
+  /* The picture is smaller than the card.
+
+     The frame used to be square and as wide as the card, which made
+     the photograph the whole of the top half of it: at four across,
+     a square frame is two hundred and seventy-three pixels, and the
+     card was four hundred and forty-nine pixels tall with a picture
+     taking up two hundred and seventy-three of them. Two thirds of
+     the card was one photograph of a clock, and the sentence beside
+     it — what the material is, what it is for, how many designs there
+     are — was the smaller half of it.
+
+     The frame is now shorter than it is wide, and the photograph sits
+     in the middle of it at a size the eye takes in at a glance. It is
+     still square and still whole: the photographs are shot square, so
+     a square picture in a shorter frame is fitted rather than cropped,
+     and it is not stretched either.
+
+     The proportion rather than a height, so that the frame shrinks
+     with the card on a narrower screen instead of standing taller than
+     the card is wide.
+
+     The photographs come on their own backgrounds, most of them pale,
+     and the frame is a shade off white so that a picture with a white
+     background reads as a picture on a mat rather than as a hole in
+     the card. */
+  aspect-ratio: 3 / 2;
+  padding: 12px;
+  background: #f4f4f2;
+}
+
+/* The empty state is a notice across the whole card, not a picture
+   with a margin round it. The margin the frame gives the photograph
+   is taken back so the notice reaches the edges. */
+.mat-card .mat-empty {
+  margin: -12px;
 }
 
 /* The filter bar above the catalogue grid.
