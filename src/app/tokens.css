@@ -3056,6 +3056,14 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  /* The card is a container so that its own width can be asked about.
+     The price line below has to know whether the price and the minimum
+     order fit on one line, and that depends on how wide this card is —
+     not on how wide the window is. The same card is two hundred pixels
+     wide on a desktop and on a phone, and the answer is the same in
+     both cases; a rule written against the window would get it right
+     in one and wrong in the other. */
+  container-type: inline-size;
 }
 
 .pcard:hover {
@@ -3101,9 +3109,27 @@
    be reached: in a narrow column the price and the minimum order do
    not both fit on one line, and the minimum order was the one that
    lost, cut to "MO" with the rest of the word gone. It is a class now
-   so that the narrow layout can put it on a line of its own. */
+   so that the narrow layout can put it on a line of its own.
+
+   The row is allowed to wrap at any width. Without that the minimum
+   order is not moved to a second line, it is cut off — which is what
+   happened, at every screen width, because the card is narrow at every
+   screen width. */
+.pcard-price {
+  flex-wrap: wrap;
+}
 .pcard-moq {
   margin-left: auto;
+}
+
+/* A card narrower than this cannot hold the price and the minimum
+   order on one line, so the minimum order takes a line of its own.
+   The threshold is the card's own width, not the window's. */
+@container (max-width: 250px) {
+  .pcard-moq {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
 }
 
 .pd2 {
