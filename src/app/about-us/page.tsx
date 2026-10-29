@@ -172,6 +172,13 @@ export default async function AboutUsPage() {
                   rel="noopener noreferrer"
                   style={{ display: 'block' }}
                 >
+                  {/* The licence is shown at a size that can be read at a
+                      glance and no larger. At the full width of the
+                      column it was three hundred and seventy pixels
+                      tall and the two columns of the page ended up
+                      four hundred pixels out of step, with a hole
+                      under the shorter one. The whole document is
+                      shown, and clicking it opens it full size. */}
                   <img
                     src="/media/factory/business-license.jpg"
                     alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
@@ -179,9 +186,12 @@ export default async function AboutUsPage() {
                     style={{
                       display: 'block',
                       width: '100%',
-                      height: 'auto',
+                      height: 240,
+                      objectFit: 'contain',
+                      objectPosition: 'top left',
                       borderRadius: 6,
-                      border: '1px solid var(--rule)'
+                      border: '1px solid var(--rule)',
+                      background: '#fff'
                     }}
                   />
                 </a>
