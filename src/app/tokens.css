@@ -2361,13 +2361,14 @@
      with the card on a narrower screen instead of standing taller than
      the card is wide.
 
-     The photographs come on their own backgrounds, most of them pale,
-     and the frame is a shade off white so that a picture with a white
-     background reads as a picture on a mat rather than as a hole in
-     the card. */
+     The frame is white, the same white the photographs are shot on, so
+     a picture sits in its frame rather than on a mat behind it. The
+     frame is still shorter than it is wide, and the picture is still
+     fitted into it and centred, so the clock is whole and the space
+     at its sides is the white of the photograph continuing. */
   aspect-ratio: 3 / 2;
   padding: 0;
-  background: #f4f4f2;
+  background: #fff;
 }
 
 /* The box the photograph is fitted into.

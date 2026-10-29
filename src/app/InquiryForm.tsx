@@ -541,7 +541,16 @@ export function InquiryForm({
  * buyer does not retype it.
  */
 export function InquiryCTA({ preset = '', label = 'Request a quotation' }: { preset?: string; label?: string }) {
-  const href = preset ? `/contact/?model=${encodeURIComponent(preset)}` : '/contact/';
+  /* The link lands on the form, not at the top of the page.
+
+     The contact page opens with the ways to reach the factory and the
+     form is below them. A buyer who pressed "Send an enquiry" on a
+     catalogue page and then had to scroll to find the form they were
+     sent to fill in has been asked for one more step than the one they
+     took. The anchor is the form's own id, so the two cannot drift
+     apart. */
+  const query = preset ? `?model=${encodeURIComponent(preset)}` : '';
+  const href = `/contact/${query}#inquiry`;
   return (
     <div className="inq-cta">
       <div>

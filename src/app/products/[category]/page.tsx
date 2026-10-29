@@ -185,7 +185,18 @@ export default async function CategoryPage({ params }) {
                   <li>Or send a reference and we will recommend the closest match</li>
                 </ul>
               </div>
-              <InquiryCTA label="Enquire about these clocks" />
+              {/* The category travels with the link.
+
+                  A buyer who was looking at wooden clocks and pressed
+                  "Enquire about these clocks" arrives at the form
+                  already told which family they are asking about, so
+                  they do not have to say it a second time in the
+                  message. The contact page reads the model from the
+                  link and fills it in. */}
+              <InquiryCTA
+                preset={cat?.name || cat?.short || undefined}
+                label="Enquire about these clocks"
+              />
             </div>
           </div>
         </section>

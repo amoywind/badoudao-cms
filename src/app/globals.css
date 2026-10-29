@@ -590,6 +590,12 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .form-fallback { margin-top: 14px; padding: 12px 14px; background: #fff8f1; border: 1px solid #fed7aa; border-radius: 4px; font-size: 13.5px; color: #9a3412; line-height: 1.6; }
 .form-fallback a { color: #9a3412; font-weight: 500; }
 
+/* The anchor the enquiry links point at. The header sticks to the top
+   of the window, so without this the form arrives underneath it. */
+#inquiry {
+  scroll-margin-top: 96px;
+}
+
 /* ---- enquiry CTA: replaces the full form where one would be intrusive ---- */
 
 .inq-cta {
