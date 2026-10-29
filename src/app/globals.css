@@ -447,16 +447,32 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .pd-desc-area { grid-area: desc; min-width: 0; }
 .pd-info { grid-area: info; min-width: 0; }
 
-/* The picture stays in view while the argument is read. A buyer who is
-   reading the price and the options wants to be able to see what they
-   are reading about, and on a desktop there is room for the picture to
-   wait beside them. */
-@media (min-width: 1025px) {
-  .pd-gallery-area {
-    position: sticky;
-    top: 24px;
-  }
-}
+/* The picture does not stay in view while the argument is read.
+
+   It used to. The picture was pinned to the top of the window so that a
+   buyer reading the price and the options could still see what they were
+   reading about — which is a good idea in the abstract and does not work
+   on this page, for two reasons that were both visible on screen.
+
+   The first was the header. The site header is 73 pixels tall and sits
+   at the top of the window. The picture was pinned 24 pixels from the
+   top, so the top 49 pixels of every clock went behind the header. The
+   face of the clock — the numerals, the hands, the thing a buyer is
+   actually looking at — was cut off.
+
+   The second was the description underneath. The page is a grid: the
+   picture in the top left, the description in the left column below it,
+   and the argument running down the right. A pinned picture is taken out
+   of that flow and floats over whatever scrolls past it, and what
+   scrolls past it is the description. The heading of the product
+   description, the dimensions, the movement and the power supply were
+   all sliding underneath a photograph of a clock.
+
+   The picture now scrolls with the page, the way the description does,
+   and the two are in the same column so neither can cover the other.
+
+   The layout is unchanged otherwise — the picture is still square and in
+   the same place — so what is gone is the pinning, not the column. */
 
 /* Square main frame: product photography is shot 1:1, and a square crop
    keeps the clock undistorted instead of stretching it to fill a 4:3 box.
