@@ -3095,6 +3095,17 @@
   color: var(--accent);
 }
 
+/* The minimum order is pushed to the far end of the row.
+
+   It was an inline style, which no rule can reach — and it needed to
+   be reached: in a narrow column the price and the minimum order do
+   not both fit on one line, and the minimum order was the one that
+   lost, cut to "MO" with the rest of the word gone. It is a class now
+   so that the narrow layout can put it on a line of its own. */
+.pcard-moq {
+  margin-left: auto;
+}
+
 .pd2 {
   display: grid;
   grid-template-columns: 55% 45%;
@@ -4122,6 +4133,17 @@
 .pcard-body h3 {
     font-size: 13.5px;
   }
+  /* Two columns of a telephone-sized card cannot hold the price and
+     the minimum order on one line. The order is given a line of its
+     own rather than being cut off at the edge. */
+  .pcard-price {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .pcard-moq {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
 .spec-row {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -4261,6 +4283,17 @@
   }
 .pcard-body h3 {
     font-size: 13.5px;
+  }
+  /* Two columns of a telephone-sized card cannot hold the price and
+     the minimum order on one line. The order is given a line of its
+     own rather than being cut off at the edge. */
+  .pcard-price {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .pcard-moq {
+    margin-left: 0;
+    flex-basis: 100%;
   }
 .spec-row {
     grid-template-columns: 1fr;

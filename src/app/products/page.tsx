@@ -67,10 +67,22 @@ export default async function ProductsIndex() {
                   <h1 style={{ fontSize: 30 }}>{products.length} models in production</h1>
                 </div>
 
-                <div className="grid-3">
+                {/* The catalogue card, the same one the category pages
+                    use. This page had a card of its own, and the two
+                    did not agree: the pictures were a third larger here,
+                    and on a phone this page showed one model at a time
+                    where the category pages showed two — so the same
+                    catalogue read at two different sizes depending on
+                    which page a buyer had arrived at.
+
+                    One card, one grid. The picture is the size the
+                    category pages draw it, the price is written the
+                    same way, and a buyer comparing the two pages sees
+                    the same thing in both. */}
+                <div className="pgrid">
                   {products.map((p, i) => (
-                    <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="card">
-                      <div className="c-visual">
+                    <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="pcard">
+                      <div className="sq">
                         {p.images.length ? (
                           <img
                             src={p.images[0].thumbUrl || p.images[0].url}
@@ -82,12 +94,18 @@ export default async function ProductsIndex() {
                           />
                         ) : null}
                       </div>
-                      <div className="c-body">
-                        <h3 style={{ fontSize: 17 }}>{p.name}</h3>
-                        <p style={{ fontSize: 13.5 }}>{p.summary?.slice(0, 100)}…</p>
-                        <div className="c-meta">
-                          <span>MOQ <b>{p.moq}</b></span>
-                          <span className="exw">Est. EXW ${p.priceMin.toFixed(2)}–{p.priceMax.toFixed(2)}</span>
+                      <div className="pcard-body">
+                        <h3>{p.name}</h3>
+                        {p.summary && (
+                          <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.55, marginBottom: 10 }}>
+                            {p.summary.slice(0, 110)}…
+                          </p>
+                        )}
+                        <div className="pcard-price">
+                          <span>Est. EXW</span>
+                          <b>${p.priceMin.toFixed(2)}</b>
+                          <span>– ${p.priceMax.toFixed(2)}</span>
+                          <span className="pcard-moq">MOQ {p.moq}</span>
                         </div>
                       </div>
                     </Link>

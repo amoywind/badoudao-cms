@@ -140,7 +140,7 @@ export function CollectionGrid({
                     <span>Est. EXW</span>
                     <b>${p.priceMin.toFixed(2)}</b>
                     <span>– ${p.priceMax.toFixed(2)}</span>
-                    <span style={{ marginLeft: 'auto' }}>MOQ {p.moq}</span>
+                    <span className="pcard-moq">MOQ {p.moq}</span>
                   </div>
                 </div>
                 <span className="trend-cta">Quick inquire →</span>
