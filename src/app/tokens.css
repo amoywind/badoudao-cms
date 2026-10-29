@@ -1641,6 +1641,12 @@
 .cert-name {
   font-size: 12.5px;
   color: var(--text-2);
+  /* The value next to the label is allowed to be long — a company name
+     is. Without this the flex item refuses to shrink below its
+     content width and the text is cut off at the end of the row
+     rather than wrapping onto the next line. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* The factory figures that are still pending. The dash is the honest
@@ -1730,6 +1736,12 @@
 .cert-name {
   font-size: 12.5px;
   color: var(--text-2);
+  /* The value next to the label is allowed to be long — a company name
+     is. Without this the flex item refuses to shrink below its
+     content width and the text is cut off at the end of the row
+     rather than wrapping onto the next line. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* The factory figures that are still pending. The dash is the honest
@@ -2829,6 +2841,199 @@
      four-by-three frame leaves grey bars above and below that read as
      a loading failure. */
   aspect-ratio: var(--square);
+}
+
+/* The filter bar above the catalogue grid.
+
+   The buttons are the sizes of the catalog, so a buyer can see what a
+   click will give them before they make it. The pressed state is
+   carried by the fill rather than by a border, because a border is the
+   same weight as every other border on the page and reads as nothing
+   in particular. */
+
+.pfilter {
+  margin-bottom: 4px;
+}
+
+.pfilter-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pfilter-label {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  flex: none;
+}
+
+.pfilter-tabs {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.pfilter-tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+
+.pfilter-tab:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* The chosen one is filled. Every other button on the site that
+   carries a state does it this way, and a filter that showed its state
+   any other way would look like a different control. */
+.pfilter-tab.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.pfilter-tab.on:hover {
+  color: #fff;
+}
+
+/* The count. It is written smaller and in the technical face, because
+   it is a figure rather than a word. */
+.pfilter-n {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  opacity: .62;
+}
+
+.pfilter-note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* The raw material tolerance bar.
+
+   Six materials, each with the measurement it is held to. The figure is
+   the point of the card, so it is the larger of the two lines. */
+
+.tol-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tol-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  text-decoration: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.tol-card:hover {
+  border-color: var(--brand);
+  box-shadow: 0 2px 12px rgba(17, 17, 17, .05);
+}
+
+.tol-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tol-spec {
+  font-family: var(--font-tech);
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* The shortlist row on the home page.
+
+   Four cards, four columns, each one a product with its SKU and its
+   price on the face of it. The catalogue is the material grid above;
+   this is four things worth a look, and the difference is why it is
+   four and not ten. */
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.feat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.feat-card:hover {
+  transform: translateY(-2px);
+  border-color: #D6D9DE;
+  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
+}
+
+.feat-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* The stock code. It is the one thing on the card a buyer can quote
+   back to the factory, so it is written in the technical face and kept
+   above the name rather than buried under it. */
+.feat-sku {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--text-2);
+  margin-bottom: 5px;
+}
+
+.feat-body h3 {
+  font-size: 14.5px;
+  line-height: 1.4;
+  margin-bottom: 9px;
+  min-height: 2.8em;
+  display: flex;
+  align-items: flex-start;
+}
+
+.feat-price {
+  font-family: var(--font-tech);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 11px;
+}
+
+.feat-body .exw {
+  align-self: flex-start;
+  margin-top: auto;
 }
 
 .mat-body {

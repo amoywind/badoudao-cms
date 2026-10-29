@@ -3,7 +3,6 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta, siteVideoMap } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
 import { VideoSlot, VideoSlotHydrator } from '../VideoSlot';
 import { MATERIALS, QC_STEPS, FACTORY_FIGURES, CERTIFICATIONS } from '@/lib/vocabulary';
@@ -58,19 +57,6 @@ export default async function CraftQcPage() {
               What each material can be made to do, and what every clock is put through
               before it is allowed into a carton.
             </p>
-          </div>
-        </section>
-
-        <section>
-          <div className="wrap">
-            <TrustCards
-              items={[
-                { value: '24', unit: ' hr', title: 'Aging QC', detail: '100% of movements tested', icon: Icons.clock },
-                { value: '0.1', unit: 'mm', title: 'Precision', detail: 'Laser and CNC tolerances', icon: Icons.ruler },
-                { value: '6', unit: '-side', title: 'Drop test', detail: 'Passed to ISTA-1A standard', icon: Icons.shield },
-                { value: '4', title: 'QC stages', detail: 'IQC, IPQC, FQC and OQC', icon: Icons.box }
-              ]}
-            />
           </div>
         </section>
 

@@ -208,8 +208,8 @@ export const PROCESS_STEPS = [
    adjectives. Each links to the page that substantiates it. */
 export const QC_CLAIMS = [
   { label: '±1s/day', note: 'movement accuracy', href: '/p/quality' },
-  { label: '<20dB', note: 'silent sweep', href: '/p/quality' },
-  { label: '72h', note: 'powered ageing test', href: '/p/quality' },
+  { label: '<10dB', note: 'silent sweep', href: '/p/quality' },
+  { label: '24h', note: 'powered ageing test', href: '/p/quality' },
   { label: 'CE / RoHS', note: 'movement certified', href: '/p/certification' }
 ];
 

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { TrustCards, Icons } from '../TrustCards';
+import { Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
 import { CERTIFICATIONS } from '@/lib/vocabulary';
 
@@ -49,6 +49,14 @@ export default async function AboutUsPage() {
       <Header />
 
       <main id="main">
+        <div className="wrap">
+          <nav className="breadcrumb">
+            <Link href="/">Home</Link>
+            <span>/</span>
+            About the factory
+          </nav>
+        </div>
+
         <section className="page-head">
           <div className="wrap">
             <div className="sec-tag">// About us</div>
@@ -63,98 +71,99 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
+        {/* ---- The factory, and what it can do ----
+
+            Two columns. The left says what the factory is for and what a
+            buyer cannot get elsewhere; the right is the specification of
+            the plant itself, in the form a buyer can check.
+
+            The four advantages are the ones a supplier who buys clocks and
+            resells them cannot offer, because each of them is a machine or
+            a process the factory owns rather than a price it can match. */}
+        {/* The left column is the argument and the right column is the
+            evidence, so the left is given more of the width — seven
+            twelfths against five. The photo and the licence sit under
+            the factsheet on the right because they are the two things
+            nobody can talk around. */}
         <section>
-          <div className="wrap">
-            <TrustCards
-              items={[
-                { value: '10+', title: 'Years in the trade', detail: 'Wall clock manufacturing and export', icon: Icons.clock },
-                { value: String(moq), unit: ' pcs', title: 'Flexible minimum order', detail: 'Mixed colours and specs in one order', icon: Icons.box },
-                { value: '1,000+', title: 'Hand styles in stock', detail: 'Ready to use, no tooling needed', icon: Icons.ruler },
-                { value: capacity, unit: ' pcs', title: 'Daily capacity', detail: 'Across one shift', icon: Icons.gear }
-              ]}
-            />
-          </div>
-        </section>
-
-        {/* ---- Core capabilities ----
-            The three things a buyer cannot get from a supplier who does not
-            own the machines. Each one is a claim a buyer can check, so
-            each carries its own number. */}
-        <section className="alt">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Core capabilities</div>
-              <h2>Three things a trading desk cannot give you</h2>
-              <p className="sec-sub">
-                A supplier who buys clocks and resells them can match a price. He
-                cannot change the tooling, the packing or the test a clock passes
-                before it leaves the building. These are the three that decide
-                whether an order is worth placing.
-              </p>
-            </div>
-
-            <div className="grid-3">
-              {[
-                {
-                  icon: Icons.box,
-                  title: 'Flexible MOQ from 300 pieces',
-                  body:
-                    'Most clock factories will not start a run below 2,000 pieces, which forces a brand to commit inventory before it has a single customer. Our modular line starts at 300, and you can mix styles and colours inside one order — so a seasonal launch or a market test does not have to be a bet on two thousand units.'
-                },
-                {
-                  icon: Icons.ruler,
-                  title: 'End-to-end customisation',
-                  body:
-                    'More than 1,000 hand styles — CNC brass, lightweight aluminium and solid timber — against dial materials from solid walnut and industrial ironwork through crystal porcelain to 3D-printed acrylics. Our engineering team sits in-house, so a drawing is checked against what the machine can actually make before it is quoted.'
-                },
-                {
-                  icon: Icons.shield,
-                  title: 'Built to survive the courier',
-                  body:
-                    'A broken clock arrives as a refund, a bad review and a second freight bill. Every clock is packed in custom-cut EPE pearl-cotton armour inside a mail-order-grade outer carton, and the packed carton is drop-tested from 1.2 metres on all six faces before it leaves the building.'
-                }
-              ].map((c) => (
-                <div className="card" key={c.title} style={{ padding: 26 }}>
-                  <div className="tcard-ico">{c.icon}</div>
-                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{c.title}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
-                    {c.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- The company ---- */}
-        <section>
-          <div className="wrap split" style={{ alignItems: 'start' }}>
+          <div
+            className="wrap split"
+            style={{ alignItems: 'start', gridTemplateColumns: '7fr 5fr' }}
+          >
             <div>
               <div className="sec-tag">// The company</div>
-              <h2>One company from the first sketch to the container</h2>
+              <h2>A factory in Xiamen, not a trading desk</h2>
               <p className="sec-sub" style={{ marginBottom: 22 }}>
-                A buyer who talks to four factories talks to four sets of tolerances,
-                four schedules and four points where a promise can slip. We do the
-                whole process ourselves so there is one place where a decision is
-                made and one place where it is checked.
+                A supplier who buys clocks and resells them can match a price.
+                He cannot change the tooling, the packing or the test a clock
+                passes before it leaves the building. We own the machines, so
+                those three are decided here rather than negotiated with a
+                third party.
               </p>
+
               <div className="cap-list" style={{ marginTop: 0 }}>
                 {[
-                  ['Design and structural engineering', 'Frame geometry, backplate, hanging hole, dial and cover — designed and prototyped in-house.'],
-                  ['Tooling and moulding', 'New tooling in 15–25 days, made in-house rather than subcontracted.'],
-                  ['Surface finishing', 'UV spray, electroplating, brushing, antique brass effects, hand-painting.'],
-                  ['Assembly', 'Movements sourced domestic or imported, assembled and tested on the same floor.'],
-                  ['Export', 'Import and export qualification held, documentation supplied, packing to your requirement.']
-                ].map(([h, p], i) => (
-                  <div className="cap" key={h}>
-                    <div className="cap-n">0{i + 1}</div>
-                    <div><h4>{h}</h4><p>{p}</p></div>
+                  {
+                    icon: Icons.box,
+                    title: 'Flexible MOQ from 300 pieces',
+                    body:
+                      'Most clock factories will not start a run below 2,000 pieces, which forces a brand to commit inventory before it has a single customer. Our modular line starts at 300, and you can mix styles and colours inside one order — so a seasonal launch or a market test does not have to be a bet on two thousand units.'
+                  },
+                  {
+                    icon: Icons.ruler,
+                    title: 'End-to-end customisation',
+                    body:
+                      'More than 1,000 hand styles — CNC brass, lightweight aluminium and solid timber — against dial materials from solid walnut and industrial ironwork through crystal porcelain to 3D-printed acrylics. Our engineering team sits in-house, so a drawing is checked against what the machine can actually make before it is quoted.'
+                  },
+                  {
+                    icon: Icons.shield,
+                    title: 'Built to survive the courier',
+                    body:
+                      'A broken clock arrives as a refund, a bad review and a second freight bill. Every clock is packed in custom-cut EPE pearl-cotton armour inside a mail-order-grade outer carton, and the packed carton is drop-tested from 1.2 metres on all six faces before it leaves the building.'
+                  },
+                  {
+                    icon: Icons.clock,
+                    title: '24-hour drawing, sample in days',
+                    body:
+                      'A photorealistic 3D rendering and the dial artwork come back inside 24 hours, so a buyer can see the product before paying for tooling. Physical samples of existing moulds ship within the week; a new shape takes two weeks of tooling first.'
+                  }
+                ].map((c) => (
+                  <div className="cap" key={c.title}>
+                    <div className="tcard-ico">{c.icon}</div>
+                    <div>
+                      <h4>{c.title}</h4>
+                      <p>{c.body}</p>
+                    </div>
                   </div>
                 ))}
               </div>
+
             </div>
 
+            {/* The factsheet. Every figure here is one a buyer can check
+                — against the business licence, against the export
+                documents, or against a visit. */}
             <div>
+              <div className="card" style={{ padding: 26, marginBottom: 20 }}>
+                <h3 style={{ fontSize: 16, marginBottom: 14 }}>Factory factsheet</h3>
+                <div className="cert-list">
+                  {[
+                    ['Legal entity', 'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.'],
+                    ['Registered', 'Xiamen, China — 28 December 2023'],
+                    ['Plant', 'Four lines under one roof: injection, woodwork, metal CNC, dust-free assembly'],
+                    ['Daily capacity', `${capacity} pcs across one shift`],
+                    ['People', 'Assembly and engineering staff on the floor, with six designers and CAD draughtsmen'],
+                    ['Shipping port', 'Port of Xiamen (XMN)'],
+                    ['Enquiries', 'amoywind@gmail.com']
+                  ].map(([k, v]) => (
+                    <div className="cert-row" key={k}>
+                      <span className="cert-code tnum">{k}</span>
+                      <span className="cert-name">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="hero-img" style={{ marginBottom: 20 }}>
                 <img
                   src="/workshop-floor.jpg"
@@ -162,92 +171,160 @@ export default async function AboutUsPage() {
                   width={1400}
                   height={933}
                   srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
-                  sizes="(max-width: 900px) 92vw, 46vw"
+                  sizes="(max-width: 900px) 92vw, 38vw"
                   loading="lazy"
                   decoding="async"
                 />
               </div>
-              <div className="card" style={{ padding: 22 }}>
-                <h3 style={{ fontSize: 16, marginBottom: 10 }}>Business licence</h3>
-                <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 12 }}>
+
+            </div>
+          </div>
+
+          {/* The business licence, across the width.
+
+              It is a landscape document and this is the only place on
+              the page wide enough to show it at a readable size. In a
+              column it was tall enough to unbalance the two columns
+              against each other; here it is the one thing on the page
+              that cannot be talked around, at a size a buyer can
+              actually read. */}
+          <div className="card" style={{ padding: 24, marginTop: 34 }}>
+            <div className="split" style={{ alignItems: 'center', gap: 40 }}>
+              <div>
+                <h3 style={{ fontSize: 17, marginBottom: 8 }}>Business licence</h3>
+                <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
                   Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.
                   Established in Xiamen, China on 28 December 2023.
+                  Click the licence to open it at full size.
                 </p>
-                <a href="/media/factory/business-license.jpg" target="_blank" rel="noopener noreferrer">
-                  <img
-                    src="/media/factory/business-license.jpg"
-                    alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
-                    width={1000} height={750} loading="lazy"
-                    style={{ width: '100%', height: 'auto', borderRadius: 6, border: '1px solid var(--rule)' }}
-                  />
-                </a>
               </div>
+              <a
+                href="/media/factory/business-license.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'block' }}
+              >
+                <img
+                  src="/media/factory/business-license.jpg"
+                  alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
+                  width={1000} height={750} loading="lazy"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: 190,
+                    objectFit: 'contain',
+                    objectPosition: 'top left',
+                    borderRadius: 6,
+                    border: '1px solid var(--rule)',
+                    background: '#fff'
+                  }}
+                />
+              </a>
             </div>
           </div>
         </section>
 
-        {/* ---- Quality control ----
-            Four gates between a finished movement and a sealed carton. The
-            numbers are the point: a tolerance a buyer can check is worth
-            more than the word "quality" on a photograph. */}
+        {/* ---- The machinery ----
+
+            The machines are named because a buyer cannot otherwise tell
+            whether a factory that says it makes to order owns the means
+            to make it. */}
         <section className="alt">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Factory quality control</div>
-              <h2>What every clock is checked for</h2>
+              <div className="sec-tag">// Machinery</div>
+              <h2>The machines behind the quote</h2>
               <p className="sec-sub">
-                Four gates stand between a finished movement and a sealed carton. A
-                clock that fails any one of them is not boxed. The full protocol,
-                with factory footage of each gate, is on the craft and QC page.
+                A factory that says it makes to order should be able to say
+                what it makes them on. These are the machines in the building,
+                not a list of what could be subcontracted.
               </p>
             </div>
 
             <div className="grid-2">
               {[
                 {
-                  n: 'Gate 01',
-                  title: '24-hour movement ageing',
+                  icon: Icons.ruler,
+                  title: 'CNC machining',
                   body:
-                    'Every quartz movement runs on power for a full 24 hours before it goes near a clock, and its tick is measured acoustically in an anechoic chamber. Nothing is assembled from a movement that has not been run for a day.',
-                  metric: '< 15 dB verified'
+                    'Five-axis routing for frames, hands and moulded parts, with a new tool path cut from a buyer drawing rather than bought in from a shop.'
                 },
                 {
-                  n: 'Gate 02',
-                  title: 'Laser-guided hand calibration',
+                  icon: Icons.spark,
+                  title: 'UV flatbed printing',
                   body:
-                    'Hour, minute and second hands are checked on a laser-guided optical rig to confirm they run in one plane. Clearance between the hour and minute hands never drops below 1.5 mm, so no hand touches another and the sweep cannot drag.',
-                  metric: '≥ 1.5 mm hand clearance'
+                    'Eight-colour UV direct printing on dials and dial faces, so a buyer can send artwork in a file and get colour that matches it rather than a colour from a catalogue.'
                 },
                 {
-                  n: 'Gate 03',
-                  title: 'Semi-dust-free dial assembly',
+                  icon: Icons.box,
+                  title: 'Injection and moulding',
                   body:
-                    'Dials, glass and crystal porcelain are assembled in a controlled, semi-dust-free area, free of dust, fingerprints and foreign particles — the surfaces a buyer looks at first, and the ones a scratched cover cannot hide.',
-                  metric: 'Semi-dust-free bench'
+                    'In-house tooling for new shapes, so a genuinely different body is a two-week wait rather than a negotiation with a moulding shop.'
                 },
                 {
-                  n: 'Gate 04',
-                  title: '1.2 m drop test and final audit',
+                  icon: Icons.clock,
+                  title: 'Anechoic test room',
                   body:
-                    'Packed cartons are sampled at random and dropped from 1.2 metres — one corner, three edges, six faces. A clock that cracks its cover or stops running does not leave the building.',
-                  metric: '1.2 m · 6 faces'
+                    'A sound-treated room for measuring the tick of a movement, with the background noise low enough that the reading means something.'
                 }
-              ].map((g) => (
-                <div className="card" key={g.n} style={{ padding: 26 }}>
-                  <span className="qc-n">{g.n}</span>
-                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{g.title}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65, marginBottom: 14 }}>
-                    {g.body}
+              ].map((m) => (
+                <div className="card" key={m.title} style={{ padding: 24 }}>
+                  <div className="tcard-ico">{m.icon}</div>
+                  <h3 style={{ fontSize: 16, marginBottom: 8 }}>{m.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
+                    {m.body}
                   </p>
-                  {/* The badge is sized to its text, not to the card.
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                      A card is a flex column, so a block-level child
-                      stretches to the full width of it — and the
-                      measurement ends up as a blue bar across the
-                      bottom of the card instead of a chip. */}
-                  <div className="qc-metric tnum" style={{ alignSelf: 'flex-start' }}>
-                    {g.metric}
-                  </div>
+        {/* ---- Buyer FAQ ----
+
+            The four questions a first-time buyer actually asks, in the
+            order they ask them. Each answer gives a number where a
+            number exists, because a number is what can be relied on. */}
+        <section>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Buyer questions</div>
+              <h2>The four questions buyers ask first</h2>
+              <p className="sec-sub">
+                These are the questions that decide whether an order goes ahead,
+                answered with the numbers rather than with adjectives.
+              </p>
+            </div>
+
+            <div className="grid-2">
+              {[
+                {
+                  n: 'Q1',
+                  q: 'What is the minimum order?',
+                  a: `${moq} pieces, and you can mix dial colours and specifications inside that one order — different hand finishes, different movements, different dial artwork in the same shipment. A new product can be tested on the market without committing to a run of two thousand.`
+                },
+                {
+                  n: 'Q2',
+                  q: 'How long does a sample take?',
+                  a: `An existing mould ships within ${s.sampleDays || '5-7'} business days. A brand-new shape needs tooling first, which takes two to three weeks. The sample cost is credited against the first bulk order, so the sample is not a cost — it is the first payment.`
+                },
+                {
+                  n: 'Q3',
+                  q: 'How do you guarantee it is quiet?',
+                  a: 'Every movement runs on power for a full 24 hours before assembly, and its tick is measured acoustically in a sound-treated room. The reading is on the record for that batch, and a movement that measures over the limit is scrapped rather than adjusted and passed on.'
+                },
+                {
+                  n: 'Q4',
+                  q: 'Will it survive the delivery?',
+                  a: 'Each clock is wrapped in custom-cut EPE pearl-cotton inside a mail-order-grade carton, and packed cartons are sampled and dropped from 1.2 metres — one corner, three edges, six faces. A clock that cracks its cover or stops running does not leave the building.'
+                }
+              ].map((f) => (
+                <div className="card" key={f.n} style={{ padding: 24 }}>
+                  <span className="qc-n">{f.n}</span>
+                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{f.q}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
+                    {f.a}
+                  </p>
                 </div>
               ))}
             </div>
@@ -258,7 +335,43 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
+        {/* ---- Numbers ----
+
+            The terms a buyer is quoted against. The noise figures and the
+            QC protocol itself are on the craft page rather than here, so
+            that the same test is not described two ways in two places. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// The numbers</div>
+              <h2>What we can commit to</h2>
+              <p className="sec-sub">
+                These are the terms a buyer is quoted against, and they are the ones
+                the factory is measured on.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                ['Minimum order', `${moq} pcs`, 'Colours and specifications can be mixed within a single order.'],
+                ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
+                ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
+                ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
+                ['Daily capacity', `${capacity} pcs`, 'Across one shift, at the current headcount.'],
+                ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']
+              ].map(([k, v, d]) => (
+                <div className="card" key={k} style={{ padding: 24 }}>
+                  <div className="tcard-n tnum" style={{ fontSize: 26, marginBottom: 4 }}>{v}</div>
+                  <div className="tcard-t">{k}</div>
+                  <div className="tcard-d" style={{ marginTop: 6 }}>{d}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ---- Compliance ----
+
             Certification for a finished clock and certification for the
             movement inside it are two different questions, and a buyer
             who is told one answer to both has been told nothing. */}
@@ -303,61 +416,6 @@ export default async function AboutUsPage() {
                   <span className="cert">Movement reports on request</span>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ---- Numbers ---- */}
-        <section className="alt">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// The numbers</div>
-              <h2>What we can commit to</h2>
-              <p className="sec-sub">
-                These are the terms a buyer is quoted against, and they are the ones
-                the factory is measured on.
-              </p>
-            </div>
-
-            <div className="grid-3">
-              {[
-                ['Minimum order', `${moq} pcs`, 'Colours and specifications can be mixed within a single order.'],
-                ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
-                ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
-                ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
-                ['Daily capacity', `${capacity} pcs`, 'Across one shift, at the current headcount.'],
-                ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']
-              ].map(([k, v, d]) => (
-                <div className="card" key={k} style={{ padding: 24 }}>
-                  <div className="tcard-n tnum" style={{ fontSize: 26, marginBottom: 4 }}>{v}</div>
-                  <div className="tcard-t">{k}</div>
-                  <div className="tcard-d" style={{ marginTop: 6 }}>{d}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- Where to go next ---- */}
-        <section className="alt">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Next step</div>
-              <h2>Where would you like to start?</h2>
-            </div>
-
-            <div className="grid-3">
-              {[
-                ['Browse base platforms', 'Six material families, photographed and priced at Ex Works.', '/products'],
-                ['See what we can customise', 'The six components of a clock, and which of them you can change.', '/custom-services'],
-                ['Read the factory story', 'The long version: series, movements, certification and how an order runs.', '/p/factory']
-              ].map(([t, d, href]) => (
-                <Link key={t} href={href} className="card" style={{ padding: 24 }}>
-                  <h3 style={{ fontSize: 16.5, marginBottom: 8 }}>{t}</h3>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 12 }}>{d}</p>
-                  <span className="exw">Open →</span>
-                </Link>
-              ))}
             </div>
           </div>
         </section>

@@ -4,7 +4,6 @@ import { listProducts, listCategories, getSettings, countProductsByCategory, bui
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { CategoryNav } from '../../CategoryNav';
 import { InquiryCTA } from '../../InquiryForm';
-import { TrustCards, Icons } from '../../TrustCards';
 import { MATERIALS } from '@/lib/vocabulary';
 import { SiteSchema } from '../../SiteSchema';
 import { CollectionGrid } from '../../CollectionGrid';
@@ -121,7 +120,13 @@ export default async function CategoryPage({ params }) {
           </div>
         </div>
 
-        {/* ---- The material's craft tags and the category trust cards ---- */}
+        {/* ---- The material's craft tags ----
+
+            The category pages do not carry a trust bar. The home page
+            has one and the product page has its own, and a third copy
+            of the same figures further down a listing says the same
+            thing three times over. What is here is specific to this
+            material: which processes it goes through. */}
         <section style={{ padding: '48px 0 0' }}>
           <div className="wrap">
             {mat && (
@@ -133,14 +138,6 @@ export default async function CategoryPage({ params }) {
               </div>
             )}
 
-            <TrustCards
-              items={[
-                { value: String(s.moq || 300), unit: ' pcs', title: 'MOQ — mixed specs allowed', detail: 'Colours and specifications in one order', icon: Icons.box },
-                { value: '100%', title: 'Silent sweep tested', detail: 'Every movement checked before packing', icon: Icons.clock },
-                { value: '3', unit: ' yr', title: 'Movement warranty', detail: 'Factory assurance on the movement', icon: Icons.shield },
-                { value: '24', unit: ' hours', title: 'Quote response', detail: 'With the 3D rendering', icon: Icons.spark }
-              ]}
-            />
           </div>
         </section>
 

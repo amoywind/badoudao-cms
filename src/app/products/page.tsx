@@ -4,6 +4,8 @@ import { listProducts, listCategories, getSettings, countProductsByCategory, bui
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { CategoryNav } from '../CategoryNav';
 import { InquiryCTA } from '../InquiryForm';
+import { ProductFilter } from '../ProductFilter';
+import { MATERIALS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -67,51 +69,74 @@ export default async function ProductsIndex() {
                   <h1 style={{ fontSize: 30 }}>{products.length} models in production</h1>
                 </div>
 
-                {/* The catalogue card, the same one the category pages
-                    use. This page had a card of its own, and the two
-                    did not agree: the pictures were a third larger here,
-                    and on a phone this page showed one model at a time
-                    where the category pages showed two — so the same
-                    catalogue read at two different sizes depending on
-                    which page a buyer had arrived at.
+                {/* The catalogue, with the material filter above it.
 
-                    One card, one grid. The picture is the size the
-                    category pages draw it, the price is written the
-                    same way, and a buyer comparing the two pages sees
-                    the same thing in both. */}
-                <div className="pgrid">
-                  {products.map((p, i) => (
-                    <Link key={p.id} href={`/products/${p.category}/${p.slug}/`} className="pcard">
-                      <div className="sq">
-                        {p.images.length ? (
-                          <img
-                            src={p.images[0].thumbUrl || p.images[0].url}
-                            alt={p.name}
-                            width={600}
-                            height={600}
-                            decoding="async"
-                            {...(i === 0 ? { fetchpriority: 'high' } : { loading: 'lazy' })}
-                          />
-                        ) : null}
-                      </div>
-                      <div className="pcard-body">
-                        <h3>{p.name}</h3>
-                        {p.summary && (
-                          <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.55, marginBottom: 10 }}>
-                            {p.summary.slice(0, 110)}…
-                          </p>
-                        )}
-                        <div className="pcard-price">
-                          <span>Est. EXW</span>
-                          <b>${p.priceMin.toFixed(2)}</b>
-                          <span>– ${p.priceMax.toFixed(2)}</span>
-                          <span className="pcard-moq">MOQ {p.moq}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                    This page had a card of its own and the category
+                    pages had another, and the same catalogue read at two
+                    different sizes depending on which page a buyer had
+                    arrived at. One card, one grid — the picture is the
+                    size the category pages draw it, and the price is
+                    written the same way.
+
+                    The filter narrows by material because that is the
+                    axis the catalogue is organised on and every product
+                    has one. It does not narrow by movement: only some
+                    of the products carry a movement recorded, and a
+                    filter that quietly hides half the catalogue when a
+                    buyer picks an option is worse than no filter. */}
+                <ProductFilter
+                  products={products.map((p) => ({
+                    id: p.id,
+                    slug: p.slug,
+                    name: p.name,
+                    category: p.category,
+                    summary: p.summary || '',
+                    priceMin: p.priceMin,
+                    priceMax: p.priceMax,
+                    moq: p.moq,
+                    leadTime: p.leadTime,
+                    image: p.images.length ? p.images[0].thumbUrl || p.images[0].url : ''
+                  }))}
+                  materials={MATERIALS.map((m) => ({
+                    id: m.slug,
+                    name: m.name,
+                    count: counts[m.slug] || 0
+                  }))}
+                />
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Raw material tolerances ----
+
+            The figure each material is held to. A buyer comparing two
+            quotes is usually comparing two materials, and this is the
+            number that tells them whether the cheaper one is cheaper
+            because it is a different material or because it is a
+            worse one.
+
+            It sits here, under the catalogue, because it is about the
+            goods in the grid above — not a page in its own right. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Raw material tolerances</div>
+              <h2>What each material is held to</h2>
+              <p className="sec-sub">
+                These are the measurements the factory checks on the raw
+                material before it is cut. Ask for the QC report on your
+                order and it comes with the batch it belongs to.
+              </p>
+            </div>
+
+            <div className="tol-grid">
+              {MATERIALS.map((m) => (
+                <Link key={m.slug} href={`/products/${m.slug}`} className="tol-card">
+                  <span className="tol-name">{m.name}</span>
+                  <span className="tol-spec tnum">{m.tolerance}</span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

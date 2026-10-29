@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
 import { MOVEMENTS, DISPLAYS, HAND_MATERIALS, HAND_SPEC_FIELDS, PACKAGING_TIERS } from '@/lib/vocabulary';
 
@@ -49,19 +48,6 @@ export default async function ComponentsPage() {
               A wall clock is six components, and each one is customisable on its own.
               This is the reference for what the factory holds and what it can tool.
             </p>
-          </div>
-        </section>
-
-        <section>
-          <div className="wrap">
-            <TrustCards
-              items={[
-                { value: '1,000+', title: 'Moulded hand styles', detail: 'Aluminium, brass, wood, acrylic and plastic', icon: Icons.ruler },
-                { value: '7', title: 'Movement types', detail: 'Silent, radio-controlled, chime, mechanical', icon: Icons.gear },
-                { value: '2', title: 'Display technologies', detail: 'LCD calendar and LED digital', icon: Icons.spark },
-                { value: '3', title: 'Packaging tiers', detail: 'Kraft, gift box and custom foam insert', icon: Icons.box }
-              ]}
-            />
           </div>
         </section>
 

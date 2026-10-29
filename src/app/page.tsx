@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import {
-  listCategories, getSettings, buildMeta, siteVideoMap
+  listCategories, getSettings, buildMeta, siteVideoMap, listProducts
 } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
@@ -40,16 +40,38 @@ export default async function HomePage() {
   /* The site videos are fetched with everything else rather than in a
      second round trip. The table is nine rows, so the query is cheap and
      the alternative is a waterfall on the slowest page on the site. */
-  /* The trending platforms are gone — their four products were all
-     inside the six material families below, so the page was showing
-     the same thing twice. That also means the home page no longer
-     needs the product list: the material cards are linked by
-     category, and the count comes from the category row. */
-  const [cats, s, videos] = await Promise.all([
+  /* Four platforms worth looking at, and the three pages that answer
+     the questions a buyer asks before they can pick one.
+
+     The featured products are taken from the database rather than
+     written out here, so a product that is added, repriced or taken
+     off the shelf changes this row on its own. */
+  const [cats, s, videos, featured] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
-    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
+    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>)),
+    listProducts({ featured: 1, status: 'published' }).catch(() => [])
   ]);
+
+  /* Three of the five featured products are the same acrylic series, so
+     taking the first four would put three of the four cards on one
+     material. The row is spread across materials instead — the point of
+     it is to show the range, and a row of near-identical acrylic clocks
+     does not. */
+  const picks: typeof featured = [];
+  const seenCats = new Set<string>();
+  for (const p of featured) {
+    if (picks.length >= 4) break;
+    if (seenCats.has(p.category)) continue;
+    seenCats.add(p.category);
+    picks.push(p);
+  }
+  /* If there were not enough materials to go round, the remainder is
+     filled from what is left rather than leaving the row short. */
+  for (const p of featured) {
+    if (picks.length >= 4) break;
+    if (!picks.includes(p)) picks.push(p);
+  }
 
   const moq = Number(s.moq) || 300;
 
@@ -166,6 +188,122 @@ export default async function HomePage() {
                       <span className="exw">MOQ {moq} pcs</span>
                     </div>
                   </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Featured platforms ----
+
+            Four products with their price and their SKU on the card, so a
+            buyer can judge the range without opening the catalogue. These
+            come from the database: the picture, the price and the link
+            are whatever the product record says today.
+
+            This is not the catalogue. The material grid above is the
+            catalogue, organised by material, and it lists everything.
+            This row is a shortlist of four things worth a look — which is
+            why it is four and not every product. */}
+        {picks.length > 0 && (
+          <section id="featured">
+            <div className="wrap">
+              <div className="sec-head">
+                <div className="sec-tag">// Featured platforms</div>
+                <h2>Four clocks worth a closer look</h2>
+                <p className="sec-sub">
+                  Prices are estimated Ex Works figures at MOQ {moq}. Every one of
+                  them can be put into production with a different dial, hand set and
+                  carton.
+                </p>
+              </div>
+
+              <div className="feat-grid">
+                {picks.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/products/${p.category}/${p.slug}`}
+                    className="feat-card"
+                  >
+                    <div className="sq">
+                      {p.images.length > 0 && (
+                        <img
+                          src={p.images[0].thumbUrl || p.images[0].url}
+                          alt={p.name}
+                          width={600}
+                          height={600}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
+                    </div>
+                    <div className="feat-body">
+                      <span className="feat-sku tnum">{p.id}</span>
+                      <h3>{p.name}</h3>
+                      <div className="feat-price tnum">
+                        ${p.priceMin.toFixed(2)} &ndash; ${p.priceMax.toFixed(2)}
+                      </div>
+                      <span className="exw">View details →</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ---- The three questions ----
+
+            A buyer who has not decided anything yet does not need a
+            product. They need to know what can be changed, what goes
+            inside the clock, and how it is checked. Each of those has a
+            page of its own, and this is the signpost to them. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Before you choose</div>
+              <h2>Three things worth understanding first</h2>
+              <p className="sec-sub">
+                Most enquiries arrive before a buyer knows which clock they
+                want. These three pages answer the questions that come
+                first, whichever product they end up choosing.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                {
+                  icon: Icons.box,
+                  title: 'What you can change',
+                  body:
+                    'A clock is six parts. The exploded view shows all six and what each one tolerates — so a buyer can say "change this" and mean something.',
+                  href: '/custom-services',
+                  cta: 'See the six components'
+                },
+                {
+                  icon: Icons.gear,
+                  title: 'What goes inside it',
+                  body:
+                    'More than 1,000 hand styles and seven movements, each with its noise level, drift and battery life written out.',
+                  href: '/components',
+                  cta: 'Open the components studio'
+                },
+                {
+                  icon: Icons.shield,
+                  title: 'How it is checked',
+                  body:
+                    'The four gates every clock passes, with the figures for each one and footage of the test floor.',
+                  href: '/craft-qc',
+                  cta: 'See the QC protocol'
+                }
+              ].map((t) => (
+                <Link key={t.title} href={t.href} className="card" style={{ padding: 26 }}>
+                  <div className="tcard-ico">{t.icon}</div>
+                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{t.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65, marginBottom: 14 }}>
+                    {t.body}
+                  </p>
+                  <span className="exw">{t.cta} →</span>
                 </Link>
               ))}
             </div>
@@ -290,15 +428,13 @@ export default async function HomePage() {
             </div>
             <div className="split" style={{ alignItems: 'start' }}>
               <div>
-                <TrustCards
-                  items={[
-                    { value: '300', unit: ' pcs', title: 'Flexible low MOQ', detail: 'Mixed colours and specs in one order', icon: Icons.box },
-                    { value: '24', unit: ' hours', title: 'Fast 3D rendering', detail: 'Photorealistic mockups before you commit', icon: Icons.spark },
-                    { value: '7', unit: ' days', title: 'Express sampling', detail: 'Physical sample shipped after approval', icon: Icons.clock },
-                    { value: '1.2', unit: 'm drop', title: 'Certified packaging', detail: 'ISTA-1A tested for e-commerce shipping', icon: Icons.shield }
-                  ]}
-                />
-                <div className="certs" style={{ marginTop: 28 }}>
+                {/* The trust figures are not repeated here. The same
+                    four numbers — MOQ, 3D rendering, sampling, drop
+                    test — sit in the bar directly under the hero, and
+                    saying them a second time six blocks down does not
+                    make a buyer trust the factory more; it makes the
+                    page look like it has four things to say. */}
+                <div className="certs">
                   <span className="cert">MOQ from {moq} pcs</span>
                   <span className="cert">Samples in {s.sampleDays || '5-7'} business days</span>
                   <span className="cert">Ex Works pricing</span>

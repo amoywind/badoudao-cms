@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
-import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
 import { SIMPLIFIED } from '@/lib/vocabulary';
 import { AnatomyHeading, RouteSection } from '../AnatomyModule';
@@ -52,19 +51,6 @@ export default async function CustomServicesPage() {
               A wall clock is six components. Each one is a decision, and each one is
               open to you — material, finish, mechanism, artwork and packaging.
             </p>
-          </div>
-        </section>
-
-        <section>
-          <div className="wrap">
-            <TrustCards
-              items={[
-                { value: '6', title: 'Core modular components', detail: 'Free mixing and matching', icon: Icons.box },
-                { value: '1,000+', title: 'Moulded hand styles', detail: 'Ready-to-use hand moulds', icon: Icons.ruler },
-                { value: '100%', title: 'Custom shape', detail: 'CNC, laser and injection', icon: Icons.spark },
-                { value: '3', title: 'Packaging tiers', detail: 'Kraft, gift box, custom insert', icon: Icons.shield }
-              ]}
-            />
           </div>
         </section>
 
@@ -137,6 +123,55 @@ export default async function CustomServicesPage() {
                   <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ---- The artwork guide ----
+
+            The one thing a buyer cannot get from a photograph is the
+            artwork template: what the dial file has to look like when
+            it arrives, so that the first render is right rather than
+            nearly right.
+
+            There is no file to download here. A template that was
+            written for one dial size would be wrong for the next one,
+            and a dial guide is specific to the size and the movement
+            the buyer has chosen. It is sent with the first quotation,
+            against the specification that quotation is about. */}
+        <section>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Artwork</div>
+              <h2>What we need from you to draw the dial</h2>
+              <p className="sec-sub">
+                A dial artwork template comes with the first quotation —
+                drawn to the size and the movement you have chosen,
+                because a template written for one is wrong for the next.
+                Here is what goes into it.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                ['Vector artwork', 'AI, EPS, PDF or SVG. Text converted to outlines so the file renders the same on our machine as on yours.'],
+                ['Print colours', 'Pantone solid coated or CMYK. A photograph of a colour is not a colour specification.'],
+                ['Logo and mark', 'Vector, with the minimum size and the clear space written down. A bitmap logo on a dial is a blurry logo on a dial.'],
+                ['Dial size', 'The finished diameter, not the diameter of the movement behind it. The two are not the same number.'],
+                ['Numerals and markers', 'Which numerals, which font, and how close to the edge they sit. The rim needs room for them.'],
+                ['Movement', 'Which movement the dial is drawn for — the centre hole and the hand spacing differ between them.']
+              ].map(([n, d]) => (
+                <div className="card" key={n} style={{ padding: 22 }}>
+                  <h3 style={{ fontSize: 15.5, marginBottom: 8 }}>{n}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 26 }}>
+              <Link href="/contact" className="btn btn-ghost">
+                Ask for the dial template with your quote →
+              </Link>
             </div>
           </div>
         </section>

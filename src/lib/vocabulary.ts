@@ -20,6 +20,13 @@ export type CraftTag = {
   blurb: string;
   /** The process names, as the specification gives them. */
   tags: string[];
+  /** The tolerance the raw material is held to, with its figure.
+
+      A material without a number is a material a buyer has to take on
+      trust. These are the measurements the factory checks, written on
+      the same bar as the price so a buyer can read one against the
+      other. */
+  tolerance: string;
 };
 
 /** Keyed by the category id in the database, so the two cannot drift. */
@@ -29,42 +36,48 @@ export const MATERIALS: CraftTag[] = [
     name: 'Plastic Wall Clocks',
     blurb:
       'Injection-moulded ABS and PP, from classic office dials to wood-grain water-transfer finishes.',
-    tags: ['Custom mold creation', 'Pantone color matching', '3D injection relief']
+    tags: ['Custom mold creation', 'Pantone color matching', '3D injection relief'],
+    tolerance: 'High-impact injection moulding · Pantone colour matched'
   },
   {
     slug: 'wood-wall-clocks',
     name: 'Wood Wall Clocks',
     blurb:
       'FSC-certified oak, walnut and bamboo, CNC-engraved and finished in natural wood-wax oil.',
-    tags: ['Solid wood / bamboo', 'CNC engraving', 'Natural wood-wax oil', 'Mortise & tenon']
+    tags: ['Solid wood / bamboo', 'CNC engraving', 'Natural wood-wax oil', 'Mortise & tenon'],
+    tolerance: 'Moisture content held at 8–12%'
   },
   {
     slug: 'metal-wall-clocks',
     name: 'Metal Wall Clocks',
     blurb:
       'Laser-cut and welded metal, from moving-gear mechanisms to multi-layer dimensional dials.',
-    tags: ['Laser cutting', 'Multi-layer 3D dial', 'Moving gear mechanism', 'Anodized / powder coated']
+    tags: ['Laser cutting', 'Multi-layer 3D dial', 'Moving gear mechanism', 'Anodized / powder coated'],
+    tolerance: 'Laser cut to ±0.1mm'
   },
   {
     slug: 'acrylic-wall-clocks',
     name: 'Acrylic Wall Clocks',
     blurb:
       '3–10mm PMMA with backside UV printing and diamond-polished edges, built to survive parcel networks.',
-    tags: ['3-10mm thick acrylic', 'Backside UV printing', 'Diamond edge polishing']
+    tags: ['3-10mm thick acrylic', 'Backside UV printing', 'Diamond edge polishing'],
+    tolerance: 'PMMA, printed in reverse for a depth effect'
   },
   {
     slug: 'glass-crystal-wall-clocks',
     name: 'Glass & Crystal Wall Clocks',
     blurb:
       'Tempered glass and crystal porcelain with HD UV printing and heat-melted glaze sealing.',
-    tags: ['Tempered shatterproof glass', 'Beveled edge cut', 'Crystal porcelain heat-melt']
+    tags: ['Tempered shatterproof glass', 'Beveled edge cut', 'Crystal porcelain heat-melt'],
+    tolerance: '4mm tempered, edges bevelled'
   },
   {
     slug: 'resin-wall-clocks',
     name: 'Resin Wall Clocks',
     blurb:
       'Polyresin and epoxy river clocks, hand-painted and cast from 3D-scanned originals.',
-    tags: ['Epoxy resin river', 'Hand-painted detailing', '3D concrete/sandstone texture']
+    tags: ['Epoxy resin river', 'Hand-painted detailing', '3D concrete/sandstone texture'],
+    tolerance: 'Vacuum-degassed, cast against the live edge'
   }
 ];
 
@@ -297,8 +310,10 @@ export const QC_STEPS = [
     title: '24-hour movement aging QC',
     detail:
       'Every movement runs on power for 24 hours on the shelf, then accuracy is ' +
-      'verified and the tick is measured in an anechoic chamber. A movement ' +
-      'reading above 12dB is scrapped rather than adjusted.',
+      'verified and the tick is measured in an anechoic chamber whose own ' +
+      'background noise is held below 10dB — a reading is only as good as the ' +
+      'room it was taken in. A movement reading above 12dB is scrapped rather ' +
+      'than adjusted.',
     metric: '100% tested · scrap above 12dB'
   },
   {
