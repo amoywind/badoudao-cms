@@ -165,7 +165,7 @@ function check(name, ok, detail) {
   check('home: the trending section is gone', home.trendCards === 0 && !home.hasTrendingHeading);
   check('home: no horizontal overflow', !home.hasOverflown);
 
-  console.log('\n=== 3. The customizer page carries the tool and the form ===');
+  console.log('\n=== 3. The customizer page carries the tool and sends the buyer to the form ===');
   await send('Page.navigate', { url: 'https://www.oemwallclocks.com/customizer' });
   await new Promise(r => setTimeout(r, 5000));
   const cz = JSON.parse(await ev(`(function(){
@@ -173,17 +173,15 @@ function check(name, ok, detail) {
     var spec=document.getElementById('spec');
     var form=document.querySelector('form');
     var code=document.querySelector('.hub-code');
-    var fd=form?new FormData(form):null;
+    var cta=document.querySelector('.inq-cta a');
     return JSON.stringify({
       hasHub: !!hub,
       hubTabs: document.querySelectorAll('.hub-tab').length,
       hubOpts: document.querySelectorAll('.hub-opt').length,
-      hasInquiry: !!document.getElementById('inquiry'),
       hasForm: !!form,
-      specInsideForm: !!(spec&&form&&form.contains(spec)),
+      hasCta: !!cta,
+      ctaHref: cta?cta.getAttribute('href'):null,
       shown: code?code.textContent.trim():'',
-      specValue: spec?spec.value:'',
-      inFormData: fd?fd.get('spec'):null,
       overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth
     });
   })()`));
@@ -191,13 +189,35 @@ function check(name, ok, detail) {
   check('customizer page: the tool renders', cz.hasHub);
   check('customizer page: all four tabs are present', cz.hubTabs === 4, cz.hubTabs + ' tabs');
   check('customizer page: the options render', cz.hubOpts >= 3, cz.hubOpts + ' options');
-  check('customizer page: the enquiry form is on the page', cz.hasInquiry && cz.hasForm);
-  check('customizer page: the specification field is inside the form', cz.specInsideForm);
-  check('customizer page: the field holds the code on screen', cz.specValue === cz.shown,
-    cz.specValue + ' / ' + cz.shown);
-  check('customizer page: FormData carries the specification', cz.inFormData === cz.shown,
-    String(cz.inFormData));
+  /* The form lives on the contact page now, so the customiser carries a
+     link to it. The check that matters is not that the link is there
+     but that pressing apply arrives with the configuration — which is
+     what the next block does. */
+  check('customizer page: the enquiry form is not on the page', !cz.hasForm);
+  check('customizer page: there is a link to the enquiry instead', !!cz.hasCta);
+  check('customizer page: the link goes to the contact page',
+    (cz.ctaHref || '').indexOf('/contact/') === 0, cz.ctaHref);
+  check('customizer page: the specification is shown on screen', cz.shown.length > 0, cz.shown);
   check('customizer page: no horizontal overflow', !cz.overflow);
+
+  /* Press apply and see what arrives at the form. */
+  await ev(`(function(){ var b=document.querySelector('.hub-apply'); if(b) b.click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 3000));
+  const ca = JSON.parse(await ev(`(function(){
+    var msg=document.getElementById('if-msg');
+    var spec=document.getElementById('spec');
+    return JSON.stringify({
+      url: location.pathname+location.search,
+      msg: msg?msg.value:'',
+      spec: spec?spec.value:''
+    });
+  })()`));
+
+  check('customizer page: apply leads to the contact page', ca.url.indexOf('/contact') === 0, ca.url);
+  check('customizer page: the configuration arrives in the message box',
+    ca.msg.indexOf('Configuration:') >= 0, ca.msg.slice(0, 60));
+  check('customizer page: the specification code arrives with it',
+    ca.spec.length > 0, ca.spec);
 
   console.log('\n=== 4. The custom-services page carries both ===');
   await send('Page.navigate', { url: 'https://www.oemwallclocks.com/custom-services' });
