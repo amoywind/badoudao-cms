@@ -44,3 +44,4 @@ scripts/.style-*.txt
 scripts/.dev.log
 scripts/.scope-*.txt
 scripts/.*.scoped.css
+scripts/preview/
