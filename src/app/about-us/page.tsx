@@ -4,6 +4,7 @@ import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { TrustCards, Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
+import { CERTIFICATIONS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -20,11 +21,11 @@ export async function generateMetadata() {
   const s = await getSettings().catch(() => ({} as SiteSettings));
 
   return buildMeta({
-    title: 'About the Factory — Xiamen Chengmaomao Creative Home | Badoudao',
+    title: 'About the Factory — Wall Clock Manufacturer in Xiamen | Badoudao',
     description:
-      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a wall clock manufacturer in Xiamen, China. 10+ years in the trade, 2,000 pcs daily capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles and 7 movement types.`,
+      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. 10+ years in the trade, ${s.capacityMin || 2000} pcs daily capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, 1.2m drop-tested packaging and Ex Works pricing.`,
     keywords:
-      'china wall clock manufacturer, xiamen clock factory, quartz clock OEM supplier, decorative clock factory',
+      'china wall clock manufacturer, xiamen clock factory, quartz clock OEM supplier, low MOQ wall clock supplier, small batch wall clock factory, custom wall clock manufacturer china',
     path: '/about-us'
   });
 }
@@ -43,11 +44,13 @@ export default async function AboutUsPage() {
         <section className="page-head">
           <div className="wrap">
             <div className="sec-tag">// About us</div>
-            <h1>A factory in Xiamen, not a trading desk</h1>
+            <h1>Precision engineering, flexible quantities</h1>
             <p>
               Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. manufactures
-              decorative wall clocks. Design, tooling, production and export are all
-              handled in-house.
+              engineered custom wall clocks in Xiamen, China — design, tooling,
+              production and export under one roof. We build for e-commerce brands,
+              Amazon and Shopify sellers, and interior designers, with the tolerances
+              of a large run and the minimum order of a small one.
             </p>
           </div>
         </section>
@@ -65,8 +68,58 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
-        {/* ---- The company ---- */}
+        {/* ---- Core capabilities ----
+            The three things a buyer cannot get from a supplier who does not
+            own the machines. Each one is a claim a buyer can check, so
+            each carries its own number. */}
         <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Core capabilities</div>
+              <h2>Three things a trading desk cannot give you</h2>
+              <p className="sec-sub">
+                A supplier who buys clocks and resells them can match a price. He
+                cannot change the tooling, the packing or the test a clock passes
+                before it leaves the building. These are the three that decide
+                whether an order is worth placing.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                {
+                  icon: Icons.box,
+                  title: 'Flexible MOQ from 300 pieces',
+                  body:
+                    'Most clock factories will not start a run below 2,000 pieces, which forces a brand to commit inventory before it has a single customer. Our modular line starts at 300, and you can mix styles and colours inside one order — so a seasonal launch or a market test does not have to be a bet on two thousand units.'
+                },
+                {
+                  icon: Icons.ruler,
+                  title: 'End-to-end customisation',
+                  body:
+                    'More than 1,000 hand styles — CNC brass, lightweight aluminium and solid timber — against dial materials from solid walnut and industrial ironwork through crystal porcelain to 3D-printed acrylics. Our engineering team sits in-house, so a drawing is checked against what the machine can actually make before it is quoted.'
+                },
+                {
+                  icon: Icons.shield,
+                  title: 'Built to survive the courier',
+                  body:
+                    'A broken clock arrives as a refund, a bad review and a second freight bill. Every clock is packed in custom-cut EPE pearl-cotton armour inside a mail-order-grade outer carton, and the packed carton is drop-tested from 1.2 metres on all six faces before it leaves the building.'
+                }
+              ].map((c) => (
+                <div className="card" key={c.title} style={{ padding: 26 }}>
+                  <div className="tcard-ico">{c.icon}</div>
+                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{c.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
+                    {c.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ---- The company ---- */}
+        <section>
           <div className="wrap split" style={{ alignItems: 'start' }}>
             <div>
               <div className="sec-tag">// The company</div>
@@ -125,8 +178,129 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
-        {/* ---- Numbers ---- */}
+        {/* ---- Quality control ----
+            Four gates between a finished movement and a sealed carton. The
+            numbers are the point: a tolerance a buyer can check is worth
+            more than the word "quality" on a photograph. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Factory quality control</div>
+              <h2>What every clock is checked for</h2>
+              <p className="sec-sub">
+                Four gates stand between a finished movement and a sealed carton. A
+                clock that fails any one of them is not boxed. The full protocol,
+                with factory footage of each gate, is on the craft and QC page.
+              </p>
+            </div>
+
+            <div className="grid-2">
+              {[
+                {
+                  n: 'Gate 01',
+                  title: '24-hour movement ageing',
+                  body:
+                    'Every quartz movement runs on power for a full 24 hours before it goes near a clock, and its tick is measured acoustically in an anechoic chamber. Nothing is assembled from a movement that has not been run for a day.',
+                  metric: '< 15 dB verified'
+                },
+                {
+                  n: 'Gate 02',
+                  title: 'Laser-guided hand calibration',
+                  body:
+                    'Hour, minute and second hands are checked on a laser-guided optical rig to confirm they run in one plane. Clearance between the hour and minute hands never drops below 1.5 mm, so no hand touches another and the sweep cannot drag.',
+                  metric: '≥ 1.5 mm hand clearance'
+                },
+                {
+                  n: 'Gate 03',
+                  title: 'Semi-dust-free dial assembly',
+                  body:
+                    'Dials, glass and crystal porcelain are assembled in a controlled, semi-dust-free area, free of dust, fingerprints and foreign particles — the surfaces a buyer looks at first, and the ones a scratched cover cannot hide.',
+                  metric: 'Semi-dust-free bench'
+                },
+                {
+                  n: 'Gate 04',
+                  title: '1.2 m drop test and final audit',
+                  body:
+                    'Packed cartons are sampled at random and dropped from 1.2 metres — one corner, three edges, six faces. A clock that cracks its cover or stops running does not leave the building.',
+                  metric: '1.2 m · 6 faces'
+                }
+              ].map((g) => (
+                <div className="card" key={g.n} style={{ padding: 26 }}>
+                  <span className="qc-n">{g.n}</span>
+                  <h3 style={{ fontSize: 16.5, marginBottom: 9 }}>{g.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65, marginBottom: 14 }}>
+                    {g.body}
+                  </p>
+                  {/* The badge is sized to its text, not to the card.
+
+                      A card is a flex column, so a block-level child
+                      stretches to the full width of it — and the
+                      measurement ends up as a blue bar across the
+                      bottom of the card instead of a chip. */}
+                  <div className="qc-metric tnum" style={{ alignSelf: 'flex-start' }}>
+                    {g.metric}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 26 }}>
+              <Link href="/craft-qc" className="btn btn-ghost">See the QC protocol and factory footage →</Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Compliance ----
+            Certification for a finished clock and certification for the
+            movement inside it are two different questions, and a buyer
+            who is told one answer to both has been told nothing. */}
         <section>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Compliance</div>
+              <h2>Certification, stated plainly</h2>
+              <p className="sec-sub">
+                Finished quartz clocks carry no mandatory certification requirement
+                for the markets we ship to. The compliance sits on the movement
+                mechanism and on the raw materials, and that is where our
+                certificates sit too.
+              </p>
+            </div>
+
+            <div className="grid-2">
+              <div className="card" style={{ padding: 26 }}>
+                <h3 style={{ fontSize: 17, marginBottom: 16 }}>What we hold</h3>
+                <div className="cert-list">
+                  {CERTIFICATIONS.map((c) => (
+                    <div className="cert-row" key={c.code}>
+                      <span className="cert-code tnum">{c.code}</span>
+                      <span className="cert-name">{c.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{ padding: 26 }}>
+                <h3 style={{ fontSize: 17, marginBottom: 12 }}>What that means for you</h3>
+                <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.75 }}>
+                  Where a buyer needs documentation for their own market — an FCC
+                  file, or a report issued in their company&rsquo;s name — we arrange
+                  certified movement reports and component testing for that order
+                  rather than claiming it in advance. What we publish above is what
+                  is on file today, not a list of what could be arranged.
+                </p>
+                <div className="certs" style={{ marginTop: 20 }}>
+                  <span className="cert">MOQ from {moq} pcs</span>
+                  <span className="cert">Ex Works pricing</span>
+                  <span className="cert">Movement reports on request</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Numbers ---- */}
+        <section className="alt">
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// The numbers</div>
@@ -176,6 +350,29 @@ export default async function AboutUsPage() {
                   <span className="exw">Open →</span>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Ready to launch ----
+            Two ways to start, and both of them reach the same form. The
+            first asks for a physical sample, the second asks for a price. */}
+        <section>
+          <div className="wrap" style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto' }}>
+            <div className="sec-tag">// Ready to launch</div>
+            <h2>Ready to launch your custom wall clock line?</h2>
+            <p className="sec-sub" style={{ marginBottom: 26 }}>
+              Factory-direct communication, transparent Ex Works pricing, and a
+              quotation back within {s.quoteHours || 4} hours. Send a reference
+              photo, a sample or a sketch — whichever is easiest.
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/contact" className="btn btn-primary">
+                Request a custom sample ({s.sampleDays || '5-7'} days)
+              </Link>
+              <Link href="/contact" className="btn btn-ghost">
+                Get an official quote (MOQ {moq}+)
+              </Link>
             </div>
           </div>
         </section>
