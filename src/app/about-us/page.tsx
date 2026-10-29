@@ -134,17 +134,22 @@ export default async function AboutUsPage() {
                 — against the business licence, against the export
                 documents, or against a visit. */}
             <div>
-              {/* The workshop photograph and the licence, as they were:
-                  the picture of the floor and the document that says
-                  who works on it, one above the other, in the column
-                  that is about the factory itself. */}
-              {/* The photograph of the floor and the licence are the same
-                  size on the page. They were not: the photograph filled
-                  the width of the column and the licence sat inside a
-                  padded card at a different width and a different
-                  height, and the eye reads the difference between two
-                  pictures of different sizes as two pictures that
-                  belong to different things. */}
+              {/* The photograph of the floor and the business licence,
+                  one above the other in the column that is about the
+                  factory itself.
+
+                  They are the same size and the same shape, and they
+                  are both the full width of the column. The licence
+                  used to sit inside a padded card, which made it
+                  narrower than the photograph above it and a different
+                  height as well — and the eye reads a difference in
+                  size as a difference in kind, as though the two
+                  belonged to different things.
+
+                  The licence is fitted inside its frame whole rather
+                  than cropped to it: a crop would cut the stamp and the
+                  registration number off the edges, which are the two
+                  parts of it a buyer looks for. */}
               <div className="factory-pic">
                 <img
                   src="/workshop-floor.jpg"
@@ -158,29 +163,24 @@ export default async function AboutUsPage() {
                 />
               </div>
 
-              <div className="card" style={{ padding: 22, marginBottom: 20 }}>
-                <h3 style={{ fontSize: 16, marginBottom: 10 }}>Business licence</h3>
-                <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 12 }}>
-                  Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.
-                  Established in Xiamen, China on 28 December 2023.
-                  Click the licence to open it at full size.
-                </p>
-                <a
-                  href="/media/factory/business-license.jpg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="factory-pic"
-                >
-                  {/* The licence is shown at the same size as the
-                      photograph above it. The whole document is shown,
-                      and clicking it opens it full size. */}
-                  <img
-                    src="/media/factory/business-license.jpg"
-                    alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
-                    width={1000} height={750} loading="lazy"
-                  />
-                </a>
-              </div>
+              <a
+                href="/media/factory/business-license.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="factory-pic"
+              >
+                <img
+                  src="/media/factory/business-license.jpg"
+                  alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
+                  width={1000} height={750} loading="lazy"
+                />
+              </a>
+
+              <p className="factory-cap">
+                <b>Business licence</b> — Xiamen Chengmaomao Creative Home
+                Furnishings Co., Ltd., established in Xiamen, China on
+                28 December 2023. Click the licence to open it at full size.
+              </p>
 
               {/* The factsheet. Seven rows of label and value, laid out
                   in two columns rather than one: in a single column it

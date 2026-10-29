@@ -123,6 +123,11 @@
 
   /* Three columns of a tolerance, two. */
   .tol-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* The material grid is four across on a wide screen. Below that it
+     is three, so the cards stay wide enough for a sentence rather than
+     a line and a half. */
+  .mat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* ---- 860px: tablet portrait ---- */
@@ -242,6 +247,11 @@
   /* Two columns of a tolerance on a phone is two columns of a
      measurement, and the measurement is the whole point of it. */
   .tol-grid { grid-template-columns: 1fr; }
+
+  /* Two material cards across on a phone, which is what the catalogue
+     grid does and what a photograph of a clock needs — one across and
+     the clock is drawn small enough to be unrecognisable. */
+  .mat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
   /* The filter label sits on its own line above the buttons rather
      than beside them: beside them it takes the width of a button. */

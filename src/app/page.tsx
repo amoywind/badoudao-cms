@@ -150,20 +150,15 @@ export default async function HomePage() {
                   <div className="mat-body">
                     <h3>{m.name}</h3>
                     <p>{m.blurb}</p>
-                    {/* One tag, not two.
+                    {/* No process tag on this card.
 
-                        A card is a sixth of the page wide, so two tags
-                        share a hundred and seventy pixels between
-                        them and each is cut to six characters. One tag
-                        fits whole, and the space for it is reserved
-                        whether it wraps or not so that the six cards
-                        end at the same place. The full list is on the
-                        category page. */}
-                    <div className="ctags mat-tags">
-                      {m.tags.slice(0, 1).map((t) => (
-                        <span className="ctag" key={t}>{t}</span>
-                      ))}
-                    </div>
+                        It was one tag in a bordered box under the
+                        description, and the card now holds a name, a
+                        sentence about the material and a count. The tag
+                        was the fourth thing in a card that a buyer
+                        reads in a second, and the process list is on the
+                        category page and on the craft page where a
+                        buyer goes looking for it. */}
                     <div className="mat-foot">
                       <span><b>{m.count}</b> designs</span>
                       <span className="exw">MOQ {moq} pcs</span>
