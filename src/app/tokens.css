@@ -2812,11 +2812,14 @@
    not examining a product, so the photograph is a cue and the name
    is the content. A row of six, with a shorter picture, says the same
    thing in a third of the height. */
-.mat-grid,
-.feat-grid {
+.mat-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 16px;
+  /* Eight material families, so eight columns. The cards are narrow at
+     this width — the name wraps to two lines and the process tag under
+     it is cut short — so the grid falls to fewer columns earlier than
+     it used to, which the responsive rules below handle. */
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .mat-card {
@@ -2967,12 +2970,83 @@
   line-height: 1.5;
 }
 
-/* The shortlist row on the home page.
+/* The two pictures in the factory column on the about page.
 
-   Four cards, four columns, each one a product with its SKU and its
-   price on the face of it. The catalogue is the material grid above;
-   this is four things worth a look, and the difference is why it is
-   four and not ten. */
+   The photograph of the workshop floor and the business licence are the
+   same size: the same width, the same height, the same edge treatment.
+   They were not, and the eye reads a difference in size as a difference
+   in kind — a photograph and a document that appear to belong to two
+   different things.
+
+   One class for both, so they cannot drift apart again. The licence is
+   a landscape document and the photograph is not, so each is fitted
+   inside the frame rather than stretched to fill it: the whole licence
+   shows, and the photograph is cropped rather than distorted. */
+
+.factory-pic {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  margin-bottom: 20px;
+  aspect-ratio: 4 / 3;
+}
+
+.factory-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The licence is a document, not a photograph. It is fitted inside the
+   frame whole rather than cropped to it — a crop would cut the stamp
+   and the registration number off the edges, which are the two parts
+   of it a buyer looks for. */
+.factory-pic img[src*="business-license"] {
+  object-fit: contain;
+  object-position: top left;
+}
+
+/* The two pictures in the factory column on the about page.
+
+   The photograph of the workshop floor and the business licence are the
+   same size: the same width, the same height, the same edge treatment.
+   They were not, and the eye reads a difference in size as a difference
+   in kind — a photograph and a document that appear to belong to two
+   different things.
+
+   One class for both, so they cannot drift apart again. The licence is
+   a landscape document and the photograph is not, so each is fitted
+   inside the frame rather than stretched to fill it: the whole licence
+   shows, and the photograph is cropped rather than distorted. */
+
+.factory-pic {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  margin-bottom: 20px;
+  aspect-ratio: 4 / 3;
+}
+
+.factory-pic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The licence is a document, not a photograph. It is fitted inside the
+   frame whole rather than cropped to it — a crop would cut the stamp
+   and the registration number off the edges, which are the two parts
+   of it a buyer looks for. */
+.factory-pic img[src*="business-license"] {
+  object-fit: contain;
+  object-position: top left;
+}
 
 /* The factory factsheet on the about page.
 
@@ -3024,72 +3098,9 @@
 @container (max-width: 340px) {
   .fact-grid { grid-template-columns: 1fr; }
 }
-
-/* The shortlist row uses the material grid's columns.
-
-   It had its own — four columns, and a bigger gap — which made the
-   row of clocks on the home page the larger of the two rows of
-   pictures, when the material grid directly above it is the one the
-   buyer is meant to read first. The grid itself is set with the
-   material grid further up, so the two cannot drift apart again. */
-
-.feat-card {
-  background: var(--surface-card);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-
-.feat-card:hover {
-  transform: translateY(-2px);
-  border-color: #D6D9DE;
-  box-shadow: 0 14px 32px -20px rgba(17, 17, 17, .32);
-}
-
-.feat-body {
-  padding: 14px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
 /* The stock code. It is the one thing on the card a buyer can quote
    back to the factory, so it is written in the technical face and kept
    above the name rather than buried under it. */
-.feat-sku {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  letter-spacing: .08em;
-  color: var(--text-2);
-  margin-bottom: 5px;
-}
-
-.feat-body h3 {
-  font-size: 14.5px;
-  line-height: 1.4;
-  margin-bottom: 9px;
-  min-height: 2.8em;
-  display: flex;
-  align-items: flex-start;
-}
-
-.feat-price {
-  font-family: var(--font-tech);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 11px;
-}
-
-.feat-body .exw {
-  align-self: flex-start;
-  margin-top: auto;
-}
-
 .mat-body {
   padding: 14px 15px 15px;
   display: flex;
@@ -4408,8 +4419,7 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
-.mat-grid,
-.feat-grid {
+.mat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 .qc-grid {
@@ -4492,9 +4502,11 @@
      under two hundred pixels wide, which is too small to recognise a
      material from. Three across is the point where the photograph is
      still a cue. */
-  .mat-grid,
-.feat-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .mat-grid {
+    /* Four across, not three. The cards hold a name and a process tag,
+       and at three columns of a narrowed page the tag was cut to a few
+       characters, which told a buyer nothing. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .hero2-grid {
@@ -4561,8 +4573,7 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
-.mat-grid,
-.feat-grid {
+.mat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 .qc-grid {
@@ -4645,9 +4656,11 @@
      under two hundred pixels wide, which is too small to recognise a
      material from. Three across is the point where the photograph is
      still a cue. */
-  .mat-grid,
-.feat-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .mat-grid {
+    /* Four across, not three. The cards hold a name and a process tag,
+       and at three columns of a narrowed page the tag was cut to a few
+       characters, which told a buyer nothing. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .hero2-grid {

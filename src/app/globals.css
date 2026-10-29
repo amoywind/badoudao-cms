@@ -981,7 +981,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 }
 .pd-main-btn {
   display: block; width: 100%; height: 100%;
-  padding: 0; border: 0; background: transparent; cursor: zoom-in;
+  padding: 0; border: 0; background: transparent;
 }
 .pd-main-btn img {
   width: 100%; height: 100%; object-fit: contain;
@@ -1024,37 +1024,11 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   font-size: 11.5px; color: var(--ink3);
 }
 
-.pd-lightbox {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(12,14,16,.94);
-  display: grid; place-items: center;
-  padding: 40px 60px;
-}
-.pd-lightbox img {
-  max-width: 100%; max-height: 88vh; object-fit: contain;
-}
-.pd-lb-close {
-  position: absolute; top: 16px; right: 20px;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 0; background: rgba(255,255,255,.12); color: #fff;
-  font-size: 26px; line-height: 1; cursor: pointer;
-}
-.pd-lb-close:hover { background: rgba(255,255,255,.24); }
-.pd-lb-nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 0; background: rgba(255,255,255,.12); color: #fff;
-  font-size: 30px; line-height: 1; cursor: pointer;
-}
-.pd-lb-nav:hover { background: rgba(255,255,255,.24); }
-.pd-lb-nav.prev { left: 16px; } .pd-lb-nav.next { right: 16px; }
-.pd-lb-foot {
-  position: absolute; bottom: 18px; left: 0; right: 0;
-  display: flex; gap: 12px; justify-content: center; align-items: center;
-  color: rgba(255,255,255,.75); font-size: 12.5px;
-}
-.pd-lb-kind { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; }
+/* There was a full-screen viewer here and its styles are gone with it.
 
+   The photograph opened over the whole page and the way out of it was a
+   button in the top corner that was almost impossible to see. Nothing
+   on the page should be able to cover the page. */
 /* ---- right column ---- */
 .pd-badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .pd-badge {

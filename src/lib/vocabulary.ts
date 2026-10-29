@@ -78,6 +78,48 @@ export const MATERIALS: CraftTag[] = [
       'Polyresin and epoxy river clocks, hand-painted and cast from 3D-scanned originals.',
     tags: ['Epoxy resin river', 'Hand-painted detailing', '3D concrete/sandstone texture'],
     tolerance: 'Vacuum-degassed, cast against the live edge'
+  },
+  {
+    /* Marble.
+
+       What the factory can actually do with it, stated plainly: it is a
+       hard, natural, veined stone, so it is cut rather than moulded and
+       every piece differs. That difference is the selling point and
+       also the constraint, and a buyer planning a range needs to know
+       both — no two dials come out alike, and a dial that breaks is a
+       dial that cannot be replaced with the same one.
+
+       The cutting is done on the same CNC machines that cut the metal
+       frames, so the shapes are the same shapes the rest of the range
+       uses, and the same movements fit the same openings. */
+    slug: 'marble-wall-clocks',
+    name: 'Marble Wall Clocks',
+    blurb:
+      'CNC-cut natural marble, with a vein pattern no two pieces share — a weight and a surface a printed dial cannot imitate.',
+    tags: ['CNC-cut natural stone', 'Vein-matched pairs', 'Honed or polished edge'],
+    tolerance: 'Cut to ±0.5mm; every piece veined differently'
+  },
+  {
+    /* 3D printing.
+
+       What it buys a buyer: no tooling. A shape that would take a
+       fifteen-day mould becomes a file and a print, which is why this
+       is the material for a small batch of something that has never
+       been made before. What it costs: surface finish and repeat
+       tolerance, which is why it sits alongside the other seven rather
+       than replacing them.
+
+       The prints are resin, not filament — fine layer lines and a
+       surface that takes a sprayed and hand-finished paint. Printed
+       parts are sprayed and hand-finished in the same booth as the
+       moulded ones, which is why the finished clock reads as a clock
+       and not as a print. */
+    slug: '3d-printed-wall-clocks',
+    name: '3D Printed Wall Clocks',
+    blurb:
+      'Resin-printed bodies with no mould and no tooling cost — the material for a first run of a shape that has never been made before.',
+    tags: ['SLA resin printing', 'Sprayed and hand-finished', 'No tooling fee'],
+    tolerance: 'Printed to ±0.3mm, hand-finished'
   }
 ];
 

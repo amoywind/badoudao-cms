@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import {
-  listCategories, getSettings, buildMeta, siteVideoMap, listProducts
+  listCategories, getSettings, buildMeta, siteVideoMap
 } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from './SiteChrome';
@@ -40,41 +40,19 @@ export default async function HomePage() {
   /* The site videos are fetched with everything else rather than in a
      second round trip. The table is nine rows, so the query is cheap and
      the alternative is a waterfall on the slowest page on the site. */
-  /* Four platforms worth looking at, and the three pages that answer
-     the questions a buyer asks before they can pick one.
+  /* The material families and the three pages that answer the questions
+     a buyer asks before they can pick one.
 
-     The featured products are taken from the database rather than
-     written out here, so a product that is added, repriced or taken
-     off the shelf changes this row on its own. */
-  const [cats, s, videos, featured, all] = await Promise.all([
+     There is no second row of product photographs on this page, and
+     there was one. The material cards are drawn with the photograph of
+     a real clock in that material, so a row of featured clocks below
+     them showed the same pictures twice — the same clock, once under
+     its material and once under its name. */
+  const [cats, s, videos] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
-    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>)),
-    listProducts({ featured: 1, status: 'published' }).catch(() => []),
-    listProducts({ status: 'published' }).catch(() => [])
+    siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
   ]);
-
-  /* One clock from each of the six material families, so the row sits
-     directly under the material grid and reads as the same set of
-     materials with an actual clock against each one.
-
-     The grid itself is tied to the material grid's rules, so the cards
-     are the same width as the cards above them. Four of them in a
-     six-column grid would have left two empty columns at the end of the
-     row and a gap in the middle of the page for no reason. */
-  const picks: typeof featured = [];
-  for (const m of MATERIALS) {
-    const inFamily = featured.filter((p) => p.category === m.slug);
-    if (inFamily.length > 0) {
-      picks.push(inFamily[0]);
-      continue;
-    }
-    /* A family with nothing flagged as featured still gets a clock —
-       the row is one of each material, and a material with no clock in
-       it would leave a hole in the row of families. */
-    const any = all.find((p) => p.category === m.slug);
-    if (any) picks.push(any);
-  }
 
   const moq = Number(s.moq) || 300;
 
@@ -145,8 +123,8 @@ export default async function HomePage() {
         <section id="materials">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// 6 core materials</div>
-              <h2>Six material families, one factory</h2>
+              <div className="sec-tag">// 8 core materials</div>
+              <h2>Eight material families, one factory</h2>
               <p className="sec-sub">
                 Every category is available with custom dials, logos, hands and packaging.
                 Prices shown are <strong>estimated Ex Works (factory) prices</strong> at MOQ {moq} —
@@ -196,64 +174,6 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* ---- Featured platforms ----
-
-            Four products with their price and their SKU on the card, so a
-            buyer can judge the range without opening the catalogue. These
-            come from the database: the picture, the price and the link
-            are whatever the product record says today.
-
-            This is not the catalogue. The material grid above is the
-            catalogue, organised by material, and it lists everything.
-            This row is a shortlist of four things worth a look — which is
-            why it is four and not every product. */}
-        {picks.length > 0 && (
-          <section id="featured">
-            <div className="wrap">
-              <div className="sec-head">
-                <div className="sec-tag">// Featured platforms</div>
-                <h2>One clock from each of the six materials</h2>
-                <p className="sec-sub">
-                  Prices are estimated Ex Works figures at MOQ {moq}. Every one of
-                  them can be put into production with a different dial, hand set and
-                  carton.
-                </p>
-              </div>
-
-              <div className="feat-grid">
-                {picks.map((p) => (
-                  <Link
-                    key={p.id}
-                    href={`/products/${p.category}/${p.slug}`}
-                    className="feat-card"
-                  >
-                    <div className="sq">
-                      {p.images.length > 0 && (
-                        <img
-                          src={p.images[0].thumbUrl || p.images[0].url}
-                          alt={p.name}
-                          width={600}
-                          height={600}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      )}
-                    </div>
-                    <div className="feat-body">
-                      <span className="feat-sku tnum">{p.id}</span>
-                      <h3>{p.name}</h3>
-                      <div className="feat-price tnum">
-                        ${p.priceMin.toFixed(2)} &ndash; ${p.priceMax.toFixed(2)}
-                      </div>
-                      <span className="exw">View details →</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* ---- The three questions ----
 

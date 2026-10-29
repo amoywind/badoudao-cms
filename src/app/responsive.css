@@ -541,13 +541,6 @@
   .site .pd-pack { grid-template-columns: 1fr; }
   .site .pd-process ol { grid-template-columns: 1fr; }
 
-  /* The lightbox needs the full width on a phone; side arrows at 44px each
-     eat a third of a 390px screen. */
-  .site .pd-lightbox { padding: 20px 12px; }
-  .site .pd-lb-nav { width: 36px; height: 36px; font-size: 24px; }
-  .site .pd-lb-nav.prev { left: 4px; }
-  .site .pd-lb-nav.next { right: 4px; }
-
   .site .pd-moq-v { font-size: 26px; }
   .site .pd-thumb { width: 56px; height: 56px; }
 }

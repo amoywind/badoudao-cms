@@ -5,13 +5,20 @@ import type { GroupIcon } from '@/lib/product-detail';
 import { GroupGlyph } from './_icons';
 
 /**
- * The interactive half of a product page: the gallery with its zoom and
- * lightbox.
+ * The interactive half of a product page: the gallery with its zoom.
  *
  * Client-side because of the interaction. Everything else on the page is
  * server rendered, so the HTML a crawler sees already contains the product
  * name, the price, the specifications and the customisation list — none of
  * that depends on this running.
+ *
+ * There is no full-screen viewer. There was one, and it covered the whole
+ * page: the photograph opened over everything, and the way out of it was a
+ * small button in the corner that was almost impossible to find, so a
+ * buyer who opened the picture was left looking at a photograph they could
+ * not get back from. The zoom inside the frame does the same job — the
+ * buyer follows the pointer across the dial and reads the finish and the
+ * numerals — without anything appearing that was not already on the page.
  */
 
 type Shot = {
@@ -27,7 +34,6 @@ type Shot = {
 
 export function ProductGallery({ name, images }: { name: string; images: Shot[] }) {
   const [zoom, setZoom] = useState(false);
-  const [lightbox, setLightbox] = useState(false);
   const [origin, setOrigin] = useState('50% 50%');
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -62,22 +68,6 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
     );
   }, []);
 
-  const close = useCallback(() => setLightbox(false), []);
-
-  useEffect(() => {
-    if (!lightbox) return;
-    /* Escape closes, and the scroll lock stops the page behind the overlay
-       moving under your thumb while you are trying to look at the photo. */
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
-    document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [lightbox, close]);
-
   return (
     <div className="pd-gallery">
       {/* Square, not 4:3. A round dial in a wide frame renders as an oval,
@@ -91,12 +81,7 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
         onMouseMove={onMove}
       >
         {current ? (
-          <button
-            type="button"
-            className="pd-main-btn"
-            onClick={() => setLightbox(true)}
-            aria-label={`Enlarge ${name} photo`}
-          >
+          <div className="pd-main-btn">
             <img
               src={current.thumbUrl || current.url}
               alt={current.alt || name}
@@ -131,7 +116,7 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
                 : {})}
               decoding="async"
             />
-          </button>
+          </div>
         ) : (
           /* Where a photo is missing, say so. A blank square reads as a
              broken image. */
@@ -144,15 +129,8 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
           </div>
         )}
 
-        {current ? <span className="pd-zoom-hint">Click to enlarge</span> : null}
+        {current && canHover ? <span className="pd-zoom-hint">Hover to zoom</span> : null}
       </div>
-
-      {lightbox && current ? (
-        <div className="pd-lightbox" role="dialog" aria-modal="true" aria-label={`${name} photo`}>
-          <button type="button" className="pd-lb-close" onClick={close} aria-label="Close">×</button>
-          <img src={current.url} alt={current.alt || name} width={1200} height={1200} />
-        </div>
-      ) : null}
     </div>
   );
 }

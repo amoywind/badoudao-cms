@@ -26,7 +26,7 @@ export async function generateMetadata() {
   const s = await getSettings().catch(() => ({} as SiteSettings));
 
   return buildMeta({
-    title: 'Material & Craft — 6 Materials, 4-Step QC Factory | Badoudao',
+    title: 'Material & Craft — 8 Materials, 4-Step QC Factory | Badoudao',
     description:
       `Six core materials with their processes, and the four QC steps every clock passes: raw material checks, 24-hour movement aging, pointer balance and 1.2m drop-tested packaging. MOQ from ${s.moq || 300} pcs.`,
     keywords:
@@ -52,7 +52,7 @@ export default async function CraftQcPage() {
         <section className="page-head">
           <div className="wrap">
             <div className="sec-tag">// Material &amp; craft</div>
-            <h1>Six materials, four QC steps, one building</h1>
+            <h1>Eight materials, four QC steps, one building</h1>
             <p>
               What each material can be made to do, and what every clock is put through
               before it is allowed into a carton.
@@ -64,7 +64,7 @@ export default async function CraftQcPage() {
         <section className="alt">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// 6 core materials</div>
+              <div className="sec-tag">// 8 core materials</div>
               <h2>What each material can be made to do</h2>
               <p className="sec-sub">
                 The processes listed here are the ones the factory runs in-house. They

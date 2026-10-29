@@ -22,7 +22,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'About the Factory — Wall Clock Manufacturer in Xiamen | Badoudao',
     description:
-      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. 10+ years in the trade, ${(Number(s.capacityMin) || 2000).toLocaleString('en-US')} pcs daily capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, Ex Works pricing.`,
+      `Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. is a custom wall clock manufacturer in Xiamen, China. Established 2023, 1,000 m² workshop, 60,000 pcs monthly capacity, MOQ from ${s.moq || 300} pcs, 1,000+ hand styles, shipping to 30+ countries, Ex Works pricing.`,
     keywords:
       'china wall clock manufacturer, xiamen clock factory, quartz clock OEM supplier, low MOQ wall clock supplier, small batch wall clock factory, custom wall clock manufacturer china',
     path: '/about-us'
@@ -32,14 +32,6 @@ export async function generateMetadata() {
 export default async function AboutUsPage() {
   const s = await getSettings().catch(() => ({} as SiteSettings));
   const moq = Number(s.moq) || 300;
-
-  /* The daily capacity is stored as a bare number — "2000" — and the
-     page writes it in two places. Written raw it reads "2000" next to
-     the "2,000" printed on the trust card above, and two spellings of
-     the same number on one page is the kind of thing a buyer notices.
-     The separator goes on here rather than in the copy, so the number
-     stays one number when the factory changes it. */
-  const capacity = (Number(s.capacityMin) || 2000).toLocaleString('en-US');
 
   return (
     <div className="site">
@@ -146,7 +138,14 @@ export default async function AboutUsPage() {
                   the picture of the floor and the document that says
                   who works on it, one above the other, in the column
                   that is about the factory itself. */}
-              <div className="hero-img" style={{ marginBottom: 20 }}>
+              {/* The photograph of the floor and the licence are the same
+                  size on the page. They were not: the photograph filled
+                  the width of the column and the licence sat inside a
+                  padded card at a different width and a different
+                  height, and the eye reads the difference between two
+                  pictures of different sizes as two pictures that
+                  belong to different things. */}
+              <div className="factory-pic">
                 <img
                   src="/workshop-floor.jpg"
                   alt="Assembly floor: staff fitting dials and movements before packing"
@@ -170,29 +169,15 @@ export default async function AboutUsPage() {
                   href="/media/factory/business-license.jpg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: 'block' }}
+                  className="factory-pic"
                 >
-                  {/* The licence is shown at a size that can be read at a
-                      glance and no larger. At the full width of the
-                      column it was three hundred and seventy pixels
-                      tall and the two columns of the page ended up
-                      four hundred pixels out of step, with a hole
-                      under the shorter one. The whole document is
-                      shown, and clicking it opens it full size. */}
+                  {/* The licence is shown at the same size as the
+                      photograph above it. The whole document is shown,
+                      and clicking it opens it full size. */}
                   <img
                     src="/media/factory/business-license.jpg"
                     alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
                     width={1000} height={750} loading="lazy"
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      height: 240,
-                      objectFit: 'contain',
-                      objectPosition: 'top left',
-                      borderRadius: 6,
-                      border: '1px solid var(--rule)',
-                      background: '#fff'
-                    }}
                   />
                 </a>
               </div>
@@ -208,11 +193,11 @@ export default async function AboutUsPage() {
                 <div className="fact-grid">
                   {[
                     ['Legal entity', 'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.'],
-                    ['Registered', 'Xiamen, China — 28 December 2023'],
-                    ['Plant', 'Four lines under one roof: injection, woodwork, metal CNC, dust-free assembly'],
-                    ['Daily capacity', `${capacity} pcs across one shift`],
-                    ['People', 'Assembly and engineering staff on the floor, with six designers and CAD draughtsmen'],
-                    ['Shipping port', 'Port of Xiamen (XMN)'],
+                    ['Established', 'Xiamen, China — December 2023'],
+                    ['Workshop area', '1,000 m² — injection, woodwork, metal CNC and dust-free assembly'],
+                    ['Monthly capacity', '60,000 pcs'],
+                    ['Machines', 'CNC 5-axis machining centres × 5, UV flatbed printers × 2'],
+                    ['Shipping port', 'Port of Xiamen (XMN) — shipped to 30+ countries'],
                     ['Enquiries', 'amoywind@gmail.com']
                   ].map(([k, v]) => (
                     <div className="fact-row" key={k}>
@@ -361,7 +346,7 @@ export default async function AboutUsPage() {
                 ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
                 ['Sample lead time', `${s.sampleDays || '5-7'} business days`, 'Sample cost credited against the first bulk order.'],
                 ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
-                ['Daily capacity', `${capacity} pcs`, 'Across one shift, at the current headcount.'],
+                ['Monthly capacity', '60,000 pcs', 'Across four production lines under one roof.'],
                 ['3D rendering', '24 hours', 'Photorealistic mockups before you commit to a sample.']
               ].map(([k, v, d]) => (
                 <div className="card" key={k} style={{ padding: 24 }}>

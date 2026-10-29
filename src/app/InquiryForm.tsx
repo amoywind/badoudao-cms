@@ -71,7 +71,8 @@ const DEFAULT_QUANTITY = '300 - 500 pcs (Standard MOQ Trial)';
  * On a product page the inquiry builder fills these in for the buyer, so
  * the common case is a pre-filled form. */
 const MATERIALS = [
-  'Plastic', 'Solid wood', 'Metal', 'Acrylic', 'Glass / crystal', 'Resin', 'Not sure yet'
+  'Plastic', 'Solid wood', 'Metal', 'Acrylic', 'Glass / crystal', 'Resin',
+  'Marble', '3D printed', 'Not sure yet'
 ];
 const MOVEMENTS = [
   'Silent sweep quartz', 'Step-second quartz', 'Radio-controlled', 'Chime',
