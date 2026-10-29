@@ -137,14 +137,35 @@ export default async function HomePage() {
                 <Link key={m.slug} href={`/products/${m.slug}`} className="mat-card">
                   <div className="sq">
                     {m.image ? (
-                      <img
-                        src={m.image}
-                        alt={m.name}
-                        loading="lazy"
-                        decoding="async"
-                        width={600}
-                        height={600}
-                      />
+                      /* The picture sits in a box of its own inside the
+                         frame.
+
+                         The frame is shorter than it is wide and the
+                         photographs are square, so the picture has to
+                         be fitted into what is left rather than filling
+                         it. The ordinary rule for a picture in a frame
+                         — width and height both a hundred per cent —
+                         cannot do that: a percentage height inside a
+                         grid whose row is sized by its own content has
+                         no definite height to be a percentage of, so it
+                         falls back to the picture's own proportions and
+                         the picture ends up taller than the frame. The
+                         frame hides what does not fit.
+
+                         The box is an ordinary element placed in the
+                         frame, so it takes exactly the size asked of
+                         it, and the picture is fitted into the box.
+                         Nothing is cut off and nothing is stretched. */
+                      <span className="sq-in">
+                        <img
+                          src={m.image}
+                          alt={m.name}
+                          loading="lazy"
+                          decoding="async"
+                          width={600}
+                          height={600}
+                        />
+                      </span>
                     ) : (
                       /* A material with nothing on the shelf yet.
 
