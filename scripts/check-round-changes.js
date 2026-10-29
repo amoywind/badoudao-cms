@@ -90,10 +90,14 @@ const PDP = 'https://www.oemwallclocks.com/products/plastic-wall-clocks/vintage-
         var h = c.querySelector('h3');
         return h ? h.innerText.trim() : '';
       });
+      var card = cards[0];
       return JSON.stringify({
         featuredRow: !!document.querySelector('.feat-grid'),
         matCols: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : null,
         matCount: cards.length,
+        /* the process tag should be gone from these cards */
+        tags: card ? card.querySelectorAll('.ctag, .mat-tags').length : null,
+        cardW: card ? Math.round(card.getBoundingClientRect().width) : null,
         names: names,
         /* the picture in each material card — the same photograph appearing
            in two rows was the complaint, so count distinct sources */
@@ -136,10 +140,15 @@ const PDP = 'https://www.oemwallclocks.com/products/plastic-wall-clocks/vintage-
         var k = f.querySelector('.fact-k'), v = f.querySelector('.fact-v');
         return (k ? k.innerText : '') + ': ' + (v ? v.innerText : '');
       });
+      /* Are the two pictures the same size? */
+      var samePics = pics.length === 2
+        ? pics[0].box === pics[1].box
+        : false;
       return JSON.stringify({
         cols: cols,
         diff: cols.length > 1 ? cols[0].h - cols[1].h : null,
         pics: pics,
+        samePics: samePics,
         facts: facts,
         overflow: de.scrollWidth - de.clientWidth
       });

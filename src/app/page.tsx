@@ -136,7 +136,7 @@ export default async function HomePage() {
               {mats.map((m) => (
                 <Link key={m.slug} href={`/products/${m.slug}`} className="mat-card">
                   <div className="sq">
-                    {m.image && (
+                    {m.image ? (
                       <img
                         src={m.image}
                         alt={m.name}
@@ -145,6 +145,21 @@ export default async function HomePage() {
                         width={600}
                         height={600}
                       />
+                    ) : (
+                      /* A material with nothing on the shelf yet.
+
+                         A blank white square reads as a picture that
+                         failed to load. This says what it is instead:
+                         the material, and that nothing is in the
+                         catalogue for it yet. It is also a link to the
+                         category page, where a buyer can ask for what
+                         they want. */
+                      <div className="mat-empty">
+                        <span className="mat-empty-mark" aria-hidden="true">
+                          {m.name.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()}
+                        </span>
+                        <span className="mat-empty-note">Nothing in the catalogue yet</span>
+                      </div>
                     )}
                   </div>
                   <div className="mat-body">
