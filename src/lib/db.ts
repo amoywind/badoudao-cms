@@ -727,7 +727,7 @@ export const VIDEO_SLOTS = {
   'home-factory-3': 'Home — packing line',
   'home-factory-4': 'Home — loading into the container',
   'qc-step-1': 'QC Step 1 — raw material check',
-  'qc-step-2': 'QC Step 2 — 24-hour movement aging',
+  'qc-step-2': 'QC Step 2 — 24-hour movement ageing',
   'qc-step-3': 'QC Step 3 — hand balancing',
   'qc-step-4': 'QC Step 4 — drop test',
   'pdp-drop-test': 'Product page — the drop test'
