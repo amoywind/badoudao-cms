@@ -143,7 +143,52 @@ export default async function AboutUsPage() {
                 — against the business licence, against the export
                 documents, or against a visit. */}
             <div>
-              <div className="card" style={{ padding: 26, marginBottom: 20 }}>
+              {/* The workshop photograph and the licence, as they were:
+                  the picture of the floor and the document that says
+                  who works on it, one above the other, in the column
+                  that is about the factory itself. */}
+              <div className="hero-img" style={{ marginBottom: 20 }}>
+                <img
+                  src="/workshop-floor.jpg"
+                  alt="Assembly floor: staff fitting dials and movements before packing"
+                  width={1400}
+                  height={933}
+                  srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
+                  sizes="(max-width: 900px) 92vw, 40vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <div className="card" style={{ padding: 22, marginBottom: 20 }}>
+                <h3 style={{ fontSize: 16, marginBottom: 10 }}>Business licence</h3>
+                <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 12 }}>
+                  Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.
+                  Established in Xiamen, China on 28 December 2023.
+                  Click the licence to open it at full size.
+                </p>
+                <a
+                  href="/media/factory/business-license.jpg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'block' }}
+                >
+                  <img
+                    src="/media/factory/business-license.jpg"
+                    alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
+                    width={1000} height={750} loading="lazy"
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: 6,
+                      border: '1px solid var(--rule)'
+                    }}
+                  />
+                </a>
+              </div>
+
+              <div className="card" style={{ padding: 26 }}>
                 <h3 style={{ fontSize: 16, marginBottom: 14 }}>Factory factsheet</h3>
                 <div className="cert-list">
                   {[
@@ -163,64 +208,9 @@ export default async function AboutUsPage() {
                 </div>
               </div>
 
-              <div className="hero-img" style={{ marginBottom: 20 }}>
-                <img
-                  src="/workshop-floor.jpg"
-                  alt="Assembly floor: staff fitting dials and movements before packing"
-                  width={1400}
-                  height={933}
-                  srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
-                  sizes="(max-width: 900px) 92vw, 38vw"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-
             </div>
           </div>
 
-          {/* The business licence, across the width.
-
-              It is a landscape document and this is the only place on
-              the page wide enough to show it at a readable size. In a
-              column it was tall enough to unbalance the two columns
-              against each other; here it is the one thing on the page
-              that cannot be talked around, at a size a buyer can
-              actually read. */}
-          <div className="card" style={{ padding: 24, marginTop: 34 }}>
-            <div className="split" style={{ alignItems: 'center', gap: 40 }}>
-              <div>
-                <h3 style={{ fontSize: 17, marginBottom: 8 }}>Business licence</h3>
-                <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
-                  Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.
-                  Established in Xiamen, China on 28 December 2023.
-                  Click the licence to open it at full size.
-                </p>
-              </div>
-              <a
-                href="/media/factory/business-license.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: 'block' }}
-              >
-                <img
-                  src="/media/factory/business-license.jpg"
-                  alt="Business licence of Xiamen Chengmaomao Creative Home Furnishings Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
-                  width={1000} height={750} loading="lazy"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: 190,
-                    objectFit: 'contain',
-                    objectPosition: 'top left',
-                    borderRadius: 6,
-                    border: '1px solid var(--rule)',
-                    background: '#fff'
-                  }}
-                />
-              </a>
-            </div>
-          </div>
         </section>
 
         {/* ---- The machinery ----

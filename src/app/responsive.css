@@ -121,10 +121,6 @@
   .cap-list { grid-template-columns: 1fr 1fr; }
   .section, section { padding: 52px 0; }
 
-  /* Four columns of a clock at this width leaves each one too narrow to
-     read a name and a price on. Two columns, twice as wide each. */
-  .feat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
   /* Three columns of a tolerance, two. */
   .tol-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -242,11 +238,6 @@
   .site h1 { font-size: 30px; line-height: 1.2; }
   .site h2 { font-size: 23px; }
   .page-head h1 { font-size: 27px; }
-
-  /* Two columns of a clock on a phone leaves each one under a hundred
-     and eighty pixels, which is narrower than the name of the product
-     is long. One column. */
-  .feat-grid { grid-template-columns: 1fr; }
 
   /* Two columns of a tolerance on a phone is two columns of a
      measurement, and the measurement is the whole point of it. */

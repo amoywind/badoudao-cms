@@ -46,31 +46,34 @@ export default async function HomePage() {
      The featured products are taken from the database rather than
      written out here, so a product that is added, repriced or taken
      off the shelf changes this row on its own. */
-  const [cats, s, videos, featured] = await Promise.all([
+  const [cats, s, videos, featured, all] = await Promise.all([
     listCategories().catch(() => []),
     getSettings().catch(() => ({} as SiteSettings)),
     siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>)),
-    listProducts({ featured: 1, status: 'published' }).catch(() => [])
+    listProducts({ featured: 1, status: 'published' }).catch(() => []),
+    listProducts({ status: 'published' }).catch(() => [])
   ]);
 
-  /* Three of the five featured products are the same acrylic series, so
-     taking the first four would put three of the four cards on one
-     material. The row is spread across materials instead — the point of
-     it is to show the range, and a row of near-identical acrylic clocks
-     does not. */
+  /* One clock from each of the six material families, so the row sits
+     directly under the material grid and reads as the same set of
+     materials with an actual clock against each one.
+
+     The grid itself is tied to the material grid's rules, so the cards
+     are the same width as the cards above them. Four of them in a
+     six-column grid would have left two empty columns at the end of the
+     row and a gap in the middle of the page for no reason. */
   const picks: typeof featured = [];
-  const seenCats = new Set<string>();
-  for (const p of featured) {
-    if (picks.length >= 4) break;
-    if (seenCats.has(p.category)) continue;
-    seenCats.add(p.category);
-    picks.push(p);
-  }
-  /* If there were not enough materials to go round, the remainder is
-     filled from what is left rather than leaving the row short. */
-  for (const p of featured) {
-    if (picks.length >= 4) break;
-    if (!picks.includes(p)) picks.push(p);
+  for (const m of MATERIALS) {
+    const inFamily = featured.filter((p) => p.category === m.slug);
+    if (inFamily.length > 0) {
+      picks.push(inFamily[0]);
+      continue;
+    }
+    /* A family with nothing flagged as featured still gets a clock —
+       the row is one of each material, and a material with no clock in
+       it would leave a hole in the row of families. */
+    const any = all.find((p) => p.category === m.slug);
+    if (any) picks.push(any);
   }
 
   const moq = Number(s.moq) || 300;
@@ -210,7 +213,7 @@ export default async function HomePage() {
             <div className="wrap">
               <div className="sec-head">
                 <div className="sec-tag">// Featured platforms</div>
-                <h2>Four clocks worth a closer look</h2>
+                <h2>One clock from each of the six materials</h2>
                 <p className="sec-sub">
                   Prices are estimated Ex Works figures at MOQ {moq}. Every one of
                   them can be put into production with a different dial, hand set and

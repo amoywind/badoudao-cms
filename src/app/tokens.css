@@ -2812,7 +2812,8 @@
    not examining a product, so the photograph is a cue and the name
    is the content. A row of six, with a shorter picture, says the same
    thing in a third of the height. */
-.mat-grid {
+.mat-grid,
+.feat-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 16px;
@@ -4354,7 +4355,8 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
-.mat-grid {
+.mat-grid,
+.feat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 .qc-grid {
@@ -4437,7 +4439,8 @@
      under two hundred pixels wide, which is too small to recognise a
      material from. Three across is the point where the photograph is
      still a cue. */
-  .mat-grid {
+  .mat-grid,
+.feat-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -4505,7 +4508,8 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
-.mat-grid {
+.mat-grid,
+.feat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 .qc-grid {
@@ -4588,7 +4592,8 @@
      under two hundred pixels wide, which is too small to recognise a
      material from. Three across is the point where the photograph is
      still a cue. */
-  .mat-grid {
+  .mat-grid,
+.feat-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
