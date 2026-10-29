@@ -117,16 +117,6 @@ const OPTION_CODES: Record<string, Record<string, string>> = {
   }
 };
 
-/* The code for a group, used as the segment that names it. */
-export const GROUP_CODES: Record<string, string> = {
-  frame: 'FRM',
-  hands: 'HND',
-  dial: 'DIAL',
-  print: 'PRT',
-  movement: 'MOV',
-  package: 'PKG'
-};
-
 /** The short code for one value of one group. */
 export function codeFor(groupKey: string, value: string): string {
   const known = OPTION_CODES[groupKey]?.[value];

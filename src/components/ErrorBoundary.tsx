@@ -1,6 +1,6 @@
 'use client';
 
-import { Component, useEffect, type ErrorInfo, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 /**
  * Catches anything a page throws during render or in an effect, so a
@@ -98,38 +98,4 @@ export class ErrorBoundary extends Component<
       </div>
     );
   }
-}
-
-/**
- * Client-side equivalent of not-found, for a page that exists in the
- * database but whose row has gone since the link was shared.
- */
-export function NotFound({ lang = 'en', what }: { lang?: 'zh' | 'en'; what?: string }) {
-  const zh = lang === 'zh';
-  return (
-    <div className="empty" style={{ padding: '48px 20px' }}>
-      <div className="t" style={{ fontSize: 17, marginBottom: 6 }}>
-        {zh ? '找不到这条记录' : 'Not found'}
-      </div>
-      <div style={{ fontSize: 13.5, color: '#8a919b' }}>
-        {zh
-          ? `这条${what || '记录'}可能已被删除。`
-          : `This ${what || 'record'} may have been deleted.`}
-      </div>
-      <a className="btn btn-ghost btn-sm" href="/" style={{ marginTop: 14 }}>
-        {zh ? '回到首页' : 'Back to home'}
-      </a>
-    </div>
-  );
-}
-
-/** Logs an error without changing what the user sees. */
-export function useErrorReporter() {
-  return useEffect(() => {
-    const onError = (e: ErrorEvent) => {
-      console.error('[window.onerror]', e.message, e.filename, e.lineno);
-    };
-    window.addEventListener('error', onError);
-    return () => window.removeEventListener('error', onError);
-  }, []);
 }

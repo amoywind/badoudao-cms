@@ -5,7 +5,7 @@
  * same primitive family bcrypt would use, with the same role.
  */
 
-import { getDB, one, run, uid } from './db';
+import { one, run, uid } from './db';
 
 const ITERATIONS = 100_000;
 const KEY_LEN = 32;

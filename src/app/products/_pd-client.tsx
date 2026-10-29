@@ -1,16 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import type { GroupIcon } from '@/lib/product-detail';
-import { GroupGlyph } from './_icons';
 
 /**
  * The interactive half of a product page: the gallery with its zoom.
  *
  * Client-side because of the interaction. Everything else on the page is
  * server rendered, so the HTML a crawler sees already contains the product
- * name, the price, the specifications and the customisation list — none of
- * that depends on this running.
+ * name, the price, the specifications and the customisation options — none
+ * of that depends on this running.
  *
  * There is no full-screen viewer. There was one, and it covered the whole
  * page: the photograph opened over everything, and the way out of it was a
@@ -132,52 +130,5 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
         {current && canHover ? <span className="pd-zoom-hint">Hover to zoom</span> : null}
       </div>
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-
-/**
- * The customisation list, as read-only rows.
- *
- * Not a picker. A visitor cannot order from this page — a wholesale quote
- * needs a conversation about quantity and artwork — so a set of controls
- * implies they can commit to a configuration here, and they cannot. What
- * belongs here is what the factory actually offers on this model, and the
- * owner chooses that per product in the admin.
- *
- * Rows rather than chips: a chip per value turns six groups into forty
- * pills and buries the groups. A row reads as "this model, this
- * specification" in one line.
- */
-export function CustomisationList({
-  groups
-}: {
-  groups: { key: string; label: string; icon: GroupIcon; values: string[] }[];
-}) {
-  /* Groups the owner ticked nothing for are dropped. An empty heading with
-     nothing under it reads as a broken section rather than an absent one. */
-  const shown = groups.filter((g) => g.values.length > 0);
-  if (!shown.length) return null;
-
-  return (
-    <section className="pd-custom" aria-label="Customisation options">
-      <h3 className="pd-custom-h">Customisation available</h3>
-      <div className="pd-custom-rows">
-        {shown.map((g) => (
-          <div key={g.key} className="pd-cr">
-            <span className="pd-cr-i">
-              <GroupGlyph name={g.icon} />
-              {g.label}
-            </span>
-            <span className="pd-cr-v">{g.values.join(' · ')}</span>
-          </div>
-        ))}
-      </div>
-      <p className="pd-custom-note">
-        Tell us which combination you need and we quote it. Nothing here binds
-        either side until we confirm feasibility.
-      </p>
-    </section>
   );
 }

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
 import { listProducts, listCategories, getSettings, countProductsByCategory, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
-import { CategoryNav } from '../../CategoryNav';
 import { InquiryCTA } from '../../InquiryForm';
 import { MATERIALS } from '@/lib/vocabulary';
 import { SiteSchema } from '../../SiteSchema';

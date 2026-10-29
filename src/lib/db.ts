@@ -1036,4 +1036,3 @@ export function uid(prefix = '') {
   return prefix ? `${prefix}_${s}` : s;
 }
 
-export const nowISO = () => new Date().toISOString().slice(0, 19).replace('T', ' ');

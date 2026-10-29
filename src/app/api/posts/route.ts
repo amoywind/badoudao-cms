@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDB, one, all, run, uid, slugify, log } from '@/lib/db';
+import { one, all, run, uid, slugify, log } from '@/lib/db';
 import { currentUser, can } from '@/lib/auth';
 import { mdToHtml } from '@/lib/markdown';
 

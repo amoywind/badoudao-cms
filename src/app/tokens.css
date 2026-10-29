@@ -367,13 +367,6 @@
 /* The hover reveal: a second layer that fades in over the still. Used for
    the "alternate dial colour" hover the specification asks for on the
    trending-platform cards, and reserved for a video once one exists. */
-.sq-alt {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity .3s ease;
-  pointer-events: none;
-}
 
 .sq:hover .sq-alt {
   opacity: 1;
@@ -708,10 +701,6 @@
 .ck-opts {
   display: grid;
   gap: 6px;
-}
-
-.ck-opts-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 /* A stack of one column. Used for the drive mode, whose two options
@@ -1409,160 +1398,9 @@
    written into the markup.
    =================================================================== */
 
-.frt {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  padding: 18px 20px 16px;
-  margin-bottom: 20px;
-}
-
-.frt-h {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 14px;
-}
-
-.frt-assumed {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  padding: 3px 7px;
-  border-radius: 3px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  text-transform: uppercase;
-}
-
-.frt-note {
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-2);
-  margin-bottom: 14px;
-}
-
-.frt-in {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.frt-field {
-  margin-bottom: 12px;
-}
-
-.frt-field label {
-  display: block;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-2);
-  margin-bottom: 5px;
-}
-
-.frt-field input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  background: var(--surface-card);
-  color: var(--text);
-  font-family: var(--font-tech);
-  font-size: 13px;
-}
-
-.frt-field input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0, 82, 204, .09);
-}
-
-.frt-dims {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.frt-dims input {
-  flex: 1;
-  min-width: 0;
-}
-
-.frt-dims span {
-  color: var(--text-2);
-  font-size: 12px;
-  flex-shrink: 0;
-}
-
-.frt-static {
-  padding: 8px 10px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  background: var(--surface-card);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.frt-out {
-  border-top: 1px solid var(--rule);
-  padding-top: 12px;
-  margin-top: 4px;
-}
-
-.frt-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  padding: 6px 0;
-}
-
-.frt-k {
-  font-size: 12px;
-  color: var(--text-2);
-  flex-shrink: 0;
-}
-
-.frt-v {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: right;
-}
-
-.frt-foot {
-  font-size: 10.5px;
-  line-height: 1.5;
-  color: var(--text-2);
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
-}
-
 /* The spec sheet download. §5.3-2 asks for it next to the quote
    button, and a buyer comparing two clocks wants the numbers in a file
    they can put in a spreadsheet rather than on a screen. */
-.pd-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.pd-spec-sheet {
-  font-size: 12.5px;
-  padding: 12px 20px;
-}
 
 
 
@@ -1696,94 +1534,8 @@
    QC metrics, certifications, factory figures, the 28-day route
    =================================================================== */
 
-.qc-metric {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 5px 10px;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: var(--radius-btn);
-}
-
-.cert-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.cert-row {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--rule-soft);
-}
-
-.cert-row:last-child {
-  border-bottom: none;
-}
-
-.cert-code {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  flex-shrink: 0;
-  min-width: 148px;
-}
-
-.cert-name {
-  font-size: 12.5px;
-  color: var(--text-2);
-  /* The value next to the label is allowed to be long — a company name
-     is. Without this the flex item refuses to shrink below its
-     content width and the text is cut off at the end of the row
-     rather than wrapping onto the next line. */
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
 /* The factory figures that are still pending. The dash is the honest
    value: a number that has not been confirmed is not a number. */
-.fig-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-}
-
-.fig {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  padding: 14px 16px;
-  background: var(--surface);
-}
-
-.fig-l {
-  font-size: 12px;
-  color: var(--text-2);
-  margin-bottom: 8px;
-}
-
-.fig-v {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-}
-
-.fig-pending {
-  font-family: var(--font-tech);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--line);
-  line-height: 1;
-}
-
-.fig-u {
-  font-family: var(--font-tech);
-  font-size: 12px;
-  color: var(--text-2);
-}
 
 
 
@@ -1804,16 +1556,6 @@
 /* The enquiry form's submit button. §6.1 asks for a 52px full-width
    accent button: it is the only conversion on the page, and a buyer on
    a phone has to find it without hunting. */
-.site .form-card form > .btn-primary[type='submit'] {
-  width: 100%;
-  min-height: 52px;
-  border-radius: var(--radius-btn);
-  font-family: var(--font-tech);
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 
 
 
@@ -1936,102 +1678,12 @@
    stays closed until it is opened.
    =================================================================== */
 
-.spec-toggle {
-  margin-bottom: 20px;
-}
-
-.spec-toggle summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 13px 15px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  background: var(--surface);
-  cursor: pointer;
-  list-style: none;
-  transition: border-color .15s ease, background .15s ease;
-}
-
-.spec-toggle summary::-webkit-details-marker {
-  display: none;
-}
-
-.spec-toggle summary:hover {
-  border-color: #C4C8CE;
-}
-
-.spec-toggle summary::after {
-  content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-right: 1.5px solid var(--text-2);
-  border-bottom: 1.5px solid var(--text-2);
-  transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform .18s ease;
-}
-
-.spec-toggle[open] summary::after {
-  transform: rotate(-135deg) translate(-2px, -2px);
-}
-
-.spec-toggle[open] summary {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.spec-sum-h {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.spec-toggle-body {
-  padding: 16px 15px 4px;
-  border: 1px solid var(--rule);
-  border-top: none;
-  border-radius: 0 0 var(--radius-btn) var(--radius-btn);
-  background: var(--surface-card);
-}
-
 /* ===================================================================
    The submit button
    -------------------------------------------------------------------
    Klein blue, uppercase, bold. It is the only conversion on the page,
    so it is the only thing allowed to shout.
    =================================================================== */
-
-.rfq-submit {
-  width: 100%;
-  min-height: 52px;
-  border-radius: var(--radius-btn);
-  font-family: var(--font-tech);
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  box-shadow: 0 6px 18px -10px rgba(0, 82, 204, .55);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.rfq-submit:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px -12px rgba(0, 82, 204, .6);
-}
-
-.rfq-submit:disabled {
-  opacity: .6;
-  cursor: default;
-  box-shadow: none;
-}
 
 /* ===================================================================
    The video slot with a video in it
@@ -2164,80 +1816,16 @@
 
 /* Every slot on the site is vertical, so the poster frame is too.
    There is no wide shape to fall back to. */
-.vslot-play {
-  aspect-ratio: 9 / 16;
-  background: #16181C;
-  padding: 0;
-  gap: 0;
-  display: block;
-}
-
-.vslot-frame {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-color: #16181C;
-  background-size: cover;
-  background-position: center;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
 
 /* The play button. It is a real button rather than a div so it is
    reachable by keyboard and announced by a screen reader. */
-.vslot-btn {
-  position: relative;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  border: none;
-  background: var(--accent);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .7);
-  transition: transform .18s ease, background .18s ease;
-}
-
-.vslot-btn:hover {
-  transform: scale(1.06);
-  background: #0A63E0;
-}
-
-.vslot-btn:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
-.vslot-play-ico {
-  display: grid;
-  place-items: center;
-  padding-left: 3px;
-  color: #fff;
-}
 
 /* The caption sits under the frame rather than over it, so the poster
    image is never obscured and the text stays legible against the page
    rather than against whatever frame the video happens to open on. */
-.vslot-play .vslot-d {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 10px 14px;
-  background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, 0));
-  color: #E4E7EB;
-  font-size: 12px;
-  max-width: none;
-  text-align: left;
-}
 
 /* Once the player is in, the button is gone and the frame holds the
    iframe at its own aspect ratio. */
-.vslot-playing {
-  background-image: none !important;
-}
 
 /* ===================================================================
    The product page video section
@@ -2249,27 +1837,9 @@
    sit in the information column at the top of it, two to a row. A
    vertical frame in the wide row of product images reads as a
    mistake; in a column of its own it reads as a video. */
-.pd-video {
-  margin-bottom: 22px;
-}
-
-.pd-video h2 {
-  font-size: 19px;
-  margin-bottom: 12px;
-}
-
-.pd-video-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  align-items: start;
-}
 
 /* The product page's slots are in a column of their own, so they can
    be larger than the ones in a row of four. */
-.pd-video-grid .vslot {
-  max-width: 100%;
-}
 
 
 
@@ -2369,81 +1939,10 @@
    is the shape of the price block above it.
    =================================================================== */
 
-.sp-card {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  padding: 16px 18px;
-  margin-bottom: 20px;
-}
-
-.sp-head {
-  padding-bottom: 11px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 13px;
-}
-
-.sp-tag {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.sp-rows {
-  display: grid;
-  gap: 2px;
-}
-
-.sp-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 7px 0;
-}
-
-.sp-k {
-  font-size: 12.5px;
-  color: var(--text-2);
-  flex-shrink: 0;
-}
-
-.sp-v {
-  font-family: var(--font-tech);
-  font-size: 13.5px;
-  font-weight: 700;
-  color: var(--text);
-  text-align: right;
-}
-
 /* The refund is the fact that makes a sample worth ordering, so it is
    the one value in the accent colour. */
-.sp-v-good {
-  color: var(--accent);
-}
-
-.sp-note {
-  font-size: 11.5px;
-  line-height: 1.55;
-  color: var(--text-2);
-  padding-bottom: 9px;
-  margin-top: -2px;
-}
 
 /* The short form, under the customizer hub's summary. */
-.sp-compact {
-  padding: 13px 15px;
-  margin: 16px 0 14px;
-  background: var(--surface-card);
-}
-
-.sp-compact .sp-note {
-  padding-bottom: 0;
-  margin-top: 6px;
-}
 
 
 
@@ -3126,40 +2625,6 @@
    past it thinks the site is broken. This says what the square is: the
    material, and that nothing is in the catalogue for it yet. */
 
-.mat-empty {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px;
-  text-align: center;
-  background: repeating-linear-gradient(
-    -45deg,
-    #fbfbfc,
-    #fbfbfc 9px,
-    #f5f6f7 9px,
-    #f5f6f7 18px
-  );
-}
-
-.mat-empty-mark {
-  font-family: var(--font-tech);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  color: var(--text-3, var(--text-2));
-  opacity: .55;
-}
-
-.mat-empty-note {
-  font-size: 11.5px;
-  line-height: 1.4;
-  color: var(--text-2);
-}
-
 .mat-body {
   padding: 14px 15px 15px;
   display: flex;
@@ -3214,11 +2679,6 @@
    at this width and does fit in two. The space for two lines is
    reserved, so a tag that wraps does not push the card's foot down and
    leave the row of six ragged. */
-.mat-tags {
-  margin: 9px 0 2px;
-  min-height: 3.2em;
-  flex-wrap: nowrap;
-}
 
 .mat-tags .ctag {
   white-space: normal;
@@ -3258,43 +2718,6 @@
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
   overflow: hidden;
-}
-
-.studio-side {
-  padding: 30px;
-  border-right: 1px solid var(--rule);
-}
-
-.studio-side:last-child {
-  border-right: none;
-}
-
-.studio-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--rule-soft);
-}
-
-.studio-row:last-child {
-  border-bottom: none;
-}
-
-.studio-k {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.studio-v {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: right;
 }
 
 .studio-v.accent {
@@ -3490,63 +2913,9 @@
   }
 }
 
-.pd2 {
-  display: grid;
-  grid-template-columns: 55% 45%;
-  gap: 44px;
-  align-items: start;
-}
-
 .pd2-media .sq {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
-}
-
-.pd-thumbs {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.pd-thumb {
-  aspect-ratio: 1/1;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-btn);
-  overflow: hidden;
-  background: var(--surface-card);
-  display: grid;
-  place-items: center;
-  padding: 4px;
-}
-
-.pd-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pd2-info h1 {
-  font-size: 32px;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.pd2-moq {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
-}
-
-.pd2-tag {
-  font-family: var(--font-tech);
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 6px 11px;
-  border-radius: var(--radius-btn);
-  background: var(--accent-soft);
-  color: var(--accent);
 }
 
 .pd2-tag.plain {
@@ -3640,35 +3009,6 @@
   background: var(--surface);
   padding: 18px 20px;
   margin-bottom: 20px;
-}
-
-.freight-h {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-2);
-  margin-bottom: 12px;
-}
-
-.freight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 20px;
-}
-
-.freight-k {
-  font-size: 11.5px;
-  color: var(--text-2);
-  margin-bottom: 2px;
-}
-
-.freight-v {
-  font-family: var(--font-tech);
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--text);
 }
 
 .dtabs {
@@ -3833,33 +3173,6 @@
   font-size: 11.5px;
 }
 
-.pd2-info .tcards {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.pd2-info .tcard {
-  padding: 16px 15px;
-}
-
-.pd2-info .tcard-ico {
-  width: 30px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-
-.pd2-info .tcard-n {
-  font-size: 22px;
-}
-
-.pd2-info .tcard-t {
-  font-size: 12.5px;
-}
-
-.pd2-info .tcard-d {
-  font-size: 11.5px;
-}
-
 
 
 
@@ -3891,36 +3204,6 @@
    They are put back from the last commit whose stylesheet was
    complete, grouped by the media query each one belongs in.
    =================================================================== */
-
-.anat-i:first-child {
-  border-radius: var(--radius-card) var(--radius-card) 0 0;
-}
-
-.anat-i:last-child {
-  border-radius: 0 0 var(--radius-card) var(--radius-card);
-}
-
-.anat-i + .anat-i {
-  margin-top: -1px;
-}
-
-.anat-i:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  position: relative;
-  z-index: 1;
-}
-
-.anat-i h4 {
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.anat-i p {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.5;
-}
 
 .rail-links {
   list-style: none;
@@ -3956,42 +3239,6 @@
   font-weight: 600;
   border-left-color: var(--accent);
   background: var(--accent-soft);
-}
-
-.clockbox-noise-l {
-  font-family: var(--font-tech);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.clockbox-noise-v {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.clockbox-noise-t {
-  color: var(--text-2);
-  font-style: italic;
-}
-
-.clockbox-noise-l {
-  font-family: var(--font-tech);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.clockbox-noise-v {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.clockbox-noise-t {
-  color: var(--text-2);
-  font-style: italic;
 }
 
 
@@ -4156,42 +3403,12 @@
 }
 
 @media (max-width: 1180px) {
-  .clockbox-body {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
 }
 
 @media (max-width: 600px) {
-  .clockbox {
-    padding: 18px;
-  }
-
-  .clockbox-head {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .clockbox-sel {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .clockbox-selwrap {
-    width: 100%;
-  }
-
-  .clockbox-foot {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
 }
 
 @media (max-width: 1180px) {
-  .clockbox-body {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
 
   .clockbox-face {
     order: 1;
@@ -4222,28 +3439,6 @@
 }
 
 @media (max-width: 600px) {
-  .clockbox {
-    padding: 18px;
-  }
-
-  .clockbox-head {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .clockbox-sel {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .clockbox-selwrap {
-    width: 100%;
-  }
-
-  .clockbox-foot {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
 }
 
 @media (max-width: 900px) {
@@ -4310,9 +3505,6 @@
 }
 
 @media (max-width: 480px) {
-  .frt-in {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 600px) {
@@ -4327,14 +3519,6 @@
 }
 
 @media (max-width: 600px) {
-  .cert-row {
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .cert-code {
-    min-width: 0;
-  }
 }
 
 /* The header at tablet width.
@@ -4378,18 +3562,6 @@
    The links narrow first, because they carry the most information, and
    the button keeps its full wording because it is the one action. */
 @media (max-width: 1024px) and (min-width: 768px) {
-  .site .nav {
-    gap: 18px;
-  }
-
-  .site .menu {
-    gap: 16px;
-    font-size: 13.5px;
-  }
-
-  .site .logo {
-    font-size: 15px;
-  }
 
   .site .nav-cta .btn {
     padding: 9px 12px;
@@ -4414,9 +3586,6 @@
 }
 
 @media (max-width: 767px) {
-  .pd-video-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 480px) {
@@ -4431,14 +3600,6 @@
 }
 
 @media (max-width: 480px) {
-  .sp-row {
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .sp-v {
-    text-align: left;
-  }
 }
 
 @media (max-width: 1024px) {
@@ -4474,20 +3635,12 @@
 .pgrid {
     grid-template-columns: repeat(3, 1fr);
   }
-.pd2 {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
 
 .qc-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 .studio {
     grid-template-columns: 1fr;
-  }
-.studio-side {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
   }
 }
 
@@ -4536,9 +3689,6 @@
     transform: none;
     position: static;
     border-radius: 0;
-  }
-.freight-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -4609,30 +3759,12 @@
    =================================================================== */
 
 @media (max-width: 1024px) {
-.coll {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-.rail {
-    position: static;
-  }
 .pgrid {
     grid-template-columns: repeat(3, 1fr);
-  }
-.pd2 {
-    grid-template-columns: 1fr;
-    gap: 30px;
   }
 
 .qc-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-.studio {
-    grid-template-columns: 1fr;
-  }
-.studio-side {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
   }
 }
 
@@ -4653,38 +3785,9 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-.pcard-body {
-    padding: 12px 13px 14px;
-  }
-.pcard-body h3 {
-    font-size: 13.5px;
-  }
   /* Two columns of a telephone-sized card cannot hold the price and
      the minimum order on one line. The order is given a line of its
      own rather than being cut off at the edge. */
-  .pcard-price {
-    flex-wrap: wrap;
-    row-gap: 2px;
-  }
-  .pcard-moq {
-    margin-left: 0;
-    flex-basis: 100%;
-  }
-.spec-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-.spec-lbl {
-    padding-top: 0;
-  }
-.trend-cta {
-    transform: none;
-    position: static;
-    border-radius: 0;
-  }
-.freight-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Below 1280 the hero goes to one column.
@@ -4704,12 +3807,6 @@
      material from. Three across is the point where the photograph is
      still a cue. */
 
-  .hero2-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 24px 48px;
-  }
-
   .hero2-h1 {
     font-size: 32px;
   }
@@ -4718,23 +3815,6 @@
      in the middle of a very wide panel. It is held to a width a
      reader can take in and centred, and the dial grows to match the
      space it has. */
-  .clockbox {
-    max-width: 880px;
-    margin: 0 auto;
-  }
-
-  .clockbox-body {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 30px;
-  }
-
-  .clockbox-face {
-    width: 250px;
-  }
-
-  .clockface {
-    max-width: 250px;
-  }
 }
 
 @media (max-width: 1024px) {

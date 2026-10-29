@@ -28,10 +28,6 @@ img { display: block; max-width: 100%; height: auto; }
 .btn-ghost { border-color: var(--ink); color: var(--ink); }
 .btn-ghost:hover { background: var(--ink); color: #fff; }
 .btn-sm { padding: 9px 16px; font-size: 13.5px; }
-.btn-white { background: #fff; color: var(--ink); }
-.btn-white:hover { transform: translateY(-1px); }
-.btn-outline-w { border-color: rgba(255,255,255,.5); color: #fff; }
-.btn-outline-w:hover { background: rgba(255,255,255,.12); }
 
 .topbar { background: var(--ink); color: #9aa1ac; font-size: 12.5px; }
 .topbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 38px; }
@@ -121,12 +117,6 @@ h1 em { font-style: normal; color: var(--brand); }
 .hero-img img { width: 100%; height: 100%; object-fit: cover; }
 
 .trust { background: var(--ink); color: #fff; padding: 30px 0; }
-.trust-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 28px; }
-.trust-item { text-align: center; border-right: 1px solid rgba(255,255,255,.1); }
-.trust-item:last-child { border: none; }
-.trust-num { font-family: var(--serif); font-size: 34px; font-weight: 600; line-height: 1; margin-bottom: 7px; }
-.trust-num small { font-size: 16px; color: var(--brass); }
-.trust-lab { font-size: 12.5px; color: #9aa1ac; letter-spacing: .03em; text-transform: uppercase; }
 
 /* The space between two sections is this padding twice, because each
    section carries its own. At eighty-eight pixels that was a hundred
@@ -200,12 +190,6 @@ h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; }
 .proc-n { font-family: var(--serif); font-size: 12px; font-weight: 600; color: var(--brass); margin-bottom: 14px; display: block; letter-spacing: .06em; }
 .proc-i h4 { font-family: var(--sans); font-size: 15px; font-weight: 600; margin-bottom: 8px; }
 .proc-i p { font-size: 13px; color: var(--ink3); }
-.why-i { display: flex; gap: 18px; padding: 28px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
-.why-ico { width: 42px; height: 42px; border-radius: 5px; background: var(--brandSoft); display: grid; place-items: center; flex-shrink: 0; color: var(--brand); }
-.why-i h4 { font-family: var(--sans); font-size: 16.5px; font-weight: 600; margin-bottom: 8px; }
-.why-i p { font-size: 14px; color: var(--ink3); }
-
-.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
 details { border-bottom: 1px solid var(--line); padding: 20px 0; }
 summary { font-size: 15.5px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; line-height: 1.45; }
 summary::-webkit-details-marker { display: none; }
@@ -217,7 +201,6 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .cta .wrap { display: flex; justify-content: space-between; align-items: center; gap: 44px; position: relative; flex-wrap: wrap; padding-top: 68px; padding-bottom: 68px; }
 .cta h2 { color: #fff; margin-bottom: 12px; font-size: 34px; }
 .cta p { color: rgba(255,255,255,.78); font-size: 16px; max-width: 560px; }
-.cta-btns { display: flex; gap: 12px; flex-wrap: wrap; }
 
 .site-footer { background: var(--ink); color: #9aa1ac; font-size: 14px; padding: 66px 0 0; }
 .f-grid { display: grid; grid-template-columns: 1.6fr repeat(4,1fr); gap: 44px; padding-bottom: 52px; }
@@ -483,33 +466,17 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
    product by. contain also means a supplier sending a portrait shot gets
    it shown whole rather than silently cropped. */
 .pd-gallery .main img { width: 100%; height: 100%; object-fit: contain; }
-.pd-noimg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 100%; color: var(--ink3); font-size: 14px; }
-.pd-noimg a { color: var(--brand); font-weight: 500; font-size: 13.5px; }
 
-/* YouTube: thumbnail that opens the player in a new tab, rather than an
-   embedded iframe. Keeps the page light and avoids a third-party script
-   loading before the buyer asks for it. */
-.pd-videos { display: grid; gap: 12px; margin-top: 14px; }
-.pd-video {
-  position: relative; display: block; overflow: hidden;
-  border: 1px solid var(--line); border-radius: 6px; background: var(--bg2);
-  text-decoration: none;
-}
-.pd-video img { width: 100%; height: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform .25s; }
-.pd-video:hover img { transform: scale(1.03); }
-.pd-video-play {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 52px; height: 52px; border-radius: 50%;
-  background: rgba(255,255,255,.94); color: var(--brand);
-  display: grid; place-items: center; padding-left: 3px;
-  box-shadow: 0 2px 14px rgba(0,0,0,.2);
-}
-.pd-video-t {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,.78));
-  color: #fff; font-size: 13px; font-weight: 500;
-  padding: 22px 12px 10px;
-}
+/* The video block on a product page used to carry its own thumbnail
+   card here — a bordered picture with a play button on it. The card is
+   gone: the player is the VideoSlot component, which draws its own
+   frame, its own button and its own caption.
+
+   What was left behind was the name. The section that holds the videos
+   is still called .pd-video, and it inherited the card's border,
+   background and overflow: hidden, which no section wants. The rule
+   below belongs to the section, and it lives with the section's other
+   rules in the token sheet. */
 .pd-info h1 { font-size: 38px; margin-bottom: 14px; }
 .pd-price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 24px 0; padding: 20px; background: var(--bg2); border-radius: 6px; border: 1px solid var(--line); }
 .pd-price .amt { font-family: var(--serif); font-size: 34px; font-weight: 600; }
@@ -522,12 +489,8 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .spec-table th, .spec-table td { text-align: left; padding: 12px 0; border-bottom: 1px solid var(--line2); vertical-align: top; }
 .spec-table th { width: 40%; color: var(--ink3); font-weight: 400; }
 .spec-table td { font-weight: 500; }
-.chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 3px; background: var(--line2); color: var(--ink2); }
 .badge-brand { background: var(--brandSoft); color: var(--brand); }
-.cta-panel { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 26px; box-shadow: 0 10px 34px -18px rgba(17,20,23,.22); }
-.cta-panel h3 { font-family: var(--sans); font-size: 18px; margin-bottom: 6px; }
-.cta-panel p { font-size: 13.5px; color: var(--ink3); margin-bottom: 18px; }
 .related-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
 
 .form-card { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 30px; }
@@ -539,16 +502,11 @@ label.fl { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px
 .inp:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(15,92,74,.09); }
 textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.chk-row { display: flex; flex-wrap: wrap; gap: 10px; }
-.chk-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
-.chk-item:hover { border-color: #c9ced4; }
-.chk-item input { accent-color: var(--brand); width: 15px; height: 15px; }
 .chk-item.checked { border-color: var(--brand); background: var(--brandSoft); color: var(--brand); font-weight: 500; }
 .form-msg { padding: 14px 16px; border-radius: 4px; font-size: 14px; margin-bottom: 18px; display: none; }
 .form-msg.show { display: block; }
 .form-msg.err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 .form-msg.ok { background: var(--brandSoft); color: var(--brand); border: 1px solid #bfdbd0; }
-.form-error { font-size: 12.5px; color: #b91c1c; margin-top: 5px; display: none; }
 .form-error.show { display: block; }
 .hp { position: absolute; left: -9999px; opacity: 0; }
 .req-note { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--ink2); margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line2); }
@@ -602,10 +560,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .wa-row { display: grid; grid-template-columns: 128px 1fr; gap: 9px; }
 .wa-code { font-size: 14px; padding: 11px 9px; cursor: pointer; }
 .wa-num { min-width: 0; }
-
-.opt-div { position: relative; text-align: center; margin: 26px 0 20px; }
-.opt-div::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--line2); }
-.opt-div span { position: relative; background: #fff; padding: 0 13px; font-size: 11.5px; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
 
 .drop {
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -754,11 +708,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    The licence sits alongside the inspection content rather than below it.
    A buyer reading this page is checking whether the factory is real, so
    the evidence should be in view, not a scroll away. */
-
-.quality-layout {
-  display: grid; grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 48px; align-items: start;
-}
 .quality-layout .licence { position: sticky; top: 90px; }
 
 .licence {
@@ -1189,39 +1138,6 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    Horizontal: six groups stacked vertically is taller than the price and
    the MOQ above them, which pushes the quote button off the first screen.
    Each row is "this model, this specification" in one line. */
-
-.pd-custom {
-  border: 1px solid var(--line); border-radius: 10px;
-  padding: 16px 18px; margin-bottom: 20px; background: #fff;
-}
-.pd-custom-h {
-  font-family: var(--sans); font-size: 12px; font-weight: 600;
-  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
-  margin: 0 0 12px;
-}
-.pd-custom-rows { display: grid; gap: 0; }
-
-.pd-cr {
-  display: flex; align-items: baseline; gap: 14px;
-  padding: 9px 0; border-bottom: 1px solid var(--line);
-}
-.pd-cr:last-child { border-bottom: 0; padding-bottom: 2px; }
-
-.pd-cr-i {
-  display: flex; align-items: center; gap: 7px;
-  flex-shrink: 0; min-width: 118px;
-  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
-  color: var(--ink3);
-}
-.pd-cr-i svg { color: var(--ink3); flex-shrink: 0; }
-
-.pd-cr-v {
-  flex: 1; font-size: 13.5px; color: var(--ink2); line-height: 1.45;
-}
-
-.pd-custom-note {
-  font-size: 11.5px; color: var(--ink3); margin: 12px 0 0; line-height: 1.5;
-}
 
 /* ---- left column: gallery + description ----
    The description moved under the photograph. The two-column grid still

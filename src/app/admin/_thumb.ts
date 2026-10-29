@@ -103,30 +103,6 @@ export async function makeThumbs(file: File): Promise<Tier[]> {
  * the server, and reintroducing that on the client would be the same mistake
  * in a place that cannot afford it either.
  */
-export function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || '');
-      /* FileReader yields "data:image/webp;base64,XXXX" — the column holds
-         the payload only, matching what the server's toBase64 produced. */
-      const comma = result.indexOf(',');
-      resolve(comma >= 0 ? result.slice(comma + 1) : result);
-    };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(blob);
-  });
-}
-
-/**
- * Build the FormData for an upload, attaching thumbnails per file.
- *
- * The thumbs travel as parallel `thumbs` fields in the same order as
- * `files`, with the target width in the field name, rather than one named
- * field per file: the route reads form.getAll('thumbs') and pairs by index,
- * and a file with no thumbnail simply stores NULL and falls back to the
- * original on the front end.
- */
 export async function buildUploadForm(
   files: FileList | File[],
   folder: string,

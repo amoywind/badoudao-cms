@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { one, run, log } from '@/lib/db';
-import { verifyPassword, createSession, sessionCookie, clearCookie, SESSION_COOKIE, readCookie } from '@/lib/auth';
+import { one, log } from '@/lib/db';
+import { verifyPassword, createSession, destroySession, sessionCookie, clearCookie, SESSION_COOKIE, readCookie } from '@/lib/auth';
 
 export const runtime = 'edge';
 
@@ -62,7 +62,10 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   const token = readCookie(request.headers.get('Cookie') || '', SESSION_COOKIE);
-  if (token) await run('DELETE FROM sessions WHERE token = ?', token);
+  /* The session is deleted through the helper rather than by writing the
+     same statement out again here. Two copies of the same delete is two
+     places for it to be wrong. */
+  if (token) await destroySession(token);
 
   const res = NextResponse.json({ ok: true });
   res.headers.set('Set-Cookie', clearCookie());

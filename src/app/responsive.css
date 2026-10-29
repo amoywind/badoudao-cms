@@ -157,8 +157,6 @@
      becomes one, but at 860 the cards are still ~380px wide, which is
      what makes them readable and tappable. */
   .grid-3, .related-grid, .faq-grid, .f-grid, .fg2 { grid-template-columns: 1fr 1fr; }
-  .trust-grid { grid-template-columns: 1fr 1fr; }
-  .trust-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 16px; }
   .proc { grid-template-columns: 1fr 1fr; }
 
   /* The hero puts the image under the text. It stays side by side at 860
@@ -200,9 +198,7 @@
   .menu .navdrop-trigger svg { display: none; }
 
   .showroom-strip img { min-height: 0; }
-  .quality-layout { grid-template-columns: 1fr; gap: 28px; }
   .quality-layout .licence { position: static; max-width: 400px; }
-  .showroom-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---- 680px: category sidebar becomes a horizontal scroller ----
@@ -366,8 +362,6 @@
      two-column hero on every phone. Stated once per bucket it cannot be
      missed the next time the 1024px values are edited. */
   .pd, .split, .quality-layout { grid-template-columns: 1fr; }
-  .trust-item { border-bottom: 1px solid rgba(255,255,255,.1); }
-  .showroom-grid { grid-template-columns: 1fr; }
 
   .wa-row { grid-template-columns: 1fr; }
 
@@ -450,7 +444,6 @@
 
   /* The dropdown panel is a hover construct: there is no hover on a
      phone, so it has to become part of the flow. */
-  .navdrop-wrap { width: 100%; }
   .navdrop {
     position: static; opacity: 1; visibility: visible; transform: none;
     box-shadow: none; border: 0; border-left: 2px solid var(--brandSoft);
@@ -458,7 +451,6 @@
     min-width: 0; background: #fafbfc;
   }
   .navdrop::before { display: none; }
-  .navdrop-all { padding: 10px 0; }
 
   .topbar { font-size: 12px; }
   .topbar .wrap { flex-direction: column; gap: 2px; text-align: center; padding: 8px var(--pad); }
@@ -513,7 +505,6 @@
 @media (hover: none) {
   .menu a { padding-top: 14px; padding-bottom: 14px; }
   .footer a { display: inline-block; padding: 5px 0; }
-  .pager a, .pg a { min-height: 40px; display: inline-flex; align-items: center; }
 }
 
 /* ---- Wide desktop ----
