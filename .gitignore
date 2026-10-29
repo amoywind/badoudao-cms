@@ -42,3 +42,5 @@ scripts/.*.new.css
 scripts/.*.bak.css
 scripts/.style-*.txt
 scripts/.dev.log
+scripts/.scope-*.txt
+scripts/.*.scoped.css
