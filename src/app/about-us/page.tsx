@@ -4,7 +4,6 @@ import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { Icons } from '../TrustCards';
 import { SiteSchema } from '../SiteSchema';
-import { CERTIFICATIONS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -370,53 +369,31 @@ export default async function AboutUsPage() {
           </div>
         </section>
 
-        {/* ---- Compliance ----
+        {/* ---- Where the certification is ----
 
-            Certification for a finished clock and certification for the
-            movement inside it are two different questions, and a buyer
-            who is told one answer to both has been told nothing. */}
+            The certificates are on the craft and QC page, beside the
+            tests they come from, because a certificate on its own says
+            very little — what a buyer needs to know is which document
+            covers which part of the clock, and that answer is written
+            where the parts are. This page says where to find it rather
+            than repeating the list. */}
         <section>
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Compliance</div>
-              <h2>Certification, stated plainly</h2>
+              <div className="sec-tag">// Certification</div>
+              <h2>What is certified, and what is not</h2>
               <p className="sec-sub">
-                Finished quartz clocks carry no mandatory certification requirement
-                for the markets we ship to. The compliance sits on the movement
-                mechanism and on the raw materials, and that is where our
-                certificates sit too.
+                A finished quartz clock carries no mandatory certification
+                requirement for the markets we ship to — the requirement
+                sits on the movement and on the raw materials. What is on
+                file, and what can be arranged for an order in the buyer&rsquo;s
+                own company name, is set out on the craft and QC page.
               </p>
             </div>
 
-            <div className="grid-2">
-              <div className="card" style={{ padding: 26 }}>
-                <h3 style={{ fontSize: 17, marginBottom: 16 }}>What we hold</h3>
-                <div className="cert-list">
-                  {CERTIFICATIONS.map((c) => (
-                    <div className="cert-row" key={c.code}>
-                      <span className="cert-code tnum">{c.code}</span>
-                      <span className="cert-name">{c.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="card" style={{ padding: 26 }}>
-                <h3 style={{ fontSize: 17, marginBottom: 12 }}>What that means for you</h3>
-                <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.75 }}>
-                  Where a buyer needs documentation for their own market — an FCC
-                  file, or a report issued in their company&rsquo;s name — we arrange
-                  certified movement reports and component testing for that order
-                  rather than claiming it in advance. What we publish above is what
-                  is on file today, not a list of what could be arranged.
-                </p>
-                <div className="certs" style={{ marginTop: 20 }}>
-                  <span className="cert">MOQ from {moq} pcs</span>
-                  <span className="cert">Ex Works pricing</span>
-                  <span className="cert">Movement reports on request</span>
-                </div>
-              </div>
-            </div>
+            <Link href="/craft-qc" className="btn btn-ghost">
+              See the certifications and what they cover →
+            </Link>
           </div>
         </section>
 
