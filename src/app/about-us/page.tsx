@@ -79,16 +79,15 @@ export default async function AboutUsPage() {
             The four advantages are the ones a supplier who buys clocks and
             resells them cannot offer, because each of them is a machine or
             a process the factory owns rather than a price it can match. */}
-        {/* The left column is the argument and the right column is the
-            evidence, so the left is given more of the width — seven
-            twelfths against five. The photo and the licence sit under
-            the factsheet on the right because they are the two things
-            nobody can talk around. */}
         <section>
-          <div
-            className="wrap split"
-            style={{ alignItems: 'start', gridTemplateColumns: '7fr 5fr' }}
-          >
+          {/* The two columns are the argument on the left and the
+              evidence on the right. The width is left to the split
+              rule rather than set here, because a width written on
+              the element does not collapse on a phone — the split
+              rule does that, and an inline width would keep two
+              columns side by side on a screen two hundred and sixty
+              pixels wide. */}
+          <div className="wrap split" style={{ alignItems: 'start' }}>
             <div>
               <div className="sec-tag">// The company</div>
               <h2>A factory in Xiamen, not a trading desk</h2>
@@ -188,9 +187,15 @@ export default async function AboutUsPage() {
                 </a>
               </div>
 
-              <div className="card" style={{ padding: 26 }}>
+              {/* The factsheet. Seven rows of label and value, laid out
+                  in two columns rather than one: in a single column it
+                  was the tallest thing in this column and pushed the
+                  photograph and the licence down, and the two columns
+                  of the page ended up two different lengths with a
+                  hole under the shorter one. */}
+              <div className="card fact-card" style={{ padding: 24 }}>
                 <h3 style={{ fontSize: 16, marginBottom: 14 }}>Factory factsheet</h3>
-                <div className="cert-list">
+                <div className="fact-grid">
                   {[
                     ['Legal entity', 'Xiamen Chengmaomao Creative Home Furnishings Co., Ltd.'],
                     ['Registered', 'Xiamen, China — 28 December 2023'],
@@ -200,9 +205,9 @@ export default async function AboutUsPage() {
                     ['Shipping port', 'Port of Xiamen (XMN)'],
                     ['Enquiries', 'amoywind@gmail.com']
                   ].map(([k, v]) => (
-                    <div className="cert-row" key={k}>
-                      <span className="cert-code tnum">{k}</span>
-                      <span className="cert-name">{v}</span>
+                    <div className="fact-row" key={k}>
+                      <span className="fact-k tnum">{k}</span>
+                      <span className="fact-v">{v}</span>
                     </div>
                   ))}
                 </div>
