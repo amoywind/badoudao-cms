@@ -370,11 +370,11 @@ export default function EditProductPage() {
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
                       <option>Continuous silent sweep</option>
-                      <option>Step-second ticking</option>
-                      <option>Multi-band radio-controlled</option>
-                      <option>High-torque oversized hands</option>
+                      <option>Standard step-second</option>
+                      <option>Radio-controlled (RCC / atomic)</option>
+                      <option>High-torque quartz</option>
                       <option>Dynamic pendulum</option>
-                      <option>Westminster / melody chime</option>
+                      <option>Hourly melody & chime</option>
                       <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>
@@ -440,11 +440,11 @@ export default function EditProductPage() {
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
                       <option>Continuous silent sweep</option>
-                      <option>Step-second ticking</option>
-                      <option>Multi-band radio-controlled</option>
-                      <option>High-torque oversized hands</option>
+                      <option>Standard step-second</option>
+                      <option>Radio-controlled (RCC / atomic)</option>
+                      <option>High-torque quartz</option>
                       <option>Dynamic pendulum</option>
-                      <option>Westminster / melody chime</option>
+                      <option>Hourly melody & chime</option>
                       <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>
@@ -510,11 +510,11 @@ export default function EditProductPage() {
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
                       <option>Continuous silent sweep</option>
-                      <option>Step-second ticking</option>
-                      <option>Multi-band radio-controlled</option>
-                      <option>High-torque oversized hands</option>
+                      <option>Standard step-second</option>
+                      <option>Radio-controlled (RCC / atomic)</option>
+                      <option>High-torque quartz</option>
                       <option>Dynamic pendulum</option>
-                      <option>Westminster / melody chime</option>
+                      <option>Hourly melody & chime</option>
                       <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>

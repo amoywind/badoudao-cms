@@ -75,8 +75,8 @@ const MATERIALS = [
   'Marble', '3D printed', 'Not sure yet'
 ];
 const MOVEMENTS = [
-  'Continuous silent sweep', 'Step-second (standard tick)', 'Multi-band radio-controlled',
-  'High-torque (oversized hands)', 'Dynamic pendulum', 'Melody / Westminster chime',
+  'Continuous silent sweep', 'Standard step-second', 'Radio-controlled (RCC / atomic)',
+  'High-torque quartz', 'Dynamic pendulum', 'Hourly melody & chime',
   'Kinetic moving gear', 'LCD calendar display', 'LED digital display', 'Not sure yet'
 ];
 const HAND_MATERIALS = [

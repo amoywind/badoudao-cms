@@ -62,11 +62,11 @@ export const OPTION_GROUPS: OptionGroup[] = [
        set can be luminous on any of these. */
     values: [
       'Continuous silent sweep',
-      'Step-second ticking',
-      'Multi-band radio-controlled',
-      'High-torque oversized hands',
+      'Standard step-second',
+      'Radio-controlled (RCC / atomic)',
+      'High-torque quartz',
       'Dynamic pendulum',
-      'Westminster / melody chime',
+      'Hourly melody & chime',
       'Kinetic moving gear'
     ]
   },
@@ -117,11 +117,11 @@ const OPTION_CODES: Record<string, Record<string, string>> = {
   },
   movement: {
     'Continuous silent sweep': 'SWEEP',
-    'Step-second ticking': 'STEP',
-    'Multi-band radio-controlled': 'RCC',
-    'High-torque oversized hands': 'TORQUE',
+    'Standard step-second': 'STEP',
+    'Radio-controlled (RCC / atomic)': 'RCC',
+    'High-torque quartz': 'TORQUE',
     'Dynamic pendulum': 'PEND',
-    'Westminster / melody chime': 'CHIME',
+    'Hourly melody & chime': 'CHIME',
     'Kinetic moving gear': 'GEAR'
   },
   package: {

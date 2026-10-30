@@ -50,11 +50,11 @@ export const TABS: Tab[] = [
     label: 'Movement',
     choices: [
       { code: 'SWEEP', label: 'Silent sweep', note: '<10 dBA, no stepping tick' },
-      { code: 'STEP', label: 'Step second', note: '~28 dBA, 24-month battery, the volume seller' },
-      { code: 'RCC', label: 'Radio-controlled', note: 'Auto-sets from WWVB / DCF77 / MSF / JJY' },
-      { code: 'TORQUE', label: 'High torque', note: '3–5× torque, hands to 450 mm' },
+      { code: 'STEP', label: 'Standard step-second', note: '28 dBA crisp tick, 24-month battery' },
+      { code: 'RCC', label: 'Radio-controlled (RCC / atomic)', note: 'Auto-sets from WWVB / DCF77 / MSF / JJY' },
+      { code: 'TORQUE', label: 'High-torque quartz', note: '3–5× torque, hands to 450 mm' },
       { code: 'PEND', label: 'Dynamic pendulum', note: 'Independent pulse coil drives the bob or tail' },
-      { code: 'CHIME', label: 'Melody & Westminster', note: 'Selectable melodies, light-sensor night silence' },
+      { code: 'CHIME', label: 'Hourly melody & chime', note: 'Selectable melodies, light-sensor night silence' },
       { code: 'GEAR', label: 'Kinetic moving gear', note: 'Second motor drives exposed gears' }
     ]
   },

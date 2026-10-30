@@ -145,60 +145,60 @@ export const MATERIALS: CraftTag[] = [
  */
 export const MOVEMENTS = [
   {
-    name: 'Continuous Silent Sweep Quartz Movement',
+    name: 'Continuous Silent Sweep',
     drive: 'A high-frequency continuous reduction gear train drives the sweep second hand in a smooth glide rather than jumping. It eliminates the mechanical stepping tick entirely.',
-    db: '< 10 dBA (anechoic conditions)',
+    db: '< 10 dBA (anechoic grade, whisper quiet)',
     drift: '±0.5s / day',
     battery: '18 months (1× AA)',
-    scene: 'Bedrooms, boutique hotels, libraries, premium homeware brands'
+    scene: 'Bedrooms, boutique hotels, quiet libraries, premium homeware brands'
   },
   {
-    name: 'Step-Second Quartz Movement (Standard Ticking)',
+    name: 'Standard Step-Second',
     drive: 'A precise 1 Hz stepping motor: the second hand advances in distinct one-second pulses with a crisp, rhythmic tick. The most energy-efficient caliber in the range.',
-    db: '~28 dBA',
+    db: '28 dBA (crisp 1 Hz rhythmic tick)',
     drift: '±1.0s / day',
-    battery: '≥24 months (1× AA)',
-    scene: 'Corporate promotional clocks, schools, kitchens, commercial offices'
+    battery: '24 months (1× AA)',
+    scene: 'Offices, kitchens, classrooms, high-volume promotional retail'
   },
   {
-    name: 'Multi-Band Radio-Controlled Movement (RCC / Atomic)',
+    name: 'Radio-Controlled (RCC / Atomic)',
     drive: 'A quartz caliber with an embedded micro-receiver antenna that synchronizes automatically with national atomic time transmitters worldwide — WWVB (USA/Canada), DCF77 (Germany/Europe), MSF (UK) and JJY (Japan) — including daylight saving transitions.',
-    db: '< 12 dBA',
-    drift: 'Zero — corrected daily',
-    battery: '12 months (2× AA)',
-    scene: 'Institutional facilities and tech-focused consumer markets in the US, Europe, the UK and Japan'
+    db: '< 10 dBA (sweep) or 28 dBA (step)',
+    drift: '±0.0s / day (atomic auto-sync)',
+    battery: '12–18 months (1× AA)',
+    scene: 'North America (WWVB), Europe (DCF77 / MSF), Japan (JJY), corporate facilities'
   },
   {
-    name: 'High-Torque Quartz Movement',
+    name: 'High-Torque Quartz',
     drive: 'Heavy-duty internal gearing, reinforced copper arbor bushings and an amplified electromagnetic coil produce three to five times the output torque of a standard movement, so it carries oversized metal, wood or acrylic hands up to 450 mm (18 in) without droop or stalling.',
-    db: '—',
-    drift: '—',
-    battery: '—',
-    scene: 'Wall clocks 50 cm to 120 cm in diameter with large-format hands'
+    db: '< 12 dBA (reinforced low friction)',
+    drift: '±0.5s / day',
+    battery: '12–18 months (1× AA)',
+    scene: 'Oversized 50–120 cm statement wall clocks, hotel lobbies, public spaces'
   },
   {
-    name: 'Dynamic Pendulum Quartz Movement',
+    name: 'Dynamic Pendulum',
     drive: 'Quartz timekeeping plus a lower electromagnetic pulse coil and permanent magnet suspension driving a pendulum rod, decorative bob or kinetic tail. The pendulum swings independently of the timekeeping gear train.',
-    db: '—',
-    drift: '—',
-    battery: '—',
-    scene: 'Pendulum clocks and character clocks with a moving tail'
+    db: '< 15 dBA (smooth electromagnetic drive)',
+    drift: '±0.5s / day',
+    battery: '12 months (2× AA)',
+    scene: 'Children’s playful wooden clocks, vintage wall clocks, boutique gifts'
   },
   {
-    name: 'Hourly Melody & Westminster Chime Movement',
+    name: 'Hourly Melody & Chime',
     drive: 'A dual-function caliber combining quartz timekeeping with an electronic sound synthesizer and resonant speaker. Selectable melodies including Westminster Chime and Ave Maria, with volume adjustment and a light sensor that silences the chime at night.',
-    db: 'Adjustable volume',
-    drift: '±1.0s / day',
-    battery: '10 months (2× C)',
-    scene: 'European classic clocks, premium gifts'
+    db: 'Adjustable volume + auto night mute',
+    drift: '±0.5s / day',
+    battery: '12–18 months (2× AA / C)',
+    scene: 'Traditional European home decor, classic pendulum wall clocks, senior living'
   },
   {
-    name: 'Kinetic Moving-Gear Mechanism',
+    name: 'Kinetic Moving-Gear',
     drive: 'Two independent motor drives: one quartz module powering the centre hands for accurate timekeeping, one low-speed high-torque motor turning an interconnected skeleton gear assembly in perpetual motion.',
-    db: '—',
-    drift: '—',
-    battery: '—',
-    scene: 'Industrial lofts, steampunk interiors, architectural spaces'
+    db: '30–35 dBA (rhythmic mechanical meshing)',
+    drift: '±0.8s / day',
+    battery: '6–12 months (2–3× AA)',
+    scene: 'Industrial loft decor, steampunk cafes, bars, architectural statement pieces'
   }
 ];
 
