@@ -22,7 +22,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Clock Hands, Movements & Packaging — Components Studio | Badoudao',
     description:
-      `OEM clock components from a China factory: 1,000+ molded clock hand styles, 7 quartz and mechanical movements, 2 electronic displays and 3 packaging tiers. CE and RoHS certified silent sweep movements under 10 dBA. MOQ from ${s.moq || 300} pcs, Ex Works pricing.`,
+      `OEM clock components from a China factory: 1,000+ molded clock hand styles, 7 quartz movements including high-torque, pendulum and kinetic gear types, 2 electronic displays and 3 packaging tiers. CE and RoHS certified silent sweep movements under 10 dBA. MOQ from ${s.moq || 300} pcs, Ex Works pricing.`,
     keywords:
       'clock hands manufacturer, wholesale clock movements, quartz movement supplier, clock packaging OEM, custom clock components',
     path: '/components'
