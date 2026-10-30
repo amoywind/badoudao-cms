@@ -12,7 +12,7 @@ import { SamplePolicy } from './SamplePolicy';
  *
  * The code is the point. A buyer who has spent a minute choosing a
  * housing, a movement, a hand alloy and a packaging tier now has a
- * string like OEM-WD08-SILENT-H08-PKG1 that says all of it in one line.
+ * string like OEM-WD08-SWEEP-H08-PKG1 that says all of it in one line.
  * That string is what the factory quotes against, and it is what makes
  * a written enquiry a structured one — the alternative is a buyer
  * describing their configuration in a paragraph and the factory

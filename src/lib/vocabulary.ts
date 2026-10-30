@@ -132,69 +132,73 @@ export const MATERIALS: CraftTag[] = [
  * two movements actually weighs them on, and neither was in the earlier
  * version of this table.
  *
- * The numbers are the ones the specification gives for the movements it
- * names. Where it names a movement by its usual trade description and
- * the table here says the same thing, the two agree. A movement that is
- * fitted but not in the specification — the LCD and the LED, which have
- * their own section — carries a dash rather than a figure that was
- * invented to fill the cell.
+ * The wording per type is the factory's own description, supplied for
+ * this page: each says what the mechanism is, not only what it does.
+ * Earlier entries were one clause — "the second hand sweeps without a
+ * gear step" — which told a buyer nothing about the gear train, the
+ * current draw or the hands the movement can carry, and left every
+ * movement in the table sounding like the next one.
+ *
+ * Where no figure was given for a movement the cell carries a dash. A
+ * dash is still not a number, and it is the honest answer to a question
+ * nobody has answered yet.
  */
 export const MOVEMENTS = [
   {
-    name: 'Silent sweep',
-    drive: 'Quartz driven, the second hand sweeps without a gear step',
-    db: '< 10 dBA (anechoic grade)',
+    name: 'Continuous Silent Sweep Quartz Movement',
+    drive: 'A high-frequency continuous reduction gear train drives the sweep second hand in a smooth glide rather than jumping. It eliminates the mechanical stepping tick entirely.',
+    db: '< 10 dBA (anechoic conditions)',
     drift: '±0.5s / day',
     battery: '18 months (1× AA)',
-    scene: 'Bedrooms, boutique hotels, premium homeware'
+    scene: 'Bedrooms, boutique hotels, libraries, premium homeware brands'
   },
   {
-    name: 'Step-second',
-    drive: 'Quartz driven, the second hand steps once a second',
-    db: '28 dBA (faint tick)',
+    name: 'Step-Second Quartz Movement (Standard Ticking)',
+    drive: 'A precise 1 Hz stepping motor: the second hand advances in distinct one-second pulses with a crisp, rhythmic tick. The most energy-efficient caliber in the range.',
+    db: '~28 dBA',
     drift: '±1.0s / day',
-    battery: '24 months (1× AA)',
-    scene: 'Offices, kitchens, the volume seller'
+    battery: '≥24 months (1× AA)',
+    scene: 'Corporate promotional clocks, schools, kitchens, commercial offices'
   },
   {
-    name: 'Radio-controlled',
-    drive: 'Receives WWVB / DCF77 / JJY / BPC and sets itself',
-    db: '< 12 dB',
+    name: 'Multi-Band Radio-Controlled Movement (RCC / Atomic)',
+    drive: 'A quartz caliber with an embedded micro-receiver antenna that synchronizes automatically with national atomic time transmitters worldwide — WWVB (USA/Canada), DCF77 (Germany/Europe), MSF (UK) and JJY (Japan) — including daylight saving transitions.',
+    db: '< 12 dBA',
     drift: 'Zero — corrected daily',
     battery: '12 months (2× AA)',
-    scene: 'US, Europe and Japan markets, commercial spaces needing accuracy'
+    scene: 'Institutional facilities and tech-focused consumer markets in the US, Europe, the UK and Japan'
   },
   {
-    name: 'Westminster chime',
-    drive: 'Electronic or mechanical strike on the hour and half hour, with a light-sensitive night silence',
+    name: 'High-Torque Quartz Movement',
+    drive: 'Heavy-duty internal gearing, reinforced copper arbor bushings and an amplified electromagnetic coil produce three to five times the output torque of a standard movement, so it carries oversized metal, wood or acrylic hands up to 450 mm (18 in) without droop or stalling.',
+    db: '—',
+    drift: '—',
+    battery: '—',
+    scene: 'Wall clocks 50 cm to 120 cm in diameter with large-format hands'
+  },
+  {
+    name: 'Dynamic Pendulum Quartz Movement',
+    drive: 'Quartz timekeeping plus a lower electromagnetic pulse coil and permanent magnet suspension driving a pendulum rod, decorative bob or kinetic tail. The pendulum swings independently of the timekeeping gear train.',
+    db: '—',
+    drift: '—',
+    battery: '—',
+    scene: 'Pendulum clocks and character clocks with a moving tail'
+  },
+  {
+    name: 'Hourly Melody & Westminster Chime Movement',
+    drive: 'A dual-function caliber combining quartz timekeeping with an electronic sound synthesizer and resonant speaker. Selectable melodies including Westminster Chime and Ave Maria, with volume adjustment and a light sensor that silences the chime at night.',
     db: 'Adjustable volume',
     drift: '±1.0s / day',
     battery: '10 months (2× C)',
     scene: 'European classic clocks, premium gifts'
   },
   {
-    name: 'Mechanical',
-    drive: 'Spring-driven mechanical movement, no battery, wound by hand',
-    db: 'Mechanical escapement',
-    drift: '±15s / day',
-    battery: 'Wound every 7 days',
-    scene: 'Enthusiasts, vintage luxury pieces'
-  },
-  {
-    name: 'Music chime',
-    drive: 'Plays a built-in chip or music-box melody at set times',
-    db: 'Melodic',
-    drift: '±1.0s / day',
-    battery: '12 months',
-    scene: 'Wedding gifts, children’s clocks'
-  },
-  {
-    name: 'Magnetic pendulum',
-    drive: 'A magnetic coil drives the pendulum smoothly, with no escapement',
-    db: '< 10 dBA',
-    drift: '±0.8s / day',
-    battery: '14 months (2× AA)',
-    scene: 'Designer toys and character clocks, large living-room clocks'
+    name: 'Kinetic Moving-Gear Mechanism',
+    drive: 'Two independent motor drives: one quartz module powering the centre hands for accurate timekeeping, one low-speed high-torque motor turning an interconnected skeleton gear assembly in perpetual motion.',
+    db: '—',
+    drift: '—',
+    battery: '—',
+    scene: 'Industrial lofts, steampunk interiors, architectural spaces'
   }
 ];
 
@@ -333,7 +337,7 @@ export const SIMPLIFIED = [
  * audited with a meter.
  *
  * The two numbers in the specification that are stated as thresholds
- * rather than ranges are both here: a movement measuring above 12dB is
+ * rather than ranges are both here: a movement measuring above 12 dBA is
  * scrapped, and the vertical clearance between the hands is never less
  * than 1.5mm.
  */
@@ -353,10 +357,10 @@ export const QC_STEPS = [
     detail:
       'Every movement runs on power for 24 hours on the shelf, then accuracy is ' +
       'verified and the tick is measured in an anechoic chamber whose own ' +
-      'background noise is held below 10dB — a reading is only as good as the ' +
-      'room it was taken in. A movement reading above 12dB is scrapped rather ' +
+      'background noise is held below 10 dBA — a reading is only as good as the ' +
+      'room it was taken in. A movement reading above 12 dBA is scrapped rather ' +
       'than adjusted.',
-    metric: '100% tested · scrap above 12dB'
+    metric: '100% tested · scrap above 12 dBA'
   },
   {
     n: 'Step 03',

@@ -82,7 +82,11 @@ export async function POST(request) {
       id, slug, String(body.name).slice(0, 200), body.category,
       body.summary || '', Number(body.priceMin) || 0, Number(body.priceMax) || 0,
       Number(body.moq) || 500, body.leadTime || '20-30 days',
-      body.moveLevel || '中国机芯', body.difficulty || 'simple',
+      /* Not the Chinese label the admin once used. New rows are created
+         before the movement source is known, and this default ended up
+         in a product's specification sheet verbatim — the sheet a buyer
+         downloads. Anything written here has to be a value safe to show. */
+      body.moveLevel || 'China-domestic quartz movement', body.difficulty || 'simple',
       body.content || '', body.featured ? 1 : 0,
       body.status || 'draft', Number(body.sortOrder) || 0
     )

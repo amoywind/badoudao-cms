@@ -144,7 +144,7 @@ export const COMPONENTS: ComponentLayer[] = [
     summary:
       'The motor and the electronics behind it. This is what makes the difference between a clock that ticks and one that does not.',
     materials:
-      'Silent sweep under 10dB, standard step-second, radio-controlled RCC covering WWVB / DCF77 / JJY / BPC, Westminster chime, FSTN LCD perpetual-calendar module, see-through-wood LED dot matrix.',
+      'Continuous silent sweep, step-second ticking, multi-band radio-controlled covering WWVB / DCF77 / MSF / JJY, melody and Westminster chime, high-torque for oversized hands, dynamic pendulum, kinetic moving gear, FSTN LCD perpetual-calendar module, see-through-wood LED dot matrix.',
     tolerances:
       'Brass center arbor, high-torque nylon gear train, 100% of movements aged on power for 24 hours, running current below 130µA.',
     craft:
@@ -152,7 +152,7 @@ export const COMPONENTS: ComponentLayer[] = [
     special: [
       {
         title: 'Radio-Controlled (RCC)',
-        detail: 'Receives WWVB, DCF77, JJY or BPC and sets itself. Zero drift, corrected daily.'
+        detail: 'Receives WWVB, DCF77, MSF or JJY and sets itself. Zero drift, corrected daily.'
       },
       {
         title: 'Westminster Chime',

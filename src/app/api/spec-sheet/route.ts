@@ -43,6 +43,22 @@ export async function GET(request) {
   })();
 
   const rule = '='.repeat(64);
+
+  /* Two lines, because Type and Source are not the same question: what
+     the movement *is*, and where it is sourced. They were one line
+     labelled "Type", which hid whichever of the two the field held.
+
+     Both are guarded against a non-Latin value reaching the buyer. The
+     source field once defaulted to a Chinese label, and this sheet is
+     downloaded and forwarded — by the time the wrong script would be
+     visible to anyone able to fix it, it has already been read by someone
+     who cannot. A value that is not printable falls back instead of being
+     emitted. */
+  const printable = (v: unknown, fallback: string) => {
+    const s = String(v || '').trim();
+    return s && !/[^\x00-\x7F]/.test(s) ? s : fallback;
+  };
+
   const lines: string[] = [
     'OEMWALLCLOCKS.COM — SPECIFICATION SHEET',
     rule,
@@ -59,7 +75,8 @@ export async function GET(request) {
     '',
     'MOVEMENT',
     rule,
-    `Type         : ${product.moveLevel || 'Quartz — specify on enquiry'}`,
+    `Type         : ${printable(product.movementType, 'Quartz — specify on enquiry')}`,
+    `Source       : ${printable(product.moveLevel, 'Specify on enquiry')}`,
     '',
     'PACKING & FREIGHT',
     rule

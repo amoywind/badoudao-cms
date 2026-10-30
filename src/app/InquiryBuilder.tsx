@@ -47,11 +47,17 @@ export const BUILDER_GROUPS: BuilderGroup[] = [
     label: 'Movement',
     fallback: 'SWEEP',
     options: [
-      { code: 'SWEEP', label: 'Silent sweep quartz' },
-      { code: 'STEP', label: 'Step-second quartz' },
-      { code: 'RADIO', label: 'Radio-controlled' },
-      { code: 'CHIME', label: 'Chime' },
-      { code: 'MECH', label: 'Mechanical' },
+      { code: 'SWEEP', label: 'Continuous silent sweep' },
+      { code: 'STEP', label: 'Step-second (standard tick)' },
+      { code: 'RCC', label: 'Multi-band radio-controlled' },
+      { code: 'TORQUE', label: 'High-torque (oversized hands)' },
+      { code: 'PEND', label: 'Dynamic pendulum' },
+      { code: 'CHIME', label: 'Melody / Westminster chime' },
+      { code: 'GEAR', label: 'Kinetic moving gear' },
+      /* LCD and LED are not movements — they replace the movement and
+         the dial, and have their own section on the components page.
+         They stay here because they are choices a buyer has to be able
+         to make in the same breath. */
       { code: 'LCD', label: 'LCD calendar display' },
       { code: 'LED', label: 'LED digital display' }
     ]

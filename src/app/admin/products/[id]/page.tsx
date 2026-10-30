@@ -31,7 +31,7 @@ export default function EditProductPage() {
         id: '', slug: '', name: '', category: 'plastic-wall-clocks', summary: '',
         priceMin: 0, priceMax: 0, moq: 300, leadTime: '20-30 days',
         movementType: '', sizeInch: '', cartonQty: '', cartonL: '', cartonW: '', cartonH: '', cartonGw: '',
-        moveLevel: 'China quartz', difficulty: 'simple', content: '',
+        moveLevel: 'China-domestic quartz movement', difficulty: 'simple', content: '',
         featured: false, status: 'draft',
         specs: [], options: [], prices: [], images: [], customizations: []
       });
@@ -369,13 +369,13 @@ export default function EditProductPage() {
                     <select className="inp" value={product.movementType || ''}
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
-                      <option>Silent Sweep</option>
-                      <option>Step-Second</option>
-                      <option>Radio-Controlled</option>
-                      <option>Chime</option>
-                      <option>Mechanical</option>
-                      <option>Music</option>
-                      <option>Pendulum</option>
+                      <option>Continuous silent sweep</option>
+                      <option>Step-second ticking</option>
+                      <option>Multi-band radio-controlled</option>
+                      <option>High-torque oversized hands</option>
+                      <option>Dynamic pendulum</option>
+                      <option>Westminster / melody chime</option>
+                      <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>
                   </div>
@@ -439,13 +439,13 @@ export default function EditProductPage() {
                     <select className="inp" value={product.movementType || ''}
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
-                      <option>Silent Sweep</option>
-                      <option>Step-Second</option>
-                      <option>Radio-Controlled</option>
-                      <option>Chime</option>
-                      <option>Mechanical</option>
-                      <option>Music</option>
-                      <option>Pendulum</option>
+                      <option>Continuous silent sweep</option>
+                      <option>Step-second ticking</option>
+                      <option>Multi-band radio-controlled</option>
+                      <option>High-torque oversized hands</option>
+                      <option>Dynamic pendulum</option>
+                      <option>Westminster / melody chime</option>
+                      <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>
                   </div>
@@ -509,13 +509,13 @@ export default function EditProductPage() {
                     <select className="inp" value={product.movementType || ''}
                       onChange={(e) => set('movementType', e.target.value)}>
                       <option value="">未指定</option>
-                      <option>Silent Sweep</option>
-                      <option>Step-Second</option>
-                      <option>Radio-Controlled</option>
-                      <option>Chime</option>
-                      <option>Mechanical</option>
-                      <option>Music</option>
-                      <option>Pendulum</option>
+                      <option>Continuous silent sweep</option>
+                      <option>Step-second ticking</option>
+                      <option>Multi-band radio-controlled</option>
+                      <option>High-torque oversized hands</option>
+                      <option>Dynamic pendulum</option>
+                      <option>Westminster / melody chime</option>
+                      <option>Kinetic moving gear</option>
                       <option>Digital</option>
                     </select>
                   </div>
@@ -580,8 +580,8 @@ export default function EditProductPage() {
                         actually makes when choosing a movement: domestic cost
                         against imported accuracy. */}
                     <select className="inp" value={product.moveLevel} onChange={(e) => set('moveLevel', e.target.value)}>
-                      <option>中国机芯</option>
-                      <option>进口机芯</option>
+                      <option>China-domestic quartz movement</option>
+                      <option>Imported quartz movement</option>
                     </select>
                   </div>
                 </div>

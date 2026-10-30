@@ -49,13 +49,13 @@ export const TABS: Tab[] = [
     key: 'movement',
     label: 'Movement',
     choices: [
-      { code: 'SILENT', label: 'Silent sweep', note: '<10dB, sweep movement, no tick' },
-      { code: 'STEP', label: 'Step second', note: '28dB, the volume seller' },
-      { code: 'RCC', label: 'Radio-controlled', note: 'Auto-sets from WWVB / DCF77 / JJY / BPC' },
-      { code: 'CHIME', label: 'Westminster chime', note: 'Hourly and half-hourly, adjustable' },
-      { code: 'MECH', label: 'Mechanical', note: 'Spring wound, no battery' },
-      { code: 'MUSIC', label: 'Music chime', note: 'Built-in melody chip' },
-      { code: 'PEND', label: 'Magnetic pendulum', note: 'Smooth magnetic drive' }
+      { code: 'SWEEP', label: 'Silent sweep', note: '<10 dBA, no stepping tick' },
+      { code: 'STEP', label: 'Step second', note: '~28 dBA, 24-month battery, the volume seller' },
+      { code: 'RCC', label: 'Radio-controlled', note: 'Auto-sets from WWVB / DCF77 / MSF / JJY' },
+      { code: 'TORQUE', label: 'High torque', note: '3–5× torque, hands to 450 mm' },
+      { code: 'PEND', label: 'Dynamic pendulum', note: 'Independent pulse coil drives the bob or tail' },
+      { code: 'CHIME', label: 'Melody & Westminster', note: 'Selectable melodies, light-sensor night silence' },
+      { code: 'GEAR', label: 'Kinetic moving gear', note: 'Second motor drives exposed gears' }
     ]
   },
   {
@@ -80,10 +80,10 @@ export const TABS: Tab[] = [
   }
 ];
 
-/** The code the specification shows: OEM-WD08-SILENT-H08-PKG1. */
+/** The code the specification shows: OEM-WD08-SWEEP-H08-PKG1. */
 export function buildCode(picks: Record<string, string>) {
   const housing = picks.housing || 'WD08';
-  const movement = picks.movement || 'SILENT';
+  const movement = picks.movement || 'SWEEP';
   const hands = picks.hands || 'H08';
   const packaging = picks.packaging || 'PKG1';
   return `OEM-${housing}-${movement}-${hands}-${packaging}`;
@@ -92,7 +92,7 @@ export function buildCode(picks: Record<string, string>) {
 /** The four decisions, in the order the tabs show them. */
 export const DEFAULT_PICKS: Record<string, string> = {
   housing: 'WD08',
-  movement: 'SILENT',
+  movement: 'SWEEP',
   hands: 'H08',
   packaging: 'PKG1'
 };

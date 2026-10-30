@@ -55,7 +55,20 @@ export const OPTION_GROUPS: OptionGroup[] = [
     key: 'movement',
     icon: 'movement',
     label: 'Movement',
-    values: ['Standard tick', 'Silent sweep', 'Radio controlled', 'Luminous', 'Musical']
+    /* Luminous is not a movement. It is a property of the hands and the
+       dial — powder that glows after dark — and offering it beside the
+       movements left a buyer choosing between "radio-controlled" and
+       "glows in the dark" as though the two were alternatives. A hand
+       set can be luminous on any of these. */
+    values: [
+      'Continuous silent sweep',
+      'Step-second ticking',
+      'Multi-band radio-controlled',
+      'High-torque oversized hands',
+      'Dynamic pendulum',
+      'Westminster / melody chime',
+      'Kinetic moving gear'
+    ]
   },
   {
     key: 'package',
@@ -103,11 +116,13 @@ const OPTION_CODES: Record<string, Record<string, string>> = {
     'Laser engraving': 'LASER'
   },
   movement: {
-    'Standard tick': 'TICK',
-    'Silent sweep': 'SWEEP',
-    'Radio controlled': 'RADIO',
-    Luminous: 'LUM',
-    Musical: 'MUSIC'
+    'Continuous silent sweep': 'SWEEP',
+    'Step-second ticking': 'STEP',
+    'Multi-band radio-controlled': 'RCC',
+    'High-torque oversized hands': 'TORQUE',
+    'Dynamic pendulum': 'PEND',
+    'Westminster / melody chime': 'CHIME',
+    'Kinetic moving gear': 'GEAR'
   },
   package: {
     'Closed box': 'CLOSED',
@@ -198,7 +213,7 @@ export const PROCESS_STEPS = [
    adjectives. Each links to the page that substantiates it. */
 export const QC_CLAIMS = [
   { label: '±1s/day', note: 'movement accuracy', href: '/p/quality' },
-  { label: '<10dB', note: 'silent sweep', href: '/p/quality' },
+  { label: '<10 dBA', note: 'silent sweep', href: '/p/quality' },
   { label: '24h', note: 'powered aging test', href: '/p/quality' },
   { label: 'CE / RoHS', note: 'movement certified', href: '/p/certification' }
 ];
