@@ -56,7 +56,20 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
   const waitArg = process.argv.indexOf('--wait');
-  const maxMin = waitArg > 0 ? Number(process.argv[waitArg + 1]) || 6 : 6;
+  /* 15 minutes, not 6.
+ *
+ * This project's build runs `next build` plus the next-on-pages step on
+ * Cloudflare's builders, and has been measured at 4–6.5 minutes depending
+ * on queue depth. A 6-minute window therefore expired *while the build was
+ * still running* often enough to be routine — and it exited 1, so a
+ * successful deploy was reported as a failure. Twice in one session the
+ * build was confirmed successful through the API while this script had
+ * already printed a failure.
+ *
+ * The timeout is not a failure verdict. It exits 2, says so in words, and
+ * prints the id needed to check by hand.
+ */
+  const maxMin = waitArg > 0 ? Number(process.argv[waitArg + 1]) || 15 : 15;
 
   const sha = await remoteHead();
   if (!sha) throw new Error('无法读取远端 HEAD');
@@ -100,8 +113,17 @@ async function main() {
     }
   }
 
-  console.error('超时，仍在构建中');
-  process.exit(1);
+  /* Not a failure. The build may still be running, so say what is known and
+     leave the door open rather than printing a verdict that is wrong half
+     the time. Exit 2 so a caller can distinguish "gave up waiting" from
+     "the build broke". */
+  console.error(
+    `⏳ 等待 ${maxMin} 分钟仍未结束 —— 构建可能仍在进行，这不是失败结论。\n` +
+    `   部署 id: ${id}\n` +
+    `   查询: node scripts/deploy-status.js ${id}\n` +
+    `   延长等待: node scripts/deploy.js --wait 20`
+  );
+  process.exit(2);
 }
 
 main().catch((e) => {
