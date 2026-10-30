@@ -92,7 +92,7 @@ export default async function HomePage() {
                 customisations — quoted in {s.quoteHours || 4} hours.
               </p>
               <div className="hero-btns">
-                <a href="#inquiry" className="btn btn-primary">Build a custom inquiry</a>
+                <a href="/contact#inquiry" className="btn btn-primary">Build a custom inquiry</a>
                 <Link href="/products" className="btn btn-ghost">View base platforms</Link>
               </div>
               <p className="hero-note">

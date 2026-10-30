@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
+
+import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
+
+/* Dev-only: gives the bare `next dev` server the Cloudflare request context
+   (D1 binding, .dev.vars) so edge routes can run locally. Production builds
+   via next-on-pages provide the real context and never touch this. */
+if (process.env.NODE_ENV === 'development') {
+  setupDevPlatform();
+}
+
 const config = {
   images: {
     unoptimized: true  // no image optimiser at the edge

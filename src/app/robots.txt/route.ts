@@ -10,9 +10,12 @@
  * The address is read from the same settings row the sitemap uses, so
  * the two cannot drift apart and a domain change needs no redeploy.
  *
- * The rules themselves are unchanged. The admin, the API and the login
- * screen hold nothing indexable, and a filtered listing duplicates the
- * canonical page it came from.
+ * The admin, the API and the login screen hold nothing indexable. The
+ * public site is fully open: handoff URLs like /contact?model=… carry a
+ * query string but buildMeta() gives them an absolute canonical to the
+ * clean path, so crawlers may fetch them and Google folds them into the
+ * canonical URL — blocking them here would only hide the pages buyers
+ * actually land on.
  */
 
 import { getSettings } from '@/lib/db';
@@ -31,12 +34,10 @@ export async function GET() {
     'Allow: /',
     '',
     '# Admin, API and the login screen hold no indexable content.',
-    'Disallow: /admin/',
-    'Disallow: /api/',
+    '# Without the trailing slash so bare /admin is covered too.',
+    'Disallow: /admin',
+    'Disallow: /api',
     'Disallow: /login',
-    '',
-    '# Filtered listings (?q=, ?status=) duplicate the canonical pages.',
-    'Disallow: /*?*',
     '',
     `Sitemap: ${site}/sitemap.xml`,
     ''

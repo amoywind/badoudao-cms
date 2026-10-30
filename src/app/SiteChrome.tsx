@@ -170,7 +170,7 @@ export async function Header() {
             button, and a second ghost button next to it competes for the
             same click. The catalogue is one nav link away. */}
         <div className="nav-cta">
-          <Link href="/#inquiry" className="btn btn-primary btn-sm">Request Quotation</Link>
+          <Link href="/contact#inquiry" className="btn btn-primary btn-sm">Request Quotation</Link>
         </div>
         </div>
     </header>

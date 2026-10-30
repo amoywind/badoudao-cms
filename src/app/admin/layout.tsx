@@ -47,7 +47,15 @@ export default async function AdminLayout({ children }) {
     <div className="app admin-root">
       <Sidebar user={user} />
       <div className="main">
-        <AdminShell>{children}</AdminShell>
+        {/* .content lives here rather than in each page: the padding is a
+            property of the frame, not of the 13 pages that fill it, and a
+            wrapper someone forgets is exactly how the dashboard ended up
+            flush against the viewport edge. The boundary stays inside so a
+            crash still cannot take the sidebar down, but the frame above it
+            always keeps its padding. */}
+        <div className="content">
+          <AdminShell>{children}</AdminShell>
+        </div>
       </div>
     </div>
   );

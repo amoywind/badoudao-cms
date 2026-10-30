@@ -289,7 +289,7 @@ function PageRail({
           Send a reference, a sample or a sketch. You get a quotation within{' '}
           {quoteHours || 4} hours, Ex Works, with no obligation.
         </p>
-        <Link href="/#inquiry" className="rail-quote">
+        <Link href="/contact#inquiry" className="rail-quote">
           Get Instant Factory Quote
         </Link>
       </section>

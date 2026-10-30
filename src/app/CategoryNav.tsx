@@ -72,7 +72,7 @@ export function CategoryNav({
 
       <p className="cat-nav-note">
         Not seeing what you need?{' '}
-        <a href="/#inquiry">Send a reference</a> and we will quote it.
+        <a href="/contact#inquiry">Send a reference</a> and we will quote it.
       </p>
     </aside>
   );
