@@ -49,7 +49,7 @@ export async function generateMetadata() {
       'Practical guides for buyers of quartz clocks: how MOQ works, Ex Works vs FOB pricing, CE and RoHS requirements, lead times and how to vet a Chinese manufacturer.',
     keywords:
       'quartz clock buying guide, clock MOQ, ex works pricing, quartz clock certification',
-    path: '/articles/'
+    path: '/articles'
   });
 }
 

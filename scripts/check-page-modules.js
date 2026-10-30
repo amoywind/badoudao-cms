@@ -24,7 +24,7 @@ const PAGES = [
   ['/about-us', 'About Us'],
   ['/contact', 'Contact'],
   ['/customizer', 'Customizer'],
-  ['/blog', 'Blog'],
+  ['/articles', 'Articles'],
   ['/news', 'News']
 ];
 
