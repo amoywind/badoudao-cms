@@ -1531,8 +1531,8 @@
   overflow-wrap: anywhere;
 }
 
-/* The factory figures that are still pending. The dash is the honest
-   value: a number that has not been confirmed is not a number. */
+/* The factory figures on the craft & QC page. One row of confirmed
+   numbers; auto-fit keeps it even when the list grows or shrinks. */
 .fig-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1558,11 +1558,11 @@
   gap: 5px;
 }
 
-.fig-pending {
+.fig-n {
   font-family: var(--font-tech);
   font-size: 24px;
   font-weight: 700;
-  color: var(--line);
+  color: var(--text);
   line-height: 1;
 }
 
@@ -1577,11 +1577,6 @@
 /* ===================================================================
    QC metrics, certifications, factory figures, the 28-day route
    =================================================================== */
-
-/* The factory figures that are still pending. The dash is the honest
-   value: a number that has not been confirmed is not a number. */
-
-
 
 /* The enquiry form's submit button. §6.1 asks for a 52px full-width
    accent button: it is the only conversion on the page, and a buyer on

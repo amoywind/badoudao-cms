@@ -162,28 +162,22 @@ export default async function CraftQcPage() {
               </div>
             </div>
 
-            {/* The factory's own figures. These are the numbers a buyer
-                checks, so they are left empty until the factory confirms
-                them rather than filled in from the specification. The
-                structure is here, so the page is ready for the values. */}
+            {/* The factory's own figures. Values come from the owner, and
+                only confirmed numbers go in — an unconfirmed figure was
+                held out of the page entirely rather than parked as a dash. */}
             <div className="spec" style={{ marginTop: 28 }}>
-              <div className="spec-h">Factory figures · pending confirmation</div>
+              <div className="spec-h">The factory in numbers</div>
               <div className="fig-grid">
                 {FACTORY_FIGURES.map((f) => (
                   <div className="fig" key={f.key}>
                     <div className="fig-l">{f.label}</div>
                     <div className="fig-v">
-                      <span className="fig-pending">—</span>
+                      <span className="fig-n tnum">{f.value}</span>
                       <span className="fig-u">{f.unit}</span>
                     </div>
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.55 }}>
-                These figures are being confirmed by the factory and will be published
-                here once they are. Ask for them in your enquiry and we will send the
-                current numbers.
-              </p>
             </div>
           </div>
         </section>

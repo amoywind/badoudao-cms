@@ -390,12 +390,11 @@ export const QC_STEPS = [
  * So the page shows the structure and leaves the values empty, marked
  * as pending, and the material requirements document asks for them.
  */
-export const FACTORY_FIGURES: { key: string; label: string; unit: string }[] = [
-  { key: 'floorArea', label: 'Manufacturing floor area', unit: 'm²' },
-  { key: 'monthlyOutput', label: 'Monthly output', unit: 'pcs' },
-  { key: 'exportMarkets', label: 'Export markets', unit: 'countries' },
-  { key: 'cncMachines', label: 'CNC machining centres', unit: 'units' },
-  { key: 'uvLines', label: 'UV flatbed print lines', unit: 'units' }
+export const FACTORY_FIGURES: { key: string; label: string; value: string; unit: string }[] = [
+  { key: 'floorArea', label: 'Manufacturing floor area', value: '1,500', unit: 'm²' },
+  { key: 'exportMarkets', label: 'Export markets', value: '32', unit: 'countries' },
+  { key: 'cncMachines', label: 'CNC machining centres', value: '2', unit: 'units' },
+  { key: 'uvLines', label: 'UV flatbed print lines', value: '2', unit: 'units' }
 ];
 
 /**
