@@ -132,7 +132,7 @@ export default async function StaticPage({ params }) {
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 24 }}>
                   {cats.map((c) => (
                     <Link key={c.id} href={`/products/${c.id}/`} className="badge badge-brand">
-                      {c.short || c.name}
+                      {c.name}
                     </Link>
                   ))}
                 </div>

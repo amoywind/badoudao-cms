@@ -249,7 +249,7 @@ export async function Footer() {
             <div className="f-h">Products</div>
             <div className="f-list">
               {cats.map((c) => (
-                <Link key={c.id} href={`/products/${c.id}`}>{c.short || c.name}</Link>
+                <Link key={c.id} href={`/products/${c.id}`}>{c.name}</Link>
               ))}
             </div>
           </div>

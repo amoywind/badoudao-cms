@@ -83,14 +83,14 @@ export default async function CategoryPage({ params }) {
         <div className="wrap">
           <Link href="/">Home</Link><span>/</span>
           <Link href="/products">Products</Link><span>/</span>
-          <span>{cat?.short || category}</span>
+          <span>{cat?.name || category}</span>
         </div>
       </nav>
 
       <main>
         <div className="page-head">
           <div className="wrap">
-            <div className="sec-tag">{cat?.short} · Wholesale &amp; OEM</div>
+            <div className="sec-tag">{cat?.name} · Wholesale &amp; OEM</div>
             <h1>{title}</h1>
             <p className="sec-sub">
               {/* The description the owner wrote, as one block of body text.
@@ -110,7 +110,7 @@ export default async function CategoryPage({ params }) {
                   filled in; that wording is unchanged from before. */}
               {(cat?.description || '').trim() || (
                 <>
-                  Looking for a {(cat?.short || category).toLowerCase()} supplier? Badoudao manufactures in-house
+                  Looking for a {(cat?.name || category).toLowerCase()} supplier? Badoudao manufactures in-house
                   with MOQ from {s.moq || 300} pieces, custom dial artwork and retail-ready packaging.
                   Ex Works pricing shown — freight and duties quoted separately.
                 </>

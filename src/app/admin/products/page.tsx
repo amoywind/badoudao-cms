@@ -162,7 +162,7 @@ export default function ProductsPage() {
                     </td>
                     <td>
                       <span className="pl pl-n">
-                        {categories.find((c) => c.id === p.category)?.short || p.category}
+                        {categories.find((c) => c.id === p.category)?.name || p.category}
                       </span>
                     </td>
                     <td style={{ textAlign: 'right', fontWeight: 500 }}>
