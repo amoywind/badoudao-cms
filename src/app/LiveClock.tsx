@@ -277,7 +277,7 @@ export function LiveClock() {
     const q = new URLSearchParams();
     q.set('spec', spec);
     q.set('msg', `Clock configuration: ${spec}.`);
-    window.location.href = '/contact/?' + q.toString();
+    window.location.href = '/contact?' + q.toString();
   }
 
   /* The dial's colours feed the SVG. The gradient id has to be unique

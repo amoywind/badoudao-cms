@@ -564,7 +564,9 @@ export function InquiryCTA({ preset = '', label = 'Request a quotation' }: { pre
      took. The anchor is the form's own id, so the two cannot drift
      apart. */
   const query = preset ? `?model=${encodeURIComponent(preset)}` : '';
-  const href = `/contact/${query}#inquiry`;
+  /* No slash between /contact and the query: Pages normalises /contact/ to
+     /contact, so the slashed form is a redirect the browser never needed. */
+  const href = `/contact${query}#inquiry`;
   return (
     <div className="inq-cta">
       <div>

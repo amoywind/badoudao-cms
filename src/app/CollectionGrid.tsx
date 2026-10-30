@@ -105,7 +105,7 @@ export function CollectionGrid({
           <div className="rail-empty">
             <p>No models in this category yet. Ask us for the one you want — most of
               what we make is not in the catalogue.</p>
-            <Link href="/contact/" className="btn btn-ghost btn-sm">
+            <Link href="/contact" className="btn btn-ghost btn-sm">
               Send a requirement
             </Link>
           </div>

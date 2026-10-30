@@ -140,7 +140,7 @@ export function CustomizerHub({
     const q = new URLSearchParams();
     q.set('spec', code);
     q.set('msg', summaryText(picks));
-    window.location.href = '/contact/?' + q.toString();
+    window.location.href = '/contact?' + q.toString();
   }
 
   const active = TABS.find((t) => t.key === tab) || TABS[0];
