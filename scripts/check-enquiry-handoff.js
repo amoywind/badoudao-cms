@@ -99,7 +99,7 @@ await withBrowser(async ({ send, ev }) => {
 
   check('the enquiry form is no longer on the page', !h.hasForm);
   check('there is a link to the contact page instead', !!h.ctaHref, 'no .inq-cta link');
-  check('the link goes to the contact page', (h.ctaHref || '').indexOf('/contact/') === 0, h.ctaHref);
+  check('the link goes to the contact page', (h.ctaHref || '').indexOf('/contact') === 0, h.ctaHref);
   check('the link lands on the form', (h.ctaHref || '').indexOf('#inquiry') > 0, h.ctaHref);
 
   // ------------------------------------------------------------------

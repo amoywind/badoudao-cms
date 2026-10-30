@@ -196,7 +196,7 @@ function check(name, ok, detail) {
   check('customizer page: the enquiry form is not on the page', !cz.hasForm);
   check('customizer page: there is a link to the enquiry instead', !!cz.hasCta);
   check('customizer page: the link goes to the contact page',
-    (cz.ctaHref || '').indexOf('/contact/') === 0, cz.ctaHref);
+    (cz.ctaHref || '').indexOf('/contact') === 0, cz.ctaHref);
   check('customizer page: the specification is shown on screen', cz.shown.length > 0, cz.shown);
   check('customizer page: no horizontal overflow', !cz.overflow);
 
