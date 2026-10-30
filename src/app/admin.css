@@ -439,7 +439,7 @@
   font-size: 11.5px; color: #8a919b; flex-wrap: wrap;
 }
 
-/* ---- SEO centre ---- */
+/* ---- SEO center ---- */
 
 .sg-link {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -503,7 +503,7 @@
 
 /* A note about an upload that succeeded — "not square", "3 of 5 failed"
    is red, "this one is 2000x300, the main slot prefers 1:1" is not. Same
-   route, same field, different outcome, so they cannot share a colour. */
+   route, same field, different outcome, so they cannot share a color. */
 .ipk-warn {
   margin: 0 0 12px; padding: 9px 12px;
   background: #fffbeb; border: 1px solid #fde68a;

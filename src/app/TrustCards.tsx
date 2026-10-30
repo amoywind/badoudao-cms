@@ -4,7 +4,7 @@
  * The pattern the specification describes, in one place so every page
  * uses the same markup: a number, a title, and one line of explanation.
  * The number is the hook, so it is the largest element and the only one
- * in the accent colour.
+ * in the accent color.
  *
  * The numbers on these cards are claims the factory makes to a buyer, and
  * a claim on a card is as binding as a claim in the copy. Every one of

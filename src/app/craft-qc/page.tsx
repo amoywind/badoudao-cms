@@ -28,7 +28,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Material & Craft — 8 Materials, 4-Step QC Factory | Badoudao',
     description:
-      `Eight core materials with their processes, and the four QC steps every clock passes: raw material checks, 24-hour movement ageing, pointer balance and 1.2m drop-tested packaging. MOQ from ${s.moq || 300} pcs.`,
+      `Eight core materials with their processes, and the four QC steps every clock passes: raw material checks, 24-hour movement aging, pointer balance and 1.2m drop-tested packaging. MOQ from ${s.moq || 300} pcs.`,
     keywords:
       'clock manufacturing process, quartz clock QC, drop test packaging, acrylic clock printing, resin clock casting',
     path: '/craft-qc'
@@ -68,7 +68,7 @@ export default async function CraftQcPage() {
               <h2>What each material can be made to do</h2>
               <p className="sec-sub">
                 The processes listed here are the ones the factory runs in-house. They
-                are the difference between a moulded clock and a designed one.
+                are the difference between a molded clock and a designed one.
               </p>
             </div>
 

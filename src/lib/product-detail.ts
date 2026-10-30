@@ -1,5 +1,5 @@
 /**
- * Customisation groups, shown on a product page.
+ * Customization groups, shown on a product page.
  *
  * The six groups are the same across the catalogue because they are what a
  * buyer specifies on an order. What differs is which values apply to a
@@ -14,7 +14,7 @@
  */
 
 /* Inline SVG rather than emoji. Emoji render differently per platform and
-   sit on a coloured square, which does not match the outlined icons used
+   sit on a colored square, which does not match the outlined icons used
    elsewhere on the site; these are stroked to match at 1.6px. */
 export type GroupIcon =
   | 'frame' | 'hands' | 'dial' | 'print' | 'movement' | 'package';
@@ -61,7 +61,7 @@ export const OPTION_GROUPS: OptionGroup[] = [
     key: 'package',
     icon: 'package',
     label: 'Packaging',
-    values: ['Closed box', 'Mail-order box', 'Open display box', 'Custom colour box']
+    values: ['Closed box', 'Mail-order box', 'Open display box', 'Custom color box']
   }
 ];
 
@@ -113,7 +113,7 @@ const OPTION_CODES: Record<string, Record<string, string>> = {
     'Closed box': 'CLOSED',
     'Mail-order box': 'MAIL',
     'Open display box': 'OPEN',
-    'Custom colour box': 'COLOUR'
+    'Custom color box': 'COLOUR'
   }
 };
 
@@ -163,7 +163,7 @@ export const PACKAGING_OPTIONS = [
   },
   {
     key: 'color',
-    title: 'Colour box',
+    title: 'Color box',
     image: 'img_ef2a1d96934f692adf68d460'
   }
 ];
@@ -199,7 +199,7 @@ export const PROCESS_STEPS = [
 export const QC_CLAIMS = [
   { label: '±1s/day', note: 'movement accuracy', href: '/p/quality' },
   { label: '<10dB', note: 'silent sweep', href: '/p/quality' },
-  { label: '24h', note: 'powered ageing test', href: '/p/quality' },
+  { label: '24h', note: 'powered aging test', href: '/p/quality' },
   { label: 'CE / RoHS', note: 'movement certified', href: '/p/certification' }
 ];
 

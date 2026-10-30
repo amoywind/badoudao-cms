@@ -71,7 +71,7 @@ export function AnatomyExplorer() {
               below the dial so that the stack reads as one clock
               pulled apart along its axis rather than as six parts
               floating in a box. The battery hatch is a square
-              recess in the middle of it, the way a moulded back is
+              recess in the middle of it, the way a molded back is
               actually made. */}
           <g
             className={`anx-l anx-solid${active === 5 ? ' on' : ''}`}
@@ -328,7 +328,6 @@ export function AnatomyExplorer() {
           Component deconstruction // part {part.n.padStart(2, '0')}
         </div>
         <h3 className="anx-h">{part.n}. {part.name}</h3>
-        <div className="anx-cn">{part.cn}</div>
         <p className="anx-sum">{part.summary}</p>
 
         <div className="anx-specs">

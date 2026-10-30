@@ -55,7 +55,7 @@ export async function GET(request) {
     'PRICING (Ex Works, per piece)',
     rule,
     `Range        : USD ${product.priceMin.toFixed(2)} - ${product.priceMax.toFixed(2)}`,
-    `MOQ          : ${moq} pcs (mixed colours and specifications allowed)`,
+    `MOQ          : ${moq} pcs (mixed colors and specifications allowed)`,
     '',
     'MOVEMENT',
     rule,

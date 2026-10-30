@@ -61,7 +61,7 @@ export const BUILDER_GROUPS: BuilderGroup[] = [
     label: 'Hands',
     fallback: 'ALU',
     options: [
-      { code: 'ALU', label: 'Aluminium' },
+      { code: 'ALU', label: 'Aluminum' },
       { code: 'BRS', label: 'Brass' },
       { code: 'WD', label: 'Solid wood' },
       { code: 'ACR', label: 'Acrylic' },
@@ -74,7 +74,7 @@ export const BUILDER_GROUPS: BuilderGroup[] = [
     fallback: 'KRAFT',
     options: [
       { code: 'KRAFT', label: 'Mail-order kraft box' },
-      { code: 'GIFT', label: 'Colour gift box' },
+      { code: 'GIFT', label: 'Color gift box' },
       { code: 'ACRYLIC', label: 'Acrylic display box' },
       { code: 'FOAM', label: 'Custom foam insert' }
     ]

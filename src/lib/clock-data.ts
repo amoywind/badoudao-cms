@@ -6,7 +6,7 @@
  * the first screen, so they live here rather than inside the component
  * — the same reason the material tags live in the vocabulary file.
  *
- * The colours are the specification's. The point of a live swatch is
+ * The colors are the specification's. The point of a live swatch is
  * that what the buyer clicks is what the factory can make, so the
  * numbers here are the numbers that go on the quote.
  */
@@ -51,7 +51,7 @@ export const DIAL_FACES = [
   },
   {
     key: 'concrete',
-    name: 'Cast Concrete Grey',
+    name: 'Cast Concrete Gray',
     short: 'Cast Concrete',
     bg: '#8E9196',
     bezel: '#7C7F84',
@@ -76,12 +76,12 @@ export const HAND_ALLOYS = [
   },
   {
     key: 'black',
-    name: 'Anodised Black #22',
-    short: 'Anodised Black',
+    name: 'Anodized Black #22',
+    short: 'Anodized Black',
     hour: '#111111',
     minute: '#111111',
     second: '#0052CC',
-    note: 'Anodised aluminium in black. Crisp and light on a light dial.'
+    note: 'Anodized aluminum in black. Crisp and light on a light dial.'
   },
   {
     key: 'walnut',
@@ -135,21 +135,21 @@ export const DRIVE_MODES = [
   {
     key: 'sweep',
     name: 'Continuous Sweep',
-    db: '<10 dB',
+    db: '<10 dBA',
     dbValue: 8.4,
     /* The reading wanders a little, the way a real measurement does.
        A number that never moves reads as a drawing. */
     dbRange: [8.0, 9.2] as [number, number],
-    quiet: 'Whisper Quiet (<10dB)',
+    quiet: 'Whisper-quiet continuous sweep · <10 dBA',
     chip: 'Silent'
   },
   {
     key: 'step',
     name: 'Step Second',
-    db: '28 dB',
+    db: '28 dBA',
     dbValue: 28.4,
     dbRange: [9.2, 9.2] as [number, number],
-    quiet: 'Crisp Interval',
+    quiet: 'Crisp interval tick · 28 dBA',
     chip: 'Standard'
   }
 ] as const;

@@ -12,7 +12,7 @@
  * against. One property is cheaper to declare than that conflict is to
  * resolve.
  *
- * Two behaviours worth knowing, both from the Cache API docs rather than
+ * Two behaviors worth knowing, both from the Cache API docs rather than
  * from the type:
  *
  *   - `put()` rejects `stale-while-revalidate`; it is a fetch directive.
@@ -21,7 +21,7 @@
  */
 declare global {
   interface CacheStorage {
-    /** The data centre-local cache every Worker shares. */
+    /** The data center-local cache every Worker shares. */
     readonly default: Cache;
   }
 }

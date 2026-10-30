@@ -51,7 +51,7 @@ async function toBase64(bytes: Uint8Array): Promise<string> {
  *
  * The client names each blob thumb-<fileIndex>-<width>-<n>.webp and appends
  * them in order, so both the pairing and the tier come out of the filename.
- * Anything unrecognised is ignored rather than guessed at — a misrouted
+ * Anything unrecognized is ignored rather than guessed at — a misrouted
  * thumbnail would show the wrong picture size on a live page, and storing
  * nothing just falls back to the original.
  */

@@ -24,7 +24,7 @@ export default async function LoginPage() {
   return (
     /* The wrapper carries the admin's own class so the admin stylesheet
        applies here as well. Without it the screen loses the admin's
-       background colour and the white card in the middle of it stops
+       background color and the white card in the middle of it stops
        being a card — the background turns white too, and the border
        around it is the only thing left of it. */
     <div className="admin-root" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 24 }}>

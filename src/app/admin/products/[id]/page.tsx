@@ -33,7 +33,7 @@ export default function EditProductPage() {
         movementType: '', sizeInch: '', cartonQty: '', cartonL: '', cartonW: '', cartonH: '', cartonGw: '',
         moveLevel: 'China quartz', difficulty: 'simple', content: '',
         featured: false, status: 'draft',
-        specs: [], options: [], prices: [], images: [], customisations: []
+        specs: [], options: [], prices: [], images: [], customizations: []
       });
     }
     fetch(`/api/products${isNew ? '' : `?id=${encodeURIComponent(Array.isArray(id) ? id[0] : String(id))}`}`)
@@ -282,14 +282,14 @@ export default function EditProductPage() {
                 </div>
 
                 {OPTION_GROUPS.map((g) => {
-                  const picked = (product.customisations || []).filter(c => c.groupKey === g.key);
+                  const picked = (product.customizations || []).filter(c => c.groupKey === g.key);
                   const has = (v) => picked.some(c => c.value === v);
 
                   const toggle = (value) => {
-                    const rest = (product.customisations || []).filter(
+                    const rest = (product.customizations || []).filter(
                       c => !(c.groupKey === g.key && c.value === value)
                     );
-                    set('customisations', has(value) ? rest : [...rest, { groupKey: g.key, value, priceDelta: 0 }]);
+                    set('customizations', has(value) ? rest : [...rest, { groupKey: g.key, value, priceDelta: 0 }]);
                   };
 
                   return (

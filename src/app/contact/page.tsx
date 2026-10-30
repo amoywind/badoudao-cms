@@ -19,7 +19,7 @@ export async function generateMetadata() {
   try { s = await getSettings(); } catch {}
 
   const title = `Contact Badoudao | Get a Quotation for Wholesale Clocks`;
-  const description = `Request a quotation for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 300} pieces, Ex Works pricing, reply within ${s.quoteHours || 4} hours.`;
+  const description = `Request a quote for OEM and ODM quartz clocks from Badoudao. MOQ from ${s.moq || 300} pieces, Ex Works pricing, reply within ${s.quoteHours || 12} hours.`;
 
   /* buildMeta() rather than a hand-rolled object, so this route gets the
      absolute canonical and the siteUrl from settings like every other one.
@@ -77,7 +77,7 @@ export default async function ContactPage({
         <div className="page-head">
           <div className="wrap">
             <div className="sec-tag">Contact</div>
-            <h1>Request a quotation</h1>
+            <h1>Request a Quote</h1>
             <p className="sec-sub">
               Tell us the model, quantity and finish you need. All prices are
               Ex Works (factory) — freight and duties are quoted separately once
@@ -115,7 +115,8 @@ export default async function ContactPage({
                       <span className="ch-lbl">Email</span>
                       <span className="ch-val">{email}</span>
                       <span className="ch-note">
-                        Attach drawings or photos and they come with the reply.
+                        Attach CAD files, vector artwork or reference photos —
+                        they are reviewed for manufacturability before we answer.
                       </span>
                     </span>
                   </a>
@@ -172,22 +173,34 @@ export default async function ContactPage({
                   <span className="ch-body">
                     <span className="ch-lbl">Response time</span>
                     <span className="ch-val">
-                      Within {s.quoteHours || 4} hours on business days
+                      Within {s.quoteHours || 12} hours on business days
                     </span>
                   </span>
                 </div>
 
                 <div className="note note-i" style={{ marginTop: 28 }}>
-                  <strong>What to include for a fast quote.</strong> Target model
-                  (or a reference photo), order quantity, dial and case finish,
-                  logo method, and destination port. With those we can return a
-                  firm Ex Works unit price and lead time in one reply.
+                  {/* Numbered rather than run together: a buyer scanning for
+                      what to write does not read a paragraph to find it. */}
+                  <strong>Information required for an expedited {s.quoteHours || 12}-hour quotation:</strong>
+                  <ol style={{ margin: '8px 0 0', paddingLeft: 20, lineHeight: 1.75 }}>
+                    <li>Target reference: model ID, reference photo, or CAD / vector artwork</li>
+                    <li>Order volume: target batch quantity (MOQ {s.moq || 300} pcs)</li>
+                    <li>Component specification: frame material, dial finish and clock hand style</li>
+                    <li>Branding method: printing, laser engraving or foil stamping, and where the logo sits</li>
+                    <li>Destination country and port, for an accurate freight estimate</li>
+                  </ol>
+                  <p style={{ margin: '10px 0 0' }}>
+                    With those five, we can return a firm Ex Works unit price and
+                    a production lead time in one reply.
+                  </p>
                 </div>
 
                 <div className="note" style={{ marginTop: 16 }}>
-                  <strong>MOQ {s.moq || 300} pcs.</strong> Small-batch and
-                  pilot runs are welcome — above {s.capacityMin || 2000} pcs per
-                  day we can absorb repeat orders without a second shift.
+                  <strong>Production capacity and order fulfilment.</strong>{' '}
+                  Agile trial runs are welcome from {s.moq || 300} pcs, and mass
+                  production runs at over {s.capacityMin || 2000} finished units
+                  per day — repeat orders are scheduled against a confirmed
+                  delivery date rather than queued behind a new one.
                 </div>
               </div>
 

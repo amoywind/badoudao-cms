@@ -97,13 +97,13 @@ export default async function AboutUsPage() {
                     icon: Icons.box,
                     title: 'Flexible MOQ from 300 pieces',
                     body:
-                      'Most clock factories will not start a run below 2,000 pieces, which forces a brand to commit inventory before it has a single customer. Our modular line starts at 300, and you can mix styles and colours inside one order — so a seasonal launch or a market test does not have to be a bet on two thousand units.'
+                      'Most clock factories will not start a run below 2,000 pieces, which forces a brand to commit inventory before it has a single customer. Our modular line starts at 300, and you can mix styles and colors inside one order — so a seasonal launch or a market test does not have to be a bet on two thousand units.'
                   },
                   {
                     icon: Icons.ruler,
-                    title: 'End-to-end customisation',
+                    title: 'End-to-end customization',
                     body:
-                      'More than 1,000 hand styles — CNC brass, lightweight aluminium and solid timber — against dial materials from solid walnut and industrial ironwork through crystal porcelain to 3D-printed acrylics. Our engineering team sits in-house, so a drawing is checked against what the machine can actually make before it is quoted.'
+                      'More than 1,000 hand styles — CNC brass, lightweight aluminum and solid timber — against dial materials from solid walnut and industrial ironwork through crystal porcelain to 3D-printed acrylics. Our engineering team sits in-house, so a drawing is checked against what the machine can actually make before it is quoted.'
                   },
                   {
                     icon: Icons.shield,
@@ -115,7 +115,7 @@ export default async function AboutUsPage() {
                     icon: Icons.clock,
                     title: 'A drawing in 24 hours, a sample in days',
                     body:
-                      'A photorealistic 3D rendering and the dial artwork come back inside 24 hours, so a buyer can see the product before paying for tooling. Physical samples of existing moulds ship within the week; a new shape takes two weeks of tooling first.'
+                      'A photorealistic 3D rendering and the dial artwork come back inside 24 hours, so a buyer can see the product before paying for tooling. Physical samples of existing molds ship within the week; a new shape takes two weeks of tooling first.'
                   }
                 ].map((c) => (
                   <div className="cap" key={c.title}>
@@ -237,19 +237,19 @@ export default async function AboutUsPage() {
                   icon: Icons.ruler,
                   title: 'CNC machining',
                   body:
-                    'Five-axis routing for frames, hands and moulded parts, with a new tool path cut from a buyer drawing rather than bought in from a shop.'
+                    'Five-axis routing for frames, hands and molded parts, with a new tool path cut from a buyer drawing rather than bought in from a shop.'
                 },
                 {
                   icon: Icons.spark,
                   title: 'UV flatbed printing',
                   body:
-                    'Eight-colour UV direct printing on dials and dial faces, so a buyer can send artwork in a file and get colour that matches it rather than a colour from a catalogue.'
+                    'Eight-color UV direct printing on dials and dial faces, so a buyer can send artwork in a file and get color that matches it rather than a color from a catalogue.'
                 },
                 {
                   icon: Icons.box,
-                  title: 'Injection and moulding',
+                  title: 'Injection and molding',
                   body:
-                    'In-house tooling for new shapes, so a genuinely different body is a two-week wait rather than a negotiation with a moulding shop.'
+                    'In-house tooling for new shapes, so a genuinely different body is a two-week wait rather than a negotiation with a molding shop.'
                 },
                 {
                   icon: Icons.clock,
@@ -291,12 +291,12 @@ export default async function AboutUsPage() {
                 {
                   n: 'Q1',
                   q: 'What is the minimum order?',
-                  a: `${moq} pieces, and you can mix dial colours and specifications inside that one order — different hand finishes, different movements, different dial artwork in the same shipment. A new product can be tested on the market without committing to a run of two thousand.`
+                  a: `${moq} pieces, and you can mix dial colors and specifications inside that one order — different hand finishes, different movements, different dial artwork in the same shipment. A new product can be tested on the market without committing to a run of two thousand.`
                 },
                 {
                   n: 'Q2',
                   q: 'How long does a sample take?',
-                  a: `An existing mould ships within ${s.sampleDays || '5–7'} business days. A brand-new shape needs tooling first, which takes two to three weeks. The sample cost is credited against the first bulk order, so the sample is not a cost — it is the first payment.`
+                  a: `An existing mold ships within ${s.sampleDays || '5–7'} business days. A brand-new shape needs tooling first, which takes two to three weeks. The sample cost is credited against the first bulk order, so the sample is not a cost — it is the first payment.`
                 },
                 {
                   n: 'Q3',
@@ -343,8 +343,8 @@ export default async function AboutUsPage() {
 
             <div className="grid-3">
               {[
-                ['Minimum order', `${moq} pcs`, 'Colours and specifications can be mixed within a single order.'],
-                ['Quote response', `${s.quoteHours || 4} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
+                ['Minimum order', `${moq} pcs`, 'Colors and specifications can be mixed within a single order.'],
+                ['Quote response', `${s.quoteHours || 12} hours`, 'With pricing broken down by tooling, unit, packaging and freight.'],
                 ['Sample lead time', `${s.sampleDays || '5–7'} business days`, 'Sample cost credited against the first bulk order.'],
                 ['Bulk lead time', '20–45 days', 'Shorter for a repeat design where the tooling already exists.'],
                 ['Monthly capacity', '60,000 pcs', 'Across four production lines under one roof.'],
@@ -397,7 +397,7 @@ export default async function AboutUsPage() {
             <h2>Ready to launch your custom wall clock line?</h2>
             <p className="sec-sub" style={{ marginBottom: 26 }}>
               Factory-direct communication, transparent Ex Works pricing, and a
-              quotation back within {s.quoteHours || 4} hours. Send a reference
+              quotation back within {s.quoteHours || 12} hours. Send a reference
               photo, a sample or a sketch — whichever is easiest.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>

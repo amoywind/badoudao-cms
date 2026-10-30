@@ -36,13 +36,13 @@ export async function TopBar() {
     <div className="topbar">
       <div className="wrap topbar-in">
         <span className="topbar-claim">
-          XIAMEN ORANGE CAT FACTORY DIRECT
+          DIRECT FROM XIAMEN FACTORY
           <i />
           FLEXIBLE MOQ {moq} PCS
           <i />
           24H 3D CAD TURNAROUND
           <i />
-          1.2M DROP-TEST CERTIFIED
+          ISTA-1A DROP-TEST CERTIFIED PACKAGING
         </span>
       </div>
     </div>
@@ -67,7 +67,7 @@ export async function Header() {
           `open` fixes desktop and then the phone cannot close it, because
           removing the attribute from CSS is not possible and
           content-visibility only hides the content, not the open/closed
-          behaviour the summary toggles.
+          behavior the summary toggles.
 
           A checkbox is the version that behaves the same on both: the
           markup is identical at every width, the peer selector
@@ -170,7 +170,7 @@ export async function Header() {
             button, and a second ghost button next to it competes for the
             same click. The catalogue is one nav link away. */}
         <div className="nav-cta">
-          <Link href="/contact#inquiry" className="btn btn-primary btn-sm">Request Quotation</Link>
+          <Link href="/contact#inquiry" className="btn btn-primary btn-sm">Request a Quote</Link>
         </div>
         </div>
     </header>
@@ -299,7 +299,7 @@ export async function Footer() {
           </svg>
           WhatsApp
         </a>
-        <a className="mbar-q" href="/contact">Request quote</a>
+        <a className="mbar-q" href="/contact">Request a Quote</a>
       </div>
     </>
   );

@@ -36,7 +36,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Wall Clock Configurator — Build Your OEM Spec | Badoudao',
     description:
-      `Configure a custom quartz wall clock: housing, movement, hands and packaging. Get a written specification the factory quotes against. MOQ from ${s.moq || 300} pcs, Ex Works pricing, quotation within ${s.quoteHours || 4} hours.`,
+      `Configure a custom quartz wall clock: housing, movement, hands and packaging. Get a written specification the factory quotes against. MOQ from ${s.moq || 300} pcs, Ex Works pricing, quotation within ${s.quoteHours || 12} hours.`,
     keywords:
       'wall clock configurator, custom wall clock builder, OEM clock specification, custom clock quote tool, bespoke clock manufacturer',
     path: '/customizer'
@@ -85,7 +85,7 @@ export default async function CustomizerPage({
             </p>
             <div className="certs" style={{ marginTop: 18 }}>
               <span className="cert">MOQ from {moq} pcs</span>
-              <span className="cert">Mixed colours and specs in one order</span>
+              <span className="cert">Mixed colors and specs in one order</span>
               <span className="cert">Ex Works pricing</span>
               <span className="cert">Quotation in {replyHours} hours</span>
             </div>
@@ -117,8 +117,8 @@ export default async function CustomizerPage({
                 <div className="cap-list">
                   {[
                     ['Your specification goes with the enquiry', 'The four choices, as a code, in the first line of the message the factory reads.'],
-                    ['A quotation inside four hours', 'A price broken down by tooling, unit, packaging and freight.'],
-                    ['A 3D rendering before tooling', 'Photorealistic, so the shape is agreed before a mould is cut.'],
+                    ['A quotation inside twelve hours', 'A price broken down by tooling, unit, packaging and freight.'],
+                    ['A 3D rendering before tooling', 'Photorealistic, so the shape is agreed before a mold is cut.'],
                     ['Samples in 5–7 business days', 'The sample fee is credited against the first bulk order.']
                   ].map(([h, p], i) => (
                     <div className="cap" key={h}>

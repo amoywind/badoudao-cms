@@ -22,7 +22,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Clock Hands, Movements & Packaging — Components Studio | Badoudao',
     description:
-      `OEM clock components from a China factory: 1,000+ moulded clock hand styles, 7 quartz and mechanical movements, 2 electronic displays and 3 packaging tiers. CE and RoHS certified silent sweep movements under 10 dB. MOQ from ${s.moq || 300} pcs, Ex Works pricing.`,
+      `OEM clock components from a China factory: 1,000+ molded clock hand styles, 7 quartz and mechanical movements, 2 electronic displays and 3 packaging tiers. CE and RoHS certified silent sweep movements under 10 dB. MOQ from ${s.moq || 300} pcs, Ex Works pricing.`,
     keywords:
       'clock hands manufacturer, wholesale clock movements, quartz movement supplier, clock packaging OEM, custom clock components',
     path: '/components'
@@ -43,10 +43,11 @@ export default async function ComponentsPage() {
         <section className="page-head">
           <div className="wrap">
             <div className="sec-tag">// Components studio</div>
-            <h1>Everything under the dial is a separate choice</h1>
+            <h1>Modular component architecture for every layer of the clock</h1>
             <p>
-              A wall clock is six components, and each one is customisable on its own.
-              This is the reference for what the factory holds and what it can tool.
+              A quartz wall clock is six structural assemblies, and each one is
+              customizable on its own. This is the reference for what the factory
+              holds and what it can tool.
             </p>
           </div>
         </section>
@@ -56,7 +57,7 @@ export default async function ComponentsPage() {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Movement matrix</div>
-              <h2>Seven movements, one body</h2>
+              <h2>Seven movement tiers across one unified body platform</h2>
               <p className="sec-sub">
                 The same shell can be built with a ticking movement for the budget end or
                 a radio-controlled sweep for the top. That is what lets one supplier
@@ -120,11 +121,11 @@ export default async function ComponentsPage() {
         <section className="alt">
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Clock hands · 1,000+ moulded styles</div>
+              <div className="sec-tag">// Clock hands · 1,000+ molded styles</div>
               <h2>Five materials, one specification per style</h2>
               <p className="sec-sub">
                 Hands are the cheapest way to make a clock look like a different
-                product. Every style in the library is a mould that already exists,
+                product. Every style in the library is a mold that already exists,
                 so there is no tooling cost and no lead time for the hand itself.
               </p>
             </div>
@@ -207,11 +208,11 @@ export default async function ComponentsPage() {
             <p className="sec-sub" style={{ marginBottom: 26 }}>
               Movement, hands, dial and packaging — send the combination and the
               quantity, and the quote comes back with the sample timeline inside{' '}
-              {s.quoteHours || 4} hours.
+              {s.quoteHours || 12} hours.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/contact" className="btn btn-primary">Request a quote</Link>
-              <Link href="/custom-services" className="btn btn-ghost">See what we can customise</Link>
+              <Link href="/custom-services" className="btn btn-ghost">See what we can customize</Link>
             </div>
             <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 20 }}>
               MOQ from {moq} pcs · Ex Works pricing · sample in {s.sampleDays || '5–7'} business days

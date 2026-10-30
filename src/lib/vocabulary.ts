@@ -35,9 +35,9 @@ export const MATERIALS: CraftTag[] = [
     slug: 'plastic-wall-clocks',
     name: 'Plastic Wall Clocks',
     blurb:
-      'Injection-moulded ABS and PP, from classic office dials to wood-grain water-transfer finishes.',
+      'Injection-molded ABS and PP, from classic office dials to wood-grain water-transfer finishes.',
     tags: ['Custom mold creation', 'Pantone color matching', '3D injection relief'],
-    tolerance: 'High-impact injection moulding · Pantone colour matched'
+    tolerance: 'High-impact injection molding · Pantone color matched'
   },
   {
     slug: 'wood-wall-clocks',
@@ -83,7 +83,7 @@ export const MATERIALS: CraftTag[] = [
     /* Marble.
 
        What the factory can actually do with it, stated plainly: it is a
-       hard, natural, veined stone, so it is cut rather than moulded and
+       hard, natural, veined stone, so it is cut rather than molded and
        every piece differs. That difference is the selling point and
        also the constraint, and a buyer planning a range needs to know
        both — no two dials come out alike, and a dial that breaks is a
@@ -103,7 +103,7 @@ export const MATERIALS: CraftTag[] = [
     /* 3D printing.
 
        What it buys a buyer: no tooling. A shape that would take a
-       fifteen-day mould becomes a file and a print, which is why this
+       fifteen-day mold becomes a file and a print, which is why this
        is the material for a small batch of something that has never
        been made before. What it costs: surface finish and repeat
        tolerance, which is why it sits alongside the other seven rather
@@ -112,12 +112,12 @@ export const MATERIALS: CraftTag[] = [
        The prints are resin, not filament — fine layer lines and a
        surface that takes a sprayed and hand-finished paint. Printed
        parts are sprayed and hand-finished in the same booth as the
-       moulded ones, which is why the finished clock reads as a clock
+       molded ones, which is why the finished clock reads as a clock
        and not as a print. */
     slug: '3d-printed-wall-clocks',
     name: '3D Printed Wall Clocks',
     blurb:
-      'Resin-printed bodies with no mould and no tooling cost — the material for a first run of a shape that has never been made before.',
+      'Resin-printed bodies with no mold and no tooling cost — the material for a first run of a shape that has never been made before.',
     tags: ['SLA resin printing', 'Sprayed and hand-finished', 'No tooling fee'],
     tolerance: 'Printed to ±0.3mm, hand-finished'
   }
@@ -143,7 +143,7 @@ export const MOVEMENTS = [
   {
     name: 'Silent sweep',
     drive: 'Quartz driven, the second hand sweeps without a gear step',
-    db: '< 10 dB (anechoic grade)',
+    db: '< 10 dBA (anechoic grade)',
     drift: '±0.5s / day',
     battery: '18 months (1× AA)',
     scene: 'Bedrooms, boutique hotels, premium homeware'
@@ -151,7 +151,7 @@ export const MOVEMENTS = [
   {
     name: 'Step-second',
     drive: 'Quartz driven, the second hand steps once a second',
-    db: '28 dB (faint tick)',
+    db: '28 dBA (faint tick)',
     drift: '±1.0s / day',
     battery: '24 months (1× AA)',
     scene: 'Offices, kitchens, the volume seller'
@@ -191,7 +191,7 @@ export const MOVEMENTS = [
   {
     name: 'Magnetic pendulum',
     drive: 'A magnetic coil drives the pendulum smoothly, with no escapement',
-    db: '< 10 dB',
+    db: '< 10 dBA',
     drift: '±0.8s / day',
     battery: '14 months (2× AA)',
     scene: 'Designer toys and character clocks, large living-room clocks'
@@ -218,9 +218,9 @@ export const HAND_MATERIALS = [
     note: 'Solid brass, the traditional choice. Polished, brushed or antique finishes.'
   },
   {
-    key: 'aluminium',
-    name: 'Aluminium (aerospace grade)',
-    note: 'Light and crisp. Anodised in any Pantone, and the default for modern designs.'
+    key: 'aluminum',
+    name: 'Aluminum (aerospace grade)',
+    note: 'Light and crisp. Anodized in any Pantone, and the default for modern designs.'
   },
   {
     key: 'walnut',
@@ -235,7 +235,7 @@ export const HAND_MATERIALS = [
   {
     key: 'plastic',
     name: 'Plastic (custom Pantone)',
-    note: 'Injection moulded in the dial colour. The economical option at volume.'
+    note: 'Injection molded in the dial color. The economical option at volume.'
   }
 ];
 
@@ -343,13 +343,13 @@ export const QC_STEPS = [
     title: 'Raw material QC',
     detail:
       'Moisture content in timber held between 8% and 12%, which is what keeps it ' +
-      'from cracking in a dry warehouse or moulding in a damp container. Metal ' +
+      'from cracking in a dry warehouse or molding in a damp container. Metal ' +
       'sheet is checked for a burr-free laser edge.',
     metric: '8% – 12% moisture content'
   },
   {
     n: 'Step 02',
-    title: '24-hour movement ageing QC',
+    title: '24-hour movement aging QC',
     detail:
       'Every movement runs on power for 24 hours on the shelf, then accuracy is ' +
       'verified and the tick is measured in an anechoic chamber whose own ' +
@@ -411,7 +411,7 @@ export const FACTORY_FIGURES: { key: string; label: string; unit: string }[] = [
  */
 export const FACTORY_SHOTS: [string, string][] = [
   ['Raw material', 'Moisture content and scratch testing on timber, plastic and acrylic.'],
-  ['24-hour ageing', 'Every movement runs under power for a day, checked for accuracy and measured for sound.'],
+  ['24-hour aging', 'Every movement runs under power for a day, checked for accuracy and measured for sound.'],
   ['Pointer balance', 'Hand straightness and balance torque, so the sweep never catches.'],
   ['Drop test', 'The packed carton dropped from 1.2 metres on all six sides.']
 ];
@@ -445,6 +445,6 @@ export const ROUTE_28 = [
   { day: 'Day 03', title: 'CNC and laser cutting', detail: 'Precision cutting, and tooling samples with the hands balanced.' },
   { day: 'Day 07', title: 'Sample assembled and shipped', detail: 'The first physical unit is built and sent by express courier.' },
   { day: 'Day 10', title: 'Sample and packaging confirmed', detail: 'The buyer approves the sample and the packaging artwork.' },
-  { day: 'Day 25', title: 'Production complete', detail: 'The full run is finished and every movement enters the ageing room.' },
+  { day: 'Day 25', title: 'Production complete', detail: 'The full run is finished and every movement enters the aging room.' },
   { day: 'Day 28', title: 'Tested and shipped', detail: '100% aged, calibrated and drop-tested; the container leaves Xiamen.' }
 ];

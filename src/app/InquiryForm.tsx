@@ -16,7 +16,7 @@ import { useRef, useState } from 'react';
  *   2. Estimated quantity — required, because the price of a clock is a
  *      function of the run, and the four options are the four runs the
  *      factory quotes differently.
- *   3. Customisation notes — optional. The sample policy, the movement
+ *   3. Customization notes — optional. The sample policy, the movement
  *      matrix and the customizer hub already answer most of what a buyer
  *      would write here, so this field is for what only they know.
  *
@@ -79,10 +79,10 @@ const MOVEMENTS = [
   'Mechanical', 'LCD calendar display', 'LED digital display', 'Not sure yet'
 ];
 const HAND_MATERIALS = [
-  'Aluminium', 'Brass', 'Solid wood', 'Acrylic', 'Custom Pantone plastic', 'Not sure yet'
+  'Aluminum', 'Brass', 'Solid wood', 'Acrylic', 'Custom Pantone plastic', 'Not sure yet'
 ];
 const PACKAGING = [
-  'Mail-order kraft box', 'Colour gift box', 'Acrylic display box',
+  'Mail-order kraft box', 'Color gift box', 'Acrylic display box',
   'Custom foam insert', 'Not sure yet'
 ];
 const TIMELINES = [
@@ -554,7 +554,7 @@ export function InquiryForm({
  * interruption. It carries the product name into the contact page so the
  * buyer does not retype it.
  */
-export function InquiryCTA({ preset = '', label = 'Request a quotation' }: { preset?: string; label?: string }) {
+export function InquiryCTA({ preset = '', label = 'Request a Quote' }: { preset?: string; label?: string }) {
   /* The link lands on the form, not at the top of the page.
 
      The contact page opens with the ways to reach the factory and the

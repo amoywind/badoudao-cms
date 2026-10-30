@@ -59,7 +59,7 @@ export function CategoryNav({
                 >
                   <span className="cat-nav-n">{c.name || c.short || c.id}</span>
                   {n !== undefined && (
-                    <span className="cat-nav-c" title={`${n} models`}>
+                    <span className="cat-nav-c" title={`${n} ${n === 1 ? 'model' : 'models'}`}>
                       {n}
                     </span>
                   )}

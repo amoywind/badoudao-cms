@@ -9,7 +9,7 @@
  * somewhere else and back again, so the whole list stays one page.
  *
  * It filters by material, because material is what the catalogue is
- * organised by and every product has one. It does not filter by
+ * organized by and every product has one. It does not filter by
  * movement: only some of the products carry a movement recorded, and a
  * filter that silently hides half the catalogue when a buyer picks an
  * option is worse than no filter at all.

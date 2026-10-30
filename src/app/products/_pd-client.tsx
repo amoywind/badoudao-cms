@@ -7,7 +7,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
  *
  * Client-side because of the interaction. Everything else on the page is
  * server rendered, so the HTML a crawler sees already contains the product
- * name, the price, the specifications and the customisation options — none
+ * name, the price, the specifications and the customization options — none
  * of that depends on this running.
  *
  * There is no full-screen viewer. There was one, and it covered the whole
@@ -54,7 +54,7 @@ export function ProductGallery({ name, images }: { name: string; images: Shot[] 
   const shots = images.length ? images : [];
   const current = shots[0];
 
-  /* Hover zoom follows the pointer: a fixed centre zoom only helps when
+  /* Hover zoom follows the pointer: a fixed center zoom only helps when
      the detail happens to be in the middle, and for a dial that is rarely
      where a buyer is looking. */
   const onMove = useCallback((e: React.MouseEvent) => {

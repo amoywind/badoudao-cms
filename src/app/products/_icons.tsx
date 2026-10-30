@@ -3,11 +3,11 @@
 import type { GroupIcon } from '@/lib/product-detail';
 
 /**
- * The six customisation-group icons, drawn as inline SVG.
+ * The six customization-group icons, drawn as inline SVG.
  *
  * Separate from product-detail.ts because that file is a .ts and this is
  * JSX. They are strokes rather than emoji: emoji render differently per
- * platform and sit on a coloured square, which does not match the outlined
+ * platform and sit on a colored square, which does not match the outlined
  * icons used elsewhere on the site. These are 1.6px strokes in a 24-box, so
  * they sit alongside the existing icon set at the same weight.
  */
@@ -26,7 +26,7 @@ export function GroupGlyph({ name }: { name: GroupIcon }) {
         <circle cx="12" cy="12" r="4.2" />
       </>
     ),
-    /* Two hands from the centre, at the ten-and-two a product photo shows. */
+    /* Two hands from the center, at the ten-and-two a product photo shows. */
     hands: (
       <>
         <circle cx="12" cy="12" r="8.6" />

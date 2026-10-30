@@ -196,7 +196,7 @@ export function CustomizerHub({
           <SamplePolicy compact />
 
           <p className="hub-note">
-            300 pcs MOQ, mixed colours and specifications in one order. EXW
+            300 pcs MOQ, mixed colors and specifications in one order. EXW
             quotation and a photorealistic 3D rendering within {replyHours} hours.
           </p>
         </div>

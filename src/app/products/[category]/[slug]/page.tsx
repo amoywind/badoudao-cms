@@ -172,7 +172,7 @@ export default async function ProductPage({ params }) {
       key: g.key,
       label: g.label,
       icon: g.icon,
-      values: (product.customisations || [])
+      values: (product.customizations || [])
         .filter((c) => c.groupKey === g.key)
         .map((c) => c.value)
     }))
@@ -185,7 +185,7 @@ export default async function ProductPage({ params }) {
      own printed a few lines above it: frame, hands, printing, movement,
      packaging. The same clock was being described twice on one screen,
      once as a list to read and once as buttons to press, and the two
-     did not agree: the builder opened on aluminium hands while the
+     did not agree: the builder opened on aluminum hands while the
      model beside it was built with wooden ones.
 
      One list now. Each group offers what the factory can do for it,
@@ -457,7 +457,7 @@ export default async function ProductPage({ params }) {
                   </a>
                 </div>
                 <p className="pd-cta-note">
-                  Reply within {s.quoteHours || 4} hours · No obligation · Ex Works
+                  Reply within {s.quoteHours || 12} hours · No obligation · Ex Works
                 </p>
 
                 {/* The product-page trust bar. It sits directly under the
@@ -581,8 +581,8 @@ export default async function ProductPage({ params }) {
                       </p>
                       <ul>
                         <li>1.2m six-side drop test on the packed carton</li>
-                        <li>EPE foam or moulded pulp insert, cut to the body</li>
-                        <li>Kraft, colour gift box or acrylic display case</li>
+                        <li>EPE foam or molded pulp insert, cut to the body</li>
+                        <li>Kraft, color gift box or acrylic display case</li>
                         <li>Silk-screen or laser-printed logo on the backplate</li>
                       </ul>
                       <p>
@@ -619,7 +619,7 @@ export default async function ProductPage({ params }) {
                 <div key={p.key} className="pd-pack-c">
                   {/* The photograph when there is one, the drawn outline when
                       there is not. A drawn box reads as a placeholder someone
-                      intended; an empty grey square reads as a page that
+                      intended; an empty gray square reads as a page that
                       failed to load. */}
                   <div className={`pd-pack-img${p.image && packShots[p.image] ? ' has-img' : ''}`}>
                     {p.image && packShots[p.image] ? (
@@ -704,7 +704,7 @@ export default async function ProductPage({ params }) {
               <div>
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 32 }}>Get pricing for {product.id}</h2>
-                <p className="sec-sub">Quantity, customisation and delivery expectations — send them over.</p>
+                <p className="sec-sub">Quantity, customization and delivery expectations — send them over.</p>
                 <ul className="tick-list" style={{ marginTop: 22 }}>
                   <li>Ex Works price breaks by quantity tier</li>
                   <li>Custom dial artwork and logo printing available</li>

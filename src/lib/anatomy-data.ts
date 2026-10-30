@@ -8,7 +8,7 @@
  *
  * The numbers are the specification's. Where they are tolerances rather
  * than options — the 1.5mm clearance between the hands, the 0.05g
- * balance of a hand set, the 1.0 colour delta of the UV print — they
+ * balance of a hand set, the 1.0 color delta of the UV print — they
  * are the ones a buyer checks, and they are the reason the panel
  * exists rather than a list of materials.
  *
@@ -22,8 +22,6 @@ export type ComponentLayer = {
   n: string;
   /** The English name. */
   name: string;
-  /** The Chinese name. */
-  cn: string;
   /** The label on the diagram. */
   label: string;
   /** One line of what this part is for. */
@@ -42,12 +40,11 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '1',
     name: 'Outer Frame / Bezel',
-    cn: '表框 / 边框',
     label: 'Outer frame',
     summary:
       'The body the clock is built on. It carries the dial, holds the movement behind it and takes the wall load.',
     materials:
-      'Aerospace aluminium 6061, FAS-grade black walnut or white oak, virgin ABS engineering plastic, 5–10mm optical acrylic, cast epoxy resin.',
+      'Aerospace aluminum 6061, FAS-grade black walnut or white oak, virgin ABS engineering plastic, 5–10mm optical acrylic, cast epoxy resin.',
     tolerances:
       'Diameter 8" (20cm) to 24" (60cm). Frame depth 15mm to 65mm. Wall mounting load tested to 5kg on a single fixing.',
     craft:
@@ -70,7 +67,6 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '2',
     name: 'Front Lens Cover',
-    cn: '表盘罩 / 玻璃镜面',
     label: 'Lens cover',
     summary:
       'The cover over the dial. It decides how much of the face is visible and how much light comes back off it.',
@@ -94,12 +90,11 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '3',
     name: 'Clock Hands System',
-    cn: '精密表针 / 指针系统',
     label: 'Hands alloy',
     summary:
-      'The hands. A thousand and more moulded shapes, and the part of the clock a buyer touches every day.',
+      'The hands. A thousand and more molded shapes, and the part of the clock a buyer touches every day.',
     materials:
-      'H62 solid brass, stamped ultra-light aerospace aluminium, CNC-carved black walnut, laser-coloured acrylic.',
+      'H62 solid brass, stamped ultra-light aerospace aluminum, CNC-carved black walnut, laser-colored acrylic.',
     tolerances:
       'Hand length 45mm to 280mm. Vertical clearance between the hour and minute hands never below 1.5mm. Counterweight balance within 0.05g per set.',
     craft:
@@ -118,24 +113,23 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '4',
     name: 'Custom Dial Face',
-    cn: '钟面 / 表盘',
     label: 'Custom dial',
     summary:
       'The face the hands run over. It is where the buyer\'s artwork goes, and it is the part that has to survive the sun.',
     materials:
-      '250g matte art board, injection-moulded engineering plastic, brushed aluminium panel, natural timber veneer, automotive crystal porcelain, black walnut river slab.',
+      '250g matte art board, injection-molded engineering plastic, brushed aluminum panel, natural timber veneer, automotive crystal porcelain, black walnut river slab.',
     tolerances:
-      'Single-colour silk screen, 8-colour high-precision UV flatbed printing, 3D embossed injection, laser-engraved grooves. Colour tolerance ΔE below 1.0.',
+      'Single-color silk screen, 8-color high-precision UV flatbed printing, 3D embossed injection, laser-engraved grooves. Color tolerance ΔE below 1.0.',
     craft:
-      'FSC-certified paper, Pantone solid-colour accuracy, non-fading archival UV ink rated for long-term indoor light.',
+      'FSC-certified paper, Pantone solid-color accuracy, non-fading archival UV ink rated for long-term indoor light.',
     special: [
       {
-        title: 'Single-Colour Silk Screen',
-        detail: 'One colour, printed straight onto the board, for a dial that has to cost almost nothing.'
+        title: 'Single-Color Silk Screen',
+        detail: 'One color, printed straight onto the board, for a dial that has to cost almost nothing.'
       },
       {
         title: '3D Embossed Injection',
-        detail: 'The dial is moulded with the relief in it rather than printed on it — for a shape you can feel.'
+        detail: 'The dial is molded with the relief in it rather than printed on it — for a shape you can feel.'
       },
       {
         title: 'Laser Engraved Grooves',
@@ -146,14 +140,13 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '5',
     name: 'Movement Motor & IC',
-    cn: '核心机芯与驱动电路',
     label: 'Movement',
     summary:
       'The motor and the electronics behind it. This is what makes the difference between a clock that ticks and one that does not.',
     materials:
       'Silent sweep under 10dB, standard step-second, radio-controlled RCC covering WWVB / DCF77 / JJY / BPC, Westminster chime, FSTN LCD perpetual-calendar module, see-through-wood LED dot matrix.',
     tolerances:
-      'Brass centre arbor, high-torque nylon gear train, 100% of movements aged on power for 24 hours, running current below 130µA.',
+      'Brass center arbor, high-torque nylon gear train, 100% of movements aged on power for 24 hours, running current below 130µA.',
     craft:
       'Hand-regulated amplitude, and a movement that is inspected again after it is fitted rather than before.',
     special: [
@@ -174,7 +167,6 @@ export const COMPONENTS: ComponentLayer[] = [
   {
     n: '6',
     name: 'Backplate & Wall Hanger',
-    cn: '底板 / 电池舱与挂钩',
     label: 'Backplate',
     summary:
       'The back. It holds the movement, carries the battery and takes the weight of the clock on the wall.',

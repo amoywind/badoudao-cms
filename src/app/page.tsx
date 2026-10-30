@@ -28,7 +28,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Quartz Clock Manufacturer China — OEM & ODM Wholesale | Badoudao',
     description:
-      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 300} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 4} hours.`,
+      `OEM and ODM quartz clocks from a China factory. Wall clocks, alarm clocks, desk clocks and clock movements. MOQ from ${s.moq || 300} pcs, ${s.capacityMin || 2000} pcs daily capacity, Ex Works pricing, CE and RoHS movements. Quotation within ${s.quoteHours || 12} hours.`,
     keywords:
       'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
     path: '/',
@@ -82,14 +82,15 @@ export default async function HomePage() {
                 OEM / ODM B2B production facility
               </div>
               <h1 className="hero2-h1">
-                Agile OEM wall clock manufacturing
+                Agile quartz wall clock manufacturing
                 <br />
-                <span className="hero2-hl">for modern global brands</span>
+                <span className="hero2-hl">for global brands and retailers</span>
               </h1>
               <p className="lede">
-                Built for interior decor brands, corporate gifting and marketplace sellers.
-                Low MOQ {moq} pcs, drop-tested packaging, and 1,000+ clock hand
-                customisations — quoted in {s.quoteHours || 4} hours.
+                Engineered for home decor brands, corporate gifting programs and
+                e-commerce sellers. Low {moq}-piece MOQ, ISTA-1A drop-tested
+                packaging, and 1,000+ clock hand customizations — quoted in{' '}
+                {s.quoteHours || 12} hours.
               </p>
               <div className="hero-btns">
                 <a href="/contact#inquiry" className="btn btn-primary">Build a custom inquiry</a>
@@ -110,7 +111,7 @@ export default async function HomePage() {
             <TrustCards
               variant="strip"
               items={[
-                { value: String(moq), unit: ' pcs', title: 'Flexible low MOQ', detail: 'Mixed colours and specs in one order', icon: Icons.box },
+                { value: String(moq), unit: ' pcs', title: 'Flexible low MOQ', detail: 'Mixed colors and specs in one order', icon: Icons.box },
                 { value: '24', unit: ' hours', title: 'Fast 3D rendering', detail: 'Photorealistic mockups before you commit', icon: Icons.spark },
                 { value: '7', unit: ' days', title: 'Express sampling', detail: 'Physical sample shipped after approval', icon: Icons.clock },
                 { value: '1.2', unit: 'm drop', title: 'Certified packaging', detail: 'ISTA-1A tested for e-commerce shipping', icon: Icons.shield }
@@ -196,7 +197,10 @@ export default async function HomePage() {
                         category page and on the craft page where a
                         buyer goes looking for it. */}
                     <div className="mat-foot">
-                      <span><b>{m.count}</b> designs</span>
+                      {/* Singular and plural agree with the count. "1 designs"
+                          was the kind of line a buyer photographs and sends
+                          to a colleague. */}
+                      <span><b>{m.count}</b> {m.count === 1 ? 'base tooling model' : 'base tooling models'}</span>
                       <span className="exw">MOQ {moq} pcs</span>
                     </div>
                   </div>
@@ -271,17 +275,17 @@ export default async function HomePage() {
               <div className="sec-tag">// Manufacturing</div>
               <h2>Everything happens under one roof</h2>
               <p className="sec-sub">
-                From moulding to finished box. Keeping the whole process in-house means
+                From molding to finished box. Keeping the whole process in-house means
                 faster sampling, tighter tolerances and no surprises between you and
                 the factory.
               </p>
               <div className="cap-list">
                 {[
-                  ['Tooling & in-house moulding', 'New tooling in 15–25 days, no subcontractor margin.'],
+                  ['Tooling & in-house molding', 'New tooling in 15–25 days, no subcontractor margin.'],
                   ['Surface finishing', 'UV spray, electroplating, brushed and antique brass effects, hand-painting.'],
                   ['Assembly & movement sourcing', 'Domestic and imported movements — you choose the accuracy-to-cost point.'],
                   ['Four-stage QC', 'IQC, IPQC, FQC and OQC. Every carton checked before it leaves.'],
-                  ['Retail-ready packaging', 'Colour boxes, window boxes and gift sets designed to survive ocean freight.']
+                  ['Retail-ready packaging', 'Color boxes, window boxes and gift sets designed to survive ocean freight.']
                 ].map(([h, p], i) => (
                   <div className="cap" key={h}>
                     <div className="cap-n">0{i + 1}</div>
@@ -291,10 +295,14 @@ export default async function HomePage() {
               </div>
               <div className="certs">
                 <span className="cert">CE &amp; RoHS movements</span>
-                <span className="cert">QC: IQC / IPQC / FQC / OQC</span>
+                <span className="cert">4-stage QC: IQC / IPQC / FQC / OQC</span>
               </div>
               <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.6 }}>
-                Quartz clocks themselves carry no mandatory certification requirement.{' '}
+                Every movement carries CE (EMC) and RoHS compliance, documented
+                at component level. Finished battery-powered clocks fall outside
+                the mandatory electrical certification schemes, so any
+                market-specific testing your import country asks for is
+                arranged for the order.{' '}
                 <Link href="/p/certification" style={{ textDecoration: 'underline' }}>Read the full compliance note</Link>
               </p>
             </div>
@@ -323,7 +331,7 @@ export default async function HomePage() {
             <div className="proc">
               {[
                 ['Send your brief', 'A reference photo, a sample or a sketch is enough to start.'],
-                ['Quotation', `Within ${s.quoteHours || 4} hours with pricing broken down by tooling, unit, packaging and freight.`],
+                ['Quotation', `Within ${s.quoteHours || 12} hours with pricing broken down by tooling, unit, packaging and freight.`],
                 ['Sample', `${s.sampleDays || '5–7'} business days. Sample cost is credited against your first bulk order.`],
                 ['Bulk production', '20–45 days depending on complexity, with photo and video updates.'],
                 ['Delivery', 'Ex Works by default. CIF or DDP available on request.']
@@ -377,7 +385,7 @@ export default async function HomePage() {
               <h2>Tell us what you need built</h2>
               <p className="sec-sub">
                 Send a reference photo, a sample or just a rough idea. You will get a
-                quotation and a 3D rendering within {s.quoteHours || 4} hours — no obligation.
+                quotation and a 3D rendering within {s.quoteHours || 12} hours — no obligation.
               </p>
             </div>
             <div className="split" style={{ alignItems: 'start' }}>

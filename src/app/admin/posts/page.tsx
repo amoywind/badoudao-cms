@@ -142,7 +142,7 @@ export default function PostsPage() {
                 This used to be gated on type === 'news' and asked for a
                 pasted URL. So an article — which the listing pages read
                 `cover` from, articles and news alike — had no way to set
-                one at all, and the card rendered as an empty grey square.
+                one at all, and the card rendered as an empty gray square.
                 The URL field also assumed the writer knew the path to a file
                 they had just uploaded through a different screen.
 

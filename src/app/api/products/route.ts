@@ -106,8 +106,8 @@ export async function POST(request) {
     );
   });
 
-  if (Array.isArray(body.customisations)) {
-    stmts.push(...customisationStatements(db, id, body.customisations));
+  if (Array.isArray(body.customizations)) {
+    stmts.push(...customisationStatements(db, id, body.customizations));
   }
 
   (body.prices || []).forEach((p) => {
@@ -237,11 +237,11 @@ export async function PUT(request) {
 
   /* replace child collections wholesale — simpler and always consistent */
 
-  /* Not gated on `limited`: the customisation ticks are a separate editor
+  /* Not gated on `limited`: the customization ticks are a separate editor
      from the field list, and saving the text fields must not silently drop
      them. Ticks are checked and reset from their own screen. */
-  if (Array.isArray(body.customisations)) {
-    stmts.push(...customisationStatements(db, body.id, body.customisations));
+  if (Array.isArray(body.customizations)) {
+    stmts.push(...customisationStatements(db, body.id, body.customizations));
   }
 
   if (!limited && Array.isArray(body.specs)) {
@@ -337,7 +337,7 @@ export async function DELETE(request) {
 
   return NextResponse.json({ ok: true });
 }
-/* Persist the owner's per-product customisation picks.
+/* Persist the owner's per-product customization picks.
 
    Written as delete-then-insert rather than a diff: the admin sends the
    whole set every time, and the set is at most six groups of five values,

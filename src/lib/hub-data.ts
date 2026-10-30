@@ -38,9 +38,9 @@ export const TABS: Tab[] = [
     label: 'Housing',
     choices: [
       { code: 'WD08', label: 'Solid wood 90°', note: 'Walnut or white oak, mortise and tenon corner joint' },
-      { code: 'AL02', label: 'Anodised aluminium', note: 'CNC laser-cut, brushed and anodised frame' },
+      { code: 'AL02', label: 'Anodized aluminum', note: 'CNC laser-cut, brushed and anodized frame' },
       { code: 'AC05', label: '5mm acrylic', note: 'Optical-grade PMMA, reverse UV print' },
-      { code: 'AB03', label: 'ABS plastic', note: 'Injection moulded, Pantone matched' },
+      { code: 'AB03', label: 'ABS plastic', note: 'Injection molded, Pantone matched' },
       { code: 'GC02', label: 'Crystal porcelain', note: 'Heat-melted glaze over tempered glass' },
       { code: 'RS04', label: 'Epoxy resin river', note: 'Vacuum-cast live-edge resin base' }
     ]
@@ -64,9 +64,9 @@ export const TABS: Tab[] = [
     choices: [
       { code: 'H08', label: 'Brass baton', note: 'H62 brass, style #084' },
       { code: 'H12', label: 'Walnut', note: 'Solid black walnut, cut to match the housing' },
-      { code: 'H03', label: 'Matte black aluminium', note: 'Anodised, minimal profile' },
+      { code: 'H03', label: 'Matte black aluminum', note: 'Anodized, minimal profile' },
       { code: 'H21', label: 'Super-LumiNova', note: 'Glow-in-the-dark, night readable' },
-      { code: 'H16', label: 'Coloured acrylic', note: 'Translucent, Pantone matched' }
+      { code: 'H16', label: 'Colored acrylic', note: 'Translucent, Pantone matched' }
     ]
   },
   {

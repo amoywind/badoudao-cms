@@ -66,7 +66,7 @@ img { display: block; max-width: 100%; height: auto; }
    happens to have, and it is given its own size in the markup so the
    header does not shift when the file arrives. The word is split the
    way the domain used to be, so the two halves of the name keep the
-   two colours the mark has always had. */
+   two colors the mark has always had. */
 .logo-mark {
   display: inline-flex;
   align-items: center;
@@ -159,9 +159,9 @@ h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -.01em; }
 .c-visual.has-img { padding: 4%; background: #f7f8f9; }
 
 /* Article and news covers go through the same has-img class. A card with
-   no cover is left as the plain grey square rather than being given a
-   placeholder graphic: on a listing page a row of identical grey squares
-   reads as three broken images, while one grey square among two covers
+   no cover is left as the plain gray square rather than being given a
+   placeholder graphic: on a listing page a row of identical gray squares
+   reads as three broken images, while one gray square among two covers
    reads as an article without a picture — which is what it is. */
 .c-visual img { width: 100%; height: 100%; object-fit: contain; transition: transform .35s; }
 .card:hover .c-visual img { transform: scale(1.05); }
@@ -222,10 +222,10 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 
 
 .f-brand .logo { color: #fff; font-size: 22px; margin-bottom: 16px; }
-/* The word carries its own colour from the header rule, and that rule
+/* The word carries its own color from the header rule, and that rule
    is the black one — on the dark ground of the footer the name has to
    be white. This is stated again here rather than left to inherit,
-   because a rule that sets a colour directly beats one that is
+   because a rule that sets a color directly beats one that is
    inherited, however later it is written. */
 .f-brand .logo-mark .logo-word { color: #fff; }
 .f-brand p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
@@ -378,14 +378,14 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 }
 .ch-promise .ch-val { font-size: 15px; font-weight: 500; }
 
-/* The label under a field, and the coloured note.
+/* The label under a field, and the colored note.
 
    These were in the admin's stylesheet, which the admin loads and the
    public pages do not — so when the admin's rules were scoped to the
    admin, the contact page lost its field labels and the blue note
    under them. They belong to both, so they live in the file both load.
 
-   The three soft colours are declared here as well, for the same
+   The three soft colors are declared here as well, for the same
    reason: the note below uses them and the public pages had never
    heard of them. */
 .help { font-size: 11.5px; color: var(--ink3); margin-top: 4px; line-height: 1.5; }
@@ -676,7 +676,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .drop-alt a:hover { text-decoration: underline; }
 
 /* ---- error fallback ----
-   Shown instead of React's blank page. Centred rather than full-bleed:
+   Shown instead of React's blank page. Centered rather than full-bleed:
    on a product page the buyer has just scrolled past a spec table, and a
    full-screen error reads like the site is down. */
 
@@ -812,7 +812,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    The rail is an off-white panel with white cards inside it, rather than
    cards floating on the page background. The difference is that the panel
    reads as one object with a boundary — the eye stops at its edge instead
-   of drifting into the margin — and it makes the sticky behaviour legible:
+   of drifting into the margin — and it makes the sticky behavior legible:
    you can see the panel following the text rather than inferring it. */
 
 .page-layout {
@@ -867,8 +867,8 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   letter-spacing: .01em; color: var(--ink);
   margin: 0 0 14px;
 }
-/* Icons carry the section identity; keeping them in the ink colour rather
-   than the brand colour stops three coloured glyphs from competing with
+/* Icons carry the section identity; keeping them in the ink color rather
+   than the brand color stops three colored glyphs from competing with
    the one button that is meant to be clicked. */
 .rail-card h2 svg { color: #3f4a56; flex-shrink: 0; }
 
@@ -916,7 +916,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   font-size: 13.5px; color: var(--brand);
 }
 
-/* The ask. The only element on the page in the solid brand colour, so it
+/* The ask. The only element on the page in the solid brand color, so it
    is unambiguous which action is wanted. */
 .rail-ask { background: #fff; }
 .rail-ask h2 { font-size: 16px; letter-spacing: 0; }
@@ -958,7 +958,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
   width: 100%; height: 100%; object-fit: contain;
   transition: transform .35s ease;
 }
-/* Zoom follows the pointer rather than staying centred: a fixed centre
+/* Zoom follows the pointer rather than staying centered: a fixed center
    helps only when the detail happens to be in the middle, and for a dial
    the interesting part — the numerals, the finish — is rarely there. */
 .pd-main.zoom .pd-main-btn img { transform: scale(1.75); }
@@ -1086,7 +1086,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
    dropped: a dashed outline around a clean product shot reads as "unfinished"
    and draws the eye to the edge instead of the box. Square rather than 4:3
    because that is how they were shot, and letterboxing a square into 4:3
-   leaves grey bars top and bottom that look like a loading failure.
+   leaves gray bars top and bottom that look like a loading failure.
 
    object-fit contain rather than cover: these show a whole box including its
    open lid, and cropping to fill a 4:3 frame cuts the lid off — which is the
@@ -1134,7 +1134,7 @@ textarea.inp { resize: vertical; min-height: 104px; line-height: 1.6; }
 .pd-process p { font-size: 13.5px; color: var(--ink2); line-height: 1.55; margin: 0; }
 
 
-/* ---- customisation list (read-only) ----
+/* ---- customization list (read-only) ----
    Rows, not a picker. A visitor cannot order from this page — a wholesale
    quote needs a conversation about quantity and artwork — so controls would
    imply they can commit to a configuration here, and they cannot. What

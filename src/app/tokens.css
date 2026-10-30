@@ -42,7 +42,7 @@
 .site {
   /* The public palette. Declared here rather than on :root so the
      admin's own :root — which loads later and would otherwise win —
-     cannot pull the front end back to the old colours. */
+     cannot pull the front end back to the old colors. */
   --ink: #111111;
   --ink2: #6B7280;
   --ink3: #6B7280;
@@ -85,7 +85,7 @@
 }
 
 :root {
-  /* -- accent: the public site's action colour. Klein Blue, reserved for
+  /* -- accent: the public site's action color. Klein Blue, reserved for
      primary CTAs, active configuration states and live indicators. */
   --accent: #0052CC;
   --accent-hover: #003D99;
@@ -99,7 +99,7 @@
   --rule: #E5E7EB;
   --rule-soft: #F0F1F3;
 
-  /* -- text: charcoal, slate, and the muted grey for engineering labels. */
+  /* -- text: charcoal, slate, and the muted gray for engineering labels. */
   --text: #111111;
   --text-2: #6B7280;
 
@@ -142,7 +142,7 @@
 }
 
 /* Numbers in the trust cards and spec tables are data, not prose. They get
-   the mono face and the accent colour so a scan down the page finds them
+   the mono face and the accent color so a scan down the page finds them
    without reading them. */
 .tnum {
   font-family: var(--font-tech);
@@ -212,7 +212,7 @@
 /* ===================================================================
    Trust cards — §4.2
    The number is the hook, so it is the largest thing on the card and the
-   only thing in accent colour.
+   only thing in accent color.
    =================================================================== */
 
 .tcards {
@@ -345,7 +345,7 @@
 /* ===================================================================
    Square media frame — §1.2
    Every product image container is 1:1 with object-fit: contain, and the
-   image background matches the card so there is no colour fringe where
+   image background matches the card so there is no color fringe where
    the two meet.
    =================================================================== */
 
@@ -365,7 +365,7 @@
 }
 
 /* The hover reveal: a second layer that fades in over the still. Used for
-   the "alternate dial colour" hover the specification asks for on the
+   the "alternate dial color" hover the specification asks for on the
    trending-platform cards, and reserved for a video once one exists. */
 
 .sq:hover .sq-alt {
@@ -776,7 +776,7 @@
   min-width: 0;
 }
 
-/* The colour chip beside a material name. It is the whole point of
+/* The color chip beside a material name. It is the whole point of
    the swatch - the buyer sees the finish rather than reading about
    it. */
 .ck-swatch {
@@ -1015,7 +1015,7 @@
 }
 
 /* The request button is the only action in the header, so it is the
-   only thing allowed to be the accent colour. */
+   only thing allowed to be the accent color. */
 .site .nav-cta .btn {
   border-radius: 2px;
   letter-spacing: 0.02em;
@@ -1947,7 +1947,7 @@
 }
 
 /* The refund is the fact that makes a sample worth ordering, so it is
-   the one value in the accent colour. */
+   the one value in the accent color. */
 .sp-v-good {
   color: var(--accent);
 }
@@ -1984,7 +1984,7 @@
    =================================================================== */
 
 /* The refund is the fact that makes a sample worth ordering, so it is
-   the one value in the accent colour. */
+   the one value in the accent color. */
 
 /* The short form, under the customizer hub's summary. */
 
@@ -1996,7 +1996,7 @@
    The drawing on the left and the engineering panel on the right.
    The drawing is clickable, so it needs to look clickable: each layer
    brightens and lifts a little when it is the selected one, and the
-   callout beside it turns to the accent colour.
+   callout beside it turns to the accent color.
    =================================================================== */
 
 .anx-head {
@@ -2082,8 +2082,8 @@
 }
 
 /* The two structural parts keep their own value whatever is selected.
-   The backplate is a dark moulded disc and the frame is a metal ring;
-   fading them to 42% turned the backplate into a pale grey circle,
+   The backplate is a dark molded disc and the frame is a metal ring;
+   fading them to 42% turned the backplate into a pale gray circle,
    which reads as a different part rather than as the same part
    waiting its turn. */
 .anx-l.anx-solid:not(.on) {
@@ -2408,7 +2408,7 @@
      The frame is white, the same white the photographs are shot on, so
      a picture sits in its frame rather than on a mat behind it. The
      frame is still shorter than it is wide, and the picture is still
-     fitted into it and centred, so the clock is whole and the space
+     fitted into it and centered, so the clock is whole and the space
      at its sides is the white of the photograph continuing. */
   aspect-ratio: 3 / 2;
   padding: 0;
@@ -2438,7 +2438,7 @@
 
    An ordinary element in between does fix it. Placed against the
    frame's own padding it takes exactly the size of the frame's
-   inside, and the picture is fitted into that box and centred in it.
+   inside, and the picture is fitted into that box and centered in it.
    Nothing is cut off and nothing is stretched: the picture is whole,
    with the frame showing at its sides, which is what a mat is for. */
 .mat-card .sq-in {
@@ -3235,7 +3235,7 @@
 /* The hero grid.
 
    The two columns are aligned at the top rather than in the middle.
-   Centred, the 431-pixel headline block sat in the middle of a
+   Centered, the 431-pixel headline block sat in the middle of a
    700-pixel card with 150 pixels of nothing above and below it, and
    the whole section ran past the bottom of the screen — the trust
    strip below it never appeared.
@@ -3246,7 +3246,7 @@
 /* The hero grid.
 
    The two columns are aligned at the top rather than in the middle.
-   Centred, the 431-pixel headline block sat in the middle of a
+   Centered, the 431-pixel headline block sat in the middle of a
    700-pixel card with 150 pixels of nothing above and below it, and
    the whole section ran past the bottom of the screen — the trust
    strip below it never appeared.
@@ -3858,7 +3858,7 @@
    read before the headline is finished. */
 @media (max-width: 1280px) {
   /* Six cards across a twelve-hundred-pixel page means each picture is
-     under two hundred pixels wide, which is too small to recognise a
+     under two hundred pixels wide, which is too small to recognize a
      material from. Three across is the point where the photograph is
      still a cue. */
 
@@ -3874,7 +3874,7 @@
 
   /* The card is the width of the page now, which would leave a dial
      in the middle of a very wide panel. It is held to a width a
-     reader can take in and centred, and the dial grows to match the
+     reader can take in and centered, and the dial grows to match the
      space it has. */
   .clockbox {
     max-width: 880px;
@@ -3956,7 +3956,7 @@
    read before the headline is finished. */
 @media (max-width: 1280px) {
   /* Six cards across a twelve-hundred-pixel page means each picture is
-     under two hundred pixels wide, which is too small to recognise a
+     under two hundred pixels wide, which is too small to recognize a
      material from. Three across is the point where the photograph is
      still a cue. */
 
@@ -3966,7 +3966,7 @@
 
   /* The card is the width of the page now, which would leave a dial
      in the middle of a very wide panel. It is held to a width a
-     reader can take in and centred, and the dial grows to match the
+     reader can take in and centered, and the dial grows to match the
      space it has. */
 }
 

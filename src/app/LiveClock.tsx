@@ -10,7 +10,7 @@
  * WHAT IT DOES
  *
  * The buyer picks a dial face, a hand alloy and a drive mode. The dial
- * redraws, the hands change colour, the second hand either sweeps or
+ * redraws, the hands change color, the second hand either sweeps or
  * steps, and the decibel reading follows. The sound of the movement can
  * be played, and the current configuration can be written into the
  * enquiry form at the bottom of the page.
@@ -36,8 +36,8 @@
  *
  * THE GEOMETRY
  *
- * The dial is drawn with the centre locked at (120, 120), and every
- * radius in the specification is measured from that centre: the bezel
+ * The dial is drawn with the center locked at (120, 120), and every
+ * radius in the specification is measured from that center: the bezel
  * at 114, the guide track at 104, the minute ticks from 98, the hour
  * ticks from 92, the hour hand 54 long, the minute hand 78, and the
  * second hand 90 with a short counterweight tail the other way.
@@ -280,7 +280,7 @@ export function LiveClock() {
     window.location.href = '/contact?' + q.toString();
   }
 
-  /* The dial's colours feed the SVG. The gradient id has to be unique
+  /* The dial's colors feed the SVG. The gradient id has to be unique
      per face, or the browser reuses the first one it defined and the
      obsidian dial keeps the white gradient. */
   const gradId = `dial-${face.key}`;
@@ -438,7 +438,7 @@ export function LiveClock() {
 
                 The lengths are the specification's effective lengths —
                 54 for the hour hand, 78 for the minute, 90 for the
-                second — measured from the centre. The specification
+                second — measured from the center. The specification
                 also gives 66 and 42 for the hour and minute hands, and
                 those are the y-coordinates their tips land on in the
                 240-unit square, not distances: a hand whose tip sits
@@ -505,7 +505,7 @@ export function LiveClock() {
           {/* 1. the drive mode */}
           <div className="ck-grp">
             <div className="ck-lbl">
-              <span className="ck-n">1.</span> Movement drive mode
+              <span className="ck-n">1.</span> Movement type &amp; escapement
             </div>
             {/* The two drive modes stack rather than sitting side by
                 side. Their names are the longest words in the panel
@@ -534,7 +534,7 @@ export function LiveClock() {
           <div className="ck-pair">
             <div className="ck-grp">
               <div className="ck-lbl">
-                <span className="ck-n">2.</span> Dial face material
+                <span className="ck-n">2.</span> Dial face substrate &amp; finish
               </div>
               <div className="ck-opts ck-opts-row">
                 {DIAL_FACES.map((f) => (
@@ -554,7 +554,7 @@ export function LiveClock() {
 
             <div className="ck-grp">
               <div className="ck-lbl">
-                <span className="ck-n">3.</span> Custom hands alloy
+                <span className="ck-n">3.</span> Clock hand material &amp; finish
               </div>
               <div className="ck-opts ck-opts-row">
                 {HAND_ALLOYS.map((a) => (
@@ -597,12 +597,12 @@ export function LiveClock() {
           <div className="ck-read-z">{zoneLabel}</div>
         </div>
         <div className="ck-read">
-          <div className="ck-read-l">Acoustic pressure</div>
+          <div className="ck-read-l">Acoustic noise floor</div>
           <div className={`ck-read-v tnum${dbPeak ? ' peak' : ''}`}>
-            {db.toFixed(1)} dB
+            {db.toFixed(1)} dBA
           </div>
           <div className="ck-read-z">
-            {isStep ? 'Standard Tick' : drive.quiet}
+            {isStep ? 'Standard 1 Hz step-second tick · 28 dBA' : drive.quiet}
           </div>
         </div>
       </div>
@@ -618,9 +618,9 @@ export function LiveClock() {
           that quotes only the first two looks like a factory nobody
           has asked the third question of. */}
       <div className="ck-specs">
-        <span><b>Movement core</b> CE (EMC) &amp; RoHS 2.0 certified</span>
-        <span><b>Crystal</b> 32.768 kHz</span>
-        <span><b>Current draw</b> &lt;130 μA</span>
+        <span><b>Movement compliance</b> CE (EMC) &amp; RoHS 2.0 certified</span>
+        <span><b>Quartz oscillator</b> 32.768 kHz tuning-fork crystal</span>
+        <span><b>Average operating current draw</b> &lt;130 μA</span>
       </div>
 
       {/* The configuration, carried into the enquiry as a hidden field

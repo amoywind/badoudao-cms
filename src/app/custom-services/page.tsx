@@ -25,7 +25,7 @@ export async function generateMetadata() {
   return buildMeta({
     title: 'Custom Services & Clock Anatomy — OEM/ODM | Badoudao',
     description:
-      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customisable. The 28-day production calendar from drawing to container. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5–7'} days.`,
+      `What a wall clock is made of: frame, backplate, hands, movement, dial and lens cover, each independently customizable. The 28-day production calendar from drawing to container. MOQ from ${s.moq || 300} pcs, Ex Works pricing, samples in ${s.sampleDays || '5–7'} days.`,
     keywords:
       'custom clock manufacturer, OEM clock parts, private label wall clock, clock dial printing, bespoke clock supplier',
     path: '/custom-services'
@@ -111,12 +111,12 @@ export default async function CustomServicesPage() {
 
             <div className="grid-3">
               {[
-                ['New tooling', '15–25 days for a new mould, made in-house so there is no subcontractor margin in the price.'],
+                ['New tooling', '15–25 days for a new mold, made in-house so there is no subcontractor margin in the price.'],
                 ['Sample', `${s.sampleDays || '5–7'} business days. A sealed sample is approved before the bulk run starts.`],
                 ['Mass production', '20–45 days depending on complexity. Lead time for a repeat design is shorter.'],
                 ['Vector files', 'AI, CAD, PDF or EPS. A dial artwork template comes with the first quote.'],
-                ['Custom moulds', '3D scanning and prototyping for shapes that do not exist yet, from a photo or a sketch.'],
-                ['Minimum order', `MOQ from ${moq} pcs, and colours and specifications can be mixed within one order.`]
+                ['Custom molds', '3D scanning and prototyping for shapes that do not exist yet, from a photo or a sketch.'],
+                ['Minimum order', `MOQ from ${moq} pcs, and colors and specifications can be mixed within one order.`]
               ].map(([n, d]) => (
                 <div className="card" key={n} style={{ padding: 22 }}>
                   <h3 style={{ fontSize: 16, marginBottom: 8 }}>{n}</h3>
@@ -155,11 +155,11 @@ export default async function CustomServicesPage() {
             <div className="grid-3">
               {[
                 ['Vector artwork', 'AI, EPS, PDF or SVG. Text converted to outlines so the file renders the same on our machine as on yours.'],
-                ['Print colours', 'Pantone solid coated or CMYK. A photograph of a colour is not a colour specification.'],
+                ['Print colors', 'Pantone solid coated or CMYK. A photograph of a color is not a color specification.'],
                 ['Logo and mark', 'Vector, with the minimum size and the clear space written down. A bitmap logo on a dial is a blurry logo on a dial.'],
                 ['Dial size', 'The finished diameter, not the diameter of the movement behind it. The two are not the same number.'],
                 ['Numerals and markers', 'Which numerals, which font, and how close to the edge they sit. The rim needs room for them.'],
-                ['Movement', 'Which movement the dial is drawn for — the centre hole and the hand spacing differ between them.']
+                ['Movement', 'Which movement the dial is drawn for — the center hole and the hand spacing differ between them.']
               ].map(([n, d]) => (
                 <div className="card" key={n} style={{ padding: 22 }}>
                   <h3 style={{ fontSize: 15.5, marginBottom: 8 }}>{n}</h3>
@@ -182,7 +182,7 @@ export default async function CustomServicesPage() {
             <h2 style={{ marginBottom: 12 }}>Send us the part you want to change</h2>
             <p className="sec-sub" style={{ marginBottom: 26 }}>
               A dial, a hand set, a frame profile, a packaging tier — tell us which one
-              and the quote comes back within {s.quoteHours || 4} hours.
+              and the quote comes back within {s.quoteHours || 12} hours.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/contact" className="btn btn-primary">Request a quote</Link>

@@ -53,7 +53,7 @@ export default async function ProductsIndex() {
             The cards were the real problem. Eight of them, each a large
             gradient panel with no photograph — because no category has a
             category image yet. So the first screen was eight identical
-            grey rectangles. A buyer cannot judge a category from its
+            gray rectangles. A buyer cannot judge a category from its
             description and a number, and the sidebar below does the same
             job in a form that fits in one column and works on a phone.
 
@@ -61,12 +61,12 @@ export default async function ProductsIndex() {
         <section>
           <div className="wrap">
             <div className="shop-layout">
-              <CategoryNav cats={cats} counts={counts} heading="Browse by Category" />
+              <CategoryNav cats={cats} counts={counts} heading="Filter by Material Platform" />
 
               <div>
                 <div className="sec-head">
-                  <div className="sec-tag">All Models</div>
-                  <h1 style={{ fontSize: 30 }}>{products.length} models in production</h1>
+                  <div className="sec-tag">All Base Models</div>
+                  <h1 style={{ fontSize: 30 }}>{products.length} {products.length === 1 ? 'base model' : 'base models'} in production</h1>
                 </div>
 
                 {/* The catalogue, with the material filter above it.
@@ -79,7 +79,7 @@ export default async function ProductsIndex() {
                     written the same way.
 
                     The filter narrows by material because that is the
-                    axis the catalogue is organised on and every product
+                    axis the catalogue is organized on and every product
                     has one. It does not narrow by movement: only some
                     of the products carry a movement recorded, and a
                     filter that quietly hides half the catalogue when a
@@ -147,7 +147,7 @@ export default async function ProductsIndex() {
               <div>
                 <div className="sec-tag">Request a Quote</div>
                 <h2 style={{ fontSize: 30 }}>Tell us what you need</h2>
-                <p className="sec-sub">Quotation within {s.quoteHours || 4} hours.</p>
+                <p className="sec-sub">Quotation within {s.quoteHours || 12} hours.</p>
               </div>
               <InquiryCTA label="Send us your requirements" />
             </div>

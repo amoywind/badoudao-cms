@@ -43,7 +43,7 @@ export type ProductImage = {
   kind?: string;
 };
 
-/* Which customisation values the owner ticked for this model. The group
+/* Which customization values the owner ticked for this model. The group
    keys and the values themselves live in product-detail.ts; this is only
    the per-product selection. */
 export type ProductCustomisation = {
@@ -97,8 +97,8 @@ export type Product = {
   sizeInch?: number | null;
   /* Only the detail page loads these. Optional so the list query, which
      does not join the table, still satisfies the type — and the page reads
-     it as `product.customisations || []` for the same reason. */
-  customisations?: ProductCustomisation[];
+     it as `product.customizations || []` for the same reason. */
+  customizations?: ProductCustomisation[];
 };
 
 export type SiteSettings = Record<string, string>;
@@ -212,7 +212,7 @@ async function edgeKey(sql: string, params: unknown[]): Promise<string | null> {
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
   /* Keyed to the request host so two deployments on different domains do
-     not read each other's entries in a shared data centre. */
+     not read each other's entries in a shared data center. */
   const host = (() => {
     try {
       return new URL((getRequestContext() as { request?: Request }).request?.url || 'https://local')
@@ -390,10 +390,10 @@ export function mapProduct(row, extras: Record<string, unknown[]> = {}) {
     movementType: row.movement_type || null,
     sizeInch: row.size_inch ?? null,
     /* Empty rather than omitted when the caller did not load them: the
-       detail page reads product.customisations.length directly, and an
+       detail page reads product.customizations.length directly, and an
        undefined here is the same class of bug as the missing fifth
        Promise.all entry — the field has to always exist. */
-    customisations: (extras.customisations as ProductCustomisation[]) || []
+    customizations: (extras.customizations as ProductCustomisation[]) || []
   };
 }
 
@@ -435,7 +435,7 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
        ORDER BY pi.is_main DESC, pi.sort_order`,
       row.id
     ),
-    /* The owner's per-product customisation picks. This has to be the fifth
+    /* The owner's per-product customization picks. This has to be the fifth
        entry: the destructuring above reads five names off this array, and a
        short array leaves customs undefined — which surfaced as a 404,
        because the page calls getProduct inside a .catch(() => null) and
@@ -482,9 +482,9 @@ export async function getProduct(idOrSlug, { includeDrafts = true } = {}) {
          Null on older rows, which the gallery treats as the front view. */
       kind: m.shot_kind || ''
     })),
-    /* Which customisation values apply to this model. The groups live in
+    /* Which customization values apply to this model. The groups live in
        product-detail.ts; this records the owner's per-product picks. */
-    customisations: customs.map((c) => ({
+    customizations: customs.map((c) => ({
       groupKey: c.group_key,
       value: c.value,
       priceDelta: c.price_delta || 0
@@ -669,7 +669,7 @@ export async function countProductsByCategory(): Promise<Record<string, number>>
 
 /**
  * Extract an 11-character YouTube id from any of the URL shapes a user is
- * likely to paste. Returns '' when the string is not recognisably YouTube,
+ * likely to paste. Returns '' when the string is not recognizably YouTube,
  * so a bad paste is caught before it reaches the page.
  */
 export function youtubeId(input: string): string {
@@ -727,7 +727,7 @@ export const VIDEO_SLOTS = {
   'home-factory-3': 'Home — packing line',
   'home-factory-4': 'Home — loading into the container',
   'qc-step-1': 'QC Step 1 — raw material check',
-  'qc-step-2': 'QC Step 2 — 24-hour movement ageing',
+  'qc-step-2': 'QC Step 2 — 24-hour movement aging',
   'qc-step-3': 'QC Step 3 — hand balancing',
   'qc-step-4': 'QC Step 4 — drop test',
   'pdp-drop-test': 'Product page — the drop test'
@@ -922,6 +922,46 @@ export async function getSiteUrl(): Promise<string> {
 }
 
 /**
+ * Shorten a search-result title without losing the brand at the end of it.
+ *
+ * The old version sliced the whole string to 62 characters, and every page
+ * title ends with " | Badoudao" — so the cut landed inside the brand and
+ * Google listed the site as "Badoud", "Badou" and even "Bado". A result
+ * title advertising a name nobody searches for is worse than a long one:
+ * the brand does not accumulate against any query.
+ *
+ * Pages write their titles as "<something> | Badoudao", so the separator is
+ * what they have in common. Words are dropped from the part before it until
+ * the whole line fits, which keeps the brand intact and the break on a word
+ * boundary rather than mid-syllable.
+ */
+const TITLE_MAX = 62;
+
+function trimTitle(input: string): string {
+  const t = input.trim();
+  if (t.length <= TITLE_MAX) return t;
+
+  const sep = t.lastIndexOf(' | ');
+  /* Nothing to protect: an over-long title with no separator is the
+     author's own, and cutting it is the only option left. */
+  if (sep < 0) return t.slice(0, TITLE_MAX).trimEnd();
+
+  const tail = t.slice(sep);
+  const words = t.slice(0, sep).trim().split(/\s+/);
+  /* Dropping whole words leaves the occasional dangling connector —
+     "…Manufacturer in | Badoudao". Trailing articles, prepositions and
+     dashes read as a printer's error, so they go too. */
+  const DANGLING = new Set(['in', 'of', 'the', 'and', 'or', 'for', 'with', 'to', 'a', 'an', '&', '—', '–', '-']);
+  while (words.length > 1) {
+    words.pop();
+    while (words.length > 1 && DANGLING.has(words[words.length - 1].toLowerCase())) words.pop();
+    const candidate = `${words.join(' ')}${tail}`;
+    if (candidate.length <= TITLE_MAX) return candidate;
+  }
+  return t.slice(0, TITLE_MAX).trimEnd();
+}
+
+/**
  * Build a Next.js metadata object for a public page.
  *
  * Every page used to inherit one shared title, which told Google that eight
@@ -952,7 +992,7 @@ export async function buildMeta({
   type?: string;
   keywords?: string;
 }) {
-  const t = String(seoTitle || title || '').trim().slice(0, 62);
+  const t = trimTitle(String(seoTitle || title || '').trim());
 
   /* The MOQ is a number the factory can change, and the SEO copy is
      written by hand — so a description that says "MOQ 500 pcs" stays
@@ -987,7 +1027,7 @@ export async function buildMeta({
      video.movie and a handful more. Passing anything else (a product page
      wanting "product", for instance) makes Next reject the whole metadata
      object: the page still renders, but with no <title> and no description
-     at all, which is invisible from the front end. Anything unrecognised
+     at all, which is invisible from the front end. Anything unrecognized
      falls back to website; the Product JSON-LD below it is what actually
      marks the page as a product. */
   const OG_TYPES = new Set([
