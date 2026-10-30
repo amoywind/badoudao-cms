@@ -3,7 +3,7 @@ import type { SiteSettings } from '@/lib/db';
 import { getSettings, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { SiteSchema } from '../SiteSchema';
-import { MOVEMENTS, DISPLAYS, HAND_MATERIALS, HAND_SPEC_FIELDS, PACKAGING_TIERS } from '@/lib/vocabulary';
+import { MOVEMENTS, DISPLAYS, HAND_MATERIALS, PACKAGING_TIERS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -122,7 +122,7 @@ export default async function ComponentsPage() {
           <div className="wrap">
             <div className="sec-head">
               <div className="sec-tag">// Clock hands · 1,000+ molded styles</div>
-              <h2>Five materials, one specification per style</h2>
+              <h2>Five materials, every style already molded</h2>
               <p className="sec-sub">
                 Hands are the cheapest way to make a clock look like a different
                 product. Every style in the library is a mold that already exists,
@@ -130,48 +130,13 @@ export default async function ComponentsPage() {
               </p>
             </div>
 
-            <div className="grid-3" style={{ marginBottom: 34 }}>
+            <div className="grid-3">
               {HAND_MATERIALS.map((h) => (
                 <div className="card" key={h.key} style={{ padding: 22 }}>
                   <h3 style={{ fontSize: 16.5, marginBottom: 8 }}>{h.name}</h3>
                   <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{h.note}</p>
                 </div>
               ))}
-            </div>
-
-            {/* The fields each style is recorded with. The list of styles
-                themselves is a thousand rows of a spreadsheet, and the
-                factory has not issued it yet — so the page shows the
-                structure the list will be loaded into rather than
-                inventing a handful of rows to look complete. */}
-            <div className="spec">
-              <div className="spec-h">What each style records</div>
-              <div style={{ overflowX: 'auto' }}>
-                <table className="mtx">
-                  <thead>
-                    <tr>
-                      {HAND_SPEC_FIELDS.map((f) => (
-                        <th key={f.key}>{f.label}</th>
-                      ))}
-                      <th>Example</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {HAND_SPEC_FIELDS.map((f) => (
-                        <td key={f.key}>{f.label}</td>
-                      ))}
-                      <td className="tnum">
-                        {HAND_SPEC_FIELDS.map((f) => f.example).join(' · ')}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 14, lineHeight: 1.55 }}>
-                The style list is pending from the factory. Ask for the current
-                catalogue and we will send it with the quotation.
-              </p>
             </div>
           </div>
         </section>

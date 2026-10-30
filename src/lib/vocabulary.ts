@@ -243,15 +243,6 @@ export const HAND_MATERIALS = [
   }
 ];
 
-/** The fields every hand style has to answer for. */
-export const HAND_SPEC_FIELDS = [
-  { key: 'style', label: 'Style number', example: 'H-084' },
-  { key: 'minuteLen', label: 'Minute hand length', example: '95 mm' },
-  { key: 'hourLen', label: 'Hour hand length', example: '62 mm' },
-  { key: 'weight', label: 'Weight per set', example: '14 g' },
-  { key: 'balance', label: 'Counterweight standard', example: 'Balanced, ±0.2 g' },
-  { key: 'lume', label: 'Glow rating', example: 'Super-LumiNova, 4 h' }
-];
 
 /** The three packaging tiers — §5.4-4. */
 export const PACKAGING_TIERS = [
