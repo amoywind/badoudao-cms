@@ -238,7 +238,7 @@ export default function PostsPage() {
     <>
       <div className="card">
         <div className="card-h">
-          <h3>博客文章</h3>
+          <h3>文章</h3>
           <span className="sub">{posts.length} 篇 · {posts.filter((p) => p.status === 'published').length} 已发布</span>
           <div className="r">
             <button className="btn btn-p btn-sm" onClick={() => { setEdit({ ...BLANK }); setView('edit'); }}>
