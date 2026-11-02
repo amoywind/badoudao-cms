@@ -86,7 +86,7 @@ export async function Header() {
           name "Menu" — the checkbox is a CSS state holder, not something a
           person operates. */}
       <input type="checkbox" id="nav-toggle" className="nav-checkbox"
-        tabIndex={-1} />
+        tabIndex={-1} aria-label="Toggle navigation menu" />
       <label className="nav-toggle" htmlFor="nav-toggle">
         <span className="nav-toggle-bars" aria-hidden="true">
           <span /><span /><span />
