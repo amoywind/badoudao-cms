@@ -261,7 +261,7 @@ export default async function HomePage() {
                   <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.65, marginBottom: 14 }}>
                     {t.body}
                   </p>
-                  <span className="exw">{t.cta} →</span>
+                  <span className="exw" style={{ marginTop: 'auto' }}>{t.cta} →</span>
                 </Link>
               ))}
             </div>
