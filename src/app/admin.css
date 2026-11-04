@@ -17,11 +17,11 @@
   --ink3: #767f8c;
   --line: #e6e8eb;
   --line2: #f0f2f4;
-  --bg: #f6f7f9;
+  --bg: #fafbfc;
   --card: #fff;
-  --brand: #0f5c4a;
-  --brand2: #0c4b3c;
-  --brandSoft: #e8f2ef;
+  --brand: #0e7c5f;
+  --brand2: #0b634c;
+  --brandSoft: #e4f4ee;
   --warn: #b45309;
   --warnSoft: #fef3c7;
   --danger: #b91c1c;
@@ -163,9 +163,11 @@
 .admin-root tbody tr:hover { background: #fafbfc; }
 .admin-root tbody tr:last-child td { border-bottom: none; }
 
-.thumb { width: 36px; height: 36px; border-radius: 4px; object-fit: cover; background: #f0f2f4; border: 1px solid var(--line); flex-shrink: 0; }
+/* Square 40px: product photos are shot square, so the frame never crops
+   or letterboxes — the same 1:1 rule the storefront uses. */
+.thumb { width: 40px; height: 40px; border-radius: 5px; object-fit: cover; background: #f0f2f4; border: 1px solid var(--line); flex-shrink: 0; }
 .thumb-ph {
-  width: 36px; height: 36px; border-radius: 4px; background: #f0f2f4;
+  width: 40px; height: 40px; border-radius: 5px; background: #f0f2f4;
   border: 1px dashed #cfd4da; display: grid; place-items: center; color: #aab1ba; flex-shrink: 0;
 }
 .pname { font-weight: 500; }
@@ -197,6 +199,10 @@
 
 /* note variants: .note keeps its base layout, tone classes only recolor */
 .note-danger { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+
+/* dashboard product table pager */
+.pgn { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-top: 1px solid var(--line2); }
+.pgn-info { font-size: 12.5px; color: var(--ink3); }
 
 /* ---------- pill ---------- */
 .pl {

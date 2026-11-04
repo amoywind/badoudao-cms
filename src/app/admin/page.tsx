@@ -11,6 +11,7 @@ const catLabel = (s: string) =>
 export default function DashboardPage() {
   const [inq, setInq] = useState(null);
   const [products, setProducts] = useState(null);
+  const [pg, setPg] = useState(1);
 
   useEffect(() => {
     fetch('/api/inquiries').then((r) => r.json()).then(setInq).catch(() => {});
@@ -23,6 +24,14 @@ export default function DashboardPage() {
   const missingImages = products.filter((p) => !p.images.length);
   const noSpecs = products.filter((p) => !p.specs.length);
   const drafts = products.filter((p) => p.status === 'draft');
+
+  /* Dashboard overview is a scan, not a work surface: five rows per page
+     keeps every row at full height with no scrolling, and the pager gives
+     the count a purpose. */
+  const PER_PAGE = 5;
+  const totalPages = Math.max(1, Math.ceil(products.length / PER_PAGE));
+  const cur = Math.min(pg, totalPages);
+  const rows = products.slice((cur - 1) * PER_PAGE, cur * PER_PAGE);
 
   return (
     <>
@@ -125,16 +134,16 @@ export default function DashboardPage() {
                   {/* Widths declared so table-layout:fixed has something to
                       work from: the product name takes the slack, and every
                       other column stays put however long the name is. */}
-                  <th style={{ width: 44 }}></th>
+                  <th style={{ width: 56 }}></th>
                   <th>产品</th>
                   <th style={{ width: 155 }}>分类</th>
-                  <th className="tnum" style={{ width: 110, textAlign: 'right' }}>出厂价</th>
+                  <th className="tnum" style={{ width: 124, textAlign: 'right' }}>出厂价</th>
                   <th style={{ width: 76 }}>状态</th>
                   <th style={{ width: 80 }}>完整度</th>
                 </tr>
             </thead>
             <tbody>
-              {products.slice(0, 10).map((p) => {
+              {rows.map((p) => {
                 const complete = p.images.length > 0 && p.specs.length > 0 && p.summary.length > 20;
                 return (
                   <tr key={p.id}>
@@ -154,7 +163,7 @@ export default function DashboardPage() {
                       <div className="psku">{p.id}</div>
                     </td>
                     <td><span className="pl pl-n">{catLabel(p.category)}</span></td>
-                    <td className="tnum" style={{ textAlign: 'right', fontWeight: 500 }}>
+                    <td className="tnum" style={{ textAlign: 'right', fontWeight: 500, whiteSpace: 'nowrap' }}>
                       {p.priceMin ? `$${p.priceMin.toFixed(2)}–${p.priceMax.toFixed(2)}` : '—'}
                     </td>
                     <td><span className={`pl ${p.status === 'published' ? 'pl-g' : 'pl-y'}`}>
@@ -166,6 +175,13 @@ export default function DashboardPage() {
               })}
             </tbody>
           </table>
+          {totalPages > 1 && (
+            <div className="pgn">
+              <button className="btn btn-sm" disabled={cur <= 1} onClick={() => setPg(cur - 1)}>‹ 上一页</button>
+              <span className="pgn-info">第 {cur} / {totalPages} 页 · 共 {products.length} 款</span>
+              <button className="btn btn-sm" style={{ marginLeft: 'auto' }} disabled={cur >= totalPages} onClick={() => setPg(cur + 1)}>下一页 ›</button>
+            </div>
+          )}
         </div>
       </div>
     </>
