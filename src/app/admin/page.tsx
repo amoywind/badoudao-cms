@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+/* Categories are stored as slugs ("wood-wall-clocks"); the table reads
+   better with the label a person would say ("Wood Wall Clocks"). */
+const catLabel = (s: string) =>
+  s.split('-').map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : '')).join(' ');
+
 export default function DashboardPage() {
   const [inq, setInq] = useState(null);
   const [products, setProducts] = useState(null);
@@ -45,7 +50,7 @@ export default function DashboardPage() {
       </div>
 
       {s.stale > 0 && (
-        <div className="note" style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b' }}>
+        <div className="note note-danger">
           有 <strong>{s.stale}</strong> 条询盘超过 24 小时未回复。承诺是 12 小时内回复，
           超时的询盘转化率会明显下降。<Link href="/admin/inquiries">立即处理 →</Link>
         </div>
@@ -69,18 +74,22 @@ export default function DashboardPage() {
             ) : (
               <table>
                 <tbody>
-                  {inq.inquiries.slice(0, 8).map((i) => (
-                    <tr key={i.id}>
-                      <td style={{ width: 100, fontSize: 12 }}>{i.created_at.slice(5, 16)}</td>
-                      <td>
-                        <div className="pname">{i.name || i.email}</div>
-                        <div style={{ fontSize: 11, color: '#767f8c' }}>
-                          {i.country} · {i.quantity}
-                        </div>
-                      </td>
-                      <td style={{ width: 80 }}><Link href={`/admin/inquiries/${i.id}`} className="btn btn-sm">打开</Link></td>
-                    </tr>
-                  ))}
+                  {inq.inquiries.slice(0, 8).map((i) => {
+                    const meta = [i.country, i.quantity].filter(Boolean).join(' · ');
+                    return (
+                      <tr key={i.id}>
+                        <td className="itime">{i.created_at.slice(5, 16)}</td>
+                        <td>
+                          <div className="pname">{i.name || i.email}</div>
+                          <div className="isum">{i.message}</div>
+                          {meta && <div className="imeta">{meta}</div>}
+                        </td>
+                        <td style={{ width: 80, textAlign: 'right' }}>
+                          <Link href={`/admin/inquiries/${i.id}`} className="btn btn-sm">打开</Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
@@ -118,8 +127,8 @@ export default function DashboardPage() {
                       other column stays put however long the name is. */}
                   <th style={{ width: 44 }}></th>
                   <th>产品</th>
-                  <th style={{ width: 140 }}>分类</th>
-                  <th style={{ width: 110, textAlign: 'right' }}>出厂价</th>
+                  <th style={{ width: 155 }}>分类</th>
+                  <th className="tnum" style={{ width: 110, textAlign: 'right' }}>出厂价</th>
                   <th style={{ width: 76 }}>状态</th>
                   <th style={{ width: 80 }}>完整度</th>
                 </tr>
@@ -144,8 +153,8 @@ export default function DashboardPage() {
                       <div className="pname"><Link href={`/admin/products/${p.id}`}>{p.name}</Link></div>
                       <div className="psku">{p.id}</div>
                     </td>
-                    <td><span className="pl pl-n">{p.category}</span></td>
-                    <td style={{ textAlign: 'right', fontWeight: 500 }}>
+                    <td><span className="pl pl-n">{catLabel(p.category)}</span></td>
+                    <td className="tnum" style={{ textAlign: 'right', fontWeight: 500 }}>
                       {p.priceMin ? `$${p.priceMin.toFixed(2)}–${p.priceMax.toFixed(2)}` : '—'}
                     </td>
                     <td><span className={`pl ${p.status === 'published' ? 'pl-g' : 'pl-y'}`}>
@@ -164,15 +173,16 @@ export default function DashboardPage() {
 }
 
 function Todo({ n, tone, label, href }: { n: number; tone: string; label: string; href?: string }) {
-  const bg = { danger: '#fee2e2', warn: '#fef3c7', green: '#dcfce7', gray: '#f0f2f4' }[tone];
-  const fg = { danger: '#b91c1c', warn: '#b45309', green: '#15803d', gray: '#767f8c' }[tone];
+  /* Zero rows carry no action: there is nothing to process, so the button
+     only appears when the count is positive. The green row is a "state is
+     healthy" line rather than a task, so zero reads as a check mark. */
+  const zero = n === 0;
+  const done = zero && tone === 'green';
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '10px 0', borderBottom: '1px solid #f0f2f4' }}>
-      <div style={{ width: 24, height: 24, borderRadius: 5, background: bg, color: fg, display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 600 }}>
-        {n}
-      </div>
-      <span style={{ fontSize: 13.5 }}>{label}</span>
-      {href && <Link href={href} className="btn btn-sm" style={{ marginLeft: 'auto' }}>处理</Link>}
+    <div className={`todo${zero ? ' todo-zero' : ''}`}>
+      <span className={`todo-n t-${done ? 'green' : tone}`}>{done ? '✓' : n}</span>
+      <span className="todo-t">{label}</span>
+      {href && !zero && <Link href={href} className="btn btn-sm">处理</Link>}
     </div>
   );
 }
