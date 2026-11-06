@@ -590,6 +590,9 @@
    letting the photo show through toward the bottom of the band. */
 @media (max-width: 720px) {
   .page-head[data-bg]::after {
-    background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.78) 40%, rgba(255,255,255,.35) 70%, rgba(255,255,255,.08) 100%);
+    /* The band runs 300-430px tall on a phone with three to four lines of
+       lede in it, so the white has to hold past the midpoint — at 40% the
+       third line was already back on raw photo. */
+    background: linear-gradient(180deg, rgba(255,255,255,.97) 0%, rgba(255,255,255,.9) 55%, rgba(255,255,255,.55) 80%, rgba(255,255,255,.18) 100%);
   }
 }
