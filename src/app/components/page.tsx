@@ -40,7 +40,7 @@ export default async function ComponentsPage() {
       <Header />
 
       <main id="main">
-        <section className="page-head">
+        <section className="page-head" data-bg="assembly">
           <div className="wrap">
             <div className="sec-tag">// Components studio</div>
             <h1>Modular component architecture for every layer of the clock</h1>

@@ -568,3 +568,18 @@
      appearing to jump as it takes focus. */
   .site .inp { line-height: 1.45; }
 }
+
+/* Page-head banners: phones swap to the 960px cut. A phone viewport
+   cannot show more than 960 device pixels across the band, so the
+   full 1920px file would spend bandwidth the buyer never sees. The
+   media query must repeat every key because a later stylesheet rule
+   wins at equal specificity — narrowing only one would leave the
+   other five loading the desktop file. */
+@media (max-width: 720px) {
+  .page-head[data-bg="workshop"]::before { background-image: url(/banners/banner-workshop-720.jpg); }
+  .page-head[data-bg="qc"]::before { background-image: url(/banners/banner-qc-720.jpg); }
+  .page-head[data-bg="assembly"]::before { background-image: url(/banners/banner-assembly-720.jpg); }
+  .page-head[data-bg="equipment"]::before { background-image: url(/banners/banner-equipment-720.jpg); }
+  .page-head[data-bg="clocks"]::before { background-image: url(/banners/banner-clocks-720.jpg); }
+  .page-head[data-bg="warehouse"]::before { background-image: url(/banners/banner-warehouse-720.jpg); }
+}

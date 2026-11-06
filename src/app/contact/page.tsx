@@ -74,7 +74,7 @@ export default async function ContactPage({
       <Header />
 
       <main>
-        <div className="page-head">
+        <div className="page-head" data-bg="clocks">
           <div className="wrap">
             <div className="sec-tag">Contact</div>
             <h1>Request a Quote</h1>

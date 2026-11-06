@@ -48,7 +48,7 @@ export default async function AboutUsPage() {
           </nav>
         </div>
 
-        <section className="page-head">
+        <section className="page-head" data-bg="workshop">
           <div className="wrap">
             <div className="sec-tag">// About us</div>
             <h1>Precision engineering, flexible quantities</h1>

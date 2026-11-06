@@ -73,7 +73,7 @@ export default async function CustomizerPage({
       <Header />
 
       <main id="main">
-        <section className="page-head">
+        <section className="page-head" data-bg="assembly">
           <div className="wrap">
             <div className="sec-tag">// Customizer hub</div>
             <h1>Build a clock specification, then send it</h1>

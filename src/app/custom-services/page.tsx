@@ -43,7 +43,7 @@ export default async function CustomServicesPage() {
       <Header />
 
       <main id="main">
-        <section className="page-head">
+        <section className="page-head" data-bg="assembly">
           <div className="wrap">
             <div className="sec-tag">// Custom services</div>
             <h1>What you can change, and how we work together</h1>

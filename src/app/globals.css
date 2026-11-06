@@ -239,6 +239,29 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 .page-head { padding: 60px 0 44px; background: var(--bg2); border-bottom: 1px solid var(--line); }
 .page-head h1 { font-size: 44px; margin-bottom: 16px; }
 .page-head p { font-size: 17px; color: var(--ink2); max-width: 700px; }
+
+/* Banner photo behind the page head, keyed by data-bg. The band keeps its
+   light ground: the photo fades under a white gradient from the left, so
+   the dark heading and lede keep their contrast at every width. Phones
+   swap to the -720 cut via responsive.css. The wrap is lifted above both
+   pseudo-layers because positioned elements otherwise paint over static
+   text — ::after sits after the children in tree order. */
+.page-head[data-bg] { position: relative; }
+.page-head[data-bg]::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background-size: cover; background-position: center;
+}
+.page-head[data-bg]::after {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,.88) 26%, rgba(255,255,255,.45) 55%, rgba(255,255,255,0) 80%);
+}
+.page-head[data-bg] > .wrap { position: relative; z-index: 1; }
+.page-head[data-bg="workshop"]::before { background-image: url(/banners/banner-workshop.jpg); }
+.page-head[data-bg="qc"]::before { background-image: url(/banners/banner-qc.jpg); }
+.page-head[data-bg="assembly"]::before { background-image: url(/banners/banner-assembly.jpg); }
+.page-head[data-bg="equipment"]::before { background-image: url(/banners/banner-equipment.jpg); }
+.page-head[data-bg="clocks"]::before { background-image: url(/banners/banner-clocks.jpg); }
+.page-head[data-bg="warehouse"]::before { background-image: url(/banners/banner-warehouse.jpg); }
 .breadcrumb { font-size: 13px; color: var(--ink3); padding: 20px 0; }
 .breadcrumb a:hover { color: var(--brand); }
 .breadcrumb span { margin: 0 7px; color: #c4c9ce; }

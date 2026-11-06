@@ -8,6 +8,30 @@ import { InquiryCTA } from '../../InquiryForm';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
+/* Which photo band sits behind the page head, keyed by page id. A page
+   that is not listed gets the workshop floor — the default says
+   "manufacturer" no matter what the owner names the next page. The keys
+   are ids, not slugs, because that is what this file looks up everywhere
+   else; a page renamed in the admin keeps its banner. */
+const PH_BG: Record<string, string> = {
+  certification: 'qc',
+  quality: 'qc',
+  'nav-4step-qc': 'qc',
+  'nav-craft': 'qc',
+  'oem-odm': 'equipment',
+  'small-batch': 'assembly',
+  'nav-components': 'assembly',
+  'nav-components-studio': 'assembly',
+  'nav-modular-anatomy': 'assembly',
+  'nav-base-platforms': 'assembly',
+  factory: 'warehouse',
+  'nav-about-factory': 'warehouse',
+  'nav-contact': 'clocks',
+  'nav-news': 'clocks',
+  'nav-articles': 'clocks',
+  'f-news': 'clocks'
+};
+
 /**
  * Per-page metadata.
  *
@@ -76,7 +100,7 @@ export default async function StaticPage({ params }) {
       </nav>
 
       <main>
-        <div className="page-head">
+        <div className="page-head" data-bg={PH_BG[page.id] || 'workshop'}>
           <div className="wrap">
             <div className="sec-tag">{page.title}</div>
             <h1>{page.heading || page.title}</h1>

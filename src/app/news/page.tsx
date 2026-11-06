@@ -58,7 +58,7 @@ export default async function NewsPage() {
       <Header />
 
       <main>
-        <div className="page-head">
+        <div className="page-head" data-bg="clocks">
           <div className="wrap">
             <div className="sec-tag">Company News</div>
             <h1>From the factory floor</h1>

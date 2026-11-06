@@ -63,7 +63,7 @@ export default async function ArticlesPage() {
       <Header />
 
       <main>
-        <div className="page-head">
+        <div className="page-head" data-bg="clocks">
           <div className="wrap">
             <div className="sec-tag">Articles</div>
             <h1>Quartz clock buying guides</h1>

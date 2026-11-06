@@ -49,7 +49,7 @@ export default async function CraftQcPage() {
       <Header />
 
       <main id="main">
-        <section className="page-head">
+        <section className="page-head" data-bg="qc">
           <div className="wrap">
             <div className="sec-tag">// Material &amp; craft</div>
             <h1>Eight materials, four QC steps, one building</h1>

@@ -88,7 +88,11 @@ export default async function CategoryPage({ params }) {
       </nav>
 
       <main>
-        <div className="page-head">
+        {/* Photo band behind the page head. Wood is the one category with
+            a matching process shot — the laser cutting frame cuts MDF —
+            so it gets it; the other materials share the finished-clock
+            wall, which is true of every category the buyer can land on. */}
+        <div className="page-head" data-bg={category === 'wood' ? 'equipment' : 'clocks'}>
           <div className="wrap">
             <div className="sec-tag">{cat?.name} · Wholesale &amp; OEM</div>
             <h1>{title}</h1>
