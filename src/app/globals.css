@@ -253,7 +253,13 @@ details p { font-size: 14px; color: var(--ink3); margin-top: 11px; }
 }
 .page-head[data-bg]::after {
   content: ""; position: absolute; inset: 0; z-index: 0;
-  background: linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,.88) 26%, rgba(255,255,255,.45) 55%, rgba(255,255,255,0) 80%);
+  /* Two layers: the horizontal fade keeps the left column readable, and
+     the flat veil lightens the whole photo — without it the paragraph,
+     which runs wider than the strong part of the fade, dissolved into
+     the busy parts of the frame (measured on the live site). */
+  background:
+    linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,.95) 32%, rgba(255,255,255,.75) 55%, rgba(255,255,255,.25) 78%, rgba(255,255,255,0) 92%),
+    linear-gradient(rgba(255,255,255,.14), rgba(255,255,255,.14));
 }
 .page-head[data-bg] > .wrap { position: relative; z-index: 1; }
 .page-head[data-bg="workshop"]::before { background-image: url(/banners/banner-workshop.jpg); }

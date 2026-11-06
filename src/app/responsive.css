@@ -583,3 +583,13 @@
   .page-head[data-bg="clocks"]::before { background-image: url(/banners/banner-clocks-720.jpg); }
   .page-head[data-bg="warehouse"]::before { background-image: url(/banners/banner-warehouse-720.jpg); }
 }
+
+/* On a phone the text spans nearly the full band width, so a horizontal
+   fade leaves the right half of every line sitting on raw photo. The
+   fade turns vertical instead: solid white behind the text at the top,
+   letting the photo show through toward the bottom of the band. */
+@media (max-width: 720px) {
+  .page-head[data-bg]::after {
+    background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.78) 40%, rgba(255,255,255,.35) 70%, rgba(255,255,255,.08) 100%);
+  }
+}
