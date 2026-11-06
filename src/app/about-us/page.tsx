@@ -164,15 +164,15 @@ export default async function AboutUsPage() {
               </div>
 
               <a
-                href="/media/factory/business-license.jpg"
+                href="/media/factory/business-license-32.jpg"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="factory-pic"
               >
                 <img
-                  src="/media/factory/business-license.jpg"
+                  src="/media/factory/business-license-32.jpg"
                   alt="Business licence of Xiamen Orange Cat Creative Home Decor Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
-                  width={1000} height={750} loading="lazy"
+                  width={1352} height={901} loading="lazy"
                 />
               </a>
 

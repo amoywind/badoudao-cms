@@ -2606,14 +2606,12 @@
   object-fit: cover;
 }
 
-/* The licence is a document, not a photograph. It is fitted inside the
-   frame whole rather than cropped to it — a crop would cut the stamp
-   and the registration number off the edges, which are the two parts
-   of it a buyer looks for. */
-.factory-pic img[src*="business-license"] {
-  object-fit: contain;
-  object-position: top left;
-}
+/* The licence used to be fitted inside the frame whole (object-fit:
+   contain) because the original photo was 4:3 and a crop would have
+   cut the stamp and the registration number. The file itself is now
+   3:2 — business-license-32.jpg has its desk-background edges extended
+   to the wider ratio, certificate untouched — so it fills the same
+   frame as the photograph above it and the two read as one size. */
 
 /* The line under the two pictures. It carries what the picture cannot:
    which document it is, and that it opens at full size. */
