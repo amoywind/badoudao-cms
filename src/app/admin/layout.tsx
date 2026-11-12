@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { getSessionUser, SESSION_COOKIE } from '@/lib/auth';
 import { LogoutButton } from './LogoutButton';
 import { AdminShell } from './_shell';
+import { AdminTopbar } from './_topbar';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -47,6 +48,10 @@ export default async function AdminLayout({ children }) {
     <div className="app admin-root">
       <Sidebar user={user} />
       <div className="main">
+        {/* The topbar sits outside the error boundary on purpose: a page
+            that throws must still leave the owner a breadcrumb, a way to
+            the storefront and a working product search. */}
+        <AdminTopbar user={user} />
         {/* .content lives here rather than in each page: the padding is a
             property of the frame, not of the 13 pages that fill it, and a
             wrapper someone forgets is exactly how the dashboard ended up
@@ -62,13 +67,16 @@ export default async function AdminLayout({ children }) {
 }
 
 function Sidebar({ user }) {
-  const pending = 0; // filled client-side from the inquiries API
-
   return (
     <aside className="side">
       <div className="side-h">
-        <div className="lg">BADOU<span>DAO</span></div>
-        <div className="who">{user.name} · {user.role}</div>
+        <div className="side-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <div>
+          <div className="lg">BADOU<span>DAO</span></div>
+          <div className="who">内容管理后台</div>
+        </div>
       </div>
 
       <nav className="nav">
@@ -110,7 +118,9 @@ function Sidebar({ user }) {
         <a className="nav-i" href="/admin/inquiries">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span>询盘管理</span>
-          <span className="bdg" id="nav-inq-count">{pending || ''}</span>
+          {/* AdminTopbar fills this from /api/inquiries. Server-rendering a
+              number here would be stale on every subsequent navigation. */}
+          <span className="bdg" id="nav-inq-count"></span>
         </a>
 
         <div className="nav-g">系统</div>
@@ -129,6 +139,11 @@ function Sidebar({ user }) {
       </nav>
 
       <div className="side-f">
+        <div className="side-ava">{String(user.name || 'A').slice(0, 1)}</div>
+        <div className="side-who">
+          <div className="nm">{user.name}</div>
+          <div className="role">{user.role} · 已登录</div>
+        </div>
         <LogoutButton />
       </div>
     </aside>
