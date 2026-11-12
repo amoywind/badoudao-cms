@@ -962,6 +962,40 @@ function trimTitle(input: string): string {
 }
 
 /**
+ * SEO override for a hard-coded route (/about-us, /customizer, /products …).
+ *
+ * Every public page already calls buildMeta() with its canonical `path`, so
+ * this is the one place the admin's fixed-page SEO needs to be read. Editing
+ * ten page.tsx files would scatter the same lookup into ten places to drift,
+ * and would leave the next fixed route needing another code change.
+ *
+ * Returns null when the migration has not run — a local D1 snapshot may
+ * predate the `kind` column, and a missing column must degrade to the
+ * hard-coded metadata rather than take a public page down.
+ */
+export async function getFixedSeo(route: string) {
+  const key = String(route || '').replace(/\/+$/, '') || '/';
+
+  /* Deliberately NOT cached(). An admin edit must show up on the very next
+     request. invalidateCache() can only delete edge keys the *writing*
+     isolate has read, and a PUT to /api/pages reads none of them — so the
+     stale entry survives for the whole TTL and the SEO field looks broken.
+     One lightweight lookup on a top-level page is cheaper than that. */
+  const row = await one(
+    "SELECT seo_title, seo_description, meta_keywords FROM pages " +
+      "WHERE kind = 'fixed' AND route = ? AND status = 'published' LIMIT 1",
+    key
+  ).catch(() => null);
+
+  if (!row) return null;
+  return {
+    seo_title: String(row.seo_title || ''),
+    seo_description: String(row.seo_description || ''),
+    meta_keywords: String(row.meta_keywords || '')
+  };
+}
+
+/**
  * Build a Next.js metadata object for a public page.
  *
  * Every page used to inherit one shared title, which told Google that eight
@@ -992,7 +1026,25 @@ export async function buildMeta({
   type?: string;
   keywords?: string;
 }) {
-  const t = trimTitle(String(seoTitle || title || '').trim());
+  /* Normalised to no trailing slash, matching every internal link:
+     Cloudflare strips the slash before the request arrives, so a canonical
+     that kept it would name a URL the site redirects rather than serves. */
+  const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`).replace(/\/+$/, '') : '';
+
+  /* Only top-level paths can be a fixed route. Anything deeper is a
+     product, an article or a /p/ document, each of which already supplies
+     its own metadata — querying for those would create one cache entry per
+     URL for a row that can never match. */
+  const isTopLevel = cleanPath.split('/').filter(Boolean).length <= 1;
+
+  const [settings, fixed] = await Promise.all([
+    getSettings().catch(() => ({} as SiteSettings)),
+    isTopLevel ? getFixedSeo(cleanPath || '/') : Promise.resolve(null)
+  ]);
+
+  /* Explicit overrides (a /p/ document, a product) win. Otherwise the
+     admin's fixed-route SEO wins, and only then the hard-coded fallback. */
+  const t = trimTitle(String(seoTitle || fixed?.seo_title || title || '').trim());
 
   /* The MOQ is a number the factory can change, and the SEO copy is
      written by hand — so a description that says "MOQ 500 pcs" stays
@@ -1007,20 +1059,27 @@ export async function buildMeta({
 
      The pattern is deliberately narrow. A blanket number substitution
      would rewrite the price range, the dimensions or a year. */
-  const moqNow = Number((await getSettings().catch(() => ({} as SiteSettings))).moq) || 0;
+  const moqNow = Number(settings.moq) || 0;
   const syncMoq = (text: string) =>
     moqNow > 0 ? text.replace(/MOQ\s+\d+(\s*pcs)?/gi, `MOQ ${moqNow} pcs`) : text;
 
-  const d = syncMoq(String(seoDescription || description || '').trim()).slice(0, 158);
+  /* Fixed rows deliberately leave seo_description empty: the generated
+     description interpolates MOQ, quote hours and product counts here,
+     where they stay current. A copy frozen into D1 would go stale. */
+  const d = syncMoq(
+    String(seoDescription || fixed?.seo_description || description || '').trim()
+  ).slice(0, 158);
+
+  /* A fixed row's keywords take precedence over the code's own: that is the
+     field the owner edits in the admin, and a code literal winning would
+     make the field a no-op. */
+  const kw = fixed?.meta_keywords || keywords || undefined;
+
   /* Read from settings rather than the constant: the canonical host is the
      one the owner chose, and a build-time constant means changing domain is
      a code edit and a redeploy. getSiteUrl() is itself memoised, so this
      costs nothing extra on a page that also renders the footer. */
   const site = await getSiteUrl();
-  /* Normalised to no trailing slash, matching every internal link: Cloudflare
-     strips the slash before the request arrives, so a canonical that kept it
-     would name a URL the site redirects rather than serves. */
-  const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`).replace(/\/+$/, '') : '';
   const url = cleanPath ? `${site}${cleanPath}` : `${site}/`;
 
   /* og:type is a closed vocabulary — website, article, book, profile,
@@ -1045,7 +1104,7 @@ export async function buildMeta({
        ends up split across two identities. Passing the full URL makes the
        host the same value the sitemap and og:url use. */
     alternates: { canonical: url },
-    keywords: keywords || undefined,
+    keywords: kw,
     openGraph: {
       title: t,
       description: d,

@@ -44,16 +44,14 @@ function stamp(v) {
 export async function GET() {
   const [settings, pages, posts, products, cats] = await Promise.all([
     getSettings().catch(() => ({}) as Record<string, string>),
-    /* The body length comes along because a page row with no body is a
-       navigation entry, not a page. The navigation lives in the same
-       table as the content — that is what makes it editable from the
-       admin — and the sitemap was listing every one of them as
-       /p/nav-home, /p/nav-products and so on. Those are not documents;
-       they are menu items pointing at routes that are already listed
-       elsewhere in this feed. */
+    /* Only documents. Menu entries and fixed-route SEO records share this
+       table but are not URLs of their own. The old LENGTH(body)>0 guess
+       published them as /p/nav-home and friends — soft 404s — and broke
+       outright as soon as a menu row acquired any content. `kind` says
+       what the row is, so nothing has to be inferred. */
     all(
-      "SELECT id, updated_at, LENGTH(COALESCE(body,'')) AS body_len FROM pages " +
-        "WHERE status = 'published' ORDER BY sort_order"
+      "SELECT id, updated_at FROM pages " +
+        "WHERE status = 'published' AND kind = 'content' ORDER BY sort_order"
     ).catch(() => []),
     all(
       `SELECT slug, type, updated_at FROM posts WHERE status = 'published'
@@ -96,12 +94,6 @@ export async function GET() {
   });
 
   pages.forEach((p) => {
-    /* Navigation entries have no body. Listing them would put a dozen
-       URLs in the feed that resolve to an empty page — a soft 404, which
-       is worse than a missing URL because it tells Google the page exists
-       and has no content. */
-    if (!Number(p.body_len)) return;
-
     entries.push(
       url(`${SITE}/p/${p.id}`, {
         priority: '0.6',

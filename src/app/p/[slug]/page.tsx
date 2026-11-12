@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/db';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { one, getSettings, listCategories, buildMeta } from '@/lib/db';
 import { TopBar, Header, Footer } from '../../SiteChrome';
 import { InquiryCTA } from '../../InquiryForm';
@@ -31,6 +31,25 @@ const PH_BG: Record<string, string> = {
   'nav-articles': 'clocks',
   'f-news': 'clocks'
 };
+
+/**
+ * Where a non-document row actually points.
+ *
+ * This mirrors listNav()'s href resolution, so a bookmarked /p/nav-about-factory
+ * lands on exactly the URL the menu item has always linked to rather than on
+ * a newly invented one. Fixed rows carry their canonical path in `route`.
+ */
+function redirectTarget(page: any): string {
+  if (page.kind === 'fixed') return String(page.route || '/');
+  if (page.id === 'nav-home') return '/';
+
+  const key = String(page.external_key || '').trim();
+  if (key) return `/${key.replace(/^\/+|\/+$/g, '')}`;
+
+  const target = String(page.target || '').trim();
+  if (target) return `/p/${target}`;
+  return '/';
+}
 
 /**
  * Per-page metadata.
@@ -76,6 +95,17 @@ export default async function StaticPage({ params }) {
   ).catch(() => null);
 
   if (!page) notFound();
+
+  /* Only `content` rows are documents. The other two kinds live in the same
+     table for the admin's convenience, but a menu entry and a hard-coded
+     route are not pages: they used to render here as an empty h1 with its own
+     canonical, i.e. a soft 404 for every nav-* id. A permanent redirect
+     hands any existing crawl equity to the URL the menu already links to,
+     which is cleaner than a noindex that leaves the URL alive.
+
+     `page.kind` is guarded so a local D1 snapshot from before the migration
+     (no such column) keeps behaving as it always did. */
+  if (page.kind && page.kind !== 'content') permanentRedirect(redirectTarget(page));
 
   /* No product counts here: the rail used to list the categories with their
      counts, which made this page a second navigation and pushed the figures
