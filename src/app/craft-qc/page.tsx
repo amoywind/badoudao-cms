@@ -4,7 +4,7 @@ import { getSettings, buildMeta, siteVideoMap } from '@/lib/db';
 import type { SiteVideoSlot } from '@/lib/db';
 import { TopBar, Header, Footer } from '../SiteChrome';
 import { SiteSchema } from '../SiteSchema';
-import { VideoSlot, VideoSlotHydrator } from '../VideoSlot';
+import { QcStepSwitcher } from '../QcStepSwitcher';
 import { MATERIALS, QC_STEPS, FACTORY_FIGURES, CERTIFICATIONS } from '@/lib/vocabulary';
 
 export const runtime = 'edge';
@@ -13,14 +13,15 @@ export const dynamic = 'force-dynamic';
 /**
  * Material and craft, plus the QC process.
  *
- * The material section is the specification's six-column matrix, and it
- * uses the same vocabulary file as the home page — the process names for
- * a material are the same wherever they appear.
+ * The page head keeps its factory banner photo. Only the copy inside the
+ * band changed — the photo, the white fade that keeps the heading readable
+ * and the -720 phone cut all come from globals.css / responsive.css, keyed
+ * on data-bg="qc". Nothing in those rules is touched here.
  *
- * The QC section carries video slots. There is no video in the media
- * library yet, so the slots say what they are waiting for rather than
- * showing a broken player. The slot carries the step number and what
- * the footage shows, so whoever produces it knows what goes where.
+ * The QC section is now one step switcher rather than four side-by-side
+ * cards. The animated instrument panel doubles as the video placeholder:
+ * when the admin fills a qc-step-N YouTube id, that step shows a lazy
+ * player instead, so no existing footage slot is orphaned.
  */
 export async function generateMetadata() {
   const s = await getSettings().catch(() => ({} as SiteSettings));
@@ -35,12 +36,62 @@ export async function generateMetadata() {
   });
 }
 
+/* Thresholds are the ones already recorded in QC_STEPS. They are written
+   out as checkpoint lines rather than derived from prose so the switcher
+   can render them as a list, but every number here matches the metric on
+   the same row of the shared vocabulary. */
+const CHECKPOINTS: string[][] = [
+  [
+    'Moisture content: 8–12%',
+    'Burr-free laser edge on metal sheet',
+    'Surface scratch inspection before cutting'
+  ],
+  [
+    '24-hour continuous timekeeping verification',
+    'Anechoic chamber background < 10 dBA',
+    'Movement above 12 dBA is scrapped'
+  ],
+  [
+    'Vertical hand clearance ≥ 1.5mm',
+    'Hands pressed on a pneumatic jig',
+    'Sweep never catches on the dial'
+  ],
+  [
+    '1.2m free fall impact on concrete floor',
+    'Zero crack on glass lens cover',
+    'Movement gears remain aligned and running'
+  ]
+];
+
+/* Neutral scope notes. No third-party audit body is named: unless a
+   certificate names the issuer, claiming "audited by X" is a verifiable
+   assertion the site cannot support. */
+const CERT_SCOPE = [
+  'CERTIFICATE ON REQUEST',
+  'CERTIFICATE ON REQUEST',
+  'MOVEMENT & MATERIALS',
+  'MOVEMENT & MATERIALS',
+  'MATERIAL DECLARATIONS'
+];
+
 export default async function CraftQcPage() {
   const [s, videos] = await Promise.all([
     getSettings().catch(() => ({} as SiteSettings)),
     siteVideoMap().catch(() => ({} as Record<string, SiteVideoSlot>))
   ]);
   const moq = Number(s.moq) || 300;
+
+  const steps = QC_STEPS.map((q, i) => ({
+    n: q.n,
+    title: q.title,
+    /* The metric is the pass threshold already used elsewhere on the site,
+       so the "Standard" line cannot drift away from the factory's figures. */
+    standard: q.metric,
+    desc: q.detail,
+    checkpoints: CHECKPOINTS[i] || [],
+    videoId: videos[`qc-step-${i + 1}`]?.youtubeId || '',
+    videoTitle: `${q.title} — factory footage`
+  }));
 
   return (
     <div className="site">
@@ -49,18 +100,67 @@ export default async function CraftQcPage() {
       <Header />
 
       <main id="main">
+        {/* The banner photo and its white fade are unchanged. Only the
+            content inside the band is new. */}
         <section className="page-head" data-bg="qc">
           <div className="wrap">
-            <div className="sec-tag">// Material &amp; craft</div>
-            <h1>Eight materials, four QC steps, one building</h1>
-            <p>
-              What each material can be made to do, and what every clock is put through
-              before it is allowed into a carton.
-            </p>
+            <nav className="qcsw-crumb" aria-label="Breadcrumb">
+              <Link href="/">← Home</Link><span>/</span>
+              <span>4-Step Quality Control &amp; Certifications</span>
+            </nav>
+            <div className="qcsw-badge">
+              100% FULL-BATCH 24H AGING · 1.2M ISTA-1A DROP TEST
+            </div>
+            <div className="qcsw-hero">
+              <div>
+                <h1>Quality Assurance &amp; Testing Standards</h1>
+                <p>
+                  Zero tolerance for noisy movements or transit breakage. Every
+                  production batch is subjected to moisture laser measurement,
+                  continuous 24-hour anechoic aging, hand-clearance alignment,
+                  and concrete free-fall drop tests.
+                </p>
+              </div>
+              <Link href="/contact" className="qcsw-cta">
+                ORDER QUALITY SAMPLE (7 DAYS)
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* ---- Material matrix ---- */}
+        {/* ---- QC step switcher ---- */}
+        <section>
+          <div className="wrap">
+            <QcStepSwitcher steps={steps} />
+
+            {/* The five certificates the factory actually holds, followed by
+                the plain-language caveat. The caveat is not decoration: it
+                states which paperwork exists and which is arranged per
+                order, so a buyer does not read a badge as an import approval. */}
+            <div className="qcsw-certs">
+              <div className="qcsw-certs-tag">// COMPLIANCE &amp; DOCUMENTATION</div>
+              <h3>Documentation available for our main export markets</h3>
+              <div className="qcsw-cert-grid">
+                {CERTIFICATIONS.map((c, i) => (
+                  <div className="qcsw-cert" key={c.code}>
+                    <div className="qcsw-cert-code">{c.code}</div>
+                    <div className="qcsw-cert-name">{c.name}</div>
+                    <div className="qcsw-cert-foot">{CERT_SCOPE[i] || ''}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="qcsw-cert-caveat">
+                Finished quartz clocks carry no mandatory certification
+                requirement for the markets we ship to — the requirement sits
+                on the movement and on the materials. Where a buyer needs
+                specific paperwork for their own market, we arrange it for the
+                order rather than claiming it in advance.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ---- Material matrix: retained, not replaced ---- */}
         <section className="alt">
           <div className="wrap">
             <div className="sec-head">
@@ -90,82 +190,14 @@ export default async function CraftQcPage() {
           </div>
         </section>
 
-        {/* ---- QC steps ---- */}
+        {/* ---- Factory figures: retained ---- */}
         <section>
           <div className="wrap">
             <div className="sec-head">
-              <div className="sec-tag">// Factory QC protocol</div>
-              <h2>Four steps every clock passes</h2>
-              <p className="sec-sub">
-                The four stages between raw material and a sealed carton. Each one is
-                a gate: a clock that fails any of them does not go in the box.
-              </p>
+              <div className="sec-tag">// Factory figures</div>
+              <h2>The factory in numbers</h2>
             </div>
-
-            {/* The four process clips. The step number runs from one to
-                four and the slot key does too, so the admin's list of
-                outstanding videos lines up with the order on the page. */}
-            <div className="qc-grid">
-              {QC_STEPS.map((q, i) => (
-                <div className="qc-item" key={q.n}>
-                  <VideoSlot
-                    youtubeId={videos[`qc-step-${i + 1}`]?.youtubeId || ''}
-                    title={q.title}
-                    caption={`${q.title} — 9:16 factory footage`}
-                  />
-                  <span className="qc-n">{q.n}</span>
-                  <h4>{q.title}</h4>
-                  <p>{q.detail}</p>
-                  <div className="qc-metric tnum">{q.metric}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- Certifications ---- */}
-        <section className="alt">
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="sec-tag">// Certification</div>
-              <h2>What is certified, and what is not</h2>
-              <p className="sec-sub">
-                This matters more than a badge, so it is stated plainly rather than
-                implied.
-              </p>
-            </div>
-
-            <div className="grid-2">
-              <div className="card" style={{ padding: 26 }}>
-                <h3 style={{ fontSize: 18, marginBottom: 16 }}>Certifications we hold</h3>
-                <div className="cert-list">
-                  {CERTIFICATIONS.map((c) => (
-                    <div className="cert-row" key={c.code}>
-                      <span className="cert-code tnum">{c.code}</span>
-                      <span className="cert-name">{c.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="card" style={{ padding: 26 }}>
-                <h3 style={{ fontSize: 18, marginBottom: 12 }}>What to know</h3>
-                <p style={{ fontSize: 14.5, color: 'var(--text-2)', lineHeight: 1.75 }}>
-                  Finished quartz clocks carry no mandatory certification requirement for
-                  the markets we ship to — the requirement sits on the movement and on
-                  the materials. Where a buyer needs specific paperwork for their own
-                  market, we arrange it for the order rather than claiming it in advance.
-                </p>
-                <div className="certs" style={{ marginTop: 18 }}>
-                  <span className="cert">MOQ from {moq} pcs</span>
-                  <span className="cert">Ex Works pricing</span>
-                </div>
-              </div>
-            </div>
-
-            {/* The factory's own figures. Values come from the owner, and
-                only confirmed numbers go in — an unconfirmed figure was
-                held out of the page entirely rather than parked as a dash. */}
-            <div className="spec" style={{ marginTop: 28 }}>
+            <div className="spec">
               <div className="spec-h">The factory in numbers</div>
               <div className="fig-grid">
                 {FACTORY_FIGURES.map((f) => (
@@ -179,10 +211,14 @@ export default async function CraftQcPage() {
                 ))}
               </div>
             </div>
+            <div className="certs" style={{ marginTop: 20 }}>
+              <span className="cert">MOQ from {moq} pcs</span>
+              <span className="cert">Ex Works pricing</span>
+            </div>
           </div>
         </section>
 
-        <section>
+        <section className="alt">
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>
             <div className="sec-tag">// Next step</div>
             <h2 style={{ marginBottom: 12 }}>Ask for the QC report on your order</h2>
@@ -196,7 +232,6 @@ export default async function CraftQcPage() {
       </main>
 
       <Footer />
-      <VideoSlotHydrator />
     </div>
   );
 }
