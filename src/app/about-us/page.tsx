@@ -152,11 +152,11 @@ export default async function AboutUsPage() {
                   parts of it a buyer looks for. */}
               <div className="factory-pic">
                 <img
-                  src="/workshop-floor.jpg"
+                  src="/site/hero/workshop-floor.jpg"
                   alt="Assembly floor: staff fitting dials and movements before packing"
                   width={1400}
                   height={933}
-                  srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
+                  srcSet="/site/hero/workshop-floor-720.jpg 720w, /site/hero/workshop-floor.jpg 1400w"
                   sizes="(max-width: 900px) 92vw, 40vw"
                   loading="lazy"
                   decoding="async"
@@ -164,13 +164,13 @@ export default async function AboutUsPage() {
               </div>
 
               <a
-                href="/media/factory/business-license-32.jpg"
+                href="/site/factory/business-license-32.jpg"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="factory-pic"
               >
                 <img
-                  src="/media/factory/business-license-32.jpg"
+                  src="/site/factory/business-license-32.jpg"
                   alt="Business licence of Xiamen Orange Cat Creative Home Decor Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
                   width={1352} height={901} loading="lazy"
                 />

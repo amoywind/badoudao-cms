@@ -165,6 +165,41 @@ export default async function ComponentsPage() {
           </div>
         </section>
 
+        {/* ---- Specification order ----
+            Unique to this page: the other pages list what exists, this one
+            tells a buyer the order in which the choices have to be made. */}
+        <section>
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// How to specify</div>
+              <h2>The order in which to choose</h2>
+              <p className="sec-sub">
+                These choices are not independent. Each one fixes what the next
+                can be, so a specification built in the wrong order has to be
+                drawn twice.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                ['1 · Movement', 'Chosen first. It sets the center hole, the available hand torque and the noise level the finished clock is sold on.'],
+                ['2 · Hands and dial', 'Drawn against that movement. The center hole and the hand clearance are fixed by it, and neither can be adjusted afterwards.'],
+                ['3 · Packaging', 'Chosen last. The carton and insert are cut to the finished depth and drop-tested with the fully assembled clock inside.']
+              ].map(([n, d]) => (
+                <div className="card" key={n} style={{ padding: 24 }}>
+                  <h3 style={{ fontSize: 17, marginBottom: 9 }}>{n}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6, marginTop: 18 }}>
+              Send the four together on the{' '}
+              <Link href="/customizer" style={{ color: '#0f5c4a', textDecoration: 'underline' }}>spec builder</Link>,
+              or describe the end use and we will propose the combination.
+            </p>
+          </div>
+        </section>
+
         {/* ---- CTA ---- */}
         <section className="alt">
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>

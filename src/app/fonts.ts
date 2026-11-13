@@ -13,10 +13,10 @@
  * contacts Google at all.
  *
  * That last part is the reason this is not a <link> to fonts.googleapis.com.
- * A stylesheet from Google tells Google the visitor's IP address. This
- * site deliberately runs Plausible rather than GA4 to stay out of the
- * European consent-banner requirement, and a font request to a third
- * party undercuts that choice in exactly the way a cookie banner would.
+ * A stylesheet from Google tells Google the visitor's IP address. This site
+ * loads no third-party analytics or tracking scripts, and a font request
+ * to a third party would undercut that in exactly the way a cookie banner
+ * would.
  *
  * The files are the latin subset only — 102 KB for all three — because
  * every word on the site is English and the buyer is reading English.

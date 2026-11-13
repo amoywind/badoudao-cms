@@ -16,17 +16,16 @@ const DEFAULTS = {
   capacityMax: '2000',
   moq: '300',
   quoteHours: '12',
-  sampleDays: '7-10',
+  sampleDays: '5–7',
   logoLight: '/logo-light.svg',
   logoDark: '/logo-dark.svg',
   brandColor: '#0f5c4a',
   accentColor: '#b8874a',
-  /* Verification tokens and analytics. A token is pasted once and must
-     reach <head> without a redeploy, so it is stored rather than compiled
-     in; the admin SEO screen writes to these keys. */
+  /* Verification tokens. A token is pasted once and must reach <head>
+     without a redeploy, so it is stored rather than compiled in; the admin
+     SEO screen writes to these keys. */
   search_console_token: '',
-  bing_verification: '',
-  plausible_domain: ''
+  bing_verification: ''
 };
 
 export async function GET(request) {

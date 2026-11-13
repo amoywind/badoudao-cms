@@ -771,7 +771,7 @@
 .lg-wrap { display: flex; min-height: 100vh; }
 .lg-brand {
   width: 42%; max-width: 620px; flex: none; position: relative; overflow: hidden;
-  background: #08271f url('/brand-panel.jpg') center center / cover no-repeat;
+  background: #08271f url('/site/brand/brand-panel.jpg') center center / cover no-repeat;
 }
 .lg-brand::after {
   content: ""; position: absolute; inset: 0;

@@ -157,6 +157,35 @@ export default async function CraftQcPage() {
                 order rather than claiming it in advance.
               </p>
             </div>
+
+            {/* Unique to this page. Every other page says what is tested;
+                this one says what a buyer can actually ask to receive with
+                a shipment, and why the record is per batch rather than a
+                standing certificate. */}
+            <div className="qcsw-docs" style={{ marginTop: 28 }}>
+              <div className="sec-tag">// Per-order record</div>
+              <h3 style={{ fontSize: 22, margin: '8px 0 12px' }}>What a shipment record contains</h3>
+              <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.7, maxWidth: 760 }}>
+                The four stations above are checks, not certificates. What leaves
+                with an order is the record of those checks for that production
+                run. It is produced per batch, so asking for the QC report before
+                a batch exists gets a template rather than a result.
+              </p>
+              <ul style={{ fontSize: 14, lineHeight: 1.9, margin: '14px 0 0', paddingLeft: 20, color: 'var(--text-2)' }}>
+                <li>Inspection result from each of the four stations</li>
+                <li>24-hour movement aging record and the acoustic reading for that batch</li>
+                <li>Packaging drop-test result at 1.2 m: one corner, three edges, six faces</li>
+                <li>A sealed reference sample retained from the batch</li>
+              </ul>
+              <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.7, maxWidth: 760, marginTop: 14 }}>
+                Movement CE / RoHS documentation travels with the movement
+                itself. Anything a buyer&apos;s own market requires beyond that
+                is arranged for the order —{' '}
+                <Link href="/contact" style={{ color: '#0f5c4a', textDecoration: 'underline' }}>
+                  ask for the set when requesting the quote
+                </Link>.
+              </p>
+            </div>
           </div>
         </section>
 

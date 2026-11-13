@@ -298,21 +298,21 @@ export const SIMPLIFIED = [
   {
     name: 'Open-face — no dial, no cover',
     detail: 'Engraved solid-wood panels and laser-cut metal shapes, where the mechanism is the design.',
-    image: '/simplified/open-wood.gif',
+    image: '/site/illustrations/open-wood.gif',
     imageWidth: 100,
     imageHeight: 100
   },
   {
     name: 'No frame, no cover',
     detail: 'Printed transparent acrylic and cast resin art pieces, where the material carries the image.',
-    image: '/simplified/open-acrylic.gif',
+    image: '/site/illustrations/open-acrylic.gif',
     imageWidth: 100,
     imageHeight: 100
   },
   {
     name: 'Electronics instead of a movement',
     detail: 'LCD perpetual calendars and LED digital displays, where the display replaces the dial entirely.',
-    image: '/simplified/open-digital.gif',
+    image: '/site/illustrations/open-digital.gif',
     imageWidth: 297,
     imageHeight: 312
   }

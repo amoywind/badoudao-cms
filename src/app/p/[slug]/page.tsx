@@ -32,6 +32,39 @@ const PH_BG: Record<string, string> = {
   'f-news': 'clocks'
 };
 
+/* Fixed routes are the authoritative source for these topics. The content
+   documents keep their full text — nothing is removed — but each one now
+   says which page is maintained as the definitive answer and links there.
+   No canonical is changed: these documents stay indexable in their own
+   right, so the link is guidance for a buyer rather than a redirect. */
+const AUTHORITY: Record<string, { href: string; label: string; note: string }> = {
+  'oem-odm': {
+    href: '/custom-services',
+    label: 'Custom services',
+    note: 'The current list of what can be changed, the 28-day production route and the artwork requirements are maintained on the custom services page. This document explains the two service models in detail.'
+  },
+  quality: {
+    href: '/craft-qc',
+    label: 'Craft & QC',
+    note: 'The four QC stations, their thresholds and their pass/fail criteria are defined on the craft & QC page. This document is the inspection record behind them.'
+  },
+  certification: {
+    href: '/craft-qc',
+    label: 'Craft & QC',
+    note: 'Which documents exist, and which are arranged per order, is stated on the craft & QC page. This document lists the paperwork available for a shipment.'
+  },
+  factory: {
+    href: '/about-us',
+    label: 'About the factory',
+    note: 'Equipment, capacity and the buyer FAQ are on the about-us page. This document is the written factory record.'
+  },
+  'small-batch': {
+    href: '/customizer',
+    label: 'Spec builder',
+    note: 'A trial specification can be built and sent from the customizer. This document explains how pilot runs are costed and scheduled.'
+  }
+};
+
 /**
  * Where a non-document row actually points.
  *
@@ -145,6 +178,18 @@ export default async function StaticPage({ params }) {
 
         <section>
           <div className="wrap">
+            {AUTHORITY[page.slug] && (
+              <div className="authority-note">
+                <div className="an-tag">Authoritative page</div>
+                <p>
+                  {AUTHORITY[page.slug].note}{' '}
+                  <Link href={AUTHORITY[page.slug].href}>
+                    {AUTHORITY[page.slug].label} →
+                  </Link>
+                </p>
+              </div>
+            )}
+
             {/* Body and rail side by side.
 
                 The body keeps its 760px measure — a 1400px line of text is
@@ -233,7 +278,7 @@ function ShowroomStrip() {
 
         <figure className="showroom-strip">
           <img
-            src="/media/factory/showroom-banner.jpg"
+            src="/site/factory/showroom-banner.jpg"
             alt="Panorama of our showroom, showing clock displays across six shelving units"
             width={1600}
             height={350}
@@ -278,16 +323,16 @@ function PageRail({
   const CAPACITY: Record<string, { label: string; value: string }[]> = {
     'oem-odm': [
       { label: 'MOQ from', value: `${moq || 300} pcs` },
-      { label: 'Sample lead time', value: '1 day' },
+      { label: 'Sample lead time', value: '5–7 business days' },
       { label: 'Bulk production', value: '7–20 days' },
-      { label: 'Movement options', value: '6 types' },
+      { label: 'Movement options', value: '7 types' },
       { label: 'Materials', value: '8 series' }
     ],
     'small-batch': [
       { label: 'MOQ from', value: `${moq || 300} pcs` },
       { label: 'Sample order', value: '1–2 pcs' },
       { label: 'Sample fee', value: 'Refunded on bulk' },
-      { label: 'Sample lead time', value: '1 day' },
+      { label: 'Sample lead time', value: '5–7 business days' },
       { label: 'Custom dial artwork', value: 'No new tooling' }
     ],
     factory: [
@@ -382,8 +427,8 @@ function LicencePanel() {
         </svg>
         <span>Business Licence</span>
       </div>
-      <a href="/media/factory/business-license-32.jpg" target="_blank" rel="noopener noreferrer">
-        <img src="/media/factory/business-license-32.jpg"
+      <a href="/site/factory/business-license-32.jpg" target="_blank" rel="noopener noreferrer">
+        <img src="/site/factory/business-license-32.jpg"
           alt="Business licence of Xiamen Orange Cat Creative Home Decor Co., Ltd. (厦门橙猫创意家居有限公司), click to view full size"
           width={1352} height={901} loading="lazy" />
       </a>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Toast, useToast } from '../_ui';
 
 /**
- * Search Console, analytics and the sitemap in one place.
+ * Search Console verification and the sitemap in one place.
  *
  * The reason this exists: verifying a domain and submitting a sitemap are
  * the two steps that decide whether any of the SEO work reaches an audience,
@@ -52,7 +52,6 @@ export default function SeoCenter() {
   const SITE = String(s.siteUrl || 'https://oemwallclocks.com').replace(/\/+$/, '');
 
   const hasSc = !!String(s.search_console_token || '').trim();
-  const hasPlausible = !!String(s.plausible_domain || '').trim();
 
   return (
     <>
@@ -133,52 +132,6 @@ export default function SeoCenter() {
               单个 URL 提交 →
             </a>
           </div>
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="card-h">
-          <h3>流量统计</h3>
-          <div className="r">
-            <button className="btn btn-p btn-sm" onClick={save} disabled={busy}>保存</button>
-          </div>
-        </div>
-        <div className="card-b">
-          <div className="notice note-i">
-            选了 Plausible 而不是 GA4：不设 Cookie、不收集个人数据，
-            欧洲访客不需要弹同意框；而且它是一个脚本，不会拖慢页面。
-          </div>
-
-          <div className="fg" style={{ marginTop: 14 }}>
-            <label className="fl">
-              Plausible 域名
-              <span className="hint">只填域名，不要粘代码</span>
-            </label>
-            <input
-              className="inp mono"
-              value={s.plausible_domain || ''}
-              onChange={(e) => setS({ ...s, plausible_domain: e.target.value })}
-              placeholder="oemwallclocks.com"
-            />
-            <div className="cnt">
-              {hasPlausible ? '✓ 统计已开启' : '未开启（留空则不加载任何脚本）'}
-            </div>
-            <div className="help" style={{ marginTop: 4 }}>
-              填上面这个域名就行 ——{' '}
-              <code>{SITE.replace(/^https?:\/\//, '')}</code>。
-              <br />
-              Plausible 后台给的是一段 <code>&lt;script&gt;</code> 代码，
-              <strong>不要整段粘进来</strong>，那会让统计重复计算。
-              本站会自动加载那个脚本，这里只负责告诉它「记哪个域名」。
-            </div>
-          </div>
-
-          {!hasPlausible && (
-            <div className="help" style={{ marginTop: 6 }}>
-              还没有？去 <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">plausible.io</a>
-              注册（免费额度每月 10 万次浏览），填入这里的域名即可。
-            </div>
-          )}
         </div>
       </div>
 

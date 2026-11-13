@@ -576,12 +576,12 @@
    wins at equal specificity — narrowing only one would leave the
    other five loading the desktop file. */
 @media (max-width: 720px) {
-  .page-head[data-bg="workshop"]::before { background-image: url(/banners/banner-workshop-720.jpg); }
-  .page-head[data-bg="qc"]::before { background-image: url(/banners/banner-qc-720.jpg); }
-  .page-head[data-bg="assembly"]::before { background-image: url(/banners/banner-assembly-720.jpg); }
-  .page-head[data-bg="equipment"]::before { background-image: url(/banners/banner-equipment-720.jpg); }
-  .page-head[data-bg="clocks"]::before { background-image: url(/banners/banner-clocks-720.jpg); }
-  .page-head[data-bg="warehouse"]::before { background-image: url(/banners/banner-warehouse-720.jpg); }
+  .page-head[data-bg="workshop"]::before { background-image: url(/site/banners/banner-workshop-720.jpg); }
+  .page-head[data-bg="qc"]::before { background-image: url(/site/banners/banner-qc-720.jpg); }
+  .page-head[data-bg="assembly"]::before { background-image: url(/site/banners/banner-assembly-720.jpg); }
+  .page-head[data-bg="equipment"]::before { background-image: url(/site/banners/banner-equipment-720.jpg); }
+  .page-head[data-bg="clocks"]::before { background-image: url(/site/banners/banner-clocks-720.jpg); }
+  .page-head[data-bg="warehouse"]::before { background-image: url(/site/banners/banner-warehouse-720.jpg); }
 }
 
 /* On a phone the text spans nearly the full band width, so a horizontal

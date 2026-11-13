@@ -138,6 +138,13 @@ export default function MediaPage() {
           </div>
           <input ref={fileRef} type="file" accept="image/*" multiple hidden
             onChange={(e) => { upload(e.target.files); e.target.value = ''; }} />
+
+          <div className="notice note-i" style={{ marginTop: 12 }}>
+            <strong>目录约定</strong>：页面公共图（banner、工厂实景、证书、Logo）放{' '}
+            <code>site-public</code>；产品图放 <code>products</code> 及其子目录，
+            两类不要混放。站点固定的公共图另存于 <code>public/site/</code>，
+            产品图目录为 <code>public/products/</code>。
+          </div>
         </div>
 
         <div className="card-b flush">

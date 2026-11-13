@@ -54,7 +54,7 @@ export function SiteSchema({ s }: { s: SiteSettings }) {
          names /assets/logo.png, which was never created, and a schema
          pointing at a missing image is a broken reference in the search
          panel. */
-      logo: `${site}/favicon.svg`,
+      logo: `${site}/site/brand/favicon.svg`,
       description:
         'Precision agile wall clock OEM/ODM manufacturing for modern global brands. ' +
         'Flexible MOQ 300, 24h 3D CAD rendering, and 1.2m drop-tested packaging.',

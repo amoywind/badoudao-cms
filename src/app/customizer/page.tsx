@@ -50,7 +50,7 @@ export default async function CustomizerPage({
 }) {
   const s = await getSettings().catch(() => ({} as SiteSettings));
   const moq = Number(s.moq) || 300;
-  const replyHours = Number(s.quoteHours) || 4;
+  const replyHours = Number(s.quoteHours) || 12;
 
   /* The home page's quick picker sends the four choices in the URL, so
      a buyer who sets a preference there arrives here with it already

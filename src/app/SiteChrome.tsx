@@ -109,7 +109,7 @@ export async function Header() {
               know which site is emailing them, and the domain belongs
               to the company as much as the name does. */}
           <Link className="logo logo-mark" href="/">
-            <img src="/logo.png" alt="" width={36} height={34} aria-hidden="true" />
+            <img src="/site/brand/logo.png" alt="" width={36} height={34} aria-hidden="true" />
             <span className="logo-word">BADOU<span>DAO</span></span>
           </Link>
 
@@ -225,7 +225,7 @@ export async function Footer() {
                 ground, and a black drawing on a dark ground is not a
                 drawing — it is a hole. */}
             <div className="logo logo-mark logo-mark-lg">
-              <img src="/logo-inverse.png" alt="" width={44} height={42} aria-hidden="true" />
+              <img src="/site/brand/logo-inverse.png" alt="" width={44} height={42} aria-hidden="true" />
               <span className="logo-word">BADOU<span>DAO</span></span>
             </div>
             <p>{s.siteName} manufactures quartz wall clocks, alarm clocks, table clocks and clock movements for OEM and ODM buyers. Small-batch production, MOQ from {s.moq || 300} pieces.</p>

@@ -176,6 +176,36 @@ export default async function CustomServicesPage() {
           </div>
         </section>
 
+        {/* ---- Structure selection ----
+            The three structures above say what each one is. This says which
+            one to pick, which is the question a buyer arrives with. */}
+        <section className="alt">
+          <div className="wrap">
+            <div className="sec-head">
+              <div className="sec-tag">// Choosing a structure</div>
+              <h2>Which simplified structure fits your order</h2>
+              <p className="sec-sub">
+                Removing a part removes a cost, but it also removes a place to
+                put a logo. The three structures are chosen by what the range
+                has to carry.
+              </p>
+            </div>
+
+            <div className="grid-3">
+              {[
+                ['Open-face, no dial', 'Pick this when the mechanism is the design. Branding goes on the frame or the backplate, and the dial artwork step disappears — useful for a first run with no artwork ready yet.'],
+                ['No frame, no cover', 'Pick this for printed acrylic or cast resin ranges. The artwork is the surface itself, so color control and reverse printing matter more than tooling.'],
+                ['Electronics instead of a movement', 'Pick this when the buyer wants calendar, day or temperature readout. It changes the power supply, the carton depth and the compliance file, so decide it before the tooling quote.']
+              ].map(([n, d]) => (
+                <div className="card" key={n} style={{ padding: 22 }}>
+                  <h3 style={{ fontSize: 15.5, marginBottom: 8 }}>{n}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-2)', lineHeight: 1.6 }}>{d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section>
           <div className="wrap" style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto' }}>
             <div className="sec-tag">// Next step</div>

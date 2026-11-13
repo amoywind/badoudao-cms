@@ -544,6 +544,14 @@ export default async function ProductPage({ params }) {
                         kitchen, a silent sweep for a hotel room, a chime for a European
                         style.
                       </p>
+                      {product.movementType && (
+                        <p style={{ fontSize: 14, lineHeight: 1.6, margin: '0 0 14px' }}>
+                          <strong>Fitted as standard on this model:</strong>{' '}
+                          {product.movementType}. The table below is the full range
+                          this body can be built with — changing the movement does
+                          not change the frame tooling.
+                        </p>
+                      )}
                       <div style={{ overflowX: 'auto' }}>
                         <table className="mtx">
                           <thead>
@@ -564,6 +572,13 @@ export default async function ProductPage({ params }) {
                           </tbody>
                         </table>
                       </div>
+                      <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 14 }}>
+                        The full comparison of all seven movement tiers, with sound
+                        limits and where each one sells, is maintained on{' '}
+                        <Link href="/components" style={{ color: '#0f5c4a', textDecoration: 'underline' }}>
+                          the components studio →
+                        </Link>.
+                      </p>
                     </>
                   )
                 },

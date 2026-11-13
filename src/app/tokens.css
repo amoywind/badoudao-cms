@@ -34,9 +34,9 @@
 
    Fonts are self-hosted. next/font/local with the woff2 files in
    src/app/fonts/ — no request to Google at runtime, which keeps the
-   visitor's IP away from a third party and keeps the site out of the
-   consent-banner requirement that the analytics choice was made to
-   avoid. The files are the latin subset, 102 KB for all three.
+   visitor's IP away from a third party. The site loads no analytics or
+   tracking scripts, so nothing asks a visitor for consent. The files are
+   the latin subset, 102 KB for all three.
    =================================================================== */
 
 .site {

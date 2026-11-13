@@ -10,11 +10,10 @@
  * way, so every slot on the site is a vertical frame and the layout
  * never has to hold two shapes at once.
  *
- * The player is youtube-nocookie rather than youtube.com. The site runs
- * Plausible rather than GA4 specifically to stay out of the European
- * consent-banner requirement, and the ordinary YouTube embed sets
- * tracking cookies before the visitor has agreed to anything. The
- * no-cookie domain does not.
+ * The player is youtube-nocookie rather than youtube.com. The site loads
+ * no third-party analytics, and the ordinary YouTube embed sets tracking
+ * cookies before the visitor has agreed to anything. The no-cookie domain
+ * does not.
  *
  * The video is not loaded until it is asked for. A YouTube iframe is
  * roughly half a megabyte of script and player, and a buyer who scrolls

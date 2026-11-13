@@ -32,7 +32,7 @@ export async function generateMetadata() {
     keywords:
       'quartz clock manufacturer, OEM clock factory, wholesale wall clocks, China clock supplier, custom quartz clocks',
     path: '/',
-    image: '/hero-clocks.jpg'
+    image: '/site/hero/hero-clocks.jpg'
   });
 }
 
@@ -130,6 +130,13 @@ export default async function HomePage() {
                 Every family can be made with custom dials, logos, hands and packaging.
                 Prices shown are <strong>estimated Ex Works (factory) prices</strong> at MOQ {moq} —
                 freight and duties quoted separately.
+              </p>
+              <p className="sec-sub" style={{ fontSize: 13.5 }}>
+                The full component specification — seven movement tiers, hand
+                materials and packaging tiers — is maintained on{' '}
+                <Link href="/components" style={{ color: '#0f5c4a', textDecoration: 'underline' }}>
+                  the components studio →
+                </Link>.
               </p>
             </div>
 
@@ -308,11 +315,11 @@ export default async function HomePage() {
             </div>
             <div className="hero-img">
               <img
-                src="/workshop-floor.jpg"
+                src="/site/hero/workshop-floor.jpg"
                 alt="Our assembly floor: staff fitting dials and movements before packing"
                 width={1400}
                 height={933}
-                srcSet="/workshop-floor-720.jpg 720w, /workshop-floor.jpg 1400w"
+                srcSet="/site/hero/workshop-floor-720.jpg 720w, /site/hero/workshop-floor.jpg 1400w"
                 sizes="(max-width: 900px) 92vw, 46vw"
                 loading="lazy"
                 decoding="async"
@@ -327,6 +334,13 @@ export default async function HomePage() {
             <div className="sec-head">
               <div className="sec-tag">// OEM / ODM process</div>
               <h2>From your idea to a shipped container</h2>
+              <p className="sec-sub" style={{ fontSize: 13.5 }}>
+                This is the short version. What can be changed, the 28-day
+                production route and the artwork requirements are on{' '}
+                <Link href="/custom-services" style={{ color: '#0f5c4a', textDecoration: 'underline' }}>
+                  custom services →
+                </Link>.
+              </p>
             </div>
             <div className="proc">
               {[
