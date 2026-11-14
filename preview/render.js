@@ -158,8 +158,8 @@ function layout({ title, description, canonical, body, schema, active }) {
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${esc(canonical || base + '/')}">
-<meta property="og:image" content="${base}/hero-clocks.png">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="${base}/site/hero/hero-clocks.jpg">
+<link rel="icon" href="/site/brand/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -246,7 +246,7 @@ custom dial artwork and packaging, and a quote back within ${esc(S.quoteHours ||
 Movements are CE and RoHS compliant · Certification arranged on request
 </p>
 </div>
-<div class="hero-img"><img src="/hero-clocks.png" alt="Assorted quartz wall clocks manufactured by Badoudao" width="1536" height="1024"></div>
+<div class="hero-img"><img src="/site/hero/hero-clocks.jpg" alt="Assorted quartz wall clocks manufactured by Badoudao" width="1400" height="788"></div>
 </div></section>
 
 <div class="trust"><div class="wrap trust-grid">
@@ -289,7 +289,7 @@ ${CAPABILITIES.map(([h, p], i) => `<div class="cap"><div class="cap-n">0${i + 1}
 Quartz clocks themselves carry no mandatory certification requirement.
 <a href="/p/certification/" style="text-decoration:underline">Read the full compliance note</a></p>
 </div>
-<div class="hero-img"><img src="/hero-clocks.png" alt="Badoudao clock production" width="1536" height="1024"></div>
+<div class="hero-img"><img src="/site/hero/hero-clocks.jpg" alt="Badoudao clock production" width="1400" height="788"></div>
 </div></section>
 
 <section id="process"><div class="wrap">
